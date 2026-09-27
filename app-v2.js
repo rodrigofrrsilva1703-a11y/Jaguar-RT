@@ -258,6 +258,7 @@ function applyRegimeUI({preset=true}={}){
  if($('simplesFutureFields')) $('simplesFutureFields').style.display=simple?'block':'none';
  if($('simpleStandardRates')) $('simpleStandardRates').style.display=r==='simples'?'block':'none';
  if($('hybridRegularRates')) $('hybridRegularRates').style.display=r==='simples_hybrid'?'block':'none';
+ updatePriceOwnCreditUI();
 
  if(preset){
   if(r==='presumido'){
@@ -300,7 +301,14 @@ function applyYearPreset(){
 }
 
 
+function updatePriceOwnCreditUI(){
+ const enabled=!!$('priceTakesCbsIbsCredit')?.checked;
+ const fields=$('priceOwnCreditFields');
+ if(fields) fields.style.display=enabled?'grid':'none';
+}
+
 function priceEngineInput(){
+ const ownCreditEnabled=!!$('priceTakesCbsIbsCredit')?.checked;
  return {
   regime:regime(),
   amount:Math.max(0,num('priceNow')),
@@ -308,6 +316,7 @@ function priceEngineInput(){
   simple:{annex:snAnnex(),rbt12:num('snRbt12')},
   future:{mode:$('rateMode')?.value||'rtav',reduction:num('rateReduction'),cbs:num('cbsRate'),ibs:num('ibsRate')},
   hybridFuture:{mode:$('hybridRateMode')?.value||'rtav',reduction:num('hybridReduction'),cbs:num('hybridCbsRate'),ibs:num('hybridIbsRate')},
+  purchases:{enabled:ownCreditEnabled,creditablePct:num('priceCreditablePurchasesPct'),usePct:num('pricePurchaseCreditUsePct')},
   buyer:{profile:$('priceBuyerProfile')?.value||'b2c',currentCredit:num('priceCurrentBuyerCredit'),usePct:num('priceBuyerCreditPct')}
  };
 }
@@ -1154,6 +1163,7 @@ function printTaxReport(kind){
 const PRICE_STATE_IDS=[
  'taxRegime','priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','snRbt12','snAnnex',
  'priceYear','rateMode','rateReduction','cbsRate','ibsRate','hybridRateMode','hybridReduction','hybridCbsRate','hybridIbsRate',
+ 'priceTakesCbsIbsCredit','priceCreditablePurchasesPct','pricePurchaseCreditUsePct',
  'priceBuyerProfile','priceCurrentBuyerCredit','priceBuyerCreditPct','priceQuickPreset','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
@@ -1301,6 +1311,7 @@ function priceInputFromState(data){
   simple:{annex:data?.snAnnex||'III',rbt12:numberFromState(data,'snRbt12')},
   future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate')},
   hybridFuture:{mode:data?.hybridRateMode||'rtav',reduction:numberFromState(data,'hybridReduction'),cbs:numberFromState(data,'hybridCbsRate'),ibs:numberFromState(data,'hybridIbsRate')},
+  purchases:{enabled:!!data?.priceTakesCbsIbsCredit,creditablePct:numberFromState(data,'priceCreditablePurchasesPct'),usePct:numberFromState(data,'pricePurchaseCreditUsePct',100)},
   buyer:{profile:data?.priceBuyerProfile||'b2c',currentCredit:numberFromState(data,'priceCurrentBuyerCredit'),usePct:numberFromState(data,'priceBuyerCreditPct',100)}
  };
 }
@@ -1332,7 +1343,8 @@ function compareNamedScenario(kind){
   panel.innerHTML='<div class="scenario-compare-grid">'+
    compareItem('Preço',other.price,current.price)+
    compareItem('Tributos',other.taxes,current.taxes)+
-   compareItem('Valor líquido',other.net,current.net)+
+   compareItem('Carga líquida',other.netTax??other.taxes,current.netTax??current.taxes)+
+   compareItem('Líquido econômico',other.economicNet??other.net,current.economicNet??current.net)+
    compareItem('Custo comprador',other.buyerCost??other.price,current.buyerCost??current.price)+
   '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'.</div>';
  }else{
@@ -1370,6 +1382,9 @@ $('resetPriceSimulation')?.addEventListener('click',function(){resetSimulation('
 $('savePriceScenario')?.addEventListener('click',function(){saveNamedScenario('price');});
 $('loadPriceScenario')?.addEventListener('click',function(){loadNamedScenario('price');});
 $('comparePriceScenario')?.addEventListener('click',function(){compareNamedScenario('price');});
+$('priceTakesCbsIbsCredit')?.addEventListener('change',function(){updatePriceOwnCreditUI();calcIntegrated();});
+$('priceCreditablePurchasesPct')?.addEventListener('input',calcIntegrated);
+$('pricePurchaseCreditUsePct')?.addEventListener('input',calcIntegrated);
 $('priceBuyerProfile')?.addEventListener('change',calcIntegrated);
 $('priceCurrentBuyerCredit')?.addEventListener('input',calcIntegrated);
 $('priceBuyerCreditPct')?.addEventListener('input',calcIntegrated);
