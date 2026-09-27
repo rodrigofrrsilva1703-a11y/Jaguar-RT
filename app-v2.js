@@ -974,22 +974,146 @@ function togglePresentation(kind){
  btn.textContent=active?'Sair do modo reunião':'Modo reunião';
 }
 
+function pdfRows(rows){
+ return '<div>'+rows.map(function(row){
+  return '<div class="pdf-row"><span>'+xmlEsc(row[0])+'</span><b>'+xmlEsc(row[1])+'</b></div>';
+ }).join('')+'</div>';
+}
+
+function pdfAnnualTable(headers,rows){
+ return '<table class="pdf-table"><thead><tr>'+headers.map(function(h){return '<th>'+xmlEsc(h)+'</th>';}).join('')+
+  '</tr></thead><tbody>'+rows.map(function(row){
+   return '<tr>'+row.map(function(v){return '<td>'+xmlEsc(v)+'</td>';}).join('')+'</tr>';
+  }).join('')+'</tbody></table>';
+}
+
+function buildPricePdf(client,year){
+ const input=priceEngineInput();
+ const base=RTAV_ENGINE.currentPriceScenario(input);
+ const future=RTAV_ENGINE.futurePriceScenario(input,year);
+ const regimeLabel=REGIME_LABELS[input.regime]||input.regime;
+ const currentRows=[['Preço bruto',money(base.price)],['Tributos considerados',money(base.taxes)],['Valor líquido',money(base.net)]];
+ const futureRows=[
+  ['Preço projetado',money(future.price)],
+  ['CBS',money(future.cbs||0)],
+  ['IBS',money(future.ibs||0)],
+  ['DAS / tributos remanescentes',money(future.remnant||0)],
+  ['Total de tributos',money(future.taxes)],
+  ['Valor líquido',money(future.net)]
+ ];
+ if(input.buyer.profile==='b2b'){
+  futureRows.push(['Crédito potencial do comprador',money(future.buyerCredit||0)]);
+  futureRows.push(['Custo efetivo do comprador',money(future.buyerCost??future.price)]);
+ }
+
+ const annual=[{year:2026,...base}];
+ for(let y=2027;y<=2033;y++) annual.push(RTAV_ENGINE.futurePriceScenario(input,y));
+ const tableRows=annual.map(function(x){
+  return [x.year,money(x.price),money(x.taxes),pct(x.price?x.taxes/x.price*100:0),money(x.net)];
+ });
+
+ return {
+  title:'Relatório de preço de venda',
+  subtitle:regimeLabel+' · análise de '+year,
+  kpis:[
+   ['Preço atual',money(base.price),'2026'],
+   ['Preço projetado',money(future.price),String(year)],
+   ['Tributos',money(future.taxes),pct(future.price?future.taxes/future.price*100:0)+' do preço'],
+   ['Valor líquido',money(future.net),'Base 2026: '+money(base.net)]
+  ],
+  currentRows,
+  futureRows,
+  tableHeaders:['Ano','Preço','Tributos','Carga','Valor líquido'],
+  tableRows,
+  note:'A projeção preserva o valor líquido considerado em 2026. Alíquotas identificadas como RTAV são premissas didáticas e devem ser substituídas pelas aplicáveis à operação quando conhecidas.'
+ };
+}
+
+function buildRevenuePdf(client,year){
+ const input=revenueEngineInput();
+ const base=RTAV_ENGINE.currentRevenueScenario(input);
+ const future=RTAV_ENGINE.futureRevenueScenario(input,year);
+ const regimeLabel=REGIME_LABELS[input.regime]||input.regime;
+ const period=$('revRevenuePeriod')?.value||'mensal';
+ const currentRows=[['Faturamento bruto',money(base.revenue)],['Tributos considerados',money(base.taxes)],['Faturamento líquido',money(base.net)]];
+ const futureRows=[
+  ['Faturamento projetado',money(future.revenue)],
+  ['CBS',money(future.cbs||0)],
+  ['IBS',money(future.ibs||0)],
+  ['DAS / tributos remanescentes',money(future.remnant||0)],
+  ['Tributos brutos',money(future.taxes)]
+ ];
+ if((future.purchaseCredit||0)>0){
+  futureRows.push(['Créditos estimados',money(future.purchaseCredit)]);
+  futureRows.push(['Carga líquida',money(future.netTax)]);
+  futureRows.push(['Líquido após créditos',money(future.economicNet)]);
+ }else{
+  futureRows.push(['Faturamento líquido',money(future.net)]);
+ }
+
+ const annual=[{year:2026,...base}];
+ for(let y=2027;y<=2033;y++) annual.push(RTAV_ENGINE.futureRevenueScenario(input,y));
+ const hasCredit=annual.some(function(x){return (x.purchaseCredit||0)>0;});
+ const tableHeaders=hasCredit?['Ano','Faturamento','Tributos','Créditos','Carga líquida']:['Ano','Faturamento','Tributos','Carga','Líquido'];
+ const tableRows=annual.map(function(x){
+  return hasCredit
+   ?[x.year,money(x.revenue),money(x.taxes),money(x.purchaseCredit||0),money(x.netTax??x.taxes)]
+   :[x.year,money(x.revenue),money(x.taxes),pct(x.revenue?x.taxes/x.revenue*100:0),money(x.net)];
+ });
+
+ return {
+  title:'Relatório de faturamento',
+  subtitle:regimeLabel+' · '+period+' · análise de '+year,
+  kpis:[
+   ['Faturamento atual',money(base.revenue),'2026 · '+period],
+   ['Faturamento projetado',money(future.revenue),String(year)],
+   ['Tributos brutos',money(future.taxes),pct(future.revenue?future.taxes/future.revenue*100:0)+' do faturamento'],
+   [(future.purchaseCredit||0)>0?'Carga líquida':'Faturamento líquido',(future.purchaseCredit||0)>0?money(future.netTax):money(future.net),(future.purchaseCredit||0)>0?'Após créditos estimados':'Após tributos']
+  ],
+  currentRows,
+  futureRows,
+  tableHeaders,
+  tableRows,
+  note:(future.purchaseCredit||0)>0
+   ?'Os créditos das aquisições são estimativas econômicas baseadas nos percentuais informados. O aproveitamento efetivo depende dos requisitos legais e documentais aplicáveis.'
+   :'A projeção preserva o faturamento líquido considerado em 2026. Premissas RTAV devem ser validadas para a operação real.'
+ };
+}
+
 function printTaxReport(kind){
  showTaxTool(kind);
  const price=kind==='price';
- const header=$(price?'pricePrintHeader':'revenuePrintHeader');
+ const report=$('printReport');
+ if(!report) return;
+
  const client=($(price?'priceClientName':'revenueClientName')?.value||'').trim()||'Cliente não identificado';
- const year=price?($('priceYear')?.value||'2027'):($('revYear')?.value||'2027');
- const title=price?'Relatório de preço de venda':'Relatório de faturamento';
+ const year=Number(price?($('priceYear')?.value||2027):($('revYear')?.value||2027));
+ const data=price?buildPricePdf(client,year):buildRevenuePdf(client,year);
  const now=new Date().toLocaleDateString('pt-BR');
- if(header){
-  header.innerHTML='<div class="print-brand">Jaguar Assessoria Contábil × RTAV</div>'+
-   '<h1>'+title+'</h1>'+
-   '<p><strong>Cliente:</strong> '+xmlEsc(client)+' · <strong>Ano analisado:</strong> '+xmlEsc(year)+'</p>'+
-   '<p><strong>Data:</strong> '+now+' · <strong>Motor:</strong> '+RTAV_ENGINE.version+' · <strong>Regras:</strong> '+RTAV_ENGINE.rulesVersion+'</p>'+
-   '<p>Simulação para planejamento. Premissas RTAV permanecem identificadas como premissas e não substituem o enquadramento aplicável à operação.</p>';
- }
- setTimeout(function(){window.print();},80);
+
+ report.innerHTML=
+  '<div class="pdf-head">'+
+   '<div><div class="pdf-brand">Jaguar Assessoria Contábil × RTAV</div><h1>'+xmlEsc(data.title)+'</h1>'+
+    '<p><strong>Cliente:</strong> '+xmlEsc(client)+'</p><p>'+xmlEsc(data.subtitle)+'</p></div>'+
+   '<div class="pdf-stamp"><div>'+xmlEsc(now)+'</div><div>Motor '+xmlEsc(RTAV_ENGINE.version)+'</div><div>Regras '+xmlEsc(RTAV_ENGINE.rulesVersion)+'</div></div>'+
+  '</div>'+
+  '<section class="pdf-section"><div class="pdf-section-title"><h2>Resumo executivo</h2><span>Principais números</span></div>'+
+   '<div class="pdf-kpis">'+data.kpis.map(function(k){return '<div class="pdf-kpi"><small>'+xmlEsc(k[0])+'</small><b>'+xmlEsc(k[1])+'</b><span>'+xmlEsc(k[2])+'</span></div>';}).join('')+'</div>'+
+  '</section>'+
+  '<section class="pdf-section"><div class="pdf-section-title"><h2>Comparação tributária</h2><span>2026 × '+year+'</span></div>'+
+   '<div class="pdf-grid"><div class="pdf-card"><h3>2026 · Atual</h3>'+pdfRows(data.currentRows)+'</div>'+
+   '<div class="pdf-card"><h3>'+year+' · Reforma</h3>'+pdfRows(data.futureRows)+'</div></div>'+
+  '</section>'+
+  '<section class="pdf-section"><div class="pdf-section-title"><h2>Evolução 2026–2033</h2><span>Resumo anual</span></div>'+
+   pdfAnnualTable(data.tableHeaders,data.tableRows)+'</section>'+
+  '<div class="pdf-note">'+xmlEsc(data.note)+'</div>'+
+  '<div class="pdf-footer">Relatório de simulação para planejamento. Não substitui enquadramento fiscal, apuração tributária ou validação da legislação aplicável à operação.</div>';
+
+ report.setAttribute('aria-hidden','false');
+ setTimeout(function(){
+  window.print();
+  report.setAttribute('aria-hidden','true');
+ },80);
 }
 
 const PRICE_STATE_IDS=[
