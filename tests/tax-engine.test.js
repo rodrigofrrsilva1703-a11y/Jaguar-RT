@@ -84,6 +84,63 @@ close(rev2027.net,revBase.net,0.0001,'Faturamento líquido preservado');
 assert.ok(rev2027.purchaseCredit>0,'Crédito estimado das aquisições deve ser positivo');
 close(rev2027.netTax,rev2027.taxes-rev2027.purchaseCredit,1e-8,'Carga líquida após créditos');
 
+
+// IRPJ e CSLL — Lucro Presumido, comércio, R$ 100 mil/mês.
+const presumidoIncome={
+ ...revenue,
+ purchases:{creditablePct:0,usePct:100},
+ incomeTax:{
+  period:'mensal',
+  presumedActivity:'commerce_industry',
+  irpjPresumptionPct:8,
+  csllPresumptionPct:12,
+  annualRevenueProjection:1200000
+ }
+};
+const pi=engine.currentRevenueScenario(presumidoIncome);
+close(pi.irpj,1200,0.01,'IRPJ mensal estimado no Lucro Presumido');
+close(pi.csll,1080,0.01,'CSLL mensal estimada no Lucro Presumido');
+close(pi.incomeTaxes,2280,0.01,'IRPJ + CSLL no Lucro Presumido');
+close(pi.afterIncomeTaxes,pi.net-2280,0.01,'Saldo após tributos considerados');
+
+// LC 224 — R$ 10 milhões/ano, comércio.
+const lc224={
+ regime:'presumido',
+ amount:10000000,
+ currentRates:{pis:.65,cofins:3,icms:18,iss:0,ipi:0},
+ future:{mode:'rtav',reduction:0},
+ hybridFuture:{mode:'rtav',reduction:0},
+ purchases:{creditablePct:0,usePct:100},
+ incomeTax:{
+  period:'anual',
+  presumedActivity:'commerce_industry',
+  irpjPresumptionPct:8,
+  csllPresumptionPct:12,
+  annualRevenueProjection:10000000
+ }
+};
+const lc=engine.currentRevenueScenario(lc224);
+close(lc.incomeTaxDetail.irpjBase,840000,0.01,'Base anual IRPJ com LC 224');
+close(lc.incomeTaxDetail.csllBase,1260000,0.01,'Base anual CSLL com LC 224');
+close(lc.irpj,186000,0.01,'IRPJ anual com adicional');
+close(lc.csll,113400,0.01,'CSLL anual');
+close(lc.incomeTaxes,299400,0.01,'IRPJ + CSLL anual');
+
+// Lucro Real — bases tributáveis informadas diretamente.
+const realIncome={
+ regime:'real',
+ amount:100000,
+ currentRates:{pis:1.65,cofins:7.6,icms:0,iss:5,ipi:0},
+ future:{mode:'rtav',reduction:0},
+ hybridFuture:{mode:'rtav',reduction:0},
+ purchases:{creditablePct:0,usePct:100},
+ incomeTax:{period:'mensal',realIrpjBase:30000,realCsllBase:30000}
+};
+const ri=engine.currentRevenueScenario(realIncome);
+close(ri.irpj,5500,0.01,'IRPJ mensal no Lucro Real');
+close(ri.csll,2700,0.01,'CSLL mensal no Lucro Real');
+close(ri.incomeTaxes,8200,0.01,'IRPJ + CSLL no Lucro Real');
+
 // 2033 não carrega ICMS/ISS remanescente no cenário regular.
 const p2033=engine.futurePriceScenario(presumido,2033);
 close(p2033.remnant,0,1e-10,'Tributos antigos remanescentes em 2033');
