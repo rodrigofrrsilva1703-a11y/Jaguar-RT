@@ -394,31 +394,62 @@ function currentScenario(){
  const r=regime();
  const price=Math.max(0,num('priceNow'));
  const currentCredit=Math.max(0,num('currentBuyerCredit'));
+ const sellerCost=Math.max(0,num('sellerOperatingCost'));
+ const sellerPurchaseCredit=Math.max(0,num('currentSellerCredit'));
  let taxes=0;
+
  if(isSimpleRegime(r)) taxes=price*snEffective(2026).eff;
  else{
   const currentRate=clamp(num('pisRate'),0,100)+clamp(num('cofinsRate'),0,100)+clamp(num('icmsRate'),0,100)+clamp(num('issRate'),0,100)+clamp(num('ipiRate'),0,100);
   taxes=price*currentRate/100;
  }
- return {year:2026,regime:r,price,taxes,net:Math.max(0,price-taxes),credit:currentCredit,cost:Math.max(0,price-currentCredit),cbs:null,ibs:null,remnant:taxes};
+
+ const net=Math.max(0,price-taxes);
+ const sellerResult=net-sellerCost+sellerPurchaseCredit;
+ const sellerMargin=price?sellerResult/price:0;
+
+ return {
+  year:2026,regime:r,price,taxes,net,
+  credit:currentCredit,
+  cost:Math.max(0,price-currentCredit),
+  cbs:null,ibs:null,remnant:taxes,
+  sellerCost,sellerPurchaseCredit,sellerResult,sellerMargin
+ };
 }
 
 function paramsForYear(year){
  const r=regime();
+
  if(r==='simples'){
   const sh=snShares(year);
   return {type:'simple',dasRate:sh.eff,cbsInside:sh.cbsEff,ibsInside:sh.ibsEff,oldInside:sh.oldEff};
  }
+
  if(r==='simples_hybrid'){
   const sh=snShares(year);
   const remRate=Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff);
   const rates=getRegularRates(year,true);
   return {type:'hybrid',remRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100,snCbsRemoved:sh.cbsEff,snIbsRemoved:sh.ibsEff};
  }
+
  const p=TRANSITION[year]||TRANSITION[2027];
  const oldRate=((clamp(num('icmsRate'),0,100)+clamp(num('issRate'),0,100))*p.old)/100;
  const rates=getRegularRates(year,false);
  return {type:'regular',remRate:oldRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
+}
+
+function projectedSellerCredit(year){
+ const r=regime();
+ const creditBase=Math.max(0,num('sellerCreditBase'));
+ const usePct=clamp(num('sellerCreditPct'),0,100)/100;
+ const other=Math.max(0,num('otherSellerCredit'));
+
+ // No Simples padrão, esta projeção não transforma compras em créditos do regime regular.
+ if(r==='simples') return other;
+
+ const p=paramsForYear(year);
+ const regularRate=(p.cbsRate||0)+(p.ibsRate||0);
+ return (creditBase*regularRate*usePct)+other;
 }
 
 function scenarioAtPrice(year,projected){
@@ -426,6 +457,8 @@ function scenarioAtPrice(year,projected){
  const cbsCreditPct=clamp(num('cbsCreditPct'),0,100)/100;
  const ibsCreditPct=clamp(num('ibsCreditPct'),0,100)/100;
  const otherCredit=Math.max(0,num('otherProjectedCredit'));
+ const sellerCost=Math.max(0,num('sellerOperatingCost'));
+
  let cbs=0,ibs=0,remnant=0,taxes=0,net=0;
 
  if(p.type==='simple'){
@@ -445,7 +478,15 @@ function scenarioAtPrice(year,projected){
  }
 
  const credit=(cbs*cbsCreditPct)+(ibs*ibsCreditPct)+otherCredit;
- return {year,regime:regime(),price:projected,cbs,ibs,remnant,taxes,net,credit,cost:Math.max(0,projected-credit)};
+ const sellerPurchaseCredit=projectedSellerCredit(year);
+ const sellerResult=net-sellerCost+sellerPurchaseCredit;
+ const sellerMargin=projected?sellerResult/projected:0;
+
+ return {
+  year,regime:regime(),price:projected,cbs,ibs,remnant,taxes,net,credit,
+  cost:Math.max(0,projected-credit),
+  sellerCost,sellerPurchaseCredit,sellerResult,sellerMargin
+ };
 }
 
 function futureScenario(year,strategyOverride=null){
@@ -453,18 +494,40 @@ function futureScenario(year,strategyOverride=null){
  const p=paramsForYear(year);
  const strategy=strategyOverride||($('priceStrategy')?.value||'net');
  let projected=0;
+
  if(strategy==='net'){
   if(p.type==='simple') projected=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
   else{
    const newRate=p.cbsRate+p.ibsRate;
    projected=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
   }
- }else if(strategy==='gross') projected=base.price;
- else projected=Math.max(0,num('manualProjectedPrice'));
+ }else if(strategy==='margin'){
+  const purchaseCredit=projectedSellerCredit(year);
+  const targetMargin=base.sellerMargin;
+
+  if(p.type==='simple'){
+   const netFactor=1-p.dasRate;
+   const denominator=netFactor-targetMargin;
+   projected=denominator>0?(base.sellerCost-purchaseCredit)/denominator:base.price;
+  }else{
+   const newRate=p.cbsRate+p.ibsRate;
+   const netFactor=(1-p.remRate)/(1+newRate);
+   const denominator=netFactor-targetMargin;
+   projected=denominator>0?(base.sellerCost-purchaseCredit)/denominator:base.price;
+  }
+ }else if(strategy==='gross'){
+  projected=base.price;
+ }else{
+  projected=Math.max(0,num('manualProjectedPrice'));
+ }
+
+ projected=Math.max(0,projected);
  const out=scenarioAtPrice(year,projected);
  out.priceDelta=effectPct(base.price,out.price);
  out.costDelta=effectPct(base.cost,out.cost);
  out.netDelta=effectPct(base.net,out.net);
+ out.sellerResultDelta=out.sellerResult-base.sellerResult;
+ out.sellerMarginDelta=(out.sellerMargin-base.sellerMargin)*100;
  return out;
 }
 
