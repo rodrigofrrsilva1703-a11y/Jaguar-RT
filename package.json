@@ -1,0 +1,13 @@
+{
+  "name": "jaguar-rtav",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma Jaguar × RTAV — estudos e simuladores da Reforma Tributária",
+  "scripts": {
+    "test": "node tests/tax-engine.test.js",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}
