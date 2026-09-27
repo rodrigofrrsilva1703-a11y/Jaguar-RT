@@ -374,10 +374,10 @@ function applyYearPreset(){
  calcIntegrated();
 }
 
+
 function currentScenario(){
  const r=regime();
  const price=Math.max(0,num('priceNow'));
- const revenue=Math.max(0,num('currentRevenue'));
  let taxes=0;
  let components={};
 
@@ -391,43 +391,25 @@ function currentScenario(){
   const icms=clamp(num('icmsRate'),0,100)/100;
   const iss=clamp(num('issRate'),0,100)/100;
   const ipi=clamp(num('ipiRate'),0,100)/100;
-  components={
-   pis:price*pis,
-   cofins:price*cofins,
-   icms:price*icms,
-   iss:price*iss,
-   ipi:price*ipi
-  };
+  components={pis:price*pis,cofins:price*cofins,icms:price*icms,iss:price*iss,ipi:price*ipi};
   taxes=Object.values(components).reduce((a,b)=>a+b,0);
  }
 
- const net=Math.max(0,price-taxes);
- const units=price>0?revenue/price:0;
- const revenueTaxes=units*taxes;
- const revenueNet=Math.max(0,revenue-revenueTaxes);
-
- return {
-  year:2026,regime:r,price,taxes,net,components,
-  revenue,revenueTaxes,revenueNet,units,
-  cbs:null,ibs:null,remnant:taxes
- };
+ return {year:2026,regime:r,price,taxes,net:Math.max(0,price-taxes),components,cbs:null,ibs:null,remnant:taxes};
 }
 
 function paramsForYear(year){
  const r=regime();
-
  if(r==='simples'){
   const sh=snShares(year);
-  return {type:'simple',dasRate:sh.eff,cbsInside:sh.cbsEff,ibsInside:sh.ibsEff,oldInside:sh.oldEff};
+  return {type:'simple',dasRate:sh.eff,cbsInside:sh.cbsEff,ibsInside:sh.ibsEff};
  }
-
  if(r==='simples_hybrid'){
   const sh=snShares(year);
   const remRate=Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff);
   const rates=getRegularRates(year,true);
   return {type:'hybrid',remRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
  }
-
  const p=TRANSITION[year]||TRANSITION[2027];
  const oldRate=((clamp(num('icmsRate'),0,100)+clamp(num('issRate'),0,100))*p.old)/100;
  const rates=getRegularRates(year,false);
@@ -453,7 +435,6 @@ function scenarioAtPrice(year,projected){
   taxes=cbs+ibs+remnant;
   net=Math.max(0,projected-taxes);
  }
-
  return {year,regime:regime(),price:projected,cbs,ibs,remnant,taxes,net};
 }
 
@@ -463,9 +444,8 @@ function futureScenario(year,keepGross=false){
  let projected=base.price;
 
  if(!keepGross){
-  if(p.type==='simple'){
-   projected=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
-  }else{
+  if(p.type==='simple') projected=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
+  else{
    const newRate=p.cbsRate+p.ibsRate;
    projected=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
   }
@@ -473,14 +453,7 @@ function futureScenario(year,keepGross=false){
 
  projected=Math.max(0,projected);
  const out=scenarioAtPrice(year,projected);
- const units=base.units;
- out.revenue=units*out.price;
- out.revenueTaxes=units*out.taxes;
- out.revenueNet=units*out.net;
- out.sameGrossRevenueNet=out.price>0?base.revenue*(out.net/out.price):0;
  out.priceDelta=effectPct(base.price,out.price);
- out.revenueDelta=effectPct(base.revenue,out.revenue);
- out.taxDelta=out.taxes-base.taxes;
  return out;
 }
 
