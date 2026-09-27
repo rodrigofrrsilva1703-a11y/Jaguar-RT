@@ -518,11 +518,11 @@ function calcIntegrated(){
 function renderYearlyProjection(){
  if(!$('yearlyProjectionTable')) return;
  const base=currentScenario(),selectedYear=Number($('priceYear')?.value||2027),r=regime(),strategy=$('priceStrategy')?.value||'net';
- const rows=[{year:2026,regime:r,system:'Atual',price:base.price,cbs:null,ibs:null,remnant:base.remnant,credit:base.credit,cost:base.cost,net:base.net,noAdjustNet:base.net,diff:0,delta:0,annualDelta:0}];
+ const rows=[{year:2026,regime:r,system:'Atual',price:base.price,cbs:null,ibs:null,remnant:base.remnant,credit:base.credit,cost:base.cost,costDelta:0,net:base.net,noAdjustNet:base.net,diff:0,delta:0,annualDelta:0}];
  let prevPrice=base.price;
  for(let year=2027;year<=2033;year++){
   const x=futureScenario(year),noAdjust=futureScenario(year,'gross');
-  rows.push({year,regime:r,system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma regular',price:x.price,cbs:x.cbs,ibs:x.ibs,remnant:x.remnant,credit:x.credit,cost:x.cost,net:x.net,noAdjustNet:noAdjust.net,diff:x.price-base.price,delta:effectPct(base.price,x.price),annualDelta:effectPct(prevPrice,x.price)});
+  rows.push({year,regime:r,system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma regular',price:x.price,cbs:x.cbs,ibs:x.ibs,remnant:x.remnant,credit:x.credit,cost:x.cost,costDelta:effectPct(base.cost,x.cost),net:x.net,noAdjustNet:noAdjust.net,diff:x.price-base.price,delta:effectPct(base.price,x.price),annualDelta:effectPct(prevPrice,x.price)});
   prevPrice=x.price;
  }
  yearlyRows=rows;
@@ -532,7 +532,7 @@ function renderYearlyProjection(){
   return `<tr class="${cls}">
    <td>${x.year}</td><td>${REGIME_LABELS[x.regime]}</td><td><span class="system-pill">${x.system}</span></td>
    <td><strong>${money(x.price)}</strong></td><td>${x.cbs===null?'—':money(x.cbs)}</td><td>${x.ibs===null?'—':money(x.ibs)}</td>
-   <td>${money(x.remnant)}</td><td>${money(x.credit)}</td><td><strong>${money(x.cost)}</strong></td><td>${money(x.net)}</td><td>${money(x.noAdjustNet)}</td>
+   <td>${money(x.remnant)}</td><td>${money(x.credit)}</td><td><strong>${money(x.cost)}</strong></td><td class="${x.costDelta<0?'effect-down':'effect-up'}">${x.year===2026?'Base':effectText(x.costDelta)}</td><td>${money(x.net)}</td><td>${money(x.noAdjustNet)}</td>
    <td class="${x.diff<0?'effect-down':'effect-up'}">${x.year===2026?'—':money(x.diff)}</td>
    <td class="${x.delta<0?'effect-down':'effect-up'}">${x.year===2026?'Base':effectText(x.delta)}</td>
    <td class="${x.annualDelta<0?'effect-down':'effect-up'}">${x.year===2026?'Base':effectText(x.annualDelta)}</td>
@@ -552,8 +552,8 @@ function xlsCell(value,type='String'){const val=type==='Number'?(Number(value)||
 function exportAnalysisExcel(){
  if(!yearlyRows.length)renderYearlyProjection();
  const r=regime(),strategy=$('priceStrategy')?.selectedOptions?.[0]?.textContent||'';
- const rowsXml=yearlyRows.map(x=>`<Row>${xlsCell(x.year,'Number')}${xlsCell(REGIME_LABELS[x.regime])}${xlsCell(x.system)}${xlsCell(x.price,'Number')}${xlsCell(x.cbs??0,'Number')}${xlsCell(x.ibs??0,'Number')}${xlsCell(x.remnant,'Number')}${xlsCell(x.credit,'Number')}${xlsCell(x.cost,'Number')}${xlsCell(x.net,'Number')}${xlsCell(x.noAdjustNet,'Number')}${xlsCell(x.diff,'Number')}${xlsCell(x.delta,'Number')}${xlsCell(x.annualDelta,'Number')}</Row>`).join('');
- const headers=['Ano','Regime','Sistema','Preço calculado','CBS','IBS','DAS / tributos remanescentes','Crédito','Custo efetivo','Receita líquida no preço calculado','Líquido se mantivesse preço 2026','Diferença R$','Reajuste vs 2026 (%)','Variação anual (%)'].map(x=>xlsCell(x)).join('');
+ const rowsXml=yearlyRows.map(x=>`<Row>${xlsCell(x.year,'Number')}${xlsCell(REGIME_LABELS[x.regime])}${xlsCell(x.system)}${xlsCell(x.price,'Number')}${xlsCell(x.cbs??0,'Number')}${xlsCell(x.ibs??0,'Number')}${xlsCell(x.remnant,'Number')}${xlsCell(x.credit,'Number')}${xlsCell(x.cost,'Number')}${xlsCell(x.costDelta,'Number')}${xlsCell(x.net,'Number')}${xlsCell(x.noAdjustNet,'Number')}${xlsCell(x.diff,'Number')}${xlsCell(x.delta,'Number')}${xlsCell(x.annualDelta,'Number')}</Row>`).join('');
+ const headers=['Ano','Regime','Sistema','Preço calculado','CBS','IBS','DAS / tributos remanescentes','Crédito','Custo efetivo','Custo vs 2026 (%)','Receita líquida no preço calculado','Líquido se mantivesse preço 2026','Diferença R$','Reajuste vs 2026 (%)','Variação anual (%)'].map(x=>xlsCell(x)).join('');
  const premises=[['Regime',REGIME_LABELS[r]],['Estratégia',strategy],['Preço 2026',num('priceNow')],['Anexo Simples',SN_LABELS[snAnnex()]],['RBT12',num('snRbt12')],['Alíquota efetiva SN 2026 %',snEffective(2026).eff*100],['Crédito atual comprador',num('currentBuyerCredit')],['PIS atual %',num('pisRate')],['Cofins atual %',num('cofinsRate')],['ICMS atual %',num('icmsRate')],['ISS atual %',num('issRate')],['IPI atual %',num('ipiRate')],['Aproveitamento CBS %',num('cbsCreditPct')],['Aproveitamento IBS %',num('ibsCreditPct')],['Outros créditos',num('otherProjectedCredit')]];
  const premXml=premises.map(([a,b])=>`<Row>${xlsCell(a)}${typeof b==='number'?xlsCell(b,'Number'):xlsCell(b)}</Row>`).join('');
  const xml=`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Analise 2026-2033"><Table><Row>${headers}</Row>${rowsXml}</Table></Worksheet><Worksheet ss:Name="Premissas"><Table><Row>${xlsCell('Premissa')}${xlsCell('Valor')}</Row>${premXml}</Table></Worksheet></Workbook>`;
