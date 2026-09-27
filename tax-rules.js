@@ -15,22 +15,6 @@
   2033:{old:0,cbs:9,ibs:18.91,status:'premissa_rtav',sourceType:'premissa',note:'RTAV: projeção didática total de 27,91%; ICMS/ISS extintos.'}
  };
 
- const incomeTaxes={
-  irpjRate:15,
-  irpjAdditionalRate:10,
-  irpjAdditionalMonthlyThreshold:20000,
-  csllGeneralRate:9,
-  presumedAnnualThreshold:5000000,
-  lc224PresumptionIncrease:10,
-  presumptions:{
-   commerce_industry:{label:'Comércio / indústria',irpj:8,csll:12},
-   services_general:{label:'Serviços em geral',irpj:32,csll:32}
-  },
-  sourceType:'oficial',
-  source:'Receita Federal — IRPJ/CSLL; LC 224/2025',
-  reviewedAt
- };
-
  const simpleTables={
   I:{
    rates26:[[180000,4,0],[360000,7.3,5940],[720000,9.5,13860],[1800000,10.7,22500],[3600000,14.3,87300],[4800000,19,378000]],
@@ -60,15 +44,13 @@
  };
 
  return Object.freeze({
-  version:'2026.09.27-2',
+  version:'2026.09.27-1',
   reviewedAt,
   transition:Object.freeze(transition),
   simpleTables:Object.freeze(simpleTables),
-  incomeTaxes:Object.freeze(incomeTaxes),
   metadata:Object.freeze({
    transition:{classification:'premissas_didaticas_e_transicao',source:'RTAV + materiais oficiais indicados na plataforma',reviewedAt},
    simpleTables:{classification:'tabelas_do_modelo_de_simulacao',source:'base vigente adotada pelo projeto; validar enquadramento real do contribuinte',reviewedAt},
-   incomeTaxes:{classification:'regras_oficiais_irpj_csll',source:'Receita Federal + LC 224/2025',reviewedAt},
    warning:'A ferramenta separa regras oficiais de premissas didáticas. Premissas RTAV não devem ser tratadas como alíquota universal definitiva.'
   })
  });
