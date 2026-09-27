@@ -266,7 +266,7 @@ function applyYearPreset(){
    const sub=num('snRbt12')>3600000?' Atenção: RBT12 acima de R$ 3,6 milhões exige tratamento do sublimite de ICMS/ISS/IBS e deve ser validado fora deste cálculo automático.':'';
    $('rateNote').textContent=`Simples padrão · ${SN_LABELS[snAnnex()]} · ${sh.band+1}ª faixa. DAS efetivo ${pct(sh.eff*100)}; dentro dele, CBS ${pct(sh.cbsEff*100)} e IBS ${pct(sh.ibsEff*100)}. O total do DAS pode permanecer estável enquanto a partilha e o crédito mudam.${sub}`;
   }else if(r==='simples_hybrid'){
-   $('rateNote').textContent='Simples híbrido: CBS/IBS são retirados automaticamente do DAS conforme o Anexo/faixa e calculados pelo regime regular por fora.';
+   $('rateNote').textContent='Simples híbrido: CBS/IBS ficam fora da base do DAS. O ICMS/ISS contido no DAS residual é excluído da base da CBS/IBS conforme o Anexo/faixa.';
   }else{
    $('rateNote').textContent=($('rateMode')?.value==='manual')
     ? 'Modo manual: informe CBS e IBS aplicáveis. A transição dos tributos antigos continua sendo aplicada por ano.'
@@ -630,7 +630,7 @@ function revApplyYearPreset(){
    const sh=revSnShares(y);
    $('revRateNote').textContent='Simples padrão · '+SN_LABELS[revAnnex()]+' · '+(sh.band+1)+'ª faixa · DAS efetivo '+pct(sh.eff*100)+'.';
   }else if(r==='simples_hybrid'){
-   $('revRateNote').textContent='Simples híbrido: CBS/IBS ficam fora do DAS; o restante permanece como DAS remanescente.';
+   $('revRateNote').textContent='Simples híbrido: CBS/IBS ficam fora da base do DAS. O ICMS/ISS contido no DAS residual é excluído da base da CBS/IBS.';
   }else{
    $('revRateNote').textContent=p.note;
   }
@@ -900,13 +900,22 @@ function downloadSpreadsheet(filename,headers,rows,premises,memory=[]){
  setTimeout(function(){URL.revokeObjectURL(url);},1000);
 }
 
+function hybridBaseRows(x){
+ if(x.params?.type!=='hybrid') return [];
+ return [
+  ['Base do DAS residual',money(x.residualBase)],
+  [x.params.excludedLabel+' no DAS — excluído da base CBS/IBS',money(x.excludedTax)],
+  ['Base da CBS/IBS',money(x.cleanBase)]
+ ];
+}
+
 function exportPriceExcel(){
  if(!yearlyRows.length) renderYearlyProjection();
  downloadSpreadsheet(
   'analise-preco-'+regime()+'-2026-2033.xlsx',
-  ['Ano','Regime','Sistema','Preço','Tributos','Carga %','Valor líquido','CBS','IBS','DAS / tributos remanescentes','Crédito potencial comprador','Custo efetivo comprador'],
+  ['Ano','Regime','Sistema','Preço','Tributos','Carga %','Valor líquido','CBS','IBS','DAS / tributos remanescentes','Crédito potencial comprador','Custo efetivo comprador','Base DAS residual','ICMS/ISS excluído da base CBS/IBS','Base CBS/IBS'],
   yearlyRows.map(function(x){
-   return [x.year,REGIME_LABELS[x.regime],x.system,x.price,x.taxes,x.price?x.taxes/x.price*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.buyerCredit??0,x.buyerCost??x.price];
+   return [x.year,REGIME_LABELS[x.regime],x.system,x.price,x.taxes,x.price?x.taxes/x.price*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.buyerCredit??0,x.buyerCost??x.price,x.residualBase??'',x.excludedTax??'',x.cleanBase??''];
   }),
   [
    ['Regime',REGIME_LABELS[regime()]],['Preço 2026',num('priceNow')],
@@ -923,9 +932,9 @@ function exportRevenueExcel(){
  if(!revenueYearlyRows.length) revRenderYearly();
  downloadSpreadsheet(
   'analise-faturamento-'+revRegime()+'-2026-2033.xlsx',
-  ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','DAS / tributos remanescentes','Créditos estimados das aquisições','Carga líquida','Líquido após créditos'],
+  ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','DAS / tributos remanescentes','Créditos estimados das aquisições','Carga líquida','Líquido após créditos','Base DAS residual','ICMS/ISS excluído da base CBS/IBS','Base CBS/IBS'],
   revenueYearlyRows.map(function(x){
-   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.economicNet??x.net];
+   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.economicNet??x.net,x.residualBase??'',x.excludedTax??'',x.cleanBase??''];
   }),
   [
    ['Regime',REGIME_LABELS[revRegime()]],['Faturamento 2026',num('revCurrentRevenue')],
@@ -995,6 +1004,7 @@ function buildPricePdf(client,year){
  const currentRows=[['Preço bruto',money(base.price)],['Tributos considerados',money(base.taxes)],['Valor líquido',money(base.net)]];
  const futureRows=[
   ['Preço projetado',money(future.price)],
+  ...hybridBaseRows(future),
   ['CBS',money(future.cbs||0)],
   ['IBS',money(future.ibs||0)],
   ['DAS / tributos remanescentes',money(future.remnant||0)],
@@ -1050,6 +1060,7 @@ function buildRevenuePdf(client,year){
  currentRows.push(['Faturamento líquido',money(base.net)]);
  const futureRows=[
   ['Faturamento projetado',money(future.revenue)],
+  ...hybridBaseRows(future),
   ['CBS',money(future.cbs||0)],
   ['IBS',money(future.ibs||0)],
   ['DAS / tributos remanescentes',money(future.remnant||0)],
