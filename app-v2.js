@@ -515,6 +515,8 @@ function calcIntegrated(){
  renderYearlyProjection();
 }
 
+let yearDetailSelected=null;
+
 function selectYearDetail(year){
  yearDetailSelected=Number(year);
  if(year>=2027&&$('priceYear')){
