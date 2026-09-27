@@ -981,6 +981,33 @@ const SOURCES = [
   ]
 ];
 
+const CLIENT_FAQ = [
+  {
+    "q": "Devo migrar do Simples para o regime regular de IBS/CBS em 2027?",
+    "a": "Não existe resposta automática. Compare carga própria, créditos das aquisições, crédito gerado ao cliente, fluxo de caixa, compliance e perfil B2B/B2C. Use o Módulo 08 como roteiro."
+  },
+  {
+    "q": "Meu preço obrigatoriamente vai subir com a Reforma?",
+    "a": "Não. A projeção pode indicar aumento, redução ou estabilidade. O resultado depende dos tributos atuais, do ano da transição, do destino, de reduções e do regime."
+  },
+  {
+    "q": "Venda para PJ muda a análise?",
+    "a": "Sim. Um comprador no regime regular pode avaliar o custo efetivo depois dos créditos de IBS/CBS, e não apenas o preço bruto da nota. Veja o Módulo 06 e os casos P04 e P05."
+  },
+  {
+    "q": "Posso usar 28% como alíquota padrão para todo cliente?",
+    "a": "Não. Números como 27,91% ou 28% devem ser identificados como premissas ou referências didáticas. A alíquota aplicável depende do período, destino, redução e regime da operação."
+  },
+  {
+    "q": "O que muda em contratos com sinal ou pagamento antecipado?",
+    "a": "Pagamento anterior ao fornecimento pode gerar antecipação de IBS/CBS. Revise faturamento, documentos, fluxo de caixa e cláusulas de preço/tributo. Veja o Módulo 02."
+  },
+  {
+    "q": "Uma simulação de 2027 serve até 2033?",
+    "a": "Não. A composição entre CBS, IBS e ICMS/ISS muda ao longo da transição. A análise deve ser refeita ano a ano."
+  }
+];
+
 const PRACTICES = [
   {
     "id": "P01",
@@ -1028,7 +1055,11 @@ const PRACTICES = [
     "client": "“Se você recebe sinal antes de entregar, precisamos mapear esse fluxo porque parte do IBS/CBS pode aparecer antes da entrega e afetar o caixa.”",
     "challenge": "Se não houver sinal em 28/01 e o cliente só pagar quando a mercadoria for entregue em 10/02, qual é o evento central do caso?",
     "challengeAnswer": "O fornecimento em 10/02. Sem pagamento anterior, não há a antecipação da parcela que existia no exemplo.",
-    "source": "RTAV; Material de Estudo, págs. 1–2; LC 214/2025, art. 10."
+    "source": "RTAV; Material de Estudo, págs. 1–2; LC 214/2025, art. 10.",
+    "regimes": [
+      "geral"
+    ],
+    "sector": "geral"
   },
   {
     "id": "P02",
@@ -1080,7 +1111,11 @@ const PRACTICES = [
     "client": "“Para manter o mesmo líquido deste exemplo, o preço iria de R$ 100 para cerca de R$ 104,15. Mas antes de reajustar precisamos olhar o crédito que esse novo preço gera para o comprador.”",
     "challenge": "Se o preço atual fosse R$ 200, mantendo exatamente as mesmas premissas do exercício, qual seria o preço projetado?",
     "challengeAnswer": "R$ 208,30. O material apresenta: líquido R$ 156,70 → com CBS estimada R$ 170,80 → gross-up de ICMS a 18% ≈ R$ 208,30.",
-    "source": "RTAV; Material de Estudo, págs. 8–9 e exercício 1 das págs. 12–13."
+    "source": "RTAV; Material de Estudo, págs. 8–9 e exercício 1 das págs. 12–13.",
+    "regimes": [
+      "presumido"
+    ],
+    "sector": "comercio"
   },
   {
     "id": "P03",
@@ -1127,7 +1162,11 @@ const PRACTICES = [
     "client": "“Neste cenário, o preço que preserva o mesmo líquido seria até menor. Reduzir ou não é decisão comercial; a contabilidade mostra a faixa possível.”",
     "challenge": "Se a empresa quiser manter um líquido de R$ 500 hoje, com ISS 5% + PIS/Cofins 3,65%, qual seria o preço bruto atual?",
     "challengeAnswer": "R$ 547,35, porque R$ 500 ÷ (1 − 0,0865) = R$ 547,35.",
-    "source": "Material de Estudo, págs. 9 e 12–13; RTAV."
+    "source": "Material de Estudo, págs. 9 e 12–13; RTAV.",
+    "regimes": [
+      "real"
+    ],
+    "sector": "servicos"
   },
   {
     "id": "P04",
@@ -1169,7 +1208,14 @@ const PRACTICES = [
     "client": "“Não basta perguntar quanto você vai cobrar. Precisamos saber quanto seu cliente efetivamente vai gastar depois dos créditos.”",
     "challenge": "Um cliente compra por R$ 104,15 e pode aproveitar R$ 7,05 de crédito no exercício. Qual é o custo efetivo?",
     "challengeAnswer": "R$ 97,10.",
-    "source": "Material de Estudo, pág. 10 e exercício 5 das págs. 12–13; RTAV."
+    "source": "Material de Estudo, pág. 10 e exercício 5 das págs. 12–13; RTAV.",
+    "regimes": [
+      "geral",
+      "presumido",
+      "real",
+      "simples"
+    ],
+    "sector": "b2b"
   },
   {
     "id": "P05",
@@ -1216,7 +1262,12 @@ const PRACTICES = [
     "client": "“Precisamos comparar o que você economiza no Simples puro com o impacto de crédito que seus principais clientes terão.”",
     "challenge": "Se o comprador paga R$ 100 e, no cenário hipotético, só consegue R$ 2 de crédito, qual é o custo efetivo?",
     "challengeAnswer": "R$ 98.",
-    "source": "Transcrição 2 do RTAV; Receita Federal/CGSN 2026 sobre Simples puro e híbrido."
+    "source": "Transcrição 2 do RTAV; Receita Federal/CGSN 2026 sobre Simples puro e híbrido.",
+    "regimes": [
+      "simples",
+      "real"
+    ],
+    "sector": "b2b"
   },
   {
     "id": "P06",
@@ -1258,7 +1309,11 @@ const PRACTICES = [
     "client": "“Sua faixa nominal é 16%, mas a alíquota efetiva do exercício é 12,436%. É a partir dela que a análise precisa continuar.”",
     "challenge": "Com receita do mês de R$ 1.000.000 e alíquota efetiva de 12,436%, qual é o DAS simulado antes das separações do cenário?",
     "challengeAnswer": "R$ 124.360.",
-    "source": "Slides e Material de Estudo do RTAV."
+    "source": "Slides e Material de Estudo do RTAV.",
+    "regimes": [
+      "simples"
+    ],
+    "sector": "servicos"
   },
   {
     "id": "P07",
@@ -1305,7 +1360,11 @@ const PRACTICES = [
     "client": "“O aumento não é de dez pontos de imposto. Primeiro precisamos calcular como o percentual de presunção muda no excedente e depois medir IRPJ/CSLL.”",
     "challenge": "Qual é a diferença entre as duas bases presumidas deste exemplo?",
     "challengeAnswer": "R$ 160.000.",
-    "source": "RTAV; Material de Estudo, pág. 7; LC 224/2025."
+    "source": "RTAV; Material de Estudo, pág. 7; LC 224/2025.",
+    "regimes": [
+      "presumido"
+    ],
+    "sector": "servicos"
   },
   {
     "id": "P08",
@@ -1342,7 +1401,11 @@ const PRACTICES = [
     "client": "“Sua atividade pode ter redução, mas precisamos confirmar a operação e aplicar a redução sobre a alíquota correta do período e destino.”",
     "challenge": "Se a referência hipotética fosse 28% e a redução fosse de 30%, qual seria a alíquota final?",
     "challengeAnswer": "19,6%, porque 28% × 70% = 19,6%.",
-    "source": "Material de Estudo, págs. 6 e 12–13; RTAV."
+    "source": "Material de Estudo, págs. 6 e 12–13; RTAV.",
+    "regimes": [
+      "geral"
+    ],
+    "sector": "geral"
   },
   {
     "id": "P09",
@@ -1389,6 +1452,12 @@ const PRACTICES = [
     "client": "“Eu não vou te entregar apenas quanto o imposto muda. Vou te mostrar qual preço preserva receita, qual preserva margem e qual espaço você tem para negociar.”",
     "challenge": "Se uma empresa tem duas metas diferentes — preservar receita líquida e preservar margem — é esperado que o reajuste calculado seja necessariamente igual?",
     "challengeAnswer": "Não. Créditos, custos e composição da DRE podem fazer o preço que preserva margem ser diferente do preço que preserva receita líquida.",
-    "source": "Material de Estudo, pág. 11; RTAV."
+    "source": "Material de Estudo, pág. 11; RTAV.",
+    "regimes": [
+      "geral",
+      "presumido",
+      "real"
+    ],
+    "sector": "geral"
   }
 ];
