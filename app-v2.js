@@ -108,85 +108,208 @@ $('heroSearch').addEventListener('keydown',e=>{
 });
 
 const TRANSITION={
- 2026:{old:1,cbs:.9,ibs:.1,note:'2026 é ano-teste. CBS 0,9% e IBS 0,1% possuem regras de compensação/dispensa; não use este resultado como “novo preço definitivo”.'},
- 2027:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% é oficial. CBS 9% é a premissa estimada usada no RTAV; a alíquota geral aplicável deve ser substituída pela oficial quando fixada.'},
- 2028:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% é oficial. CBS 9% permanece apenas premissa RTAV nesta simulação.'},
- 2029:{old:.9,cbs:9,ibs:1.891,note:'Projeção didática: CBS 9% + 10% de um IBS cheio estimado em 18,91%. As alíquotas de referência reais devem ser atualizadas quando fixadas.'},
- 2030:{old:.8,cbs:9,ibs:3.782,note:'Projeção didática: CBS 9% + 20% de IBS cheio estimado em 18,91%.'},
- 2031:{old:.7,cbs:9,ibs:5.673,note:'Projeção didática: CBS 9% + 30% de IBS cheio estimado em 18,91%.'},
- 2032:{old:.6,cbs:9,ibs:7.564,note:'Projeção didática: CBS 9% + 40% de IBS cheio estimado em 18,91%.'},
- 2033:{old:0,cbs:9,ibs:18.91,note:'Projeção didática de carga-padrão total de 27,91% (9% CBS + 18,91% IBS). É estimativa RTAV, não alíquota universal oficial.'}
+ 2026:{old:1,cbs:.9,ibs:.1,note:'2026 é ano-teste. CBS 0,9% e IBS 0,1% têm regras próprias de compensação/dispensa. Use como simulação, não como preço definitivo.'},
+ 2027:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% é o parâmetro legal da fase inicial. CBS 9% é a premissa didática usada no RTAV e deve ser substituída pela alíquota oficial aplicável.'},
+ 2028:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% na fase inicial. CBS 9% continua apenas como premissa RTAV neste modo.'},
+ 2029:{old:.9,cbs:9,ibs:1.891,note:'Projeção RTAV: CBS 9% + 10% de um IBS cheio estimado em 18,91%. Atualize quando houver alíquotas oficiais aplicáveis.'},
+ 2030:{old:.8,cbs:9,ibs:3.782,note:'Projeção RTAV: CBS 9% + 20% de IBS cheio estimado em 18,91%.'},
+ 2031:{old:.7,cbs:9,ibs:5.673,note:'Projeção RTAV: CBS 9% + 30% de IBS cheio estimado em 18,91%.'},
+ 2032:{old:.6,cbs:9,ibs:7.564,note:'Projeção RTAV: CBS 9% + 40% de IBS cheio estimado em 18,91%.'},
+ 2033:{old:0,cbs:9,ibs:18.91,note:'Projeção didática RTAV de 27,91% no total (9% CBS + 18,91% IBS). Não é alíquota universal oficial.'}
 };
 
+const clamp=(v,min,max)=>Math.min(max,Math.max(min,Number(v)||0));
+const effectPct=(before,after)=>before?((after/before)-1)*100:0;
+const deltaMoney=(before,after)=>after-before;
+const effectText=v=>`${v>=0?'+':''}${pct(v)}`;
+
 function applyYearPreset(){
- const y=Number($('priceYear').value);
- const p=TRANSITION[y];
- if($('rateMode').value==='rtav'){
+ const y=Number($('priceYear')?.value||2027);
+ const p=TRANSITION[y]||TRANSITION[2027];
+ if($('rateMode')?.value==='rtav'){
   $('cbsRate').value=p.cbs;
   $('ibsRate').value=p.ibs;
  }
- $('rateNote').textContent=p.note;
- calcPrice();
+ if($('rateNote')) $('rateNote').textContent=$('rateMode')?.value==='manual'
+  ? 'Modo manual: informe CBS e IBS aplicáveis à operação e ao período. A redução informada abaixo será aplicada sobre essas alíquotas para fins de simulação.'
+  : p.note;
+ calcIntegrated();
 }
-$('priceYear').addEventListener('change',applyYearPreset);
-$('rateMode').addEventListener('change',()=>{
+
+function syncPriceStrategy(){
+ const manual=$('priceStrategy')?.value==='manual';
+ if($('manualProjectedPrice')) $('manualProjectedPrice').disabled=!manual;
+ calcIntegrated();
+}
+
+function syncCreditProfile(){
+ const profile=$('buyerCreditProfile')?.value||'full';
+ const manual=profile==='manual';
+ if(profile==='full'){
+  $('cbsCreditPct').value=100;
+  $('ibsCreditPct').value=100;
+ }else if(profile==='none'){
+  $('cbsCreditPct').value=0;
+  $('ibsCreditPct').value=0;
+ }
+ if($('cbsCreditPct')) $('cbsCreditPct').readOnly=!manual;
+ if($('ibsCreditPct')) $('ibsCreditPct').readOnly=!manual;
+ calcIntegrated();
+}
+
+function calcIntegrated(){
+ if(!$('integratedKpis')) return;
+
+ const price=Math.max(0,num('priceNow'));
+ const pis=clamp(num('pisRate'),0,100);
+ const cofins=clamp(num('cofinsRate'),0,100);
+ const icms=clamp(num('icmsRate'),0,100);
+ const iss=clamp(num('issRate'),0,100);
+ const ipi=clamp(num('ipiRate'),0,100);
+ const currentRate=pis+cofins+icms+iss+ipi;
+ const currentTaxes=price*currentRate/100;
+ const currentNet=Math.max(0,price-currentTaxes);
+
+ const y=Number($('priceYear')?.value||2027);
+ const preset=TRANSITION[y]||TRANSITION[2027];
+ const reduction=clamp(num('rateReduction'),0,100);
+ const reductionFactor=1-reduction/100;
+ const cbsBaseRate=clamp(num('cbsRate'),0,100);
+ const ibsBaseRate=clamp(num('ibsRate'),0,100);
+ const cbsRate=cbsBaseRate*reductionFactor;
+ const ibsRate=ibsBaseRate*reductionFactor;
+ const newRate=(cbsRate+ibsRate)/100;
+ const oldRate=((icms+iss)*preset.old)/100;
+
+ let projected=0;
+ let cleanBase=0;
+ const strategy=$('priceStrategy')?.value||'net';
+
+ if(strategy==='net'){
+  cleanBase=currentNet;
+  projected=(1-oldRate)>0?cleanBase*(1+newRate)/(1-oldRate):0;
+ }else{
+  projected=strategy==='gross'?price:Math.max(0,num('manualProjectedPrice'));
+  cleanBase=(1+newRate)>0?projected*(1-oldRate)/(1+newRate):0;
+ }
+
+ const cbsValue=cleanBase*cbsRate/100;
+ const ibsValue=cleanBase*ibsRate/100;
+ const oldTaxValue=projected*oldRate;
+ const projectedTaxes=cbsValue+ibsValue+oldTaxValue;
+ const projectedNet=Math.max(0,projected-projectedTaxes);
+
+ const currentCredit=Math.max(0,num('currentBuyerCredit'));
+ const cbsCredit=cbsValue*clamp(num('cbsCreditPct'),0,100)/100;
+ const ibsCredit=ibsValue*clamp(num('ibsCreditPct'),0,100)/100;
+ const otherCredit=Math.max(0,num('otherProjectedCredit'));
+ const projectedCredit=cbsCredit+ibsCredit+otherCredit;
+ const currentCost=Math.max(0,price-currentCredit);
+ const projectedCost=Math.max(0,projected-projectedCredit);
+
+ const priceDelta=effectPct(price,projected);
+ const costDelta=effectPct(currentCost,projectedCost);
+ const netDelta=effectPct(currentNet,projectedNet);
+ const creditDelta=deltaMoney(currentCredit,projectedCredit);
+
+ let signal='EFEITO PRÓXIMO DO ATUAL';
+ let headline='Preço e custo caminham de forma próxima neste cenário.';
+ if(priceDelta>.05&&costDelta<-.05){
+  signal='PAGA MAIS · CUSTA MENOS';
+  headline='O crédito mais do que compensa o aumento do preço para o comprador.';
+ }else if(priceDelta>.05&&costDelta>.05){
+  signal='PAGA MAIS · CUSTA MAIS';
+  headline='Os créditos não compensam integralmente o aumento do preço.';
+ }else if(priceDelta<-.05&&costDelta<-.05){
+  signal='PAGA MENOS · CUSTA MENOS';
+  headline='Preço e custo efetivo caem neste cenário.';
+ }else if(priceDelta<-.05&&costDelta>.05){
+  signal='PAGA MENOS · CUSTA MAIS';
+  headline='O preço cai, mas a perda/redução de créditos aumenta o custo efetivo.';
+ }else if(Math.abs(priceDelta)<=.05&&costDelta<-.05){
+  signal='PREÇO ESTÁVEL · CUSTO MENOR';
+  headline='O preço fica praticamente igual, mas os créditos reduzem o custo.';
+ }else if(Math.abs(priceDelta)<=.05&&costDelta>.05){
+  signal='PREÇO ESTÁVEL · CUSTO MAIOR';
+  headline='O preço fica praticamente igual, mas o custo aumenta por efeito de créditos.';
+ }
+
+ const reductionNote=reduction>0
+   ? ` Foi aplicada redução de ${pct(reduction)}: CBS efetiva ${pct(cbsRate)} e IBS efetivo ${pct(ibsRate)}.`
+   : '';
+ const strategyLabel=strategy==='net'?'preservar a receita líquida atual':strategy==='gross'?'manter o preço bruto atual':'usar o preço projetado informado manualmente';
+ const creditProfile=$('buyerCreditProfile')?.value||'full';
+ const creditNote=creditProfile==='full'
+   ? ' O cenário usa 100% da CBS/IBS calculada como crédito apenas para demonstrar o efeito econômico; confirme o direito real ao crédito.'
+   : creditProfile==='none'
+     ? ' O cenário considera que o comprador não aproveita crédito de CBS/IBS.'
+     : ' O cenário usa os percentuais manuais de aproveitamento de crédito informados.';
+
+ $('resultSignal').textContent=signal;
+ $('integratedKpis').innerHTML=`
+  <div class="integrated-kpi dark"><small>Preço projetado</small><b>${money(projected)}</b><span>${effectText(priceDelta)} vs. hoje</span></div>
+  <div class="integrated-kpi"><small>CBS + IBS do cenário</small><b>${money(cbsValue+ibsValue)}</b><span>CBS ${money(cbsValue)} · IBS ${money(ibsValue)}</span></div>
+  <div class="integrated-kpi"><small>Crédito projetado</small><b>${money(projectedCredit)}</b><span>CBS ${money(cbsCredit)} · IBS ${money(ibsCredit)}</span></div>
+  <div class="integrated-kpi dark"><small>Custo efetivo do comprador</small><b>${money(projectedCost)}</b><span>${effectText(costDelta)} vs. hoje</span></div>
+ `;
+
+ const row=(label,before,after,effect,kind='pct')=>{
+  const effectValue=kind==='money'?money(effect):effectText(effect);
+  return `<tr><td><strong>${label}</strong></td><td>${money(before)}</td><td>${money(after)}</td><td class="${effect<0?'effect-down':'effect-up'}">${effectValue}</td></tr>`;
+ };
+ $('integratedTable').innerHTML=[
+  row('Preço / valor pago',price,projected,priceDelta),
+  row('Tributos considerados na venda',currentTaxes,projectedTaxes,projectedTaxes-currentTaxes,'money'),
+  row('Crédito do comprador',currentCredit,projectedCredit,creditDelta,'money'),
+  row('Custo efetivo do comprador',currentCost,projectedCost,costDelta),
+  row('Receita líquida da venda',currentNet,projectedNet,netDelta)
+ ].join('');
+
+ $('integratedExplanation').innerHTML=`
+   <b>${headline}</b>
+   <p>A estratégia selecionada é <strong>${strategyLabel}</strong>. O preço projetado gera ${money(cbsValue)} de CBS e ${money(ibsValue)} de IBS no modelo didático; após o aproveitamento informado, o comprador recebe ${money(projectedCredit)} em créditos considerados e seu custo efetivo fica em ${money(projectedCost)}.${reductionNote}${creditNote}</p>
+ `;
+}
+
+$('priceYear')?.addEventListener('change',applyYearPreset);
+$('rateMode')?.addEventListener('change',()=>{
  const manual=$('rateMode').value==='manual';
  $('cbsRate').readOnly=!manual;
  $('ibsRate').readOnly=!manual;
- if(!manual)applyYearPreset();
- else {$('rateNote').textContent='Modo manual: informe as alíquotas CBS e IBS aplicáveis à operação e ao período.';calcPrice();}
+ applyYearPreset();
 });
-['priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','cbsRate','ibsRate'].forEach(id=>$(id).addEventListener('input',calcPrice));
+$('priceStrategy')?.addEventListener('change',syncPriceStrategy);
+$('buyerCreditProfile')?.addEventListener('change',syncCreditProfile);
 
-function calcPrice(){
- const price=num('priceNow');
- const currentSum=num('pisRate')+num('cofinsRate')+num('icmsRate')+num('issRate')+num('ipiRate');
- const liquid=price*(1-currentSum/100);
- const cbs=num('cbsRate'),ibs=num('ibsRate');
- const cbsValue=liquid*cbs/100, ibsValue=liquid*ibs/100;
- const intermediate=liquid+cbsValue+ibsValue;
- const y=Number($('priceYear').value);
- const oldFactor=TRANSITION[y].old;
- const oldCurrent=(num('icmsRate')+num('issRate'))*oldFactor;
- const projected=oldCurrent<100?intermediate/(1-oldCurrent/100):0;
- const delta=price?((projected/price)-1)*100:0;
- $('priceResult').innerHTML=`
-  <div><small>Preço líquido-alvo</small><b>${money(liquid)}</b></div>
-  <div><small>CBS sobre base limpa</small><b>${money(cbsValue)}</b></div>
-  <div><small>IBS sobre base limpa</small><b>${money(ibsValue)}</b></div>
-  <div><small>ICMS/ISS remanescente no cenário</small><b>${pct(oldCurrent)}</b></div>
-  <div class="main-result"><small>Preço projetado</small><strong>${money(projected)}</strong><span>${delta>=0?'+':''}${pct(delta)} vs. preço atual</span></div>`;
-}
+[
+ 'priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','currentBuyerCredit',
+ 'rateReduction','cbsRate','ibsRate','manualProjectedPrice','cbsCreditPct','ibsCreditPct','otherProjectedCredit'
+].forEach(id=>$(id)?.addEventListener('input',calcIntegrated));
 
-['costNow','creditNow','costFuture','cbsCredit','ibsCredit'].forEach(id=>$(id).addEventListener('input',calcCost));
-function calcCost(){
- const now=num('costNow')-num('creditNow');
- const future=num('costFuture')-num('cbsCredit')-num('ibsCredit');
- const d=now?((future/now)-1)*100:0;
- $('costResult').innerHTML=`<div><small>Custo efetivo hoje</small><b>${money(now)}</b></div><div><small>Custo efetivo projetado</small><b>${money(future)}</b></div><div class="main-result"><small>Variação do custo</small><strong>${d>=0?'+':''}${pct(d)}</strong></div>`;
-}
-
-['rbt12','snNominal','snDeduction','snRevenue'].forEach(id=>$(id).addEventListener('input',calcSimples));
+['rbt12','snNominal','snDeduction','snRevenue'].forEach(id=>$(id)?.addEventListener('input',calcSimples));
 function calcSimples(){
+ if(!$('simplesResult')) return;
  const r=num('rbt12'),nom=num('snNominal')/100,pd=num('snDeduction'),rev=num('snRevenue');
  const eff=r?((r*nom-pd)/r):0;
- $('simplesResult').innerHTML=`<div><small>Alíquota efetiva</small><b>${pct(eff*100)}</b></div><div class="main-result"><small>DAS simulado</small><strong>${money(rev*eff)}</strong></div>`;
+ $('simplesResult').innerHTML=`<div><small>Alíquota efetiva</small><b>${pct(eff*100)}</b></div><div class="main-result"><small>DAS simulado</small><strong>${money(rev*eff)}</strong><span>Complemento do diagnóstico; não alimenta automaticamente a formação do preço.</span></div>`;
 }
 
-['lpRevenue','lpPresumption'].forEach(id=>$(id).addEventListener('input',calcLP));
+['lpRevenue','lpPresumption'].forEach(id=>$(id)?.addEventListener('input',calcLP));
 function calcLP(){
+ if(!$('lpResult')) return;
  const revenue=num('lpRevenue'),pres=num('lpPresumption')/100,limit=5000000;
  const before=revenue*pres;
  const normal=Math.min(revenue,limit);
  const excess=Math.max(0,revenue-limit);
  const newPres=pres*1.10;
  const after=normal*pres+excess*newPres;
- $('lpResult').innerHTML=`<div><small>Base sem acréscimo</small><b>${money(before)}</b></div><div><small>Presunção sobre excedente</small><b>${pct(newPres*100)}</b></div><div class="main-result"><small>Base com LC 224 (simulação)</small><strong>${money(after)}</strong><span>Diferença: ${money(after-before)}</span></div>`;
+ $('lpResult').innerHTML=`<div><small>Base sem acréscimo</small><b>${money(before)}</b></div><div><small>Presunção sobre excedente</small><b>${pct(newPres*100)}</b></div><div class="main-result"><small>Base com LC 224</small><strong>${money(after)}</strong><span>Diferença: ${money(after-before)} · análise simplificada da base.</span></div>`;
 }
 
 renderHome();
 searchModules('');
+syncCreditProfile();
+syncPriceStrategy();
 applyYearPreset();
-calcCost();
 calcSimples();
 calcLP();
