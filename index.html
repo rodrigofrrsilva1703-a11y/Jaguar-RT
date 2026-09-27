@@ -551,15 +551,15 @@
  </div>
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
-  <button id="priceToolTab" class="tool-switch active" type="button" onclick="showTaxTool('price')">
+  <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
    <span>01</span><div><b>Preço de venda</b><small>Produto ou serviço individual</small></div>
   </button>
-  <button id="revenueToolTab" class="tool-switch" type="button" onclick="showTaxTool('revenue')">
+  <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
   </button>
  </div>
 
- <div id="priceToolPanel" class="tax-tool-panel active">
+ <div id="priceToolPanel" class="tax-tool-panel active" role="tabpanel" aria-labelledby="priceToolTab">
   <article class="integrated-tool tax-calculator">
    <div class="integrated-head">
     <div>
@@ -714,14 +714,14 @@
        <tbody id="yearlyProjectionTable"></tbody>
       </table>
      </div>
-     <div id="yearDetailPanel" class="year-detail-panel"></div>
+     <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <div id="yearlyProjectionNote" class="rate-note yearly-note"></div>
     </section>
    </section>
   </article>
  </div>
 
- <div id="revenueToolPanel" class="tax-tool-panel">
+ <div id="revenueToolPanel" class="tax-tool-panel" role="tabpanel" aria-labelledby="revenueToolTab">
   <article class="integrated-tool tax-calculator revenue-calculator">
    <div class="integrated-head">
     <div>
@@ -874,7 +874,7 @@
        <tbody id="revYearlyTable"></tbody>
       </table>
      </div>
-     <div id="revYearDetailPanel" class="year-detail-panel"></div>
+     <div id="revYearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <div id="revYearlyNote" class="rate-note yearly-note"></div>
     </section>
 
