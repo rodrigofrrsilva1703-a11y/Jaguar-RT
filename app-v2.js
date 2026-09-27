@@ -938,70 +938,121 @@ function revRenderYearly(){
  $('revYearlyNote').textContent=note;
 }
 
-function xmlEsc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function xlsCell(value,type='String'){const val=type==='Number'?(Number(value)||0):xmlEsc(value);return `<Cell><Data ss:Type="${type}">${val}</Data></Cell>`;}
 
-function exportAnalysisExcel(){
- if(!yearlyRows.length) renderYearlyProjection();
- const r=regime();
- const rowsXml=yearlyRows.map(x=>`<Row>
-  ${xlsCell(x.year,'Number')}${xlsCell(REGIME_LABELS[x.regime])}${xlsCell(x.system)}
-  ${xlsCell(x.price,'Number')}${xlsCell(x.taxes,'Number')}${xlsCell(x.net,'Number')}
-  ${xlsCell(x.cbs??0,'Number')}${xlsCell(x.ibs??0,'Number')}${xlsCell(x.remnant,'Number')}
-  ${xlsCell(x.revenue,'Number')}${xlsCell(x.revenueTaxes,'Number')}${xlsCell(x.revenueNet,'Number')}
-  ${xlsCell(x.delta,'Number')}${xlsCell(x.annualDelta,'Number')}
- </Row>`).join('');
-
- const headers=['Ano','Regime','Sistema','Preço','Tributos por venda','Valor líquido','CBS','IBS','DAS / tributos remanescentes','Faturamento projetado','Tributos no faturamento','Faturamento líquido','Variação preço vs 2026 (%)','Variação anual (%)'].map(x=>xlsCell(x)).join('');
-
- const premises=[
-  ['Regime',REGIME_LABELS[r]],['Preço atual',num('priceNow')],['Faturamento atual',num('currentRevenue')],
-  ['Período',$('revenuePeriod')?.value||'mensal'],['Anexo Simples',SN_LABELS[snAnnex()]],['RBT12',num('snRbt12')],
-  ['PIS atual %',num('pisRate')],['Cofins atual %',num('cofinsRate')],['ICMS atual %',num('icmsRate')],
-  ['ISS atual %',num('issRate')],['IPI atual %',num('ipiRate')],['Modo de alíquota',$('rateMode')?.value||''],
-  ['Redução futura %',num('rateReduction')]
- ];
- const premXml=premises.map(([a,b])=>`<Row>${xlsCell(a)}${typeof b==='number'?xlsCell(b,'Number'):xlsCell(b)}</Row>`).join('');
-
- const xml=`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Analise 2026-2033"><Table><Row>${headers}</Row>${rowsXml}</Table></Worksheet><Worksheet ss:Name="Premissas"><Table><Row>${xlsCell('Premissa')}${xlsCell('Valor')}</Row>${premXml}</Table></Worksheet></Workbook>`;
- const blob=new Blob(['\ufeff',xml],{type:'application/vnd.ms-excel;charset=utf-8'});
- const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download=`analise-tributaria-${r}-2026-2033.xls`;
- document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+function xmlEsc(v){
+ return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function xlsCell(value,type='String'){
+ const val=type==='Number'?(Number(value)||0):xmlEsc(value);
+ return '<Cell><Data ss:Type="'+type+'">'+val+'</Data></Cell>';
 }
 
-$('taxRegime')?.addEventListener('change',()=>applyRegimeUI({preset:true}));
-$('snAnnex')?.addEventListener('change',()=>{updateSnSummary();calcIntegrated();});
-$('snRbt12')?.addEventListener('input',()=>{updateSnSummary();calcIntegrated();});
-$('priceYear')?.addEventListener('change',applyYearPreset);
-$('revenuePeriod')?.addEventListener('change',calcIntegrated);
-$('exportExcelBtn')?.addEventListener('click',exportAnalysisExcel);
+function downloadSpreadsheet(filename,headers,rows,premises){
+ const headersXml=headers.map(function(x){return xlsCell(x);}).join('');
+ const rowsXml=rows.map(function(row){
+  return '<Row>'+row.map(function(v){return typeof v==='number'?xlsCell(v,'Number'):xlsCell(v);}).join('')+'</Row>';
+ }).join('');
+ const premXml=premises.map(function(row){
+  return '<Row>'+xlsCell(row[0])+(typeof row[1]==='number'?xlsCell(row[1],'Number'):xlsCell(row[1]))+'</Row>';
+ }).join('');
 
-$('rateMode')?.addEventListener('change',()=>{
+ const xml='<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>'+
+  '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'+
+  '<Worksheet ss:Name="Analise 2026-2033"><Table><Row>'+headersXml+'</Row>'+rowsXml+'</Table></Worksheet>'+
+  '<Worksheet ss:Name="Premissas"><Table><Row>'+xlsCell('Premissa')+xlsCell('Valor')+'</Row>'+premXml+'</Table></Worksheet></Workbook>';
+
+ const blob=new Blob(['\ufeff',xml],{type:'application/vnd.ms-excel;charset=utf-8'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(function(){URL.revokeObjectURL(url);},1000);
+}
+
+function exportPriceExcel(){
+ if(!yearlyRows.length) renderYearlyProjection();
+ downloadSpreadsheet(
+  'analise-preco-'+regime()+'-2026-2033.xls',
+  ['Ano','Regime','Sistema','Preço','Tributos','Carga %','Valor líquido','CBS','IBS','DAS / tributos remanescentes'],
+  yearlyRows.map(function(x){
+   return [x.year,REGIME_LABELS[x.regime],x.system,x.price,x.taxes,x.price?x.taxes/x.price*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant];
+  }),
+  [
+   ['Regime',REGIME_LABELS[regime()]],['Preço 2026',num('priceNow')],
+   ['PIS %',num('pisRate')],['Cofins %',num('cofinsRate')],['ICMS %',num('icmsRate')],
+   ['ISS %',num('issRate')],['IPI %',num('ipiRate')]
+  ]
+ );
+}
+
+function exportRevenueExcel(){
+ if(!revenueYearlyRows.length) revRenderYearly();
+ downloadSpreadsheet(
+  'analise-faturamento-'+revRegime()+'-2026-2033.xls',
+  ['Ano','Regime','Sistema','Faturamento bruto','Tributos','Carga %','Faturamento líquido','CBS','IBS','DAS / tributos remanescentes'],
+  revenueYearlyRows.map(function(x){
+   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant];
+  }),
+  [
+   ['Regime',REGIME_LABELS[revRegime()]],['Faturamento 2026',num('revCurrentRevenue')],
+   ['Período',$('revRevenuePeriod')?.value||'mensal'],
+   ['PIS %',num('revPisRate')],['Cofins %',num('revCofinsRate')],['ICMS %',num('revIcmsRate')],
+   ['ISS %',num('revIssRate')],['IPI %',num('revIpiRate')]
+  ]
+ );
+}
+
+$('taxRegime')?.addEventListener('change',function(){applyRegimeUI({preset:true});});
+$('snAnnex')?.addEventListener('change',function(){updateSnSummary();calcIntegrated();});
+$('snRbt12')?.addEventListener('input',function(){updateSnSummary();calcIntegrated();});
+$('priceYear')?.addEventListener('change',applyYearPreset);
+$('exportPriceExcelBtn')?.addEventListener('click',exportPriceExcel);
+
+$('rateMode')?.addEventListener('change',function(){
  const manual=$('rateMode').value==='manual';
  $('cbsRate').readOnly=!manual;$('ibsRate').readOnly=!manual;applyYearPreset();
 });
-$('hybridRateMode')?.addEventListener('change',()=>{
+$('hybridRateMode')?.addEventListener('change',function(){
  const manual=$('hybridRateMode').value==='manual';
  $('hybridCbsRate').readOnly=!manual;$('hybridIbsRate').readOnly=!manual;applyYearPreset();
 });
+['priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate','hybridReduction','hybridCbsRate','hybridIbsRate'].forEach(function(id){
+ $(id)?.addEventListener('input',calcIntegrated);
+});
 
-['priceNow','currentRevenue','pisRate','cofinsRate','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate','hybridReduction','hybridCbsRate','hybridIbsRate'].forEach(id=>$(id)?.addEventListener('input',calcIntegrated));
+$('revTaxRegime')?.addEventListener('change',function(){revApplyUI({preset:true});});
+$('revSnAnnex')?.addEventListener('change',function(){revUpdateSnSummary();revCalcIntegrated();});
+$('revSnRbt12')?.addEventListener('input',function(){revUpdateSnSummary();revCalcIntegrated();});
+$('revYear')?.addEventListener('change',revApplyYearPreset);
+$('revRevenuePeriod')?.addEventListener('change',revCalcIntegrated);
+$('exportRevenueExcelBtn')?.addEventListener('click',exportRevenueExcel);
 
-['lpRevenue','lpPresumption'].forEach(id=>$(id)?.addEventListener('input',calcLP));
+$('revRateMode')?.addEventListener('change',function(){
+ const manual=$('revRateMode').value==='manual';
+ $('revCbsRate').readOnly=!manual;$('revIbsRate').readOnly=!manual;revApplyYearPreset();
+});
+$('revHybridRateMode')?.addEventListener('change',function(){
+ const manual=$('revHybridRateMode').value==='manual';
+ $('revHybridCbsRate').readOnly=!manual;$('revHybridIbsRate').readOnly=!manual;revApplyYearPreset();
+});
+['revCurrentRevenue','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate','revRateReduction','revCbsRate','revIbsRate','revHybridReduction','revHybridCbsRate','revHybridIbsRate'].forEach(function(id){
+ $(id)?.addEventListener('input',revCalcIntegrated);
+});
+
+['lpRevenue','lpPresumption'].forEach(function(id){$(id)?.addEventListener('input',calcLP);});
 function calcLP(){
  if(!$('lpResult')) return;
  const revenue=num('lpRevenue'),pres=num('lpPresumption')/100,limit=5000000;
- const before=revenue*pres;
- const normal=Math.min(revenue,limit);
- const excess=Math.max(0,revenue-limit);
- const newPres=pres*1.10;
- const after=normal*pres+excess*newPres;
- $('lpResult').innerHTML=`<div><small>Base sem acréscimo</small><b>${money(before)}</b></div><div><small>Presunção sobre excedente</small><b>${pct(newPres*100)}</b></div><div class="main-result"><small>Base com LC 224</small><strong>${money(after)}</strong><span>Diferença: ${money(after-before)} · análise simplificada da base.</span></div>`;
+ const before=revenue*pres,normal=Math.min(revenue,limit),excess=Math.max(0,revenue-limit),newPres=pres*1.10,after=normal*pres+excess*newPres;
+ $('lpResult').innerHTML=
+  '<div><small>Base sem acréscimo</small><b>'+money(before)+'</b></div>'+
+  '<div><small>Presunção sobre excedente</small><b>'+pct(newPres*100)+'</b></div>'+
+  '<div class="main-result"><small>Base com LC 224</small><strong>'+money(after)+'</strong><span>Diferença: '+money(after-before)+' · análise simplificada da base.</span></div>';
 }
 
 renderHome();
 searchModules('');
 updateSnSummary();
 applyRegimeUI({preset:true});
+revUpdateSnSummary();
+revApplyUI({preset:true});
+showTaxTool('price');
 calcLP();
