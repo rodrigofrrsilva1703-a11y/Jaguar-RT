@@ -22,14 +22,50 @@ function renderHome(){
  $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
  $('moduleGrid').innerHTML=STUDY_MODULES.map(moduleCard).join('');
  $('practiceGrid').innerHTML=PRACTICES.map((p,i)=>`<article class="practice-card">
-   <span class="tag">${p.tag}</span><h3>${p.title}</h3><p>${p.question}</p>
-   <details><summary>Ver resolução</summary><div class="answer">${p.answer}</div></details>
+   <div><span class="tag">${p.tag}</span><span class="practice-code">${p.id}</span></div>
+   <h3>${p.title}</h3>
+   <p>${p.subtitle}</p>
+   <div class="practice-meta"><span>${p.steps.length} etapas</span><span>resolução completa</span></div>
+   <button class="practice-open" onclick="openPractice(${i})">Abrir caso completo →</button>
  </article>`).join('');
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
  $('timeline').innerHTML=Object.entries(TIMELINE).map(([y,o])=>`<button class="year" onclick="pickYear('${y}')" data-year="${y}"><b>${y}</b><small>${o.label}</small></button>`).join('');
  pickYear('2027');
+}
+
+function openPractice(i){
+ const p=PRACTICES[i];
+ if(!p)return;
+ const premises=p.premises.map(x=>`<li>${x}</li>`).join('');
+ const steps=p.steps.map((s,j)=>`<article class="case-step">
+   <div class="case-step-top"><span>ETAPA ${String(j+1).padStart(2,'0')}</span></div>
+   <h3>${s.t}</h3>
+   <div class="case-calc">${s.calc}</div>
+   <p>${s.x}</p>
+ </article>`).join('');
+ $('practicePage').innerHTML=`
+   <button class="back" onclick="go('practice')">← Voltar para práticas</button>
+   <div class="case-hero">
+     <div><span class="tag">${p.tag}</span><span class="practice-code">${p.id}</span>
+     <h1 class="page-title">${p.title}</h1><p class="page-lead">${p.subtitle}</p></div>
+   </div>
+   <section class="case-context">
+     <div><span class="eyebrow">CENÁRIO</span><h2>O que está acontecendo?</h2><p>${p.scenario}</p></div>
+     <div><span class="eyebrow">OBJETIVO</span><h2>O que você precisa aprender?</h2><p>${p.objective}</p></div>
+   </section>
+   <section class="case-premises"><span class="eyebrow">ANTES DE CALCULAR</span><h2>Premissas do caso</h2><ul>${premises}</ul></section>
+   <section class="case-resolution"><span class="eyebrow">RESOLUÇÃO GUIADA</span><h2>Passo a passo</h2>${steps}</section>
+   <section class="case-result"><span class="eyebrow">RESULTADO</span><h2>${p.result}</h2><p>${p.interpretation}</p></section>
+   <section class="case-two">
+     <div class="case-note warning"><span class="eyebrow">ERRO COMUM</span><h3>O que evitar</h3><p>${p.error}</p></div>
+     <div class="case-note client"><span class="eyebrow">COMO EXPLICAR AO CLIENTE</span><h3>Tradução consultiva</h3><p>${p.client}</p></div>
+   </section>
+   <details class="case-challenge"><summary>Teste de compreensão</summary><div><b>${p.challenge}</b><p>${p.challengeAnswer}</p></div></details>
+   <div class="legal-box"><b>Base deste caso</b><p>${p.source}</p></div>
+ `;
+ go('practicePage');
 }
 
 function openModule(id){
