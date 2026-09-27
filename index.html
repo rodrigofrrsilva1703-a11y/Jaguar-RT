@@ -413,6 +413,41 @@
 .preset-row select{border:1px solid #d7d6d0;background:#fff;border-radius:8px;padding:7px;font-size:9px}
 .preset-row small{font-size:7.5px;color:#888}
 @media(max-width:650px){.preset-row{grid-template-columns:1fr}.preset-row select{width:100%}}
+
+/* ===== VALIDAÇÃO, MEMÓRIA E CENÁRIOS ===== */
+.validation-panel{display:grid;gap:6px;margin:10px 0 0}
+.validation-panel:empty{display:none}
+.validation-message{border-radius:10px;padding:9px 11px;font-size:8.5px;line-height:1.5;border:1px solid #deddd7;background:#fff}
+.validation-message.warning{background:#fff9e9;border-color:#ead8a8;color:#6f5517}
+.validation-message.error{background:#fff0f0;border-color:#e5bcbc;color:#7b2727}
+.validation-message.info{background:#f3f3ef;color:#666}
+.scenario-manager,.calc-memory{margin:10px 0;border:1px solid #deddd7;background:#fff;border-radius:14px;overflow:hidden}
+.scenario-manager>summary,.calc-memory>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;font-size:9px;font-weight:900}
+.scenario-manager>summary small,.calc-memory>summary small{font-size:7.5px;color:#888;font-weight:600}
+.scenario-manager[open]>summary,.calc-memory[open]>summary{border-bottom:1px solid #ecebe6}
+.scenario-manager-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;padding:12px}
+.scenario-select{grid-column:1/3}
+.scenario-action{height:37px;border:1px solid #d2d1cb;background:#fff;border-radius:9px;padding:0 11px;font-size:8px;font-weight:850}
+.scenario-action.primary{background:#111;color:#fff;border-color:#111}
+.scenario-compare{padding:0 12px 12px}
+.scenario-compare:empty{display:none}
+.scenario-compare-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:4px}
+.scenario-compare-item{background:#f7f7f4;border-radius:10px;padding:9px}
+.scenario-compare-item small,.scenario-compare-item b,.scenario-compare-item span{display:block}
+.scenario-compare-item small{font-size:7px;color:#888;text-transform:uppercase;letter-spacing:.06em}
+.scenario-compare-item b{font-size:12px;margin-top:3px}
+.scenario-compare-item span{font-size:7.5px;color:#777;margin-top:2px}
+.memory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;padding:5px 13px 12px}
+.memory-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #efeee9;font-size:8.5px}
+.memory-row:nth-child(odd){margin-right:12px}
+.memory-row span{color:#777}.memory-row b{text-align:right}
+@media(max-width:760px){
+ .scenario-manager-grid{grid-template-columns:1fr}
+ .scenario-select{grid-column:auto}
+ .scenario-compare-grid{grid-template-columns:1fr 1fr}
+ .memory-grid{grid-template-columns:1fr}
+ .memory-row:nth-child(odd){margin-right:0}
+}
 </style>
 <script>
 (async()=>{
@@ -684,7 +719,21 @@
     <div class="rate-note">O crédito do comprador é uma análise econômica adicional. O direito efetivo depende do regime, documento fiscal, extinção do débito e demais requisitos legais.</div>
    </details>
 
+   <div id="priceValidation" class="validation-panel" aria-live="polite"></div>
    <div class="autosave-row"><span id="priceSaveStatus">Simulação salva neste navegador</span><button id="resetPriceSimulation" type="button">Restaurar padrão</button></div>
+
+   <details class="scenario-manager">
+    <summary><span>Cenários salvos</span><small>Salve e compare simulações deste navegador</small></summary>
+    <div class="scenario-manager-grid">
+     <div class="field"><label for="priceClientName">Cliente / empresa</label><input id="priceClientName" type="text" placeholder="Ex.: Cliente A"></div>
+     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Venda B2B 2027"></div>
+     <button id="savePriceScenario" class="scenario-action primary" type="button">Salvar cenário atual</button>
+     <div class="field scenario-select"><label for="priceScenarioSelect">Cenário salvo</label><select id="priceScenarioSelect"><option value="">Nenhum cenário salvo</option></select></div>
+     <button id="loadPriceScenario" class="scenario-action" type="button">Carregar</button>
+     <button id="comparePriceScenario" class="scenario-action" type="button">Comparar com atual</button>
+    </div>
+    <div id="priceScenarioCompare" class="scenario-compare" aria-live="polite"></div>
+   </details>
 
    <section class="integrated-results tax-results">
     <div class="result-head"><div><span class="eyebrow">RESULTADO DO PREÇO</span><h3>2026 × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal"></div></div>
@@ -697,6 +746,10 @@
     </div>
 
     <div id="integratedExplanation" class="integrated-explanation" aria-live="polite"></div>
+    <details class="calc-memory">
+     <summary><span>Memória de cálculo</span><small>Veja como o resultado selecionado foi formado</small></summary>
+     <div id="priceMemory" class="memory-grid"></div>
+    </details>
 
     <section class="yearly-analysis">
      <div class="yearly-head">
@@ -844,7 +897,21 @@
     <div class="rate-note">No regime regular, a estimativa reduz a carga líquida com base nas aquisições informadas. No Simples padrão, a empresa não apropria esses créditos de IBS/CBS dentro do regime.</div>
    </details>
 
+   <div id="revenueValidation" class="validation-panel" aria-live="polite"></div>
    <div class="autosave-row"><span id="revenueSaveStatus">Simulação salva neste navegador</span><button id="resetRevenueSimulation" type="button">Restaurar padrão</button></div>
+
+   <details class="scenario-manager">
+    <summary><span>Cenários salvos</span><small>Salve e compare simulações deste navegador</small></summary>
+    <div class="scenario-manager-grid">
+     <div class="field"><label for="revenueClientName">Cliente / empresa</label><input id="revenueClientName" type="text" placeholder="Ex.: Cliente A"></div>
+     <div class="field"><label for="revenueScenarioName">Nome do cenário</label><input id="revenueScenarioName" type="text" placeholder="Ex.: Receita 2027 com créditos"></div>
+     <button id="saveRevenueScenario" class="scenario-action primary" type="button">Salvar cenário atual</button>
+     <div class="field scenario-select"><label for="revenueScenarioSelect">Cenário salvo</label><select id="revenueScenarioSelect"><option value="">Nenhum cenário salvo</option></select></div>
+     <button id="loadRevenueScenario" class="scenario-action" type="button">Carregar</button>
+     <button id="compareRevenueScenario" class="scenario-action" type="button">Comparar com atual</button>
+    </div>
+    <div id="revenueScenarioCompare" class="scenario-compare" aria-live="polite"></div>
+   </details>
 
    <section class="integrated-results tax-results">
     <div class="result-head"><div><span class="eyebrow">RESULTADO DO FATURAMENTO</span><h3>2026 × <span id="revResultYearLabel">2027</span></h3></div><div id="revResultSignal" class="result-signal"></div></div>
@@ -857,6 +924,10 @@
     </div>
 
     <div id="revExplanation" class="integrated-explanation" aria-live="polite"></div>
+    <details class="calc-memory">
+     <summary><span>Memória de cálculo</span><small>Veja como o resultado selecionado foi formado</small></summary>
+     <div id="revenueMemory" class="memory-grid"></div>
+    </details>
 
     <section class="yearly-analysis">
      <div class="yearly-head">
