@@ -1,0 +1,17 @@
+{
+  "name": "Jaguar × RTAV — Reforma Tributária",
+  "short_name": "RTAV",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f4f1",
+  "theme_color": "#090909",
+  "description": "Guia interativo da Reforma Tributária — Jaguar Assessoria Contábil × RTAV",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
