@@ -629,6 +629,315 @@ function renderYearlyProjection(){
  $('yearlyProjectionNote').textContent=note;
 }
 
+
+function showTaxTool(which){
+ const price=which!=='revenue';
+ $('priceToolPanel')?.classList.toggle('active',price);
+ $('revenueToolPanel')?.classList.toggle('active',!price);
+ $('priceToolTab')?.classList.toggle('active',price);
+ $('revenueToolTab')?.classList.toggle('active',!price);
+ if(price) calcIntegrated(); else revCalcIntegrated();
+}
+
+function revRegime(){return $('revTaxRegime')?.value||'presumido';}
+function revIsSimple(r=revRegime()){return r==='simples'||r==='simples_hybrid';}
+function revAnnex(){return $('revSnAnnex')?.value||'III';}
+function revRbt12(){return Math.max(0,num('revSnRbt12'));}
+function revSnEffective(year){return snEffective(year,revAnnex(),revRbt12());}
+function revSnShares(year){return snShares(year,revAnnex(),revRbt12());}
+
+function revUpdateSnSummary(){
+ const now=revSnEffective(2026);
+ if($('revSnBandLabel')) $('revSnBandLabel').value=(now.band+1)+'ª faixa';
+ if($('revSnCurrentEffective')) $('revSnCurrentEffective').value=pct(now.eff*100);
+
+ if($('revSnAutoSummary')){
+  $('revSnAutoSummary').innerHTML=[2027,2029,2033].map(function(year){
+   const sh=revSnShares(year);
+   return '<div class="sn-auto-card"><small>'+year+'</small><b>DAS '+pct(sh.eff*100)+'</b><span>CBS efetiva '+pct(sh.cbsEff*100)+' · IBS efetivo '+pct(sh.ibsEff*100)+'</span></div>';
+  }).join('');
+ }
+
+ if($('revHybridAutoSummary')){
+  $('revHybridAutoSummary').innerHTML=[2027,2029,2033].map(function(year){
+   const sh=revSnShares(year),rem=Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff);
+   return '<div class="sn-auto-card"><small>'+year+'</small><b>DAS rem. '+pct(rem*100)+'</b><span>CBS/IBS fora do DAS</span></div>';
+  }).join('');
+ }
+}
+
+function revGetRates(year,hybrid=false){
+ const p=TRANSITION[year]||TRANSITION[2027];
+ const mode=hybrid?($('revHybridRateMode')?.value||'rtav'):($('revRateMode')?.value||'rtav');
+ const reduction=clamp(hybrid?num('revHybridReduction'):num('revRateReduction'),0,100);
+ const factor=1-reduction/100;
+ let cbs=0,ibs=0;
+
+ if(mode==='rtav'){cbs=p.cbs;ibs=p.ibs;}
+ else{
+  cbs=clamp(hybrid?num('revHybridCbsRate'):num('revCbsRate'),0,100);
+  ibs=clamp(hybrid?num('revHybridIbsRate'):num('revIbsRate'),0,100);
+ }
+ return {cbs:cbs*factor,ibs:ibs*factor};
+}
+
+function revApplyUI(opts={}){
+ const preset=opts.preset!==false;
+ const r=revRegime(),simple=revIsSimple(r);
+
+ if($('revRegularCurrentFields')) $('revRegularCurrentFields').style.display=simple?'none':'block';
+ if($('revSimplesCurrentFields')) $('revSimplesCurrentFields').style.display=simple?'block':'none';
+ if($('revRegularFutureFields')) $('revRegularFutureFields').style.display=simple?'none':'block';
+ if($('revSimplesFutureFields')) $('revSimplesFutureFields').style.display=simple?'block':'none';
+ if($('revSimpleStandardRates')) $('revSimpleStandardRates').style.display=r==='simples'?'block':'none';
+ if($('revHybridRegularRates')) $('revHybridRegularRates').style.display=r==='simples_hybrid'?'block':'none';
+
+ if(preset){
+  if(r==='presumido'){$('revPisRate').value=.65;$('revCofinsRate').value=3;}
+  else if(r==='real'){$('revPisRate').value=1.65;$('revCofinsRate').value=7.6;}
+ }
+ revUpdateSnSummary();
+ revApplyYearPreset();
+}
+
+function revApplyYearPreset(){
+ const y=Number($('revYear')?.value||2027);
+ const p=TRANSITION[y]||TRANSITION[2027];
+ const r=revRegime();
+
+ if(!revIsSimple(r)&&$('revRateMode')?.value==='rtav'){
+  $('revCbsRate').value=p.cbs;$('revIbsRate').value=p.ibs;
+ }
+ if(r==='simples_hybrid'&&$('revHybridRateMode')?.value==='rtav'){
+  $('revHybridCbsRate').value=p.cbs;$('revHybridIbsRate').value=p.ibs;
+ }
+
+ revUpdateSnSummary();
+
+ if($('revRateNote')){
+  if(r==='simples'){
+   const sh=revSnShares(y);
+   $('revRateNote').textContent='Simples padrão · '+SN_LABELS[revAnnex()]+' · '+(sh.band+1)+'ª faixa · DAS efetivo '+pct(sh.eff*100)+'.';
+  }else if(r==='simples_hybrid'){
+   $('revRateNote').textContent='Simples híbrido: CBS/IBS ficam fora do DAS; o restante permanece como DAS remanescente.';
+  }else{
+   $('revRateNote').textContent=p.note;
+  }
+ }
+ revCalcIntegrated();
+}
+
+function revCurrentScenario(){
+ const r=revRegime();
+ const revenue=Math.max(0,num('revCurrentRevenue'));
+ let taxes=0,components={};
+
+ if(revIsSimple(r)){
+  const eff=revSnEffective(2026).eff;
+  taxes=revenue*eff;
+  components={das:taxes};
+ }else{
+  const pis=clamp(num('revPisRate'),0,100)/100;
+  const cofins=clamp(num('revCofinsRate'),0,100)/100;
+  const icms=clamp(num('revIcmsRate'),0,100)/100;
+  const iss=clamp(num('revIssRate'),0,100)/100;
+  const ipi=clamp(num('revIpiRate'),0,100)/100;
+  components={pis:revenue*pis,cofins:revenue*cofins,icms:revenue*icms,iss:revenue*iss,ipi:revenue*ipi};
+  taxes=Object.values(components).reduce(function(a,b){return a+b;},0);
+ }
+
+ return {year:2026,regime:r,revenue:revenue,taxes:taxes,net:Math.max(0,revenue-taxes),components:components,cbs:null,ibs:null,remnant:taxes};
+}
+
+function revParamsForYear(year){
+ const r=revRegime();
+
+ if(r==='simples'){
+  const sh=revSnShares(year);
+  return {type:'simple',dasRate:sh.eff,cbsInside:sh.cbsEff,ibsInside:sh.ibsEff};
+ }
+
+ if(r==='simples_hybrid'){
+  const sh=revSnShares(year);
+  const rates=revGetRates(year,true);
+  return {type:'hybrid',remRate:Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff),cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
+ }
+
+ const p=TRANSITION[year]||TRANSITION[2027];
+ const oldRate=((clamp(num('revIcmsRate'),0,100)+clamp(num('revIssRate'),0,100))*p.old)/100;
+ const rates=revGetRates(year,false);
+ return {type:'regular',remRate:oldRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
+}
+
+function revScenarioAtRevenue(year,gross){
+ const p=revParamsForYear(year);
+ let cbs=0,ibs=0,remnant=0,taxes=0,net=0;
+
+ if(p.type==='simple'){
+  taxes=gross*p.dasRate;
+  cbs=gross*p.cbsInside;
+  ibs=gross*p.ibsInside;
+  remnant=Math.max(0,taxes-cbs-ibs);
+  net=Math.max(0,gross-taxes);
+ }else{
+  const newRate=p.cbsRate+p.ibsRate;
+  const cleanBase=(1+newRate)>0?gross*(1-p.remRate)/(1+newRate):0;
+  cbs=cleanBase*p.cbsRate;
+  ibs=cleanBase*p.ibsRate;
+  remnant=gross*p.remRate;
+  taxes=cbs+ibs+remnant;
+  net=Math.max(0,gross-taxes);
+ }
+
+ return {year:year,regime:revRegime(),revenue:gross,cbs:cbs,ibs:ibs,remnant:remnant,taxes:taxes,net:net};
+}
+
+function revFutureScenario(year,keepGross=false){
+ const base=revCurrentScenario();
+ const p=revParamsForYear(year);
+ let gross=base.revenue;
+
+ if(!keepGross){
+  if(p.type==='simple') gross=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
+  else{
+   const newRate=p.cbsRate+p.ibsRate;
+   gross=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
+  }
+ }
+
+ gross=Math.max(0,gross);
+ const out=revScenarioAtRevenue(year,gross);
+ out.delta=effectPct(base.revenue,out.revenue);
+ return out;
+}
+
+function revCurrentRows(base){
+ const rows=[['Faturamento bruto',money(base.revenue)]];
+ if(!revIsSimple(base.regime)){
+  const c=base.components;
+  if(c.pis>0) rows.push(['PIS',money(c.pis)]);
+  if(c.cofins>0) rows.push(['Cofins',money(c.cofins)]);
+  if(c.icms>0) rows.push(['ICMS',money(c.icms)]);
+  if(c.iss>0) rows.push(['ISS',money(c.iss)]);
+  if(c.ipi>0) rows.push(['IPI',money(c.ipi)]);
+ }else rows.push(['DAS / tributos',money(base.taxes)]);
+ rows.push(['Total de tributos',money(base.taxes)]);
+ rows.push(['Faturamento líquido',money(base.net)]);
+ return rows;
+}
+
+function revFutureRows(x){
+ const rows=[['Faturamento bruto projetado',money(x.revenue)]];
+ if(x.cbs>0) rows.push(['CBS',money(x.cbs)]);
+ if(x.ibs>0) rows.push(['IBS',money(x.ibs)]);
+ if(x.remnant>0) rows.push(['DAS / tributos remanescentes',money(x.remnant)]);
+ rows.push(['Total de tributos',money(x.taxes)]);
+ rows.push(['Faturamento líquido',money(x.net)]);
+ return rows;
+}
+
+let revenueYearlyRows=[],revYearDetailSelected=null;
+
+function revCalcIntegrated(){
+ if(!$('revKpis')) return;
+ const base=revCurrentScenario();
+ const y=Number($('revYear')?.value||2027);
+ const future=revFutureScenario(y);
+ const unchanged=revFutureScenario(y,true);
+ const delta=effectPct(base.revenue,future.revenue);
+ const period=$('revRevenuePeriod')?.value||'mensal';
+
+ if($('revActiveRegimeBadge')) $('revActiveRegimeBadge').textContent=REGIME_LABELS[revRegime()]||revRegime();
+ if($('revActiveYearBadge')) $('revActiveYearBadge').textContent=y;
+ if($('revPeriodBadge')) $('revPeriodBadge').textContent=period.charAt(0).toUpperCase()+period.slice(1);
+ if($('revResultYearLabel')) $('revResultYearLabel').textContent=y;
+ if($('revFutureEyebrow')) $('revFutureEyebrow').textContent=y+' · REFORMA';
+
+ $('revResultSignal').textContent=delta>.05?'AUMENTO DE FATURAMENTO':delta<-.05?'REDUÇÃO DE FATURAMENTO':'FATURAMENTO ESTÁVEL';
+ $('revRegimeResultNote').textContent=REGIME_LABELS[revRegime()]+' · projeção do faturamento bruto necessário para preservar o mesmo faturamento líquido de 2026.';
+
+ $('revKpis').innerHTML=
+  '<div class="integrated-kpi dark"><small>Faturamento atual</small><b>'+money(base.revenue)+'</b><span>'+period+'</span></div>'+
+  '<div class="integrated-kpi"><small>Tributos atuais</small><b>'+money(base.taxes)+'</b><span>Carga '+pct(base.revenue?base.taxes/base.revenue*100:0)+'</span></div>'+
+  '<div class="integrated-kpi dark"><small>Faturamento em '+y+'</small><b>'+money(future.revenue)+'</b><span>'+effectText(delta)+' vs. 2026</span></div>'+
+  '<div class="integrated-kpi"><small>Se não reajustar</small><b>'+money(unchanged.net)+'</b><span>Líquido com bruto de '+money(base.revenue)+'</span></div>';
+
+ $('revCurrentSummary').innerHTML=summaryRows(revCurrentRows(base));
+ $('revFutureSummary').innerHTML=summaryRows(revFutureRows(future));
+ $('revExplanation').innerHTML='<b>Comparação do faturamento.</b><p>Em 2026, o faturamento líquido é '+money(base.net)+'. Para preservar esse mesmo líquido em '+y+', o faturamento bruto projetado é <strong>'+money(future.revenue)+'</strong> ('+effectText(delta)+'). Se o faturamento bruto permanecesse em '+money(base.revenue)+', o líquido seria '+money(unchanged.net)+'.</p>';
+
+ revRenderYearly();
+}
+
+function revSelectYear(year){
+ revYearDetailSelected=Number(year);
+ if(year>=2027&&$('revYear')){
+  $('revYear').value=String(year);
+  revApplyYearPreset();
+ }else revRenderYearly();
+}
+
+function revRenderDetail(year){
+ const x=revenueYearlyRows.find(function(r){return r.year===Number(year);})||revenueYearlyRows[0];
+ if(!x) return;
+ const base=revenueYearlyRows[0];
+ const change=x.year===2026?0:effectPct(base.revenue,x.revenue);
+ const analysis=x.year===2026
+  ? 'Em 2026, o faturamento bruto é '+money(x.revenue)+', os tributos considerados somam '+money(x.taxes)+' e o faturamento líquido é '+money(x.net)+'.'
+  : 'Em '+x.year+', para preservar o mesmo faturamento líquido de 2026, a receita bruta projetada é '+money(x.revenue)+' ('+effectText(change)+'). Os tributos somam '+money(x.taxes)+' e o líquido permanece em '+money(x.net)+'.';
+
+ $('revYearDetailPanel').classList.add('visible');
+ $('revYearDetailPanel').innerHTML=
+  '<div class="year-detail-top">'+
+   '<div><span>ANÁLISE DO FATURAMENTO · '+REGIME_LABELS[x.regime]+'</span><h4>'+x.year+' · '+x.system+'</h4></div>'+
+   '<div class="year-detail-price"><small>FATURAMENTO BRUTO</small><b>'+money(x.revenue)+'</b></div>'+
+  '</div>'+
+  '<div class="year-detail-grid tax-detail">'+
+   '<div class="year-detail-item"><small>Total de tributos</small><b>'+money(x.taxes)+'</b></div>'+
+   '<div class="year-detail-item"><small>Carga</small><b>'+pct(x.revenue?x.taxes/x.revenue*100:0)+'</b></div>'+
+   '<div class="year-detail-item"><small>Faturamento líquido</small><b>'+money(x.net)+'</b></div>'+
+   '<div class="year-detail-item"><small>CBS</small><b>'+(x.cbs===null?'—':money(x.cbs))+'</b></div>'+
+   '<div class="year-detail-item"><small>IBS</small><b>'+(x.ibs===null?'—':money(x.ibs))+'</b></div>'+
+   '<div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>'+money(x.remnant)+'</b></div>'+
+  '</div>'+
+  '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+analysis+'</p></div>';
+}
+
+function revRenderYearly(){
+ const base=revCurrentScenario(),r=revRegime(),selected=Number($('revYear')?.value||2027);
+ const rows=[Object.assign({},base,{system:'Atual',delta:0})];
+
+ for(let year=2027;year<=2033;year++){
+  const x=revFutureScenario(year);
+  rows.push(Object.assign({},x,{
+   system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma',
+   delta:effectPct(base.revenue,x.revenue)
+  }));
+ }
+ revenueYearlyRows=rows;
+
+ if(revYearDetailSelected===null||!rows.some(function(x){return x.year===revYearDetailSelected;})) revYearDetailSelected=selected;
+
+ $('revYearStrip').innerHTML=rows.map(function(x){
+  return '<button type="button" class="year-price-card '+(x.year===revYearDetailSelected?'active':'')+'" onclick="revSelectYear('+x.year+')">'+
+   '<small>'+x.year+'</small><b>'+money(x.revenue)+'</b><span>'+(x.year===2026?'Base':effectText(x.delta)+' vs. 2026')+'</span></button>';
+ }).join('');
+
+ $('revYearlyTable').innerHTML=rows.map(function(x){
+  const cls=x.year===2026?'current-year':(x.year===revYearDetailSelected?'selected-year':'');
+  return '<tr class="'+cls+'" onclick="revSelectYear('+x.year+')">'+
+   '<td>'+x.year+'</td><td><strong>'+money(x.revenue)+'</strong></td><td>'+money(x.taxes)+'</td>'+
+   '<td>'+pct(x.revenue?x.taxes/x.revenue*100:0)+'</td><td><strong>'+money(x.net)+'</strong></td></tr>';
+ }).join('');
+
+ revRenderDetail(revYearDetailSelected);
+
+ let note='O faturamento bruto de cada ano é calculado para preservar o mesmo faturamento líquido de 2026.';
+ if(r==='simples') note+=' No Simples padrão, ele pode permanecer igual quando a alíquota efetiva total do DAS não muda.';
+ if(r==='simples_hybrid') note+=' No híbrido, CBS/IBS ficam fora do DAS.';
+ $('revYearlyNote').textContent=note;
+}
+
 function xmlEsc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function xlsCell(value,type='String'){const val=type==='Number'?(Number(value)||0):xmlEsc(value);return `<Cell><Data ss:Type="${type}">${val}</Data></Cell>`;}
 
