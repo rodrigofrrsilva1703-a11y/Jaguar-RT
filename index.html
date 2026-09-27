@@ -448,6 +448,18 @@
  .memory-grid{grid-template-columns:1fr}
  .memory-row:nth-child(odd){margin-right:0}
 }
+
+.print-report-header{display:none}
+@media print{
+ .print-report-header{display:block!important;visibility:visible!important;border-bottom:2px solid #111;padding:0 0 14px;margin:0 0 14px}
+ .print-report-header *{visibility:visible!important}
+ .print-report-header .print-brand{font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+ .print-report-header h1{font-size:24px;margin:5px 0 6px}
+ .print-report-header p{font-size:9px;color:#555;margin:2px 0}
+ .calc-memory{display:block!important;visibility:visible!important}
+ .calc-memory>summary{display:none!important}
+ .calc-memory .memory-grid{display:grid!important}
+}
 </style>
 <script>
 (async()=>{
@@ -735,6 +747,7 @@
     <div id="priceScenarioCompare" class="scenario-compare" aria-live="polite"></div>
    </details>
 
+   <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
     <div class="result-head"><div><span class="eyebrow">RESULTADO DO PREÇO</span><h3>2026 × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal"></div></div>
     <div id="regimeResultNote" class="regime-result-note"></div>
@@ -913,6 +926,7 @@
     <div id="revenueScenarioCompare" class="scenario-compare" aria-live="polite"></div>
    </details>
 
+   <div id="revenuePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
     <div class="result-head"><div><span class="eyebrow">RESULTADO DO FATURAMENTO</span><h3>2026 × <span id="revResultYearLabel">2027</span></h3></div><div id="revResultSignal" class="result-signal"></div></div>
     <div id="revRegimeResultNote" class="regime-result-note"></div>
