@@ -33,6 +33,9 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await expect(page.locator('#revCurrentSummary')).toContainText('Cofins');
  await expect(page.locator('#revCurrentSummary')).toContainText('ICMS');
  await expect(page.locator('#revCurrentSummary')).not.toContainText('Total de tributos');
+ await expect(page.locator('#revCurrentSummary')).toContainText('−');
+ await expect(page.locator('#revCurrentSummary')).not.toContainText('+');
+ await expect(page.locator('#revCurrentSummary')).not.toContainText('=');
  await page.locator('#revenueAdvanced').evaluate(el=>{el.open=true;});
  await page.locator('#revCreditablePurchasesPct').fill('50');
  await page.locator('#revYear').selectOption('2027');
