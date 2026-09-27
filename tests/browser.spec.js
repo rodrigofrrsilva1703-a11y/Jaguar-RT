@@ -36,6 +36,11 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await page.locator('#revenuePrintBtn').click();
  await expect(page.locator('#printReport')).toContainText('Resumo executivo');
  await expect(page.locator('#printReport')).toContainText('Comparação tributária');
+ await expect(page.locator('#printReport')).toContainText('PIS');
+ await expect(page.locator('#printReport')).toContainText('Cofins');
+ await expect(page.locator('#printReport')).toContainText('ICMS');
+ await expect(page.locator('#printReport')).toContainText('Total de tributos');
+ await expect(page.locator('#printReport')).not.toContainText('Tributos considerados');
  await expect(page.locator('#printReport')).toContainText('Evolução 2026–2033');
  await expect(page.locator('#printReport')).not.toContainText('Exemplo editável');
  await expect(page.locator('#printReport')).not.toContainText('Restaurar padrão');
