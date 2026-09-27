@@ -420,180 +420,208 @@ const STUDY_MODULES = [
   },
   {
     "id": "07",
-    "title": "Reprecificação, custo e DRE",
-    "subtitle": "Como transformar a Reforma em preço, margem e decisão comercial sem confundir simulação com apuração fiscal.",
-    "intro": "O método do RTAV é uma ferramenta de planejamento: primeiro descobre-se o líquido econômico atual; depois aplica-se o novo sistema conforme o ano; por fim, reconstrói-se a DRE e mede-se o efeito na cadeia.",
-    "before": "É comum olhar apenas a guia tributária ou aplicar um percentual novo diretamente sobre o preço atual.",
-    "after": "A análise passa a separar preço bruto, líquido, CBS/IBS, tributos antigos remanescentes, créditos de compra, custo efetivo e margem.",
+    "title": "Reprecificação, faturamento e DRE",
+    "subtitle": "Como transformar mudança tributária em preço e receita sem confundir planejamento com apuração fiscal.",
+    "intro": "O RTAV usa a reprecificação como ferramenta de planejamento. O raciocínio começa no valor líquido atual, reconstrói cada ano da transição e, em uma análise completa, pode avançar para compras, créditos e DRE. A calculadora do site separa duas visões: preço unitário e faturamento.",
+    "before": "Um erro comum é pegar a nova alíquota e simplesmente somá-la ao preço ou ao faturamento atual.",
+    "after": "A análise correta identifica o líquido de 2026, aplica CBS/IBS do período, trata os tributos antigos remanescentes e mede o efeito sobre preço ou faturamento bruto necessário para preservar o mesmo líquido.",
     "blocks": [
       {
-        "t": "Passo 1 — limpar o preço",
+        "t": "1. Descobrir o líquido de 2026",
         "k": "MÉTODO RTAV",
-        "x": "Preço líquido-alvo = preço atual menos os tributos considerados no cenário atual. O objetivo é descobrir qual valor econômico a empresa quer preservar."
+        "x": "Preço líquido-alvo = preço atual − tributos considerados no cenário atual. Na visão macro, faturamento líquido = faturamento bruto − tributos considerados."
       },
       {
-        "t": "Passo 2 — aplicar o novo",
+        "t": "2. Aplicar o novo sistema",
         "k": "MÉTODO RTAV",
-        "x": "Sobre o líquido, aplique CBS e IBS conforme o ano, destino, redução e regime da operação. Quando o evento usa 9% de CBS, trate como premissa do exercício."
+        "x": "Sobre a base limpa, aplique CBS e IBS conforme o ano, destino, redução e regime da operação. Se o exercício usar 9%, 27,91% ou 28%, marque como premissa didática."
       },
       {
-        "t": "Passo 3 — tratar o sistema antigo remanescente",
+        "t": "3. Tratar o velho remanescente",
         "k": "MÉTODO RTAV",
-        "x": "Na transição, ICMS/ISS ainda podem permanecer na formação do preço. O evento usa gross-up para reconstruir a parcela tratada por dentro."
+        "x": "Na transição, ICMS/ISS ainda podem permanecer na formação econômica. O RTAV usa a sequência 'primeiro o novo, depois o velho' para reconstruir o bruto."
       },
       {
-        "t": "Passo 4 — repetir nas compras",
-        "k": "MÉTODO RTAV",
-        "x": "Recalcule fornecedores e créditos. Preço de venda isolado não mostra o impacto sobre margem."
+        "t": "4. Repetir ano a ano",
+        "k": "MÉTODO",
+        "x": "2027 não representa 2029 ou 2032. Refaça a conta em cada ano porque a composição entre CBS, IBS e tributos antigos muda."
       },
       {
-        "t": "Passo 5 — reconstruir a DRE",
-        "k": "NA PRÁTICA",
-        "x": "Compare receita bruta, tributos sobre venda, receita líquida, custos, créditos, despesas e resultado. Faça cenários por ano da transição."
+        "t": "5. Ferramenta de preço",
+        "k": "NO SITE",
+        "x": "A calculadora de preço mostra preço atual, tributos, valor líquido e o preço projetado de 2027 a 2033 para preservar o mesmo líquido por venda."
       },
       {
-        "t": "Três estratégias de preço",
-        "k": "MATERIAL DE ESTUDO",
-        "x": "Manter preço bruto; manter receita líquida; ou manter margem/resultado considerando custos e créditos. A escolha final é comercial, não automática."
+        "t": "6. Ferramenta de faturamento",
+        "k": "NO SITE",
+        "x": "A calculadora de faturamento faz a mesma lógica em escala: receita bruta, tributos, faturamento líquido e receita bruta projetada para preservar o líquido de 2026."
       },
       {
-        "t": "Banda +1,27% a +3,61%",
+        "t": "7. DRE completa é uma etapa adicional",
+        "k": "RTAV",
+        "x": "Uma análise estratégica completa pode incluir compras, fornecedores, créditos, custos, despesas e margem. Isso vai além da calculadora tributária simplificada do site."
+      },
+      {
+        "t": "8. Três estratégias ensinadas no material",
+        "k": "MATERIAL RTAV",
+        "x": "O evento compara manter preço bruto, preservar receita líquida ou preservar margem/resultado. São objetivos de decisão empresarial, não regras fiscais."
+      },
+      {
+        "t": "9. Banda +1,27% a +3,61%",
         "k": "EXEMPLO RTAV",
-        "x": "É um resultado específico de uma DRE apresentada no evento: +1,27% preservava margem considerando créditos e +3,61% preservava receita líquida. Não copie essa faixa para outro cliente."
-      },
-      {
-        "t": "Limite do simulador",
-        "k": "ATENÇÃO",
-        "x": "A calculadora do site ensina o método e permite cenários. Ela não substitui motor fiscal, classificação de item, regras de base, benefícios, destino e alíquotas oficiais aplicáveis."
+        "x": "A faixa pertence a uma DRE específica apresentada no evento. Não é parâmetro geral para outros clientes."
       }
     ],
     "qa": [
       [
-        "A Reforma sempre aumenta preço?",
-        "Não. Um cenário pode exigir aumento, redução ou manutenção, dependendo da carga atual, créditos, regime e margem."
+        "A Reforma sempre aumenta o preço?",
+        "Não. A reconstrução pode indicar aumento, redução ou estabilidade, dependendo da carga atual e das regras do cenário futuro."
       ],
       [
-        "Qual é o preço correto?",
-        "Há preços que preservam objetivos diferentes. O contador deve mostrar cenários e o empresário decide a estratégia comercial."
+        "A calculadora do site calcula margem?",
+        "Não nesta versão. Ela foi intencionalmente simplificada para preço, faturamento, tributos e valor líquido."
       ],
       [
-        "Posso usar 9% de CBS em todos os clientes?",
-        "Não como alíquota oficial. No RTAV, 9% é uma premissa de simulação."
+        "Posso aplicar 9% de CBS em qualquer cliente?",
+        "Não como alíquota oficial. No RTAV, 9% é premissa didática de determinados exercícios."
+      ],
+      [
+        "Preço projetado é preço comercial obrigatório?",
+        "Não. É uma referência econômica da simulação; a decisão comercial pertence à empresa."
       ]
     ],
-    "legal": "RTAV; Material de Estudo, págs. 8–11; LC 214/2025 para regras reais de base, alíquota, crédito e transição."
+    "legal": "RTAV; Material de Estudo, págs. 8–11; LC 214/2025 para base, alíquotas, créditos e transição. A calculadora do site é didática e não substitui apuração fiscal."
   },
   {
     "id": "08",
     "title": "Simples Nacional em 2027",
-    "subtitle": "Simples puro, híbrido, crédito, regime de caixa, NFS-e e o que realmente muda na rotina.",
-    "intro": "O Simples Nacional continua existindo, mas 2027 muda sua relação com CBS/IBS, documentos e caixa. A empresa pode manter CBS/IBS dentro do regime único ou optar pelo regime regular desses dois tributos, permanecendo no Simples para os demais.",
-    "before": "Hoje a empresa recolhe os tributos do Simples no DAS e pode, em determinadas condições, usar regime de caixa para a apuração mensal. A NFS-e ainda não é uniformemente nacional para todos os optantes.",
-    "after": "CBS e IBS passam a integrar o Simples; existe a escolha entre modelo “puro” e “híbrido”; o regime de caixa deixa de ser utilizado para a base mensal a partir de 2027; e a NFS-e nacional se torna obrigatória para ME/EPP prestadoras de serviços a partir de 1º/11/2026.",
+    "subtitle": "Simples padrão, regime regular de IBS/CBS, prazos, créditos, regime de caixa e NFS-e.",
+    "intro": "O Simples Nacional continua existindo. A grande novidade é que o optante pode permanecer com IBS/CBS dentro do Simples ou exercer a opção de apurá-los pelo regime regular, continuando no Simples para os demais tributos.",
+    "before": "Até 2026, o Simples opera com sua estrutura atual e ainda admite regime de caixa para a base mensal nas condições então vigentes.",
+    "after": "A partir de 2027, CBS e IBS passam a integrar a disciplina do Simples; existe opção pelo regime regular desses dois tributos; o regime de caixa mensal deixa de ser utilizado; e a documentação fiscal passa por novas exigências.",
     "blocks": [
       {
-        "t": "Simples puro",
+        "t": "1. Simples padrão",
         "k": "REGRA OFICIAL",
-        "x": "CBS e IBS permanecem dentro do recolhimento unificado. Se a empresa não fizer a opção específica pelo regime regular de IBS/CBS, essa é a sistemática aplicável no período correspondente."
+        "x": "Se a empresa permanecer com IBS/CBS dentro do Simples, esses tributos são recolhidos segundo as regras do regime unificado e a partilha aplicável ao Anexo/faixa."
       },
       {
-        "t": "Simples híbrido",
+        "t": "2. Opção pelo regime regular de IBS/CBS",
         "k": "REGRA OFICIAL",
-        "x": "A empresa continua no Simples para os demais tributos, mas apura e recolhe IBS/CBS pelo regime regular, conforme a LC 214 e a regulamentação do CGSN."
+        "x": "O art. 41, §3º, permite ao optante do Simples apurar e recolher IBS e CBS pelo regime regular, mantendo-se no Simples para os demais tributos."
       },
       {
-        "t": "Janela para o 1º semestre de 2027",
-        "k": "ATUALIZAÇÃO 2026",
-        "x": "A Receita abriu a escolha em setembro de 2026, com efeitos de janeiro a junho de 2027. Empresas já optantes do Simples não precisam renovar a permanência no regime, mas precisam avaliar o modelo de IBS/CBS."
+        "t": "3. Primeiro semestre de 2027",
+        "k": "PRAZO 2026",
+        "x": "Para empresas já optantes que desejem IBS/CBS no regime regular no primeiro semestre de 2027, a janela informada pelo CGSN/RFB é de 1º a 30 de setembro de 2026."
       },
       {
-        "t": "Nova janela para o 2º semestre",
-        "k": "ATUALIZAÇÃO 2026",
-        "x": "Quem não escolheu o regime regular em setembro de 2026 pode fazer nova opção em março de 2027 para efeitos de julho a dezembro, conforme as regras publicadas pelo CGSN."
+        "t": "4. Segundo semestre de 2027",
+        "k": "PRAZO 2027",
+        "x": "Quem não fez a opção anterior pode exercer nova opção de 1º a 31 de março de 2027 para efeitos de julho a dezembro, conforme as regras publicadas pelo CGSN."
       },
       {
-        "t": "Fim do regime de caixa",
+        "t": "5. Permanência no modelo escolhido",
+        "k": "ATENÇÃO",
+        "x": "A regulamentação prevê continuidade da opção pelo regime regular nos períodos seguintes, salvo renúncia nos prazos aplicáveis. Não trate a escolha como uma decisão mensal."
+      },
+      {
+        "t": "6. Regime de caixa",
         "k": "REGRA 2027",
-        "x": "A regulamentação do Simples extinguiu a opção pelo regime de caixa para a base mensal. A receita passa a seguir as novas regras de faturamento, em geral vinculadas à emissão do documento fiscal."
+        "x": "A regulamentação publicada em 2026 extingue a opção pelo regime de caixa para a determinação da base mensal do Simples a partir de 1º de janeiro de 2027; a receita passa a seguir as novas regras de faturamento."
       },
       {
-        "t": "NFS-e nacional",
+        "t": "7. NFS-e nacional",
         "k": "ATUALIZAÇÃO 2026",
-        "x": "Para ME e EPP do Simples sujeitas à NFS-e, o Emissor Nacional passa a ser obrigatório a partir de 1º de novembro de 2026. As regras de CBS/IBS no documento para optantes produzem efeitos a partir de 1º de janeiro de 2027."
+        "x": "ME e EPP optantes do Simples sujeitas à NFS-e passam a usar o padrão nacional a partir de 1º de novembro de 2026. Os efeitos específicos de CBS/IBS para optantes começam em 1º de janeiro de 2027."
       },
       {
-        "t": "DAS remanescente",
+        "t": "8. Crédito para o adquirente",
+        "k": "REGRA OFICIAL",
+        "x": "Quando IBS/CBS são pagos dentro do Simples, o adquirente sujeito ao regime regular pode ter crédito equivalente ao valor desses tributos devido via Simples. No regime regular, aplicam-se as regras gerais de débito e crédito."
+      },
+      {
+        "t": "9. 'DAS remanescente'",
         "k": "LINGUAGEM RTAV",
-        "x": "O palestrante usa “DAS remanescente” para explicar o que continua no Simples quando IBS/CBS são recolhidos por fora. É uma expressão didática do evento; o cálculo precisa seguir a regulamentação efetiva do PGDAS-D."
+        "x": "O RTAV usa essa expressão para explicar a parcela que permanece no Simples quando IBS/CBS são apurados por fora. É recurso didático; a apuração real deve seguir PGDAS-D e regulamentação vigente."
       },
       {
-        "t": "Crédito e competitividade B2B",
-        "k": "NA PRÁTICA",
-        "x": "A escolha do híbrido não deve ser feita apenas pela guia da empresa. É necessário medir o crédito gerado ao cliente, compras, margem, caixa, perfil B2B/B2C e custo de compliance."
-      },
-      {
-        "t": "Alíquota efetiva do DAS",
-        "k": "FÓRMULA",
-        "x": "[(RBT12 × alíquota nominal) − parcela a deduzir] ÷ RBT12. No exercício do RTAV com RBT12 de R$ 1 milhão, 16% e PD de R$ 35.640, o resultado é 12,436%."
+        "t": "10. Sublimite",
+        "k": "PONTO DE ATENÇÃO",
+        "x": "O tratamento de ICMS/ISS e, na transição, do IBS em situações de sublimite exige análise própria. Não use uma conta simplificada para RBT12 acima dos limites relevantes sem conferir a regra aplicável."
       }
     ],
     "qa": [
       [
-        "O Simples acaba?",
+        "O Simples acaba em 2027?",
         "Não."
       ],
       [
-        "Escolher IBS/CBS por fora tira a empresa do Simples?",
-        "Não. A empresa permanece no Simples para os demais tributos, desde que continue atendendo aos requisitos do regime."
+        "Escolher IBS/CBS no regime regular tira a empresa do Simples?",
+        "Não para os demais tributos, desde que ela continue atendendo aos requisitos do Simples."
       ],
       [
-        "O regime híbrido é melhor para todo B2B?",
-        "Não. Ele pode melhorar a cadeia de créditos, mas também altera carga, fluxo de caixa, documentos e controles."
+        "O híbrido é sempre melhor para empresa B2B?",
+        "Não. É necessário comparar carga própria, crédito gerado ao cliente, fluxo de caixa, compliance e perfil comercial."
       ],
       [
-        "Regime de caixa continua em 2027?",
-        "Não para a base de cálculo mensal do Simples, segundo as regras publicadas em 2026."
+        "O regime de caixa mensal continua em 2027?",
+        "Não, segundo a regulamentação publicada em 2026 para a base de cálculo mensal do Simples."
+      ],
+      [
+        "A NFS-e nacional obrigatória em novembro já exige CBS/IBS do Simples em novembro de 2026?",
+        "Não. A Receita esclarece que os efeitos de CBS/IBS para optantes começam em 1º de janeiro de 2027."
       ]
     ],
-    "legal": "LC 214/2025, art. 41 e regras do Simples; Resoluções CGSN 190 e 191/2026; orientações RFB de agosto e setembro/2026; RTAV."
+    "legal": "LC 214/2025, art. 41 e art. 47, §9º; Resoluções CGSN nº 190 e nº 191/2026; orientações Receita Federal/CGSN de agosto e setembro de 2026; RTAV."
   },
   {
     "id": "09",
     "title": "Lucro Presumido × Lucro Real e LC 224",
-    "subtitle": "O Presumido não acaba; muda a lógica de comparação e aumenta a importância da DRE.",
-    "intro": "O RTAV chama atenção para uma mudança econômica: com o fim de PIS/Cofins e a entrada da CBS, desaparece uma diferença importante entre os regimes na tributação federal do consumo. Isso não significa que o Lucro Presumido perde validade nem que o Lucro Real será sempre melhor.",
-    "before": "No consumo, Presumido costuma conviver com PIS/Cofins cumulativo e Real com não cumulativo. Para IRPJ/CSLL, Presumido usa percentuais legais e Real parte do lucro contábil ajustado.",
-    "after": "Para empresas fora do Simples, CBS/IBS seguem a disciplina do regime regular independentemente de a empresa apurar IRPJ/CSLL pelo Presumido ou Real. A escolha passa a exigir DRE, margem real, adicional de IRPJ, adições/exclusões, benefícios e custo operacional.",
+    "subtitle": "Por que a comparação de regimes precisa sair da alíquota isolada e entrar na DRE.",
+    "intro": "A Reforma do consumo não extingue o Lucro Presumido. O que muda é uma das premissas históricas de comparação: PIS/Cofins dão lugar à CBS e o regime regular de IBS/CBS passa a valer para empresas fora do Simples independentemente de IRPJ/CSLL serem apurados pelo Presumido ou Real.",
+    "before": "No consumo, Presumido costuma usar PIS/Cofins cumulativo e Real o não cumulativo; IRPJ/CSLL seguem bases próprias de cada regime.",
+    "after": "Com CBS/IBS no regime regular, a decisão entre Presumido e Real depende ainda mais de lucro efetivo, presunção, adicional de IRPJ, ajustes fiscais, benefícios, prejuízos fiscais e custo operacional.",
     "blocks": [
       {
-        "t": "Lucro Presumido continua existindo",
-        "k": "RESPOSTA DIRETA",
-        "x": "A Reforma do consumo não extinguiu o Lucro Presumido. O que muda são premissas econômicas usadas para compará-lo ao Lucro Real."
+        "t": "1. Lucro Presumido não foi extinto",
+        "k": "REGRA",
+        "x": "A Reforma Tributária do Consumo não elimina o regime de Lucro Presumido para IRPJ/CSLL."
       },
       {
-        "t": "LC 224 — acréscimo de 10%",
+        "t": "2. CBS/IBS não decidem sozinhos Presumido × Real",
+        "k": "CONCEITO",
+        "x": "Para empresas fora do Simples, a disciplina de IBS/CBS é a do regime regular. A escolha de IRPJ/CSLL continua exigindo comparação própria entre Presumido e Real."
+      },
+      {
+        "t": "3. LC 224 — acréscimo nos percentuais de presunção",
         "k": "REGRA OFICIAL",
-        "x": "Nos regimes de base presumida, a LC 224 prevê acréscimo de 10% nos percentuais de presunção. No Lucro Presumido, aplica-se sobre a parcela da receita bruta total que excede R$ 5 milhões no ano-calendário, com proporcionalidade por período e por atividade."
+        "x": "A LC 224 prevê acréscimo de 10% nos percentuais de presunção aplicáveis à parcela da receita bruta total que exceder R$ 5 milhões no ano-calendário, com proporcionalidade por período e atividade."
       },
       {
-        "t": "32% vira 35,2%, não 42%",
+        "t": "4. 32% vira 35,2%, não 42%",
         "k": "CÁLCULO",
-        "x": "32% × 1,10 = 35,2%. O acréscimo é de 10% sobre o percentual de presunção, não de 10 pontos percentuais."
+        "x": "32% × 1,10 = 35,2%. O acréscimo é de 10% sobre o percentual de presunção, e não de 10 pontos percentuais."
       },
       {
-        "t": "Exemplo R$ 10 milhões",
-        "k": "EXEMPLO RTAV",
-        "x": "R$ 5 milhões × 32% = R$ 1,6 milhão; outros R$ 5 milhões × 35,2% = R$ 1,76 milhão; base simulada total de R$ 3,36 milhões antes do cálculo de IRPJ/CSLL e adicional."
+        "t": "5. Exemplo de R$ 10 milhões",
+        "k": "EXEMPLO DIDÁTICO",
+        "x": "No exemplo simplificado de serviços: R$ 5 milhões × 32% = R$ 1,6 milhão; R$ 5 milhões × 35,2% = R$ 1,76 milhão; base total simulada = R$ 3,36 milhões."
       },
       {
-        "t": "Por que a DRE é indispensável",
-        "k": "MÉTODO",
-        "x": "Lucro efetivo abaixo da presunção é um sinal para estudar o Real, mas não encerra a decisão. É preciso calcular IRPJ, CSLL, adicional, adições/exclusões, compensações, benefícios e efeitos operacionais."
+        "t": "6. Limite do exemplo",
+        "k": "ATENÇÃO",
+        "x": "Essa conta isola a base presumida. Para decidir regime, ainda é necessário calcular IRPJ, CSLL, adicional, ajustes, benefícios e demais efeitos relevantes."
       },
       {
-        "t": "O que é opinião do palestrante",
-        "k": "RTAV",
-        "x": "A expectativa de migração forte do Presumido para o Real é uma análise estratégica do evento, não uma determinação legal."
+        "t": "7. Lucro efetivo abaixo da presunção",
+        "k": "INDÍCIO, NÃO VEREDITO",
+        "x": "Pode ser sinal de que o Lucro Real merece estudo, mas não prova que será melhor. A decisão exige comparação completa."
+      },
+      {
+        "t": "8. Opinião do RTAV",
+        "k": "SEPARAR DA LEI",
+        "x": "A expectativa de migração de empresas do Presumido para o Real é análise estratégica do palestrante, não obrigação legal nem resultado garantido."
       }
     ],
     "qa": [
@@ -602,15 +630,19 @@ const STUDY_MODULES = [
         "Não."
       ],
       [
-        "Margem real de 20% e presunção de 32% garantem que o Real seja melhor?",
-        "Não automaticamente. A diferença de base é relevante, mas o regime precisa ser comparado por completo."
+        "Se minha margem real é menor que a presunção, o Lucro Real é automaticamente melhor?",
+        "Não. É um sinal para simular, não uma conclusão automática."
       ],
       [
-        "A LC 224 aumentou a alíquota de IRPJ em 10 pontos?",
-        "Não. A regra discutida aqui aumenta o percentual de presunção em 10% sobre a parcela excedente ao limite legal."
+        "A LC 224 somou 10 pontos à presunção?",
+        "Não. O acréscimo é de 10% sobre o percentual aplicável à parcela excedente."
+      ],
+      [
+        "O limite de R$ 5 milhões é simplesmente dividido ao meio em qualquer empresa?",
+        "Não. A lei prevê proporcionalidade por período de apuração e por atividade; o exemplo de R$ 10 milhões é simplificado."
       ]
     ],
-    "legal": "LC 224/2025, art. 4º, §4º, VII, e §5º; RTAV; Material de Estudo, págs. 7–8."
+    "legal": "LC 224/2025, art. 4º, §4º, VII, e §5º; LC 214/2025; RTAV; Material de Estudo, págs. 7–8."
   },
   {
     "id": "10",
