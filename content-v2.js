@@ -960,6 +960,21 @@ const SOURCES = [
     "Acréscimo de 10% nos percentuais de presunção e regra do limite anual de R$ 5 milhões no Lucro Presumido."
   ],
   [
+    "Decreto 12.955/2026 — Regulamento da CBS",
+    "https://www2.camara.leg.br/legin/fed/decret/2026/decreto-12955-29-abril-2026-799019-normaatualizada-pe.html",
+    "Regulamenta a CBS e detalha regras operacionais, inclusive reduções e tratamentos específicos."
+  ],
+  [
+    "RFB/CGIBS — Atos Conjuntos",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/legislacao/atos-conjuntos/",
+    "Inclui o Ato Conjunto nº 4/2026, com cronograma de início da obrigatoriedade de documentos fiscais eletrônicos."
+  ],
+  [
+    "RFB/CGIBS — Atos Técnicos Conjuntos",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/legislacao/atos-tecnicos-conjuntos/",
+    "Inclui o Ato Técnico Conjunto nº 4/2026, referente à documentação técnica da Plataforma Pública do Split Payment."
+  ],
+  [
     "RTAV + Material de Estudo 26/09/2026",
     "#",
     "Base didática do treinamento. Exemplos, estimativas e opiniões do palestrante são identificados e não substituem a regra oficial."
