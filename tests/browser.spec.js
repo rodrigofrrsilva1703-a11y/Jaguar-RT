@@ -61,7 +61,7 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  expect(errors).toEqual([]);
 });
 
-test('Simples híbrido separa ISS e bases em preço, faturamento, PDF e Excel',async({page})=>{
+test('Simples híbrido mantém cálculo em preço, faturamento, PDF e Excel',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=hybrid',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
  await page.locator('#taxRegime').selectOption('simples_hybrid');
@@ -83,8 +83,15 @@ test('Simples híbrido separa ISS e bases em preço, faturamento, PDF e Excel',a
  await page.locator('#revYear').selectOption('2027');
  await expect(page.locator('#revenueMemory')).toContainText('937.481,29');
  await page.locator('#revenuePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('39.486,09');
+ await expect(page.locator('#printReport')).toContainText('CBS');
  await expect(page.locator('#printReport')).toContainText('86.342,03');
+ await expect(page.locator('#printReport')).toContainText('IBS');
+ await expect(page.locator('#printReport')).toContainText('937,48');
+ await expect(page.locator('#printReport')).toContainText('DAS / tributos remanescentes');
+ await expect(page.locator('#printReport')).toContainText('101.327,38');
+ await expect(page.locator('#printReport')).not.toContainText('Base do DAS residual');
+ await expect(page.locator('#printReport')).not.toContainText('Base da CBS/IBS');
+ await expect(page.locator('#printReport')).not.toContainText('excluído da base CBS/IBS');
  const sheets=await page.evaluate(()=>{
   const out=[];
   downloadSpreadsheet=(...args)=>out.push(args);

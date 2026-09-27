@@ -1072,8 +1072,7 @@ function buildRevenuePdf(client,year){
  // valores de entrada/líquidos sem sinal e tributos/saídas com sinal negativo.
  const currentRows=revCurrentRows(base);
  const futureRows=[
-  ['Faturamento projetado',money(future.revenue)],
-  ...hybridBaseRows(future)
+  ['Faturamento projetado',money(future.revenue)]
  ];
  if((future.cbs||0)>0) futureRows.push(['CBS',signedMoney(future.cbs,'−')]);
  if((future.ibs||0)>0) futureRows.push(['IBS',signedMoney(future.ibs,'−')]);
