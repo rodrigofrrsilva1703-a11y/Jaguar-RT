@@ -375,8 +375,6 @@ function applyYearPreset(){
 }
 
 function syncPriceStrategy(){
- const manual=$('priceStrategy')?.value==='manual';
- if($('manualProjectedPrice')) $('manualProjectedPrice').disabled=!manual;
  calcIntegrated();
 }
 
@@ -492,7 +490,7 @@ function scenarioAtPrice(year,projected){
 function futureScenario(year,strategyOverride=null){
  const base=currentScenario();
  const p=paramsForYear(year);
- const strategy=strategyOverride||($('priceStrategy')?.value||'net');
+ const strategy=strategyOverride||'margin';
  let projected=0;
 
  if(strategy==='net'){
@@ -549,10 +547,9 @@ function regimeExplanation(){
 
 function updateScenarioStrip(){
  const r=regime(),year=$('priceYear')?.value||'2027';
- const strategy=$('priceStrategy')?.selectedOptions?.[0]?.textContent||'';
  if($('activeRegimeBadge')) $('activeRegimeBadge').textContent=REGIME_LABELS[r]||r;
  if($('activeYearBadge')) $('activeYearBadge').textContent=year;
- if($('activeStrategyBadge')) $('activeStrategyBadge').textContent=strategy.replace('Formar preço para ','').replace(' (simulação)','');
+ if($('activeStrategyBadge')) $('activeStrategyBadge').textContent='Automático';
 }
 
 function calcIntegrated(){
@@ -616,21 +613,12 @@ function calcIntegrated(){
   row('Receita líquida se mantivesse preço 2026',base.net,natural.net,effectPct(base.net,natural.net))
  ].join('');
 
- const strategy=$('priceStrategy')?.value||'net';
- const strategyLabel=
-  strategy==='net'?'formar o preço para preservar o líquido de 2026':
-  strategy==='margin'?'formar o preço para preservar a margem operacional de 2026':
-  strategy==='gross'?'manter o preço de 2026 apenas para medir o impacto':
-  'usar o preço informado manualmente';
-
- let extra='';
- if(strategy==='margin'){
-  extra=` A margem-alvo é ${pct(base.sellerMargin*100)} e o resultado projetado fica em ${money(future.sellerResult)}, considerando ${money(future.sellerPurchaseCredit)} de créditos projetados nas compras.`;
- }else if(regime()==='simples'&&Math.abs(priceDelta)<=.05){
-  extra=' Neste Simples padrão, preço estável não significa ausência de impacto: a partilha CBS/IBS e o crédito do comprador podem mudar.';
+ let extra=` O cálculo automático usa como referência a margem operacional de 2026 (${pct(base.sellerMargin*100)}), considerando os custos e créditos informados. Em ${y}, o resultado projetado é ${money(future.sellerResult)} e a margem fica em ${pct(future.sellerMargin*100)}.`;
+ if(regime()==='simples'&&Math.abs(priceDelta)<=.05){
+  extra+=' No Simples padrão, preço estável não significa ausência de impacto: a composição CBS/IBS e o custo efetivo do comprador podem mudar.';
  }
 
- $('integratedExplanation').innerHTML=`<b>${headline}</b><p>A estratégia é <strong>${strategyLabel}</strong>. Em ${y}, o preço calculado é ${money(future.price)} e o custo efetivo do comprador é ${money(future.cost)}.${extra}</p>`;
+ $('integratedExplanation').innerHTML=`<b>${headline}</b><p>Em ${y}, o preço calculado é <strong>${money(future.price)}</strong> e o custo efetivo do comprador é ${money(future.cost)}.${extra}</p>`;
 
  renderYearlyProjection();
 }
@@ -724,7 +712,7 @@ function renderYearDetail(year){
 
 function renderYearlyProjection(){
  if(!$('yearlyProjectionTable')) return;
- const base=currentScenario(),selectedYear=Number($('priceYear')?.value||2027),r=regime(),strategy=$('priceStrategy')?.value||'net';
+ const base=currentScenario(),selectedYear=Number($('priceYear')?.value||2027),r=regime();
 
  const rows=[{
   year:2026,regime:r,system:'Atual',price:base.price,cbs:null,ibs:null,remnant:base.remnant,
@@ -774,15 +762,7 @@ function renderYearlyProjection(){
 
  renderYearDetail(yearDetailSelected);
 
- let note=
-  strategy==='net'
-   ? 'O preço recomendado preserva o líquido econômico de 2026. Clique em qualquer ano para abrir a análise completa.'
-   : strategy==='margin'
-    ? 'O preço recomendado preserva a margem operacional de 2026 usando custos e créditos das compras informados. A análise de cada ano mostra o efeito para cliente e empresa.'
-    : strategy==='gross'
-     ? 'Nesta estratégia o preço é mantido por escolha. Os detalhes mostram o impacto tributário e econômico por ano.'
-     : 'O preço manual é aplicado aos anos futuros. Clique em um ano para visualizar a composição completa.';
-
+ let note='O preço de cada ano é calculado automaticamente a partir do cenário de 2026, dos custos, dos créditos e das regras tributárias do período. Clique em qualquer ano para abrir a análise completa de preço, cliente e empresa.';
  if(r==='simples') note+=' No Simples padrão, o preço pode permanecer igual quando a alíquota efetiva total do DAS não muda, mesmo que crédito e custo do comprador mudem.';
  if(r==='simples_hybrid') note+=' No híbrido, o painel separa o DAS remanescente de CBS/IBS.';
  $('yearlyProjectionNote').textContent=note;
@@ -792,10 +772,10 @@ function xmlEsc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;
 function xlsCell(value,type='String'){const val=type==='Number'?(Number(value)||0):xmlEsc(value);return `<Cell><Data ss:Type="${type}">${val}</Data></Cell>`;}
 function exportAnalysisExcel(){
  if(!yearlyRows.length)renderYearlyProjection();
- const r=regime(),strategy=$('priceStrategy')?.selectedOptions?.[0]?.textContent||'';
+ const r=regime(),strategy='Automático — margem operacional de 2026';
  const rowsXml=yearlyRows.map(x=>`<Row>${xlsCell(x.year,'Number')}${xlsCell(REGIME_LABELS[x.regime])}${xlsCell(x.system)}${xlsCell(x.price,'Number')}${xlsCell(x.cbs??0,'Number')}${xlsCell(x.ibs??0,'Number')}${xlsCell(x.remnant,'Number')}${xlsCell(x.credit,'Number')}${xlsCell(x.cost,'Number')}${xlsCell(x.costDelta,'Number')}${xlsCell(x.net,'Number')}${xlsCell(x.noAdjustNet,'Number')}${xlsCell(x.sellerPurchaseCredit??0,'Number')}${xlsCell(x.sellerResult??0,'Number')}${xlsCell((x.sellerMargin??0)*100,'Number')}${xlsCell(x.diff,'Number')}${xlsCell(x.delta,'Number')}${xlsCell(x.annualDelta,'Number')}</Row>`).join('');
  const headers=['Ano','Regime','Sistema','Preço calculado','CBS','IBS','DAS / tributos remanescentes','Crédito','Custo efetivo','Custo vs 2026 (%)','Receita líquida no preço calculado','Líquido se mantivesse preço 2026','Crédito das compras da empresa','Resultado operacional simplificado','Margem operacional (%)','Diferença R$','Reajuste vs 2026 (%)','Variação anual (%)'].map(x=>xlsCell(x)).join('');
- const premises=[['Regime',REGIME_LABELS[r]],['Estratégia',strategy],['Preço 2026',num('priceNow')],['Anexo Simples',SN_LABELS[snAnnex()]],['RBT12',num('snRbt12')],['Alíquota efetiva SN 2026 %',snEffective(2026).eff*100],['Crédito atual comprador',num('currentBuyerCredit')],['PIS atual %',num('pisRate')],['Cofins atual %',num('cofinsRate')],['ICMS atual %',num('icmsRate')],['ISS atual %',num('issRate')],['IPI atual %',num('ipiRate')],['Aproveitamento CBS %',num('cbsCreditPct')],['Aproveitamento IBS %',num('ibsCreditPct')],['Outros créditos comprador',num('otherProjectedCredit')],['Custos e despesas por venda',num('sellerOperatingCost')],['Créditos atuais nas compras',num('currentSellerCredit')],['Base líquida das compras com crédito',num('sellerCreditBase')],['Aproveitamento créditos das compras %',num('sellerCreditPct')],['Outros créditos projetados da empresa',num('otherSellerCredit')]];
+ const premises=[['Regime',REGIME_LABELS[r]],['Método automático',strategy],['Preço 2026',num('priceNow')],['Anexo Simples',SN_LABELS[snAnnex()]],['RBT12',num('snRbt12')],['Alíquota efetiva SN 2026 %',snEffective(2026).eff*100],['Crédito atual comprador',num('currentBuyerCredit')],['PIS atual %',num('pisRate')],['Cofins atual %',num('cofinsRate')],['ICMS atual %',num('icmsRate')],['ISS atual %',num('issRate')],['IPI atual %',num('ipiRate')],['Aproveitamento CBS %',num('cbsCreditPct')],['Aproveitamento IBS %',num('ibsCreditPct')],['Outros créditos comprador',num('otherProjectedCredit')],['Custos e despesas por venda',num('sellerOperatingCost')],['Créditos atuais nas compras',num('currentSellerCredit')],['Base líquida das compras com crédito',num('sellerCreditBase')],['Aproveitamento créditos das compras %',num('sellerCreditPct')],['Outros créditos projetados da empresa',num('otherSellerCredit')]];
  const premXml=premises.map(([a,b])=>`<Row>${xlsCell(a)}${typeof b==='number'?xlsCell(b,'Number'):xlsCell(b)}</Row>`).join('');
  const xml=`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Analise 2026-2033"><Table><Row>${headers}</Row>${rowsXml}</Table></Worksheet><Worksheet ss:Name="Premissas"><Table><Row>${xlsCell('Premissa')}${xlsCell('Valor')}</Row>${premXml}</Table></Worksheet></Workbook>`;
  const blob=new Blob(['\ufeff',xml],{type:'application/vnd.ms-excel;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
@@ -806,13 +786,12 @@ $('taxRegime')?.addEventListener('change',()=>applyRegimeUI({preset:true}));
 $('snAnnex')?.addEventListener('change',()=>{updateSnSummary();calcIntegrated();});
 $('snRbt12')?.addEventListener('input',()=>{updateSnSummary();calcIntegrated();});
 $('priceYear')?.addEventListener('change',applyYearPreset);
-$('priceStrategy')?.addEventListener('change',syncPriceStrategy);
 $('buyerCreditProfile')?.addEventListener('change',syncCreditProfile);
 $('exportExcelBtn')?.addEventListener('click',exportAnalysisExcel);
 $('rateMode')?.addEventListener('change',()=>{const manual=$('rateMode').value==='manual';$('cbsRate').readOnly=!manual;$('ibsRate').readOnly=!manual;applyYearPreset();});
 $('hybridRateMode')?.addEventListener('change',()=>{const manual=$('hybridRateMode').value==='manual';$('hybridCbsRate').readOnly=!manual;$('hybridIbsRate').readOnly=!manual;applyYearPreset();});
 
-['priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','currentBuyerCredit','rateReduction','cbsRate','ibsRate','manualProjectedPrice','cbsCreditPct','ibsCreditPct','otherProjectedCredit','hybridReduction','hybridCbsRate','hybridIbsRate','sellerOperatingCost','currentSellerCredit','sellerCreditBase','sellerCreditPct','otherSellerCredit'].forEach(id=>$(id)?.addEventListener('input',calcIntegrated));
+['priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','currentBuyerCredit','rateReduction','cbsRate','ibsRate','cbsCreditPct','ibsCreditPct','otherProjectedCredit','hybridReduction','hybridCbsRate','hybridIbsRate','sellerOperatingCost','currentSellerCredit','sellerCreditBase','sellerCreditPct','otherSellerCredit'].forEach(id=>$(id)?.addEventListener('input',calcIntegrated));
 
 ['lpRevenue','lpPresumption'].forEach(id=>$(id)?.addEventListener('input',calcLP));
 function calcLP(){
