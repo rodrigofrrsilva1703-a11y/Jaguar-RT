@@ -1067,30 +1067,21 @@ function buildRevenuePdf(client,year){
  const future=RTAV_ENGINE.futureRevenueScenario(input,year);
  const regimeLabel=REGIME_LABELS[input.regime]||input.regime;
  const period=$('revRevenuePeriod')?.value||'mensal';
- const currentRows=[['Faturamento bruto',money(base.revenue)]];
- if(input.regime==='simples'||input.regime==='simples_hybrid'){
-  currentRows.push(['DAS / tributos',money(base.taxes)]);
- }else{
-  const c=base.components||{};
-  if((c.pis||0)>0) currentRows.push(['PIS',money(c.pis)]);
-  if((c.cofins||0)>0) currentRows.push(['Cofins',money(c.cofins)]);
-  if((c.icms||0)>0) currentRows.push(['ICMS',money(c.icms)]);
-  if((c.iss||0)>0) currentRows.push(['ISS',money(c.iss)]);
-  if((c.ipi||0)>0) currentRows.push(['IPI',money(c.ipi)]);
- }
- currentRows.push(['Total de tributos',money(base.taxes)]);
- currentRows.push(['Faturamento líquido',money(base.net)]);
+
+ // Mantém no PDF a mesma leitura visual da tela:
+ // valores de entrada/líquidos sem sinal e tributos/saídas com sinal negativo.
+ const currentRows=revCurrentRows(base);
  const futureRows=[
   ['Faturamento projetado',money(future.revenue)],
-  ...hybridBaseRows(future),
-  ['CBS',money(future.cbs||0)],
-  ['IBS',money(future.ibs||0)],
-  ['DAS / tributos remanescentes',money(future.remnant||0)],
-  ['Tributos brutos',money(future.taxes)]
+  ...hybridBaseRows(future)
  ];
+ if((future.cbs||0)>0) futureRows.push(['CBS',signedMoney(future.cbs,'−')]);
+ if((future.ibs||0)>0) futureRows.push(['IBS',signedMoney(future.ibs,'−')]);
+ if((future.remnant||0)>0) futureRows.push(['DAS / tributos remanescentes',signedMoney(future.remnant,'−')]);
+ futureRows.push(['Tributos brutos',signedMoney(future.taxes,'−')]);
  if((future.purchaseCredit||0)>0){
   futureRows.push(['Créditos estimados',money(future.purchaseCredit)]);
-  futureRows.push(['Carga líquida',money(future.netTax)]);
+  futureRows.push(['Carga líquida',signedMoney(future.netTax,'−')]);
   futureRows.push(['Líquido após créditos',money(future.economicNet)]);
  }else{
   futureRows.push(['Faturamento líquido',money(future.net)]);
@@ -1102,8 +1093,8 @@ function buildRevenuePdf(client,year){
  const tableHeaders=hasCredit?['Ano','Faturamento','Tributos','Créditos','Carga líquida']:['Ano','Faturamento','Tributos','Carga','Líquido'];
  const tableRows=annual.map(function(x){
   return hasCredit
-   ?[x.year,money(x.revenue),money(x.taxes),money(x.purchaseCredit||0),money(x.netTax??x.taxes)]
-   :[x.year,money(x.revenue),money(x.taxes),pct(x.revenue?x.taxes/x.revenue*100:0),money(x.net)];
+   ?[x.year,money(x.revenue),signedMoney(x.taxes,'−'),money(x.purchaseCredit||0),signedMoney(x.netTax??x.taxes,'−')]
+   :[x.year,money(x.revenue),signedMoney(x.taxes,'−'),pct(x.revenue?x.taxes/x.revenue*100:0),money(x.net)];
  });
 
  return {
@@ -1112,8 +1103,8 @@ function buildRevenuePdf(client,year){
   kpis:[
    ['Faturamento atual',money(base.revenue),'2026 · '+period],
    ['Faturamento projetado',money(future.revenue),String(year)],
-   ['Tributos brutos',money(future.taxes),pct(future.revenue?future.taxes/future.revenue*100:0)+' do faturamento'],
-   [(future.purchaseCredit||0)>0?'Carga líquida':'Faturamento líquido',(future.purchaseCredit||0)>0?money(future.netTax):money(future.net),(future.purchaseCredit||0)>0?'Após créditos estimados':'Após tributos']
+   ['Tributos brutos',signedMoney(future.taxes,'−'),pct(future.revenue?future.taxes/future.revenue*100:0)+' do faturamento'],
+   [(future.purchaseCredit||0)>0?'Carga líquida':'Faturamento líquido',(future.purchaseCredit||0)>0?signedMoney(future.netTax,'−'):money(future.net),(future.purchaseCredit||0)>0?'Após créditos estimados':'Após tributos']
   ],
   currentRows,
   futureRows,
