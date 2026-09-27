@@ -557,6 +557,43 @@ function futureTaxRows(x){
 }
 
 
+function renderTaxChart(id,rows,mode){
+ const el=$(id);
+ if(!el||!rows?.length) return;
+
+ let values=[];
+ if(mode==='price'){
+  rows.forEach(x=>values.push(x.remnant||0,x.cbs||0,x.ibs||0));
+ }else{
+  rows.forEach(x=>values.push(x.taxes||0,x.purchaseCredit||0,((x.netTax ?? x.taxes) || 0)));
+ }
+ const max=Math.max(1,...values);
+
+ el.innerHTML=rows.map(x=>{
+  const year=x.year;
+  if(mode==='price'){
+   const a=((x.remnant||0)/max)*100;
+   const b=((x.cbs||0)/max)*100;
+   const c=((x.ibs||0)/max)*100;
+   return '<div class="tax-chart-col" title="'+year+'">'+
+    '<div class="tax-chart-bars">'+
+     '<span class="tax-chart-bar tertiary" style="height:'+a+'%" title="Remanescentes '+money(x.remnant||0)+'"></span>'+
+     '<span class="tax-chart-bar secondary" style="height:'+b+'%" title="CBS '+money(x.cbs||0)+'"></span>'+
+     '<span class="tax-chart-bar" style="height:'+c+'%" title="IBS '+money(x.ibs||0)+'"></span>'+
+    '</div><b>'+year+'</b><small>'+money(x.taxes||0)+'</small></div>';
+  }
+  const debit=((x.taxes||0)/max)*100;
+  const credit=((x.purchaseCredit||0)/max)*100;
+  const liquid=((((x.netTax ?? x.taxes) || 0))/max)*100;
+  return '<div class="tax-chart-col" title="'+year+'">'+
+   '<div class="tax-chart-bars">'+
+    '<span class="tax-chart-bar" style="height:'+debit+'%" title="Débito '+money(x.taxes||0)+'"></span>'+
+    '<span class="tax-chart-bar credit" style="height:'+credit+'%" title="Crédito '+money(x.purchaseCredit||0)+'"></span>'+
+    '<span class="tax-chart-bar secondary" style="height:'+liquid+'%" title="Carga líquida '+money(((x.netTax ?? x.taxes) || 0))+'"></span>'+
+   '</div><b>'+year+'</b><small>'+money(((x.netTax ?? x.taxes) || 0))+'</small></div>';
+ }).join('');
+}
+
 function calcIntegrated(){
  if(!$('integratedKpis')) return;
  updateScenarioStrip();
@@ -651,6 +688,7 @@ function renderYearlyProjection(){
   prevPrice=x.price;
  }
  yearlyRows=rows;
+ renderTaxChart('priceTaxChart',rows,'price');
 
  if(yearDetailSelected===null||!rows.some(x=>x.year===yearDetailSelected)) yearDetailSelected=selectedYear;
 
@@ -980,6 +1018,7 @@ function revRenderYearly(){
   }));
  }
  revenueYearlyRows=rows;
+ renderTaxChart('revenueTaxChart',rows,'revenue');
 
  if(revYearDetailSelected===null||!rows.some(function(x){return x.year===revYearDetailSelected;})) revYearDetailSelected=selected;
 
