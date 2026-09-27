@@ -374,11 +374,9 @@
 .advanced-analysis summary small{font-size:8px;color:#888;font-weight:600}
 .advanced-analysis[open] summary{border-bottom:1px solid #e5e4df}
 .advanced-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:12px 14px 5px}
-.credit-choice{margin:12px 14px 2px;border:1px solid #deddd7;background:#fff;border-radius:12px;padding:10px}
-.credit-toggle{display:flex;align-items:flex-start;gap:9px;cursor:pointer}
-.credit-toggle input{margin:2px 0 0;width:15px;height:15px;accent-color:#111}
-.credit-toggle span{display:grid;gap:2px}.credit-toggle b{font-size:9px}.credit-toggle small{font-size:7.5px;color:#777;line-height:1.4}
-.credit-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px;padding-top:10px;border-top:1px solid #ecebe6}
+.main-credit-check{grid-column:1/-1;display:flex;align-items:center;gap:9px;border:1px solid #deddd7;background:#fff;border-radius:10px;padding:9px 10px;cursor:pointer}
+.main-credit-check input{margin:0;width:15px;height:15px;accent-color:#111}
+.main-credit-check span{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}.main-credit-check b{font-size:8.5px}.main-credit-check small{font-size:7.5px;color:#777}
 .advanced-analysis .rate-note{margin:5px 14px 13px}
 .autosave-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 2px 0;color:#8a8a84;font-size:8px}
 .autosave-row button{border:0;background:transparent;color:#666;text-decoration:underline;font-size:8px;cursor:pointer}
@@ -690,6 +688,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
        </select>
       </div>
       <div class="field wide"><label>Preço atual do produto/serviço R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
+      <label class="main-credit-check" for="priceTakesCbsIbsCredit">
+       <input id="priceTakesCbsIbsCredit" type="checkbox">
+       <span><b>Aproveita crédito de CBS/IBS</b><small>Considera o crédito de CBS e IBS no cálculo do preço.</small></span>
+      </label>
      </div>
 
      <div id="regularCurrentFields" class="regime-panel">
@@ -768,17 +770,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    </div>
 
    <details id="priceAdvanced" class="advanced-analysis">
-    <summary><span>Análise avançada</span><small>Crédito da empresa e análise B2B/B2C</small></summary>
-    <div class="credit-choice">
-     <label class="credit-toggle" for="priceTakesCbsIbsCredit">
-      <input id="priceTakesCbsIbsCredit" type="checkbox">
-      <span><b>Empresa aproveita créditos de CBS/IBS</b><small>Considere os créditos das compras/insumos na formação do preço de venda.</small></span>
-     </label>
-     <div id="priceOwnCreditFields" class="credit-fields" style="display:none">
-      <div class="field"><label for="priceCreditablePurchasesPct">Compras/insumos que geram crédito (% do preço)</label><input id="priceCreditablePurchasesPct" type="number" min="0" max="100" step=".01" value="0"></div>
-      <div class="field"><label for="pricePurchaseCreditUsePct">Aproveitamento do crédito CBS/IBS %</label><input id="pricePurchaseCreditUsePct" type="number" min="0" max="100" step=".01" value="100"></div>
-     </div>
-    </div>
+    <summary><span>Análise avançada</span><small>B2B/B2C e crédito econômico do comprador</small></summary>
     <div class="advanced-grid">
      <div class="field"><label for="priceBuyerProfile">Perfil da venda</label>
       <select id="priceBuyerProfile"><option value="b2c" selected>Consumidor final / sem crédito</option><option value="b2b">PJ no regime regular / com crédito</option></select>
@@ -786,7 +778,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
      <div class="field"><label for="priceCurrentBuyerCredit">Crédito atual aproveitável por venda R$</label><input id="priceCurrentBuyerCredit" type="number" min="0" step=".01" value="0"></div>
      <div class="field"><label for="priceBuyerCreditPct">Aproveitamento do CBS/IBS destacado pelo comprador %</label><input id="priceBuyerCreditPct" type="number" min="0" max="100" step=".01" value="100"></div>
     </div>
-    <div class="rate-note">Crédito da empresa e crédito do comprador são análises diferentes. Informe a parcela das aquisições que efetivamente gera crédito para que a formação do preço considere a carga líquida.</div>
+    <div class="rate-note">O crédito do comprador é uma análise econômica separada do crédito de CBS/IBS considerado na formação do preço.</div>
    </details>
 
    <div id="priceValidation" class="validation-panel" aria-live="polite"></div>
@@ -1063,10 +1055,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260927-42"></script>
-<script src="tax-rules.js?v=20260927-42"></script>
-<script src="tax-engine.js?v=20260927-42"></script>
+<script src="content-v2.js?v=20260927-43"></script>
+<script src="tax-rules.js?v=20260927-43"></script>
+<script src="tax-engine.js?v=20260927-43"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260927-42" defer></script>
+<script src="app-v2.js?v=20260927-43" defer></script>
 </body>
 </html>

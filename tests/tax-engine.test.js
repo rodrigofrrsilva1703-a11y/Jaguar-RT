@@ -27,15 +27,15 @@ const p2027=engine.futurePriceScenario(presumido,2027);
 close(p2027.price,104.4443719512195,0.001,'Preço projetado comércio 2027 com CBS 9,21%');
 close(p2027.net,pBase.net,1e-8,'Líquido preservado comércio');
 
-// Preço com crédito próprio de CBS/IBS nas aquisições.
-const ownCredit={...presumido,purchases:{enabled:true,creditablePct:50,usePct:100}};
+// Preço com checkbox simples de crédito CBS/IBS.
+const ownCredit={...presumido,purchases:{enabled:true}};
 const own2027=engine.futurePriceScenario(ownCredit,2027);
-assert.ok(own2027.purchaseCredit>0,'Crédito próprio da empresa deve ser positivo');
-close(own2027.netTax,own2027.taxes-own2027.purchaseCredit,1e-8,'Carga líquida do preço após créditos');
-close(own2027.economicNet,pBase.net,1e-8,'Líquido econômico preservado com crédito próprio');
-assert.ok(own2027.price<p2027.price,'Crédito próprio deve reduzir o preço necessário quando as demais premissas são iguais');
+close(own2027.purchaseCredit,own2027.cbs+own2027.ibs,1e-8,'Checkbox deve considerar CBS + IBS calculados como crédito');
+close(own2027.netTax,own2027.taxes-own2027.purchaseCredit,1e-8,'Tributos líquidos do preço após crédito');
+close(own2027.economicNet,pBase.net,1e-8,'Valor líquido preservado com crédito');
+assert.ok(own2027.price<p2027.price,'Crédito deve reduzir o preço necessário quando as demais premissas são iguais');
 
-const ownCreditDisabled={...presumido,purchases:{enabled:false,creditablePct:50,usePct:100}};
+const ownCreditDisabled={...presumido,purchases:{enabled:false}};
 const ownDisabled2027=engine.futurePriceScenario(ownCreditDisabled,2027);
 close(ownDisabled2027.price,p2027.price,1e-8,'Checkbox desligado não deve alterar o preço');
 
