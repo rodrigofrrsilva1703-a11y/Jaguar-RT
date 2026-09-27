@@ -50,7 +50,9 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await expect(page.locator('#printReport')).toContainText('PIS');
  await expect(page.locator('#printReport')).toContainText('Cofins');
  await expect(page.locator('#printReport')).toContainText('ICMS');
- await expect(page.locator('#printReport')).toContainText('Total de tributos');
+ await expect(page.locator('#printReport')).toContainText('−');
+ await expect(page.locator('#printReport')).not.toContainText('+');
+ await expect(page.locator('#printReport')).not.toContainText('=');
  await expect(page.locator('#printReport')).not.toContainText('Tributos considerados');
  await expect(page.locator('#printReport')).toContainText('Evolução 2026–2033');
  await expect(page.locator('#printReport')).not.toContainText('Exemplo editável');
