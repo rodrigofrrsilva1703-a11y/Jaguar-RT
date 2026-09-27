@@ -374,20 +374,6 @@ function applyYearPreset(){
  calcIntegrated();
 }
 
-function syncPriceStrategy(){
- calcIntegrated();
-}
-
-function syncCreditProfile(){
- const profile=$('buyerCreditProfile')?.value||'full';
- const manual=profile==='manual';
- if(profile==='full'){$('cbsCreditPct').value=100;$('ibsCreditPct').value=100;}
- else if(profile==='none'){$('cbsCreditPct').value=0;$('ibsCreditPct').value=0;}
- if($('cbsCreditPct')) $('cbsCreditPct').readOnly=!manual;
- if($('ibsCreditPct')) $('ibsCreditPct').readOnly=!manual;
- calcIntegrated();
-}
-
 function currentScenario(){
  const r=regime();
  const price=Math.max(0,num('priceNow'));
