@@ -108,31 +108,114 @@ $('heroSearch')?.addEventListener('keydown',e=>{
 });
 
 const TRANSITION={
- 2026:{old:1,cbs:.9,ibs:.1,note:'2026 é ano-teste. CBS 0,9% e IBS 0,1% têm regras próprias de compensação/dispensa. Use como simulação, não como preço definitivo.'},
- 2027:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% é o parâmetro legal da fase inicial. CBS 9% é a premissa didática usada no RTAV e deve ser substituída pela alíquota oficial aplicável.'},
- 2028:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% na fase inicial. CBS 9% continua apenas como premissa RTAV neste modo.'},
- 2029:{old:.9,cbs:9,ibs:1.891,note:'Projeção RTAV: CBS 9% + 10% de um IBS cheio estimado em 18,91%. Atualize quando houver alíquotas oficiais aplicáveis.'},
+ 2026:{old:1,cbs:.9,ibs:.1,note:'2026 é usado na ferramenta como cenário atual/base comercial. A alíquota-teste de 2026 continua tratada nos estudos.'},
+ 2027:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% é o parâmetro da fase inicial. CBS 9% é premissa didática RTAV e deve ser substituída pela alíquota oficial aplicável.'},
+ 2028:{old:1,cbs:9,ibs:.1,note:'IBS 0,1% na fase inicial. CBS 9% permanece premissa RTAV neste modo.'},
+ 2029:{old:.9,cbs:9,ibs:1.891,note:'Projeção RTAV: CBS 9% + 10% de um IBS cheio estimado em 18,91%.'},
  2030:{old:.8,cbs:9,ibs:3.782,note:'Projeção RTAV: CBS 9% + 20% de IBS cheio estimado em 18,91%.'},
  2031:{old:.7,cbs:9,ibs:5.673,note:'Projeção RTAV: CBS 9% + 30% de IBS cheio estimado em 18,91%.'},
  2032:{old:.6,cbs:9,ibs:7.564,note:'Projeção RTAV: CBS 9% + 40% de IBS cheio estimado em 18,91%.'},
- 2033:{old:0,cbs:9,ibs:18.91,note:'Projeção didática RTAV de 27,91% no total (9% CBS + 18,91% IBS). Não é alíquota universal oficial.'}
+ 2033:{old:0,cbs:9,ibs:18.91,note:'Projeção didática RTAV de 27,91% no total. Não é alíquota universal oficial.'}
+};
+
+const REGIME_LABELS={
+ presumido:'Lucro Presumido',
+ real:'Lucro Real',
+ simples:'Simples Nacional — padrão',
+ simples_hybrid:'Simples Nacional — híbrido',
+ manual:'Outro / manual'
 };
 
 const clamp=(v,min,max)=>Math.min(max,Math.max(min,Number(v)||0));
 const effectPct=(before,after)=>before?((after/before)-1)*100:0;
 const deltaMoney=(before,after)=>after-before;
 const effectText=v=>`${v>=0?'+':''}${pct(v)}`;
+let snFutureDasTouched=false;
+let yearlyRows=[];
+
+function regime(){
+ return $('taxRegime')?.value||'presumido';
+}
+function isSimpleRegime(r=regime()){
+ return r==='simples'||r==='simples_hybrid';
+}
+function calcSnEffective(){
+ const r=Math.max(0,num('snRbt12'));
+ const nominal=clamp(num('snNominal'),0,100)/100;
+ const deduction=Math.max(0,num('snDeduction'));
+ return r?Math.max(0,(r*nominal-deduction)/r):0;
+}
+function updateSnEffective(){
+ const eff=calcSnEffective()*100;
+ if($('snCurrentEffective')) $('snCurrentEffective').value=pct(eff);
+ if(!snFutureDasTouched&&$('snFutureDasRate')) $('snFutureDasRate').value=eff.toFixed(4);
+}
+
+function applyRegimeUI({preset=true}={}){
+ const r=regime();
+ const simple=isSimpleRegime(r);
+ if($('regularCurrentFields')) $('regularCurrentFields').style.display=simple?'none':'block';
+ if($('simplesCurrentFields')) $('simplesCurrentFields').style.display=simple?'block':'none';
+ if($('regularFutureFields')) $('regularFutureFields').style.display=simple?'none':'block';
+ if($('simplesFutureFields')) $('simplesFutureFields').style.display=simple?'block':'none';
+ if($('hybridRegularRates')) $('hybridRegularRates').style.display=r==='simples_hybrid'?'block':'none';
+
+ if(preset){
+  if(r==='presumido'){
+   $('pisRate').value=.65;
+   $('cofinsRate').value=3;
+  }else if(r==='real'){
+   $('pisRate').value=1.65;
+   $('cofinsRate').value=7.6;
+  }
+ }
+
+ updateSnEffective();
+ applyYearPreset();
+}
+
+function getRegularRates(year,hybrid=false){
+ const p=TRANSITION[year]||TRANSITION[2027];
+ const mode=hybrid?($('hybridRateMode')?.value||'rtav'):($('rateMode')?.value||'rtav');
+ const reduction=clamp(hybrid?num('hybridReduction'):num('rateReduction'),0,100);
+ const factor=1-reduction/100;
+ let cbs=0,ibs=0;
+ if(mode==='rtav'){
+  cbs=p.cbs;
+  ibs=p.ibs;
+ }else{
+  cbs=clamp(hybrid?num('hybridCbsRate'):num('cbsRate'),0,100);
+  ibs=clamp(hybrid?num('hybridIbsRate'):num('ibsRate'),0,100);
+ }
+ return {cbs:cbs*factor,ibs:ibs*factor,reduction,mode};
+}
 
 function applyYearPreset(){
  const y=Number($('priceYear')?.value||2027);
  const p=TRANSITION[y]||TRANSITION[2027];
- if($('rateMode')?.value==='rtav'){
+ const r=regime();
+
+ if(!isSimpleRegime(r)&&$('rateMode')?.value==='rtav'){
   $('cbsRate').value=p.cbs;
   $('ibsRate').value=p.ibs;
  }
- if($('rateNote')) $('rateNote').textContent=$('rateMode')?.value==='manual'
-  ? 'Modo manual: informe CBS e IBS aplicáveis à operação e ao período. A redução informada abaixo será aplicada sobre essas alíquotas para fins de simulação.'
-  : p.note;
+ if(r==='simples_hybrid'&&$('hybridRateMode')?.value==='rtav'){
+  $('hybridCbsRate').value=p.cbs;
+  $('hybridIbsRate').value=p.ibs;
+ }
+
+ if($('rateNote')){
+  if(r==='simples'){
+   $('rateNote').textContent='Simples padrão: CBS e IBS permanecem dentro do DAS. Informe a alíquota efetiva projetada do DAS e as parcelas efetivas de CBS/IBS usadas no cenário.';
+  }else if(r==='simples_hybrid'){
+   $('rateNote').textContent='Simples híbrido: a empresa permanece no Simples para os demais tributos, enquanto CBS e IBS são calculados pelo regime regular fora do DAS.';
+  }else{
+   const manual=$('rateMode')?.value==='manual';
+   $('rateNote').textContent=manual
+    ? 'Modo manual: informe as alíquotas CBS e IBS aplicáveis. A mesma premissa será usada na tabela anual, enquanto a transição dos tributos antigos varia por ano.'
+    : p.note;
+  }
+ }
  calcIntegrated();
 }
 
@@ -157,100 +240,144 @@ function syncCreditProfile(){
  calcIntegrated();
 }
 
-function calcIntegrated(){
- if(!$('integratedKpis')) return;
-
+function currentScenario(){
+ const r=regime();
  const price=Math.max(0,num('priceNow'));
- const pis=clamp(num('pisRate'),0,100);
- const cofins=clamp(num('cofinsRate'),0,100);
- const icms=clamp(num('icmsRate'),0,100);
- const iss=clamp(num('issRate'),0,100);
- const ipi=clamp(num('ipiRate'),0,100);
- const currentRate=pis+cofins+icms+iss+ipi;
- const currentTaxes=price*currentRate/100;
- const currentNet=Math.max(0,price-currentTaxes);
+ const currentCredit=Math.max(0,num('currentBuyerCredit'));
+ let taxes=0;
 
- const y=Number($('priceYear')?.value||2027);
- const preset=TRANSITION[y]||TRANSITION[2027];
- const reduction=clamp(num('rateReduction'),0,100);
- const reductionFactor=1-reduction/100;
- const cbsBaseRate=clamp(num('cbsRate'),0,100);
- const ibsBaseRate=clamp(num('ibsRate'),0,100);
- const cbsRate=cbsBaseRate*reductionFactor;
- const ibsRate=ibsBaseRate*reductionFactor;
- const newRate=(cbsRate+ibsRate)/100;
- const oldRate=((icms+iss)*preset.old)/100;
-
- let projected=0;
- let cleanBase=0;
- const strategy=$('priceStrategy')?.value||'net';
-
- if(strategy==='net'){
-  cleanBase=currentNet;
-  projected=(1-oldRate)>0?cleanBase*(1+newRate)/(1-oldRate):0;
+ if(isSimpleRegime(r)){
+  const eff=calcSnEffective();
+  taxes=price*eff;
  }else{
-  projected=strategy==='gross'?price:Math.max(0,num('manualProjectedPrice'));
-  cleanBase=(1+newRate)>0?projected*(1-oldRate)/(1+newRate):0;
+  const currentRate=clamp(num('pisRate'),0,100)+clamp(num('cofinsRate'),0,100)+clamp(num('icmsRate'),0,100)+clamp(num('issRate'),0,100)+clamp(num('ipiRate'),0,100);
+  taxes=price*currentRate/100;
+ }
+ const net=Math.max(0,price-taxes);
+ const cost=Math.max(0,price-currentCredit);
+ return {year:2026,regime:r,price,taxes,net,credit:currentCredit,cost,cbs:null,ibs:null,remnant:taxes};
+}
+
+function futureScenario(year){
+ const r=regime();
+ const base=currentScenario();
+ const strategy=$('priceStrategy')?.value||'gross';
+ const manualPrice=Math.max(0,num('manualProjectedPrice'));
+ const cbsCreditPct=clamp(num('cbsCreditPct'),0,100);
+ const ibsCreditPct=clamp(num('ibsCreditPct'),0,100);
+ const otherCredit=Math.max(0,num('otherProjectedCredit'));
+
+ let projected=0,cbsValue=0,ibsValue=0,remnant=0,taxes=0,net=0;
+ let cleanBase=0;
+
+ if(r==='simples'){
+  const totalDasRate=clamp(num('snFutureDasRate'),0,100)/100;
+  const cbsDasRate=clamp(num('snCbsDasRate'),0,100)/100;
+  const ibsDasRate=clamp(num('snIbsDasRate'),0,100)/100;
+  const combined=Math.min(totalDasRate,cbsDasRate+ibsDasRate);
+  const scale=(cbsDasRate+ibsDasRate)>0?combined/(cbsDasRate+ibsDasRate):0;
+  const cbsEff=cbsDasRate*scale;
+  const ibsEff=ibsDasRate*scale;
+
+  if(strategy==='net') projected=(1-totalDasRate)>0?base.net/(1-totalDasRate):0;
+  else projected=strategy==='gross'?base.price:manualPrice;
+
+  const dasTotal=projected*totalDasRate;
+  cbsValue=projected*cbsEff;
+  ibsValue=projected*ibsEff;
+  remnant=Math.max(0,dasTotal-cbsValue-ibsValue);
+  taxes=dasTotal;
+  net=Math.max(0,projected-taxes);
+ }else if(r==='simples_hybrid'){
+  const totalDasRate=clamp(num('snFutureDasRate'),0,100)/100;
+  const cbsRemoved=clamp(num('snCbsDasRate'),0,100)/100;
+  const ibsRemoved=clamp(num('snIbsDasRate'),0,100)/100;
+  const remRate=Math.max(0,totalDasRate-cbsRemoved-ibsRemoved);
+  const rates=getRegularRates(year,true);
+  const newRate=(rates.cbs+rates.ibs)/100;
+
+  if(strategy==='net'){
+   cleanBase=base.net;
+   projected=(1-remRate)>0?cleanBase*(1+newRate)/(1-remRate):0;
+  }else{
+   projected=strategy==='gross'?base.price:manualPrice;
+   cleanBase=(1+newRate)>0?projected*(1-remRate)/(1+newRate):0;
+  }
+
+  cbsValue=cleanBase*rates.cbs/100;
+  ibsValue=cleanBase*rates.ibs/100;
+  remnant=projected*remRate;
+  taxes=cbsValue+ibsValue+remnant;
+  net=Math.max(0,projected-taxes);
+ }else{
+  const rates=getRegularRates(year,false);
+  const newRate=(rates.cbs+rates.ibs)/100;
+  const p=TRANSITION[year]||TRANSITION[2027];
+  const oldRate=((clamp(num('icmsRate'),0,100)+clamp(num('issRate'),0,100))*p.old)/100;
+
+  if(strategy==='net'){
+   cleanBase=base.net;
+   projected=(1-oldRate)>0?cleanBase*(1+newRate)/(1-oldRate):0;
+  }else{
+   projected=strategy==='gross'?base.price:manualPrice;
+   cleanBase=(1+newRate)>0?projected*(1-oldRate)/(1+newRate):0;
+  }
+
+  cbsValue=cleanBase*rates.cbs/100;
+  ibsValue=cleanBase*rates.ibs/100;
+  remnant=projected*oldRate;
+  taxes=cbsValue+ibsValue+remnant;
+  net=Math.max(0,projected-taxes);
  }
 
- const cbsValue=cleanBase*cbsRate/100;
- const ibsValue=cleanBase*ibsRate/100;
- const oldTaxValue=projected*oldRate;
- const projectedTaxes=cbsValue+ibsValue+oldTaxValue;
- const projectedNet=Math.max(0,projected-projectedTaxes);
+ const credit=(cbsValue*cbsCreditPct/100)+(ibsValue*ibsCreditPct/100)+otherCredit;
+ const cost=Math.max(0,projected-credit);
 
- const currentCredit=Math.max(0,num('currentBuyerCredit'));
- const cbsCredit=cbsValue*clamp(num('cbsCreditPct'),0,100)/100;
- const ibsCredit=ibsValue*clamp(num('ibsCreditPct'),0,100)/100;
- const otherCredit=Math.max(0,num('otherProjectedCredit'));
- const projectedCredit=cbsCredit+ibsCredit+otherCredit;
- const currentCost=Math.max(0,price-currentCredit);
- const projectedCost=Math.max(0,projected-projectedCredit);
+ return {
+  year,regime:r,price:projected,cbs:cbsValue,ibs:ibsValue,remnant,taxes,net,credit,cost,
+  priceDelta:effectPct(base.price,projected),
+  costDelta:effectPct(base.cost,cost),
+  netDelta:effectPct(base.net,net)
+ };
+}
 
- const priceDelta=effectPct(price,projected);
- const costDelta=effectPct(currentCost,projectedCost);
- const netDelta=effectPct(currentNet,projectedNet);
- const creditDelta=deltaMoney(currentCredit,projectedCredit);
+function regimeExplanation(){
+ const r=regime();
+ if(r==='simples') return 'Simples Nacional padrão: CBS e IBS permanecem dentro do DAS. Para comprador no regime regular, o crédito simulado fica limitado às parcelas efetivas de CBS/IBS informadas como devidas via Simples.';
+ if(r==='simples_hybrid') return 'Simples Nacional híbrido: o DAS fica apenas com os tributos remanescentes e CBS/IBS são apurados no regime regular fora do DAS.';
+ if(r==='real') return 'Lucro Real: a ferramenta usa PIS/Cofins atuais como premissa editável e CBS/IBS no regime regular a partir de 2027.';
+ if(r==='presumido') return 'Lucro Presumido: a ferramenta usa PIS/Cofins atuais como premissa editável e CBS/IBS no regime regular a partir de 2027.';
+ return 'Modo manual: os tributos atuais e as alíquotas futuras são tratados como premissas informadas pelo usuário.';
+}
+
+function calcIntegrated(){
+ if(!$('integratedKpis')) return;
+ const base=currentScenario();
+ const y=Number($('priceYear')?.value||2027);
+ const future=futureScenario(y);
+
+ const priceDelta=effectPct(base.price,future.price);
+ const costDelta=effectPct(base.cost,future.cost);
+ const netDelta=effectPct(base.net,future.net);
+ const creditDelta=deltaMoney(base.credit,future.credit);
 
  let signal='EFEITO PRÓXIMO DO ATUAL';
  let headline='Preço e custo caminham de forma próxima neste cenário.';
- if(priceDelta>.05&&costDelta<-.05){
-  signal='PAGA MAIS · CUSTA MENOS';
-  headline='O crédito mais do que compensa o aumento do preço para o comprador.';
- }else if(priceDelta>.05&&costDelta>.05){
-  signal='PAGA MAIS · CUSTA MAIS';
-  headline='Os créditos não compensam integralmente o aumento do preço.';
- }else if(priceDelta<-.05&&costDelta<-.05){
-  signal='PAGA MENOS · CUSTA MENOS';
-  headline='Preço e custo efetivo caem neste cenário.';
- }else if(priceDelta<-.05&&costDelta>.05){
-  signal='PAGA MENOS · CUSTA MAIS';
-  headline='O preço cai, mas a perda/redução de créditos aumenta o custo efetivo.';
- }else if(Math.abs(priceDelta)<=.05&&costDelta<-.05){
-  signal='PREÇO ESTÁVEL · CUSTO MENOR';
-  headline='O preço fica praticamente igual, mas os créditos reduzem o custo.';
- }else if(Math.abs(priceDelta)<=.05&&costDelta>.05){
-  signal='PREÇO ESTÁVEL · CUSTO MAIOR';
-  headline='O preço fica praticamente igual, mas o custo aumenta por efeito de créditos.';
- }
-
- const reductionNote=reduction>0
-   ? ` Foi aplicada redução de ${pct(reduction)}: CBS efetiva ${pct(cbsRate)} e IBS efetivo ${pct(ibsRate)}.`
-   : '';
- const strategyLabel=strategy==='net'?'preservar a receita líquida atual':strategy==='gross'?'manter o preço bruto atual':'usar o preço projetado informado manualmente';
- const creditProfile=$('buyerCreditProfile')?.value||'full';
- const creditNote=creditProfile==='full'
-   ? ' O cenário usa 100% da CBS/IBS calculada como crédito apenas para demonstrar o efeito econômico; confirme o direito real ao crédito.'
-   : creditProfile==='none'
-     ? ' O cenário considera que o comprador não aproveita crédito de CBS/IBS.'
-     : ' O cenário usa os percentuais manuais de aproveitamento de crédito informados.';
+ if(priceDelta>.05&&costDelta<-.05){signal='PAGA MAIS · CUSTA MENOS';headline='O crédito mais do que compensa o aumento do preço para o comprador.';}
+ else if(priceDelta>.05&&costDelta>.05){signal='PAGA MAIS · CUSTA MAIS';headline='Os créditos não compensam integralmente o aumento do preço.';}
+ else if(priceDelta<-.05&&costDelta<-.05){signal='PAGA MENOS · CUSTA MENOS';headline='Preço e custo efetivo caem neste cenário.';}
+ else if(priceDelta<-.05&&costDelta>.05){signal='PAGA MENOS · CUSTA MAIS';headline='O preço cai, mas a perda/redução de créditos aumenta o custo efetivo.';}
+ else if(Math.abs(priceDelta)<=.05&&costDelta<-.05){signal='PREÇO ESTÁVEL · CUSTO MENOR';headline='O preço fica praticamente igual, mas os créditos reduzem o custo.';}
+ else if(Math.abs(priceDelta)<=.05&&costDelta>.05){signal='PREÇO ESTÁVEL · CUSTO MAIOR';headline='O preço fica praticamente igual, mas o custo aumenta por efeito de créditos.';}
 
  $('resultSignal').textContent=signal;
+ $('regimeResultNote').textContent=REGIME_LABELS[regime()]+' · '+regimeExplanation();
+
  $('integratedKpis').innerHTML=`
-  <div class="integrated-kpi dark"><small>Preço projetado</small><b>${money(projected)}</b><span>${effectText(priceDelta)} vs. hoje</span></div>
-  <div class="integrated-kpi"><small>CBS + IBS do cenário</small><b>${money(cbsValue+ibsValue)}</b><span>CBS ${money(cbsValue)} · IBS ${money(ibsValue)}</span></div>
-  <div class="integrated-kpi"><small>Crédito projetado</small><b>${money(projectedCredit)}</b><span>CBS ${money(cbsCredit)} · IBS ${money(ibsCredit)}</span></div>
-  <div class="integrated-kpi dark"><small>Custo efetivo do comprador</small><b>${money(projectedCost)}</b><span>${effectText(costDelta)} vs. hoje</span></div>
+  <div class="integrated-kpi dark"><small>Preço em ${y}</small><b>${money(future.price)}</b><span>${effectText(priceDelta)} vs. 2026</span></div>
+  <div class="integrated-kpi"><small>CBS + IBS em ${y}</small><b>${money(future.cbs+future.ibs)}</b><span>CBS ${money(future.cbs)} · IBS ${money(future.ibs)}</span></div>
+  <div class="integrated-kpi"><small>Crédito do comprador</small><b>${money(future.credit)}</b><span>${money(creditDelta)} vs. 2026</span></div>
+  <div class="integrated-kpi dark"><small>Custo efetivo</small><b>${money(future.cost)}</b><span>${effectText(costDelta)} vs. 2026</span></div>
  `;
 
  const row=(label,before,after,effect,kind='pct')=>{
@@ -258,16 +385,23 @@ function calcIntegrated(){
   return `<tr><td><strong>${label}</strong></td><td>${money(before)}</td><td>${money(after)}</td><td class="${effect<0?'effect-down':'effect-up'}">${effectValue}</td></tr>`;
  };
  $('integratedTable').innerHTML=[
-  row('Preço / valor pago',price,projected,priceDelta),
-  row('Tributos considerados na venda',currentTaxes,projectedTaxes,projectedTaxes-currentTaxes,'money'),
-  row('Crédito do comprador',currentCredit,projectedCredit,creditDelta,'money'),
-  row('Custo efetivo do comprador',currentCost,projectedCost,costDelta),
-  row('Receita líquida da venda',currentNet,projectedNet,netDelta)
+  row('Preço / valor pago',base.price,future.price,priceDelta),
+  row('Tributos considerados na venda',base.taxes,future.taxes,future.taxes-base.taxes,'money'),
+  row('Crédito do comprador',base.credit,future.credit,creditDelta,'money'),
+  row('Custo efetivo do comprador',base.cost,future.cost,costDelta),
+  row('Receita líquida após tributos',base.net,future.net,netDelta)
  ].join('');
 
+ const strategy=$('priceStrategy')?.value||'gross';
+ const strategyLabel=strategy==='gross'
+  ? 'sem reajuste, para enxergar o impacto natural dos tributos'
+  : strategy==='net'
+   ? 'reajustar o preço para preservar a receita líquida de 2026'
+   : 'usar o preço informado manualmente';
+
  $('integratedExplanation').innerHTML=`
-   <b>${headline}</b>
-   <p>A estratégia selecionada é <strong>${strategyLabel}</strong>. O preço projetado gera ${money(cbsValue)} de CBS e ${money(ibsValue)} de IBS no modelo didático; após o aproveitamento informado, o comprador recebe ${money(projectedCredit)} em créditos considerados e seu custo efetivo fica em ${money(projectedCost)}.${reductionNote}${creditNote}</p>
+  <b>${headline}</b>
+  <p>A estratégia selecionada é <strong>${strategyLabel}</strong>. A receita líquida de ${y} fica em ${money(future.net)}. Se você escolher “preservar receita líquida”, ela ficará igual à de 2026 por construção matemática; no modo “sem reajuste”, ela varia conforme a carga de cada ano.</p>
  `;
 
  renderYearlyProjection();
@@ -275,133 +409,159 @@ function calcIntegrated(){
 
 function renderYearlyProjection(){
  if(!$('yearlyProjectionTable')) return;
-
- const price=Math.max(0,num('priceNow'));
- const pis=clamp(num('pisRate'),0,100);
- const cofins=clamp(num('cofinsRate'),0,100);
- const icms=clamp(num('icmsRate'),0,100);
- const iss=clamp(num('issRate'),0,100);
- const ipi=clamp(num('ipiRate'),0,100);
- const currentRate=pis+cofins+icms+iss+ipi;
- const currentTaxes=price*currentRate/100;
- const currentNet=Math.max(0,price-currentTaxes);
- const currentCredit=Math.max(0,num('currentBuyerCredit'));
- const currentCost=Math.max(0,price-currentCredit);
-
- const reduction=clamp(num('rateReduction'),0,100);
- const reductionFactor=1-reduction/100;
- const strategy=$('priceStrategy')?.value||'net';
+ const base=currentScenario();
  const selectedYear=Number($('priceYear')?.value||2027);
- const rateMode=$('rateMode')?.value||'rtav';
- const manualCbs=clamp(num('cbsRate'),0,100);
- const manualIbs=clamp(num('ibsRate'),0,100);
- const cbsCreditPct=clamp(num('cbsCreditPct'),0,100);
- const ibsCreditPct=clamp(num('ibsCreditPct'),0,100);
- const otherCredit=Math.max(0,num('otherProjectedCredit'));
- const manualPrice=Math.max(0,num('manualProjectedPrice'));
+ const r=regime();
 
  const rows=[{
-  year:2026,
-  system:'Atual',
-  price,
-  cbs:null,
-  ibs:null,
-  oldTaxes:currentTaxes,
-  credit:currentCredit,
-  cost:currentCost,
-  net:currentNet,
-  delta:0
+  year:2026,regime:r,system:'Atual',price:base.price,cbs:null,ibs:null,remnant:base.remnant,
+  credit:base.credit,cost:base.cost,net:base.net,delta:0
  }];
-
  for(let year=2027;year<=2033;year++){
-  const preset=TRANSITION[year];
-  const cbsBaseRate=rateMode==='rtav'?preset.cbs:manualCbs;
-  const ibsBaseRate=rateMode==='rtav'?preset.ibs:manualIbs;
-  const cbsRate=cbsBaseRate*reductionFactor;
-  const ibsRate=ibsBaseRate*reductionFactor;
-  const newRate=(cbsRate+ibsRate)/100;
-  const oldRate=((icms+iss)*preset.old)/100;
-
-  let projected=0;
-  let cleanBase=0;
-  if(strategy==='net'){
-   cleanBase=currentNet;
-   projected=(1-oldRate)>0?cleanBase*(1+newRate)/(1-oldRate):0;
-  }else{
-   projected=strategy==='gross'?price:manualPrice;
-   cleanBase=(1+newRate)>0?projected*(1-oldRate)/(1+newRate):0;
-  }
-
-  const cbsValue=cleanBase*cbsRate/100;
-  const ibsValue=cleanBase*ibsRate/100;
-  const oldTaxValue=projected*oldRate;
-  const projectedNet=Math.max(0,projected-cbsValue-ibsValue-oldTaxValue);
-  const projectedCredit=(cbsValue*cbsCreditPct/100)+(ibsValue*ibsCreditPct/100)+otherCredit;
-  const projectedCost=Math.max(0,projected-projectedCredit);
-
+  const x=futureScenario(year);
   rows.push({
-   year,
-   system:'Reforma',
-   price:projected,
-   cbs:cbsValue,
-   ibs:ibsValue,
-   oldTaxes:oldTaxValue,
-   credit:projectedCredit,
-   cost:projectedCost,
-   net:projectedNet,
-   delta:effectPct(price,projected)
+   year,regime:r,
+   system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma regular',
+   price:x.price,cbs:x.cbs,ibs:x.ibs,remnant:x.remnant,credit:x.credit,cost:x.cost,net:x.net,delta:x.priceDelta
   });
  }
+ yearlyRows=rows;
 
- $('yearlyProjectionTable').innerHTML=rows.map(r=>{
-  const cls=r.year===2026?'current-year':(r.year===selectedYear?'selected-year':'');
+ $('yearlyProjectionTable').innerHTML=rows.map(x=>{
+  const cls=x.year===2026?'current-year':(x.year===selectedYear?'selected-year':'');
   return `<tr class="${cls}">
-   <td>${r.year}</td>
-   <td><span class="system-pill">${r.system}</span></td>
-   <td><strong>${money(r.price)}</strong></td>
-   <td>${r.cbs===null?'—':money(r.cbs)}</td>
-   <td>${r.ibs===null?'—':money(r.ibs)}</td>
-   <td>${money(r.oldTaxes)}</td>
-   <td>${money(r.credit)}</td>
-   <td><strong>${money(r.cost)}</strong></td>
-   <td>${money(r.net)}</td>
-   <td class="${r.delta<0?'effect-down':'effect-up'}">${r.year===2026?'Base':effectText(r.delta)}</td>
+   <td>${x.year}</td>
+   <td>${REGIME_LABELS[x.regime]}</td>
+   <td><span class="system-pill">${x.system}</span></td>
+   <td><strong>${money(x.price)}</strong></td>
+   <td>${x.cbs===null?'—':money(x.cbs)}</td>
+   <td>${x.ibs===null?'—':money(x.ibs)}</td>
+   <td>${money(x.remnant)}</td>
+   <td>${money(x.credit)}</td>
+   <td><strong>${money(x.cost)}</strong></td>
+   <td>${money(x.net)}</td>
+   <td class="${x.delta<0?'effect-down':'effect-up'}">${x.year===2026?'Base':effectText(x.delta)}</td>
   </tr>`;
  }).join('');
 
- const modeText=rateMode==='rtav'
-  ? 'De 2027 a 2033, o modo Estimativa RTAV usa as premissas anuais do simulador.'
-  : 'No modo manual, as alíquotas de CBS e IBS informadas no campo selecionado são mantidas como premissa para 2027–2033; apenas a transição de ICMS/ISS varia por ano.';
- const strategyText=strategy==='net'
-  ? ' A estratégia anual preserva a receita líquida de 2026.'
-  : strategy==='gross'
-   ? ' A estratégia anual mantém o preço bruto de 2026.'
-   : ' A estratégia anual usa o mesmo preço manual informado em todos os anos futuros.';
- $('yearlyProjectionNote').textContent='2026 é apresentado como cenário atual/base comercial e não como cálculo da alíquota-teste de CBS/IBS. '+modeText+strategyText;
+ const strategy=$('priceStrategy')?.value||'gross';
+ let strategyText='';
+ if(strategy==='gross') strategyText='O preço de 2026 é mantido nos anos seguintes; por isso a receita líquida varia conforme os tributos.';
+ else if(strategy==='net') strategyText='O preço é recalculado em cada ano para manter a receita líquida de 2026; por isso a coluna de receita líquida fica constante.';
+ else strategyText='O mesmo preço manual informado é usado nos anos futuros; a receita líquida varia conforme os tributos.';
+
+ let regimeText='';
+ if(r==='simples') regimeText=' No Simples padrão, o DAS projetado e suas parcelas de CBS/IBS são premissas informadas e mantidas na projeção até você atualizá-las.';
+ else if(r==='simples_hybrid') regimeText=' No híbrido, o DAS remanescente é calculado a partir das parcelas de CBS/IBS retiradas do DAS e CBS/IBS regular seguem as premissas anuais selecionadas.';
+ else regimeText=' Para regimes regulares, ICMS/ISS recuam conforme a transição e CBS/IBS seguem o modo RTAV ou manual.';
+
+ $('yearlyProjectionNote').textContent=strategyText+regimeText;
 }
 
+function xmlEsc(v){
+ return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function xlsCell(value,type='String'){
+ const val=type==='Number'?(Number(value)||0):xmlEsc(value);
+ return `<Cell><Data ss:Type="${type}">${val}</Data></Cell>`;
+}
+function exportAnalysisExcel(){
+ if(!yearlyRows.length) renderYearlyProjection();
+ const r=regime();
+ const strategy=$('priceStrategy')?.selectedOptions?.[0]?.textContent||'';
+ const rowsXml=yearlyRows.map(x=>`<Row>
+  ${xlsCell(x.year,'Number')}${xlsCell(REGIME_LABELS[x.regime])}${xlsCell(x.system)}
+  ${xlsCell(x.price,'Number')}${xlsCell(x.cbs??0,'Number')}${xlsCell(x.ibs??0,'Number')}
+  ${xlsCell(x.remnant,'Number')}${xlsCell(x.credit,'Number')}${xlsCell(x.cost,'Number')}
+  ${xlsCell(x.net,'Number')}${xlsCell(x.delta,'Number')}
+ </Row>`).join('');
+
+ const headers=['Ano','Regime','Sistema','Preço','CBS','IBS','DAS / tributos remanescentes','Crédito','Custo efetivo','Receita líquida','Preço vs 2026 (%)']
+  .map(x=>xlsCell(x)).join('');
+
+ const premises=[
+  ['Regime',REGIME_LABELS[r]],
+  ['Estratégia de preço',strategy],
+  ['Preço atual',num('priceNow')],
+  ['Crédito atual do comprador',num('currentBuyerCredit')],
+  ['PIS atual %',num('pisRate')],
+  ['Cofins atual %',num('cofinsRate')],
+  ['ICMS atual %',num('icmsRate')],
+  ['ISS atual %',num('issRate')],
+  ['IPI atual %',num('ipiRate')],
+  ['RBT12',num('snRbt12')],
+  ['Alíquota nominal SN %',num('snNominal')],
+  ['Parcela a deduzir SN',num('snDeduction')],
+  ['Alíquota efetiva atual SN %',calcSnEffective()*100],
+  ['DAS projetado SN %',num('snFutureDasRate')],
+  ['Parcela CBS no DAS %',num('snCbsDasRate')],
+  ['Parcela IBS no DAS %',num('snIbsDasRate')],
+  ['Aproveitamento CBS %',num('cbsCreditPct')],
+  ['Aproveitamento IBS %',num('ibsCreditPct')],
+  ['Outros créditos projetados',num('otherProjectedCredit')],
+  ['Modo alíquota regular',$('rateMode')?.value||''],
+  ['CBS manual %',num('cbsRate')],
+  ['IBS manual %',num('ibsRate')],
+  ['Redução regular %',num('rateReduction')],
+  ['Modo híbrido',$('hybridRateMode')?.value||''],
+  ['CBS híbrido manual %',num('hybridCbsRate')],
+  ['IBS híbrido manual %',num('hybridIbsRate')],
+  ['Redução híbrido %',num('hybridReduction')]
+ ];
+ const premXml=premises.map(([a,b])=>`<Row>${xlsCell(a)}${typeof b==='number'?xlsCell(b,'Number'):xlsCell(b)}</Row>`).join('');
+
+ const xml=`<?xml version="1.0" encoding="UTF-8"?>
+ <?mso-application progid="Excel.Sheet"?>
+ <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Worksheet ss:Name="Analise 2026-2033"><Table><Row>${headers}</Row>${rowsXml}</Table></Worksheet>
+  <Worksheet ss:Name="Premissas"><Table><Row>${xlsCell('Premissa')}${xlsCell('Valor')}</Row>${premXml}</Table></Worksheet>
+ </Workbook>`;
+
+ const blob=new Blob(['\ufeff',xml],{type:'application/vnd.ms-excel;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ const safe=r.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+ a.href=url;
+ a.download=`analise-reforma-${safe}-2026-2033.xls`;
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+$('taxRegime')?.addEventListener('change',()=>applyRegimeUI({preset:true}));
 $('priceYear')?.addEventListener('change',applyYearPreset);
+$('priceStrategy')?.addEventListener('change',syncPriceStrategy);
+$('buyerCreditProfile')?.addEventListener('change',syncCreditProfile);
+$('exportExcelBtn')?.addEventListener('click',exportAnalysisExcel);
+
 $('rateMode')?.addEventListener('change',()=>{
  const manual=$('rateMode').value==='manual';
  $('cbsRate').readOnly=!manual;
  $('ibsRate').readOnly=!manual;
  applyYearPreset();
 });
-$('priceStrategy')?.addEventListener('change',syncPriceStrategy);
-$('buyerCreditProfile')?.addEventListener('change',syncCreditProfile);
+$('hybridRateMode')?.addEventListener('change',()=>{
+ const manual=$('hybridRateMode').value==='manual';
+ $('hybridCbsRate').readOnly=!manual;
+ $('hybridIbsRate').readOnly=!manual;
+ applyYearPreset();
+});
+
+['snRbt12','snNominal','snDeduction'].forEach(id=>$(id)?.addEventListener('input',()=>{
+ updateSnEffective();
+ calcIntegrated();
+}));
+$('snFutureDasRate')?.addEventListener('input',()=>{snFutureDasTouched=true;calcIntegrated();});
 
 [
  'priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','currentBuyerCredit',
- 'rateReduction','cbsRate','ibsRate','manualProjectedPrice','cbsCreditPct','ibsCreditPct','otherProjectedCredit'
+ 'rateReduction','cbsRate','ibsRate','manualProjectedPrice','cbsCreditPct','ibsCreditPct','otherProjectedCredit',
+ 'snCbsDasRate','snIbsDasRate','hybridReduction','hybridCbsRate','hybridIbsRate'
 ].forEach(id=>$(id)?.addEventListener('input',calcIntegrated));
-
-['rbt12','snNominal','snDeduction','snRevenue'].forEach(id=>$(id)?.addEventListener('input',calcSimples));
-function calcSimples(){
- if(!$('simplesResult')) return;
- const r=num('rbt12'),nom=num('snNominal')/100,pd=num('snDeduction'),rev=num('snRevenue');
- const eff=r?((r*nom-pd)/r):0;
- $('simplesResult').innerHTML=`<div><small>Alíquota efetiva</small><b>${pct(eff*100)}</b></div><div class="main-result"><small>DAS simulado</small><strong>${money(rev*eff)}</strong><span>Complemento do diagnóstico; não alimenta automaticamente a formação do preço.</span></div>`;
-}
 
 ['lpRevenue','lpPresumption'].forEach(id=>$(id)?.addEventListener('input',calcLP));
 function calcLP(){
@@ -419,6 +579,5 @@ renderHome();
 searchModules('');
 syncCreditProfile();
 syncPriceStrategy();
-applyYearPreset();
-calcSimples();
+applyRegimeUI({preset:true});
 calcLP();
