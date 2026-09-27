@@ -333,7 +333,8 @@ function applyYearPreset(){
  if($('rateNote')){
   if(r==='simples'){
    const sh=snShares(y);
-   $('rateNote').textContent=`Simples padrão · ${SN_LABELS[snAnnex()]} · ${sh.band+1}ª faixa. DAS efetivo ${pct(sh.eff*100)}; dentro dele, CBS ${pct(sh.cbsEff*100)} e IBS ${pct(sh.ibsEff*100)}. O total do DAS pode permanecer estável enquanto a partilha e o crédito mudam.`;
+   const sub=num('snRbt12')>3600000?' Atenção: RBT12 acima de R$ 3,6 milhões exige tratamento do sublimite de ICMS/ISS/IBS e deve ser validado fora deste cálculo automático.':'';
+   $('rateNote').textContent=`Simples padrão · ${SN_LABELS[snAnnex()]} · ${sh.band+1}ª faixa. DAS efetivo ${pct(sh.eff*100)}; dentro dele, CBS ${pct(sh.cbsEff*100)} e IBS ${pct(sh.ibsEff*100)}. O total do DAS pode permanecer estável enquanto a partilha e o crédito mudam.${sub}`;
   }else if(r==='simples_hybrid'){
    $('rateNote').textContent='Simples híbrido: CBS/IBS são retirados automaticamente do DAS conforme o Anexo/faixa e calculados pelo regime regular por fora.';
   }else{
@@ -442,6 +443,7 @@ function futureScenario(year,strategyOverride=null){
 function regimeExplanation(){
  const r=regime();
  if(r==='simples'){
+  if(num('snRbt12')>3600000) return 'Simples padrão: RBT12 acima do sublimite de R$ 3,6 milhões exige tratamento específico de ICMS/ISS/IBS. A ferramenta sinaliza a faixa, mas o resultado deve ser validado antes de uso com cliente.';
   const e27=snEffective(2027).eff, e33=snEffective(2033).eff;
   const same=Math.abs(e27-e33)<.0000001;
   return same
