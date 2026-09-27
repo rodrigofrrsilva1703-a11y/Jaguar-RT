@@ -269,6 +269,115 @@ function calcIntegrated(){
    <b>${headline}</b>
    <p>A estratégia selecionada é <strong>${strategyLabel}</strong>. O preço projetado gera ${money(cbsValue)} de CBS e ${money(ibsValue)} de IBS no modelo didático; após o aproveitamento informado, o comprador recebe ${money(projectedCredit)} em créditos considerados e seu custo efetivo fica em ${money(projectedCost)}.${reductionNote}${creditNote}</p>
  `;
+
+ renderYearlyProjection();
+}
+
+function renderYearlyProjection(){
+ if(!$('yearlyProjectionTable')) return;
+
+ const price=Math.max(0,num('priceNow'));
+ const pis=clamp(num('pisRate'),0,100);
+ const cofins=clamp(num('cofinsRate'),0,100);
+ const icms=clamp(num('icmsRate'),0,100);
+ const iss=clamp(num('issRate'),0,100);
+ const ipi=clamp(num('ipiRate'),0,100);
+ const currentRate=pis+cofins+icms+iss+ipi;
+ const currentTaxes=price*currentRate/100;
+ const currentNet=Math.max(0,price-currentTaxes);
+ const currentCredit=Math.max(0,num('currentBuyerCredit'));
+ const currentCost=Math.max(0,price-currentCredit);
+
+ const reduction=clamp(num('rateReduction'),0,100);
+ const reductionFactor=1-reduction/100;
+ const strategy=$('priceStrategy')?.value||'net';
+ const selectedYear=Number($('priceYear')?.value||2027);
+ const rateMode=$('rateMode')?.value||'rtav';
+ const manualCbs=clamp(num('cbsRate'),0,100);
+ const manualIbs=clamp(num('ibsRate'),0,100);
+ const cbsCreditPct=clamp(num('cbsCreditPct'),0,100);
+ const ibsCreditPct=clamp(num('ibsCreditPct'),0,100);
+ const otherCredit=Math.max(0,num('otherProjectedCredit'));
+ const manualPrice=Math.max(0,num('manualProjectedPrice'));
+
+ const rows=[{
+  year:2026,
+  system:'Atual',
+  price,
+  cbs:null,
+  ibs:null,
+  oldTaxes:currentTaxes,
+  credit:currentCredit,
+  cost:currentCost,
+  net:currentNet,
+  delta:0
+ }];
+
+ for(let year=2027;year<=2033;year++){
+  const preset=TRANSITION[year];
+  const cbsBaseRate=rateMode==='rtav'?preset.cbs:manualCbs;
+  const ibsBaseRate=rateMode==='rtav'?preset.ibs:manualIbs;
+  const cbsRate=cbsBaseRate*reductionFactor;
+  const ibsRate=ibsBaseRate*reductionFactor;
+  const newRate=(cbsRate+ibsRate)/100;
+  const oldRate=((icms+iss)*preset.old)/100;
+
+  let projected=0;
+  let cleanBase=0;
+  if(strategy==='net'){
+   cleanBase=currentNet;
+   projected=(1-oldRate)>0?cleanBase*(1+newRate)/(1-oldRate):0;
+  }else{
+   projected=strategy==='gross'?price:manualPrice;
+   cleanBase=(1+newRate)>0?projected*(1-oldRate)/(1+newRate):0;
+  }
+
+  const cbsValue=cleanBase*cbsRate/100;
+  const ibsValue=cleanBase*ibsRate/100;
+  const oldTaxValue=projected*oldRate;
+  const projectedNet=Math.max(0,projected-cbsValue-ibsValue-oldTaxValue);
+  const projectedCredit=(cbsValue*cbsCreditPct/100)+(ibsValue*ibsCreditPct/100)+otherCredit;
+  const projectedCost=Math.max(0,projected-projectedCredit);
+
+  rows.push({
+   year,
+   system:'Reforma',
+   price:projected,
+   cbs:cbsValue,
+   ibs:ibsValue,
+   oldTaxes:oldTaxValue,
+   credit:projectedCredit,
+   cost:projectedCost,
+   net:projectedNet,
+   delta:effectPct(price,projected)
+  });
+ }
+
+ $('yearlyProjectionTable').innerHTML=rows.map(r=>{
+  const cls=r.year===2026?'current-year':(r.year===selectedYear?'selected-year':'');
+  return `<tr class="${cls}">
+   <td>${r.year}</td>
+   <td><span class="system-pill">${r.system}</span></td>
+   <td><strong>${money(r.price)}</strong></td>
+   <td>${r.cbs===null?'—':money(r.cbs)}</td>
+   <td>${r.ibs===null?'—':money(r.ibs)}</td>
+   <td>${money(r.oldTaxes)}</td>
+   <td>${money(r.credit)}</td>
+   <td><strong>${money(r.cost)}</strong></td>
+   <td>${money(r.net)}</td>
+   <td class="${r.delta<0?'effect-down':'effect-up'}">${r.year===2026?'Base':effectText(r.delta)}</td>
+  </tr>`;
+ }).join('');
+
+ const modeText=rateMode==='rtav'
+  ? 'De 2027 a 2033, o modo Estimativa RTAV usa as premissas anuais do simulador.'
+  : 'No modo manual, as alíquotas de CBS e IBS informadas no campo selecionado são mantidas como premissa para 2027–2033; apenas a transição de ICMS/ISS varia por ano.';
+ const strategyText=strategy==='net'
+  ? ' A estratégia anual preserva a receita líquida de 2026.'
+  : strategy==='gross'
+   ? ' A estratégia anual mantém o preço bruto de 2026.'
+   : ' A estratégia anual usa o mesmo preço manual informado em todos os anos futuros.';
+ $('yearlyProjectionNote').textContent='2026 é apresentado como cenário atual/base comercial e não como cálculo da alíquota-teste de CBS/IBS. '+modeText+strategyText;
 }
 
 $('priceYear')?.addEventListener('change',applyYearPreset);
