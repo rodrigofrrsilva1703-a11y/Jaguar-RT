@@ -558,6 +558,7 @@ function updateScenarioStrip(){
 function calcIntegrated(){
  if(!$('integratedKpis')) return;
  updateScenarioStrip();
+
  const base=currentScenario();
  const y=Number($('priceYear')?.value||2027);
  const future=futureScenario(y);
@@ -569,38 +570,66 @@ function calcIntegrated(){
  const costDelta=effectPct(base.cost,future.cost);
  const netDelta=effectPct(base.net,future.net);
  const creditDelta=deltaMoney(base.credit,future.credit);
+ const sellerCreditDelta=future.sellerPurchaseCredit-base.sellerPurchaseCredit;
+ const sellerResultDelta=future.sellerResult-base.sellerResult;
+ const sellerMarginDelta=(future.sellerMargin-base.sellerMargin)*100;
 
  let signal='PREÇO RECALCULADO',headline='O preço foi recalculado para o cenário tributário selecionado.';
  if(priceDelta>.05){signal='REAJUSTE DE PREÇO';headline='O cenário exige aumento do preço para atingir o objetivo selecionado.';}
  else if(priceDelta<-.05){signal='REDUÇÃO DE PREÇO';headline='O cenário permite preço menor para atingir o objetivo selecionado.';}
- else{signal='PREÇO ESTÁVEL';headline='A carga total que forma o preço ficou muito próxima da base de 2026.';}
+ else{signal='PREÇO ESTÁVEL';headline='O preço calculado ficou muito próximo da base de 2026.';}
 
  $('resultSignal').textContent=signal;
  $('regimeResultNote').textContent=REGIME_LABELS[regime()]+' · '+regimeExplanation();
 
+ if($('sellerMarginPreview')){
+  $('sellerMarginPreview').innerHTML=`
+   <div><small>Resultado 2026</small><b>${money(base.sellerResult)}</b></div>
+   <div><small>Margem 2026</small><b>${pct(base.sellerMargin*100)}</b></div>
+  `;
+ }
+
  $('integratedKpis').innerHTML=`
   <div class="integrated-kpi dark"><small>Preço calculado em ${y}</small><b>${money(future.price)}</b><span>${effectText(priceDelta)} vs. 2026</span></div>
   <div class="integrated-kpi"><small>Variação anual</small><b>${effectText(annualDelta)}</b><span>vs. ${y-1}</span></div>
-  <div class="integrated-kpi"><small>CBS + IBS</small><b>${money(future.cbs+future.ibs)}</b><span>CBS ${money(future.cbs)} · IBS ${money(future.ibs)}</span></div>
+  <div class="integrated-kpi"><small>Resultado / margem</small><b>${money(future.sellerResult)}</b><span>Margem ${pct(future.sellerMargin*100)} · ${sellerMarginDelta>=0?'+':''}${sellerMarginDelta.toFixed(2)} p.p.</span></div>
   <div class="integrated-kpi dark"><small>Custo efetivo do comprador</small><b>${money(future.cost)}</b><span>${effectText(costDelta)} vs. 2026</span></div>
  `;
 
- const row=(label,before,after,effect,kind='pct')=>`<tr><td><strong>${label}</strong></td><td>${money(before)}</td><td>${money(after)}</td><td class="${effect<0?'effect-down':'effect-up'}">${kind==='money'?money(effect):effectText(effect)}</td></tr>`;
+ const row=(label,before,after,effect,kind='pct')=>{
+  let beforeText=money(before),afterText=money(after),effectValue='';
+  if(kind==='margin'){
+   beforeText=pct(before*100);afterText=pct(after*100);effectValue=`${effect>=0?'+':''}${effect.toFixed(2)} p.p.`;
+  }else effectValue=kind==='money'?money(effect):effectText(effect);
+  return `<tr><td><strong>${label}</strong></td><td>${beforeText}</td><td>${afterText}</td><td class="${effect<0?'effect-down':'effect-up'}">${effectValue}</td></tr>`;
+ };
+
  $('integratedTable').innerHTML=[
   row('Preço de venda',base.price,future.price,priceDelta),
   row('Tributos considerados na venda',base.taxes,future.taxes,future.taxes-base.taxes,'money'),
   row('Crédito do comprador',base.credit,future.credit,creditDelta,'money'),
   row('Custo efetivo do comprador',base.cost,future.cost,costDelta),
   row('Receita líquida no preço calculado',base.net,future.net,netDelta),
+  row('Créditos das compras da empresa',base.sellerPurchaseCredit,future.sellerPurchaseCredit,sellerCreditDelta,'money'),
+  row('Resultado operacional simplificado',base.sellerResult,future.sellerResult,sellerResultDelta,'money'),
+  row('Margem operacional',base.sellerMargin,future.sellerMargin,sellerMarginDelta,'margin'),
   row('Receita líquida se mantivesse preço 2026',base.net,natural.net,effectPct(base.net,natural.net))
  ].join('');
 
  const strategy=$('priceStrategy')?.value||'net';
- const strategyLabel=strategy==='net'?'formar o preço para preservar o líquido de 2026':strategy==='gross'?'manter o preço de 2026 apenas para medir o impacto':'usar o preço informado manualmente';
+ const strategyLabel=
+  strategy==='net'?'formar o preço para preservar o líquido de 2026':
+  strategy==='margin'?'formar o preço para preservar a margem operacional de 2026':
+  strategy==='gross'?'manter o preço de 2026 apenas para medir o impacto':
+  'usar o preço informado manualmente';
+
  let extra='';
- if(regime()==='simples'&&Math.abs(priceDelta)<=.05){
-  extra=' Neste Simples padrão, preço estável não significa ausência de impacto: a partilha CBS/IBS e o crédito do comprador mudam na tabela anual.';
+ if(strategy==='margin'){
+  extra=` A margem-alvo é ${pct(base.sellerMargin*100)} e o resultado projetado fica em ${money(future.sellerResult)}, considerando ${money(future.sellerPurchaseCredit)} de créditos projetados nas compras.`;
+ }else if(regime()==='simples'&&Math.abs(priceDelta)<=.05){
+  extra=' Neste Simples padrão, preço estável não significa ausência de impacto: a partilha CBS/IBS e o crédito do comprador podem mudar.';
  }
+
  $('integratedExplanation').innerHTML=`<b>${headline}</b><p>A estratégia é <strong>${strategyLabel}</strong>. Em ${y}, o preço calculado é ${money(future.price)} e o custo efetivo do comprador é ${money(future.cost)}.${extra}</p>`;
 
  renderYearlyProjection();
@@ -616,6 +645,40 @@ function selectYearDetail(year){
  }else{
   renderYearlyProjection();
  }
+}
+
+function yearAnalysisHTML(x,base){
+ if(x.year===2026){
+  return `
+   <div class="year-analysis-box">
+    <span>ANÁLISE DO ANO</span><h5>2026 é a referência da comparação.</h5>
+    <div class="year-analysis-grid">
+     <div class="year-analysis-point"><b>Preço</b><small>Preço-base de ${money(x.price)} usado para reconstruir os anos seguintes.</small></div>
+     <div class="year-analysis-point"><b>Cliente</b><small>Custo efetivo de ${money(x.cost)} após os créditos atuais informados.</small></div>
+     <div class="year-analysis-point"><b>Empresa</b><small>Resultado de ${money(x.sellerResult)} e margem de ${pct(x.sellerMargin*100)} antes da Reforma.</small></div>
+    </div>
+   </div>`;
+ }
+
+ const priceWord=x.delta>.05?'aumenta':x.delta<-.05?'diminui':'fica praticamente estável';
+ const clientWord=x.costDelta>.05?'aumenta':x.costDelta<-.05?'diminui':'fica praticamente estável';
+ const marginDelta=(x.sellerMargin-base.sellerMargin)*100;
+ const marginWord=marginDelta>.02?'melhora':marginDelta<-.02?'cai':'é preservada';
+ const regimeNote=x.regime==='simples'
+  ? 'No Simples padrão, a composição do DAS e o crédito gerado podem mudar mesmo com preço estável.'
+  : x.regime==='simples_hybrid'
+   ? 'No híbrido, CBS/IBS ficam fora do DAS e o remanescente permanece separado.'
+   : 'Nos regimes regulares, CBS/IBS entram por fora e os tributos antigos recuam conforme a transição.';
+
+ return `
+  <div class="year-analysis-box">
+   <span>ANÁLISE DO ANO</span><h5>O que muda em ${x.year}</h5>
+   <div class="year-analysis-grid">
+    <div class="year-analysis-point"><b>Preço</b><small>O preço recomendado ${priceWord}: ${money(x.price)} (${effectText(x.delta)} vs. 2026; ${effectText(x.annualDelta)} vs. ano anterior).</small></div>
+    <div class="year-analysis-point"><b>Cliente</b><small>O custo efetivo ${clientWord} para ${money(x.cost)}. Crédito considerado: ${money(x.credit)}.</small></div>
+    <div class="year-analysis-point"><b>Empresa</b><small>Resultado ${money(x.sellerResult)}; margem ${marginWord} em ${pct(x.sellerMargin*100)}. Créditos das compras: ${money(x.sellerPurchaseCredit)}. ${regimeNote}</small></div>
+   </div>
+  </div>`;
 }
 
 function renderYearDetail(year){
@@ -648,19 +711,29 @@ function renderYearDetail(year){
    <div class="year-detail-item"><small>Crédito do comprador</small><b>${money(x.credit)}</b></div>
    <div class="year-detail-item"><small>Custo efetivo</small><b>${money(x.cost)}</b></div>
    <div class="year-detail-item"><small>Receita líquida</small><b>${money(x.net)}</b></div>
+   <div class="year-detail-item"><small>Crédito nas compras da empresa</small><b>${money(x.sellerPurchaseCredit)}</b></div>
+   <div class="year-detail-item"><small>Resultado operacional</small><b>${money(x.sellerResult)}</b></div>
+   <div class="year-detail-item"><small>Margem operacional</small><b>${pct(x.sellerMargin*100)}</b></div>
    <div class="year-detail-item"><small>Líquido sem reajuste</small><b>${money(x.noAdjustNet)}</b></div>
    <div class="year-detail-item"><small>Diferença no preço</small><b>${x.year===2026?'—':money(x.diff)}</b></div>
   </div>
   <div class="year-detail-foot">${context}</div>
+  ${yearAnalysisHTML(x,base)}
  `;
 }
 
 function renderYearlyProjection(){
  if(!$('yearlyProjectionTable')) return;
  const base=currentScenario(),selectedYear=Number($('priceYear')?.value||2027),r=regime(),strategy=$('priceStrategy')?.value||'net';
- const rows=[{year:2026,regime:r,system:'Atual',price:base.price,cbs:null,ibs:null,remnant:base.remnant,credit:base.credit,cost:base.cost,costDelta:0,net:base.net,noAdjustNet:base.net,diff:0,delta:0,annualDelta:0}];
- let prevPrice=base.price;
 
+ const rows=[{
+  year:2026,regime:r,system:'Atual',price:base.price,cbs:null,ibs:null,remnant:base.remnant,
+  credit:base.credit,cost:base.cost,costDelta:0,net:base.net,noAdjustNet:base.net,
+  diff:0,delta:0,annualDelta:0,
+  sellerPurchaseCredit:base.sellerPurchaseCredit,sellerResult:base.sellerResult,sellerMargin:base.sellerMargin
+ }];
+
+ let prevPrice=base.price;
  for(let year=2027;year<=2033;year++){
   const x=futureScenario(year),noAdjust=futureScenario(year,'gross');
   rows.push({
@@ -668,7 +741,8 @@ function renderYearlyProjection(){
    system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma regular',
    price:x.price,cbs:x.cbs,ibs:x.ibs,remnant:x.remnant,credit:x.credit,cost:x.cost,
    costDelta:effectPct(base.cost,x.cost),net:x.net,noAdjustNet:noAdjust.net,
-   diff:x.price-base.price,delta:effectPct(base.price,x.price),annualDelta:effectPct(prevPrice,x.price)
+   diff:x.price-base.price,delta:effectPct(base.price,x.price),annualDelta:effectPct(prevPrice,x.price),
+   sellerPurchaseCredit:x.sellerPurchaseCredit,sellerResult:x.sellerResult,sellerMargin:x.sellerMargin
   });
   prevPrice=x.price;
  }
@@ -700,13 +774,17 @@ function renderYearlyProjection(){
 
  renderYearDetail(yearDetailSelected);
 
- let note=strategy==='net'
-  ? 'O preço recomendado de cada ano preserva o líquido econômico de 2026. Clique em qualquer ano para abrir CBS, IBS, tributos remanescentes, receita líquida e o cenário sem reajuste.'
-  : strategy==='gross'
-   ? 'Nesta estratégia o preço é mantido por escolha. Use os detalhes do ano para visualizar o impacto nos tributos, crédito, custo e receita líquida.'
-   : 'O preço manual é aplicado aos anos futuros. Clique em um ano para visualizar a composição completa.';
- if(r==='simples') note+=' No Simples padrão, o preço pode permanecer igual quando a alíquota efetiva total do DAS não muda, mesmo que a composição CBS/IBS e o custo do comprador mudem.';
- if(r==='simples_hybrid') note+=' No híbrido, o painel detalhado mostra o DAS remanescente separado de CBS/IBS.';
+ let note=
+  strategy==='net'
+   ? 'O preço recomendado preserva o líquido econômico de 2026. Clique em qualquer ano para abrir a análise completa.'
+   : strategy==='margin'
+    ? 'O preço recomendado preserva a margem operacional de 2026 usando custos e créditos das compras informados. A análise de cada ano mostra o efeito para cliente e empresa.'
+    : strategy==='gross'
+     ? 'Nesta estratégia o preço é mantido por escolha. Os detalhes mostram o impacto tributário e econômico por ano.'
+     : 'O preço manual é aplicado aos anos futuros. Clique em um ano para visualizar a composição completa.';
+
+ if(r==='simples') note+=' No Simples padrão, o preço pode permanecer igual quando a alíquota efetiva total do DAS não muda, mesmo que crédito e custo do comprador mudem.';
+ if(r==='simples_hybrid') note+=' No híbrido, o painel separa o DAS remanescente de CBS/IBS.';
  $('yearlyProjectionNote').textContent=note;
 }
 
