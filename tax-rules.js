@@ -6,13 +6,13 @@
  const reviewedAt='2026-09-27';
  const transition={
   2026:{old:1,cbs:0,ibs:0,status:'base_2026',sourceType:'base',note:'2026 é usado como cenário-base da ferramenta.'},
-  2027:{old:1,cbs:8.9,ibs:.1,status:'premissa_rtav',sourceType:'premissa',note:'Premissa didática RTAV: total de 9% em 2027, separado em CBS 8,9% + IBS 0,1%.'},
-  2028:{old:1,cbs:8.9,ibs:.1,status:'premissa_rtav',sourceType:'premissa',note:'Premissa didática RTAV: mesma estrutura usada para 2027.'},
-  2029:{old:.9,cbs:9,ibs:1.891,status:'premissa_rtav',sourceType:'premissa',note:'RTAV: CBS 9% + 10% de IBS cheio estimado em 18,91%; ICMS/ISS a 90%.'},
-  2030:{old:.8,cbs:9,ibs:3.782,status:'premissa_rtav',sourceType:'premissa',note:'RTAV: CBS 9% + 20% de IBS cheio estimado; ICMS/ISS a 80%.'},
-  2031:{old:.7,cbs:9,ibs:5.673,status:'premissa_rtav',sourceType:'premissa',note:'RTAV: CBS 9% + 30% de IBS cheio estimado; ICMS/ISS a 70%.'},
-  2032:{old:.6,cbs:9,ibs:7.564,status:'premissa_rtav',sourceType:'premissa',note:'RTAV: CBS 9% + 40% de IBS cheio estimado; ICMS/ISS a 60%.'},
-  2033:{old:0,cbs:9,ibs:18.91,status:'premissa_rtav',sourceType:'premissa',note:'RTAV: projeção didática total de 27,91%; ICMS/ISS extintos.'}
+  2027:{old:1,cbs:9.21,ibs:.1,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + IBS 0,1% em 2027. Use o modo manual quando houver alíquota aplicável específica.'},
+  2028:{old:1,cbs:9.21,ibs:.1,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + IBS 0,1% em 2028. Use o modo manual quando houver alíquota aplicável específica.'},
+  2029:{old:.9,cbs:9.21,ibs:1.891,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + 10% do IBS cheio estimado em 18,91%; ICMS/ISS a 90%.'},
+  2030:{old:.8,cbs:9.21,ibs:3.782,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + 20% do IBS cheio estimado; ICMS/ISS a 80%.'},
+  2031:{old:.7,cbs:9.21,ibs:5.673,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + 30% do IBS cheio estimado; ICMS/ISS a 70%.'},
+  2032:{old:.6,cbs:9.21,ibs:7.564,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + 40% do IBS cheio estimado; ICMS/ISS a 60%.'},
+  2033:{old:0,cbs:9.21,ibs:18.91,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + IBS estimado em 18,91%; ICMS/ISS extintos.'}
  };
 
  const simpleTables={
@@ -44,7 +44,7 @@
  };
 
  return Object.freeze({
-  version:'2026.09.27-1',
+  version:'2026.09.27-2',
   reviewedAt,
   transition:Object.freeze(transition),
   simpleTables:Object.freeze(simpleTables),
