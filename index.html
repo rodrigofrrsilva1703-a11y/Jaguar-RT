@@ -426,7 +426,7 @@
  </div>
 
  <div class="flowline" aria-label="Fluxo do simulador">
-  <span>1 · Regime</span><i>→</i><span>2 · Preço atual</span><i>→</i><span>3 · Reforma</span><i>→</i><span>4 · Créditos</span><i>→</i><span>5 · Margem</span><i>→</i><span>6 · Resultado 2026–33</span>
+  <span>1 · Regime</span><i>→</i><span>2 · Dados atuais</span><i>→</i><span>3 · Reforma</span><i>→</i><span>4 · Créditos</span><i>→</i><span>5 · Margem</span><i>→</i><span>6 · Análise 2026–33</span>
  </div>
 
  <article class="integrated-tool">
@@ -442,8 +442,8 @@
   <div class="scenario-strip">
    <div><small>REGIME</small><b id="activeRegimeBadge">Lucro Presumido</b></div>
    <div><small>ANO DESTACADO</small><b id="activeYearBadge">2027</b></div>
-   <div><small>ESTRATÉGIA</small><b id="activeStrategyBadge">Preservar líquido</b></div>
-   <div class="scenario-strip-note"><small>OBJETIVO</small><b>Formação anual do preço de venda</b></div>
+   <div><small>CÁLCULO</small><b id="activeStrategyBadge">Automático</b></div>
+   <div class="scenario-strip-note"><small>OBJETIVO</small><b>Resultado e análise anual</b></div>
   </div>
 
   <div class="sim-sections">
@@ -493,10 +493,9 @@
    </section>
 
    <section class="sim-block">
-    <div class="sim-title"><span>02</span><div><b>Cenário da Reforma</b><small>Ano, estratégia e regras do regime.</small></div></div>
+    <div class="sim-title"><span>02</span><div><b>Cenário da Reforma</b><small>Ano e regras tributárias aplicáveis.</small></div></div>
     <div class="fields three">
      <div class="field"><label>Ano destacado</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
-     <div class="field"><label>Estratégia de preço</label><select id="priceStrategy"><option value="net" selected>Formar preço para preservar o líquido de 2026</option><option value="margin">Preservar margem operacional de 2026</option><option value="gross">Manter preço de 2026 (simulação)</option><option value="manual">Preço projetado manual</option></select></div>
 
      <div id="regularFutureFields" class="regime-panel wide">
       <div class="fields three">
@@ -525,7 +524,6 @@
       </div>
      </div>
 
-     <div class="field wide" id="manualPriceField"><label>Preço projetado manual R$</label><input id="manualProjectedPrice" type="number" step=".01" value="100" disabled><small class="field-help">Ative “Preço projetado manual” para testar uma decisão comercial específica.</small></div>
     </div>
     <div id="rateNote" class="rate-note"></div>
    </section>
@@ -651,7 +649,7 @@
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260927-26"></script>
-<script src="app-v2.js?v=20260927-26"></script>
+<script src="content-v2.js?v=20260927-27"></script>
+<script src="app-v2.js?v=20260927-27"></script>
 </body>
 </html>
