@@ -1035,7 +1035,19 @@ function buildRevenuePdf(client,year){
  const future=RTAV_ENGINE.futureRevenueScenario(input,year);
  const regimeLabel=REGIME_LABELS[input.regime]||input.regime;
  const period=$('revRevenuePeriod')?.value||'mensal';
- const currentRows=[['Faturamento bruto',money(base.revenue)],['Tributos considerados',money(base.taxes)],['Faturamento líquido',money(base.net)]];
+ const currentRows=[['Faturamento bruto',money(base.revenue)]];
+ if(input.regime==='simples'||input.regime==='simples_hybrid'){
+  currentRows.push(['DAS / tributos',money(base.taxes)]);
+ }else{
+  const c=base.components||{};
+  if((c.pis||0)>0) currentRows.push(['PIS',money(c.pis)]);
+  if((c.cofins||0)>0) currentRows.push(['Cofins',money(c.cofins)]);
+  if((c.icms||0)>0) currentRows.push(['ICMS',money(c.icms)]);
+  if((c.iss||0)>0) currentRows.push(['ISS',money(c.iss)]);
+  if((c.ipi||0)>0) currentRows.push(['IPI',money(c.ipi)]);
+ }
+ currentRows.push(['Total de tributos',money(base.taxes)]);
+ currentRows.push(['Faturamento líquido',money(base.net)]);
  const futureRows=[
   ['Faturamento projetado',money(future.revenue)],
   ['CBS',money(future.cbs||0)],
