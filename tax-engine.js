@@ -138,7 +138,7 @@
   if(r==='simples_hybrid'){
    const sh=snShares(year,cfg.simple.annex,cfg.simple.rbt12);
    const rates=resolveRegularRates(year,cfg.hybridFuture);
-   return {type:'hybrid',remRate:Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff),cbsRate:rates.cbs/100,ibsRate:rates.ibs/100,source:sh,rates};
+   return {type:'hybrid',excludedRate:sh.oldEff,excludedLabel:['I','II'].includes(cfg.simple.annex)?'ICMS':'ISS',remRate:Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff),cbsRate:rates.cbs/100,ibsRate:rates.ibs/100,source:sh,rates};
   }
   const p=RULES.transition[year]||RULES.transition[2027];
   const oldRate=((cfg.currentRates.icms+cfg.currentRates.iss)*p.old)/100;
@@ -179,11 +179,38 @@
  function currentPriceScenario(input){return currentBaseScenario(input,'price');}
  function currentRevenueScenario(input){return currentBaseScenario(input,'revenue');}
 
+
+ // No híbrido, CBS/IBS ficam fora da base do DAS. Apenas a parcela
+ // de ICMS/ISS do DAS residual é excluída da base dos novos tributos.
+ function hybridAtGross(p,gross){
+  const newRate=p.cbsRate+p.ibsRate;
+  const residualBase=gross/(1+(1-p.excludedRate)*newRate);
+  const excludedTax=residualBase*p.excludedRate;
+  const cleanBase=residualBase-excludedTax;
+  const cbs=cleanBase*p.cbsRate,ibs=cleanBase*p.ibsRate;
+  const remnant=residualBase*p.remRate;
+  const taxes=cbs+ibs+remnant;
+  return {residualBase,excludedTax,cleanBase,cbs,ibs,remnant,taxes,net:Math.max(0,gross-taxes)};
+ }
+
+ function hybridGrossFromNet(p,net){
+  const residualBase=(1-p.remRate)>0?net/(1-p.remRate):0;
+  return residualBase*(1+(1-p.excludedRate)*(p.cbsRate+p.ibsRate));
+ }
+
+ function hybridBaseMemory(x){
+  if(x.params?.type!=='hybrid') return [];
+  return [
+   ['Base do DAS residual (sem CBS/IBS)',x.residualBase],
+   [x.params.excludedLabel+' no DAS residual — excluído da base CBS/IBS',x.excludedTax]
+  ];
+ }
+
  function priceScenarioAtPrice(input,year,projected){
   const cfg=normalizeInput(input);
   const p=paramsForYear(cfg,year);
   const price=Math.max(0,Number(projected)||0);
-  let cbs=0,ibs=0,remnant=0,taxes=0,net=0,cleanBase=0;
+  let cbs=0,ibs=0,remnant=0,taxes=0,net=0,cleanBase=0,residualBase=null,excludedTax=0;
 
   if(p.type==='simple'){
    taxes=price*p.dasRate;
@@ -192,6 +219,8 @@
    remnant=Math.max(0,taxes-cbs-ibs);
    net=Math.max(0,price-taxes);
    cleanBase=net;
+  }else if(p.type==='hybrid'){
+   ({cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax}=hybridAtGross(p,price));
   }else{
    const newRate=p.cbsRate+p.ibsRate;
    cleanBase=(1+newRate)>0?price*(1-p.remRate)/(1+newRate):0;
@@ -203,7 +232,7 @@
   }
 
   const buyerCredit=cfg.buyer.profile==='b2b'?(cbs+ibs)*(cfg.buyer.usePct/100):0;
-  return {year,regime:cfg.regime,price,cbs,ibs,remnant,taxes,net,cleanBase,buyerCredit,buyerCost:Math.max(0,price-buyerCredit),params:p};
+  return {year,regime:cfg.regime,price,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,buyerCredit,buyerCost:Math.max(0,price-buyerCredit),params:p};
  }
 
  function futurePriceScenario(input,year,keepGross=false){
@@ -214,6 +243,7 @@
 
   if(!keepGross){
    if(p.type==='simple') projected=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
+   else if(p.type==='hybrid') projected=hybridGrossFromNet(p,base.net);
    else{
     const newRate=p.cbsRate+p.ibsRate;
     projected=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
@@ -229,7 +259,7 @@
   const cfg=normalizeInput(input);
   const p=paramsForYear(cfg,year);
   const revenue=Math.max(0,Number(gross)||0);
-  let cbs=0,ibs=0,remnant=0,taxes=0,net=0,cleanBase=0;
+  let cbs=0,ibs=0,remnant=0,taxes=0,net=0,cleanBase=0,residualBase=null,excludedTax=0;
 
   if(p.type==='simple'){
    taxes=revenue*p.dasRate;
@@ -238,6 +268,8 @@
    remnant=Math.max(0,taxes-cbs-ibs);
    net=Math.max(0,revenue-taxes);
    cleanBase=net;
+  }else if(p.type==='hybrid'){
+   ({cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax}=hybridAtGross(p,revenue));
   }else{
    const newRate=p.cbsRate+p.ibsRate;
    cleanBase=(1+newRate)>0?revenue*(1-p.remRate)/(1+newRate):0;
@@ -251,7 +283,7 @@
   const purchaseCredit=p.type==='simple'?0:revenue*(cfg.purchases.creditablePct/100)*((p.cbsRate||0)+(p.ibsRate||0))*(cfg.purchases.usePct/100);
   const netTax=Math.max(0,taxes-purchaseCredit);
   const economicNet=Math.max(0,revenue-netTax);
-  return {year,regime:cfg.regime,revenue,cbs,ibs,remnant,taxes,net,cleanBase,purchaseCredit,netTax,economicNet,params:p};
+  return {year,regime:cfg.regime,revenue,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,purchaseCredit,netTax,economicNet,params:p};
  }
 
  function futureRevenueScenario(input,year,keepGross=false){
@@ -262,6 +294,7 @@
 
   if(!keepGross){
    if(p.type==='simple') gross=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
+   else if(p.type==='hybrid') gross=hybridGrossFromNet(p,base.net);
    else{
     const newRate=p.cbsRate+p.ibsRate;
     gross=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
@@ -319,7 +352,8 @@
   const p=x.params;
   const rows=[
    ['Valor líquido preservado de 2026',base.net],
-   ['Base limpa usada no novo sistema',x.cleanBase],
+   ...hybridBaseMemory(x),
+   [x.params?.type==='hybrid'?'Base da CBS/IBS após excluir '+x.params.excludedLabel:'Base limpa usada no novo sistema',x.cleanBase],
    ['CBS calculada',x.cbs],
    ['IBS calculado',x.ibs],
    ['Tributos/DAS remanescentes',x.remnant],
@@ -346,7 +380,8 @@
   const x=futureRevenueScenario(cfg,Number(year));
   return [
    ['Faturamento líquido preservado de 2026',base.net],
-   ['Base limpa usada no novo sistema',x.cleanBase],
+   ...hybridBaseMemory(x),
+   [x.params?.type==='hybrid'?'Base da CBS/IBS após excluir '+x.params.excludedLabel:'Base limpa usada no novo sistema',x.cleanBase],
    ['CBS calculada',x.cbs],
    ['IBS calculado',x.ibs],
    ['Tributos/DAS remanescentes',x.remnant],
@@ -358,7 +393,7 @@
  }
 
  return Object.freeze({
-  version:'1.0.0',
+  version:'1.1.0',
   rulesVersion:RULES.version,
   clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
   currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,
