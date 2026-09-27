@@ -518,12 +518,17 @@ function summaryRows(rows){
 
 function currentTaxRows(base){
  if(isSimpleRegime(base.regime)){
-  return [
+  const rows=[
    ['Preço bruto',money(base.price)],
    ['DAS / tributos',money(base.taxes)],
    ['Carga sobre o preço',pct(base.price?base.taxes/base.price*100:0)],
    ['Valor líquido',money(base.net)]
   ];
+  if(($('priceBuyerProfile')?.value||'b2c')==='b2b'){
+   rows.push(['Crédito atual informado',money(base.buyerCredit||0)]);
+   rows.push(['Custo efetivo do comprador',money(base.buyerCost??base.price)]);
+  }
+  return rows;
  }
  const c=base.components;
  const rows=[['Preço bruto',money(base.price)]];
