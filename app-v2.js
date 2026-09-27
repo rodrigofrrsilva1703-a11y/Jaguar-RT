@@ -602,16 +602,6 @@ function revApplyUI(opts={}){
  if($('revSimplesFutureFields')) $('revSimplesFutureFields').style.display=simple?'block':'none';
  if($('revSimpleStandardRates')) $('revSimpleStandardRates').style.display=r==='simples'?'block':'none';
  if($('revHybridRegularRates')) $('revHybridRegularRates').style.display=r==='simples_hybrid'?'block':'none';
- if($('revIncomeTaxBlock')) $('revIncomeTaxBlock').style.display=(r==='presumido'||r==='real')?'block':'none';
- if($('revPresumedIncomeFields')) $('revPresumedIncomeFields').style.display=r==='presumido'?'block':'none';
- if($('revRealIncomeFields')) $('revRealIncomeFields').style.display=r==='real'?'block':'none';
- if($('revIncomeTaxNote')){
-  $('revIncomeTaxNote').textContent=r==='presumido'
-   ?'IRPJ e CSLL são estimados sobre bases presumidas e aparecem separados dos tributos sobre vendas.'
-   :r==='real'
-    ?'IRPJ e CSLL usam as bases tributáveis estimadas informadas; faturamento sozinho não determina esses tributos.'
-    :'';
- }
 
  if(preset){
   if(r==='presumido'){$('revPisRate').value=.65;$('revCofinsRate').value=3;}
@@ -656,16 +646,7 @@ function revenueEngineInput(){
   simple:{annex:revAnnex(),rbt12:revRbt12()},
   future:{mode:$('revRateMode')?.value||'rtav',reduction:num('revRateReduction'),cbs:num('revCbsRate'),ibs:num('revIbsRate')},
   hybridFuture:{mode:$('revHybridRateMode')?.value||'rtav',reduction:num('revHybridReduction'),cbs:num('revHybridCbsRate'),ibs:num('revHybridIbsRate')},
-  purchases:{creditablePct:num('revCreditablePurchasesPct'),usePct:num('revPurchaseCreditUsePct')},
-  incomeTax:{
-   period:$('revRevenuePeriod')?.value||'mensal',
-   presumedActivity:$('revPresumedActivity')?.value||'commerce_industry',
-   irpjPresumptionPct:num('revIrpjPresumptionPct'),
-   csllPresumptionPct:num('revCsllPresumptionPct'),
-   annualRevenueProjection:num('revAnnualRevenueProjection'),
-   realIrpjBase:num('revRealIrpjBase'),
-   realCsllBase:num('revRealCsllBase')
-  }
+  purchases:{creditablePct:num('revCreditablePurchasesPct'),usePct:num('revPurchaseCreditUsePct')}
  };
 }
 
@@ -688,21 +669,15 @@ function revFutureScenario(year,keepGross=false){
 function revCurrentRows(base){
  const rows=[['Faturamento bruto',money(base.revenue)]];
  if(!revIsSimple(base.regime)){
-  const c=base.components||{};
+  const c=base.components;
   if(c.pis>0) rows.push(['PIS',money(c.pis)]);
   if(c.cofins>0) rows.push(['Cofins',money(c.cofins)]);
   if(c.icms>0) rows.push(['ICMS',money(c.icms)]);
   if(c.iss>0) rows.push(['ISS',money(c.iss)]);
   if(c.ipi>0) rows.push(['IPI',money(c.ipi)]);
  }else rows.push(['DAS / tributos',money(base.taxes)]);
- rows.push(['Total de tributos sobre vendas',money(base.taxes)]);
- rows.push(['Receita após tributos sobre vendas',money(base.net)]);
- if(base.incomeTaxDetail?.applicable){
-  rows.push(['IRPJ estimado',money(base.irpj)]);
-  rows.push(['CSLL estimada',money(base.csll)]);
-  rows.push(['IRPJ + CSLL',money(base.incomeTaxes)]);
-  rows.push(['Saldo após tributos considerados',money(base.afterIncomeTaxes)]);
- }
+ rows.push(['Total de tributos',money(base.taxes)]);
+ rows.push(['Faturamento líquido',money(base.net)]);
  return rows;
 }
 
@@ -711,20 +686,13 @@ function revFutureRows(x){
  if(x.cbs>0) rows.push(['CBS',money(x.cbs)]);
  if(x.ibs>0) rows.push(['IBS',money(x.ibs)]);
  if(x.remnant>0) rows.push(['DAS / tributos remanescentes',money(x.remnant)]);
- rows.push(['Total de tributos sobre vendas',money(x.taxes)]);
+ rows.push(['Total de tributos',money(x.taxes)]);
  if((x.purchaseCredit||0)>0){
   rows.push(['Créditos estimados das aquisições',money(x.purchaseCredit)]);
-  rows.push(['Carga líquida sobre vendas após créditos',money(x.netTax)]);
-  rows.push(['Receita após tributos sobre vendas e créditos',money(x.economicNet)]);
- }else{
-  rows.push(['Receita após tributos sobre vendas',money(x.net)]);
+  rows.push(['Carga líquida após créditos',money(x.netTax)]);
+  rows.push(['Líquido econômico após créditos',money(x.economicNet)]);
  }
- if(x.incomeTaxDetail?.applicable){
-  rows.push(['IRPJ estimado',money(x.irpj)]);
-  rows.push(['CSLL estimada',money(x.csll)]);
-  rows.push(['IRPJ + CSLL',money(x.incomeTaxes)]);
-  rows.push(['Saldo após tributos considerados',money(x.afterIncomeTaxes)]);
- }
+ rows.push(['Faturamento líquido antes dos créditos',money(x.net)]);
  return rows;
 }
 
@@ -749,25 +717,21 @@ function revCalcIntegrated(){
  if($('revFutureEyebrow')) $('revFutureEyebrow').textContent=y+' · REFORMA';
 
  $('revResultSignal').textContent=delta>.05?'AUMENTO DE FATURAMENTO':delta<-.05?'REDUÇÃO DE FATURAMENTO':'FATURAMENTO ESTÁVEL';
- $('revRegimeResultNote').textContent=REGIME_LABELS[revRegime()]+' · tributos sobre vendas e IRPJ/CSLL são apresentados separadamente. A projeção de preço/faturamento preserva a receita após tributos sobre vendas de 2026.';
+ $('revRegimeResultNote').textContent=REGIME_LABELS[revRegime()]+' · projeção do faturamento bruto necessário para preservar o mesmo faturamento líquido de 2026.';
 
  const hasPurchaseCredit=(future.purchaseCredit||0)>0;
- const hasIncomeTax=!!future.incomeTaxDetail?.applicable;
  $('revKpis').innerHTML=
   '<div class="integrated-kpi dark"><small>Faturamento atual</small><b>'+money(base.revenue)+'</b><span>'+period+'</span></div>'+
-  '<div class="integrated-kpi"><small>Tributos sobre vendas</small><b>'+money(future.taxes)+'</b><span>'+pct(future.revenue?future.taxes/future.revenue*100:0)+' em '+y+'</span></div>'+
-  '<div class="integrated-kpi dark"><small>Receita após vendas</small><b>'+money(hasPurchaseCredit?future.economicNet:future.net)+'</b><span>'+y+'</span></div>'+
-  (hasIncomeTax
-   ?'<div class="integrated-kpi"><small>IRPJ + CSLL</small><b>'+money(future.incomeTaxes)+'</b><span>IRPJ '+money(future.irpj)+' · CSLL '+money(future.csll)+'</span></div>'+
-    '<div class="integrated-kpi dark"><small>Saldo após tributos considerados</small><b>'+money(future.afterIncomeTaxes)+'</b><span>Sem custos e despesas operacionais</span></div>'
-   :'<div class="integrated-kpi"><small>Faturamento em '+y+'</small><b>'+money(future.revenue)+'</b><span>'+effectText(delta)+' vs. 2026</span></div>');
+  '<div class="integrated-kpi"><small>Tributos atuais</small><b>'+money(base.taxes)+'</b><span>Carga '+pct(base.revenue?base.taxes/base.revenue*100:0)+'</span></div>'+
+  '<div class="integrated-kpi dark"><small>Faturamento em '+y+'</small><b>'+money(future.revenue)+'</b><span>'+effectText(delta)+' vs. 2026</span></div>'+
+  (hasPurchaseCredit
+   ?'<div class="integrated-kpi"><small>Créditos estimados</small><b>'+money(future.purchaseCredit)+'</b><span>Carga líquida '+money(future.netTax)+'</span></div>'
+   :'<div class="integrated-kpi"><small>Se não reajustar</small><b>'+money(unchanged.net)+'</b><span>Líquido com bruto de '+money(base.revenue)+'</span></div>');
 
  $('revCurrentSummary').innerHTML=summaryRows(revCurrentRows(base));
  $('revFutureSummary').innerHTML=summaryRows(revFutureRows(future));
-
- const creditSentence=hasPurchaseCredit?' Considerando as aquisições informadas, os créditos estimados de IBS/CBS são '+money(future.purchaseCredit)+', reduzindo a carga líquida sobre vendas para '+money(future.netTax)+'.':'';
- const incomeSentence=hasIncomeTax?' Separadamente, a estimativa de IRPJ é '+money(future.irpj)+' e a de CSLL é '+money(future.csll)+'. Esses tributos não são tratados como tributos incidentes diretamente sobre a venda.':'';
- $('revExplanation').innerHTML='<b>Leitura da receita e dos tributos.</b><p>Em 2026, a receita após tributos sobre vendas é '+money(base.net)+'. Para preservar essa mesma referência em '+y+', o faturamento bruto projetado é <strong>'+money(future.revenue)+'</strong> ('+effectText(delta)+'). Se o faturamento bruto permanecesse em '+money(base.revenue)+', a receita após tributos sobre vendas seria '+money(unchanged.net)+'.'+creditSentence+incomeSentence+'</p>';
+ const creditSentence=hasPurchaseCredit?' Considerando a base de aquisições informada, os créditos estimados de IBS/CBS são '+money(future.purchaseCredit)+', reduzindo a carga líquida para '+money(future.netTax)+'.':'';
+ $('revExplanation').innerHTML='<b>Comparação do faturamento.</b><p>Em 2026, o faturamento líquido antes de créditos das aquisições é '+money(base.net)+'. Para preservar esse mesmo líquido em '+y+', o faturamento bruto projetado é <strong>'+money(future.revenue)+'</strong> ('+effectText(delta)+'). Se o faturamento bruto permanecesse em '+money(base.revenue)+', o líquido seria '+money(unchanged.net)+'.'+creditSentence+'</p>';
 
  revRenderYearly();
 }
@@ -785,10 +749,9 @@ function revRenderDetail(year){
  if(!x) return;
  const base=revenueYearlyRows[0];
  const change=x.year===2026?0:effectPct(base.revenue,x.revenue);
- const salesNet=(x.purchaseCredit||0)>0?x.economicNet:x.net;
  const analysis=x.year===2026
-  ? 'Em 2026, o faturamento bruto é '+money(x.revenue)+', os tributos sobre vendas somam '+money(x.taxes)+' e a receita após esses tributos é '+money(x.net)+'.'+(x.incomeTaxDetail?.applicable?' IRPJ e CSLL estimados somam '+money(x.incomeTaxes)+'.':'')
-  : 'Em '+x.year+', para preservar a mesma receita após tributos sobre vendas de 2026, a receita bruta projetada é '+money(x.revenue)+' ('+effectText(change)+'). Os tributos sobre vendas somam '+money(x.taxes)+'.'+(x.incomeTaxDetail?.applicable?' IRPJ e CSLL estimados somam '+money(x.incomeTaxes)+'.':'');
+  ? 'Em 2026, o faturamento bruto é '+money(x.revenue)+', os tributos considerados somam '+money(x.taxes)+' e o faturamento líquido é '+money(x.net)+'.'
+  : 'Em '+x.year+', para preservar o mesmo faturamento líquido de 2026, a receita bruta projetada é '+money(x.revenue)+' ('+effectText(change)+'). Os tributos somam '+money(x.taxes)+' e o líquido permanece em '+money(x.net)+'.';
 
  $('revYearDetailPanel').classList.add('visible');
  $('revYearDetailPanel').innerHTML=
@@ -797,14 +760,13 @@ function revRenderDetail(year){
    '<div class="year-detail-price"><small>FATURAMENTO BRUTO</small><b>'+money(x.revenue)+'</b></div>'+
   '</div>'+
   '<div class="year-detail-grid tax-detail">'+
-   '<div class="year-detail-item"><small>Tributos sobre vendas</small><b>'+money(x.taxes)+'</b></div>'+
-   '<div class="year-detail-item"><small>Carga sobre vendas</small><b>'+pct(x.revenue?x.taxes/x.revenue*100:0)+'</b></div>'+
-   '<div class="year-detail-item"><small>Receita após tributos sobre vendas</small><b>'+money(salesNet)+'</b></div>'+
+   '<div class="year-detail-item"><small>Total de tributos</small><b>'+money(x.taxes)+'</b></div>'+
+   '<div class="year-detail-item"><small>Carga</small><b>'+pct(x.revenue?x.taxes/x.revenue*100:0)+'</b></div>'+
+   '<div class="year-detail-item"><small>Faturamento líquido</small><b>'+money(x.net)+'</b></div>'+
    '<div class="year-detail-item"><small>CBS</small><b>'+(x.cbs===null?'—':money(x.cbs))+'</b></div>'+
    '<div class="year-detail-item"><small>IBS</small><b>'+(x.ibs===null?'—':money(x.ibs))+'</b></div>'+
    '<div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>'+money(x.remnant)+'</b></div>'+
-   ((x.purchaseCredit||0)>0?'<div class="year-detail-item"><small>Créditos estimados</small><b>'+money(x.purchaseCredit)+'</b></div><div class="year-detail-item"><small>Carga líquida sobre vendas</small><b>'+money(x.netTax)+'</b></div>':'')+
-   (x.incomeTaxDetail?.applicable?'<div class="year-detail-item"><small>IRPJ estimado</small><b>'+money(x.irpj)+'</b></div><div class="year-detail-item"><small>CSLL estimada</small><b>'+money(x.csll)+'</b></div><div class="year-detail-item"><small>Saldo após tributos considerados</small><b>'+money(x.afterIncomeTaxes)+'</b></div>':'')+
+   ((x.purchaseCredit||0)>0?'<div class="year-detail-item"><small>Créditos estimados</small><b>'+money(x.purchaseCredit)+'</b></div><div class="year-detail-item"><small>Carga líquida</small><b>'+money(x.netTax)+'</b></div><div class="year-detail-item"><small>Líquido após créditos</small><b>'+money(x.economicNet)+'</b></div>':'')+
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+analysis+'</p></div>';
 }
@@ -832,18 +794,16 @@ function revRenderYearly(){
 
  $('revYearlyTable').innerHTML=rows.map(function(x){
   const cls=x.year===2026?'current-year':(x.year===revYearDetailSelected?'selected-year':'');
-  const salesNet=(x.purchaseCredit||0)>0?x.economicNet:x.net;
   return '<tr class="'+cls+'" onclick="revSelectYear('+x.year+')">'+
    '<td>'+x.year+'</td><td><strong>'+money(x.revenue)+'</strong></td><td>'+money(x.taxes)+'</td>'+
-   '<td>'+money(salesNet)+'</td><td>'+money(x.incomeTaxes||0)+'</td><td><strong>'+money(x.incomeTaxDetail?.applicable?x.afterIncomeTaxes:salesNet)+'</strong></td></tr>';
+   '<td>'+pct(x.revenue?x.taxes/x.revenue*100:0)+'</td><td><strong>'+money(x.net)+'</strong></td></tr>';
  }).join('');
 
  revRenderDetail(revYearDetailSelected);
 
- let note='A projeção do faturamento preserva a mesma receita após tributos sobre vendas de 2026. IRPJ e CSLL aparecem em uma camada separada e não entram na formação do preço da venda.';
- if(r==='presumido') note+=' No Lucro Presumido, a estimativa usa os percentuais de presunção informados e considera a LC 224 na parcela anual acima de R$ 5 milhões.';
- if(r==='real') note+=' No Lucro Real, a estimativa depende das bases tributáveis informadas e mantém sua proporção em relação ao faturamento na projeção.';
- if(r==='simples') note+=' No Simples padrão, IRPJ/CSLL já integram a lógica do DAS e não são mostrados separadamente.';
+ let note='O faturamento bruto de cada ano é calculado para preservar o mesmo faturamento líquido de 2026.';
+ if(r==='simples') note+=' No Simples padrão, ele pode permanecer igual quando a alíquota efetiva total do DAS não muda.';
+ if(r==='simples_hybrid') note+=' No híbrido, CBS/IBS ficam fora do DAS.';
  $('revYearlyNote').textContent=note;
 }
 
@@ -961,33 +921,27 @@ function exportPriceExcel(){
 
 function exportRevenueExcel(){
  if(!revenueYearlyRows.length) revRenderYearly();
- const input=revenueEngineInput();
  downloadSpreadsheet(
   'analise-faturamento-'+revRegime()+'-2026-2033.xlsx',
-  ['Ano','Regime','Sistema','Faturamento bruto','Tributos sobre vendas','Receita após tributos sobre vendas','CBS','IBS','DAS / tributos remanescentes','Créditos das aquisições','Carga líquida sobre vendas','IRPJ estimado','CSLL estimada','IRPJ + CSLL','Saldo após tributos considerados'],
+  ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','DAS / tributos remanescentes','Créditos estimados das aquisições','Carga líquida','Líquido após créditos'],
   revenueYearlyRows.map(function(x){
-   const salesNet=(x.purchaseCredit||0)>0?x.economicNet:x.net;
-   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,salesNet,x.cbs??0,x.ibs??0,x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.irpj??0,x.csll??0,x.incomeTaxes??0,x.incomeTaxDetail?.applicable?x.afterIncomeTaxes:salesNet];
+   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.economicNet??x.net];
   }),
   [
    ['Regime',REGIME_LABELS[revRegime()]],['Faturamento 2026',num('revCurrentRevenue')],
    ['Período',$('revRevenuePeriod')?.value||'mensal'],
    ['Base de aquisições creditáveis %',num('revCreditablePurchasesPct')],
    ['Aproveitamento estimado dos créditos %',num('revPurchaseCreditUsePct')],
-   ['Atividade de presunção',$('revPresumedActivity')?.selectedOptions?.[0]?.textContent||''],
-   ['Presunção IRPJ %',num('revIrpjPresumptionPct')],['Presunção CSLL %',num('revCsllPresumptionPct')],
-   ['Receita anual projetada',num('revAnnualRevenueProjection')],
-   ['Base IRPJ Lucro Real',num('revRealIrpjBase')],['Base CSLL Lucro Real',num('revRealCsllBase')],
    ['PIS %',num('revPisRate')],['Cofins %',num('revCofinsRate')],['ICMS %',num('revIcmsRate')],
    ['ISS %',num('revIssRate')],['IPI %',num('revIpiRate')]
   ],
-  RTAV_ENGINE.revenueMemory(input,Number($('revYear')?.value||2027))
+  RTAV_ENGINE.revenueMemory(revenueEngineInput(),Number($('revYear')?.value||2027))
  );
 }
 
 const QUICK_PRESETS={
- commerce_lp:{regime:'presumido',pis:.65,cofins:3,icms:18,iss:0,ipi:0,presumedActivity:'commerce_industry'},
- services_lp:{regime:'presumido',pis:.65,cofins:3,icms:0,iss:5,ipi:0,presumedActivity:'services_general'},
+ commerce_lp:{regime:'presumido',pis:.65,cofins:3,icms:18,iss:0,ipi:0},
+ services_lp:{regime:'presumido',pis:.65,cofins:3,icms:0,iss:5,ipi:0},
  services_lr:{regime:'real',pis:1.65,cofins:7.6,icms:0,iss:5,ipi:0}
 };
 
@@ -1005,10 +959,6 @@ function applyQuickPreset(kind){
 
  $(regimeId).value=p.regime;
  $(ids.pis).value=p.pis;$(ids.cofins).value=p.cofins;$(ids.icms).value=p.icms;$(ids.iss).value=p.iss;$(ids.ipi).value=p.ipi;
- if(!price&&p.presumedActivity&&$('revPresumedActivity')){
-  $('revPresumedActivity').value=p.presumedActivity;
-  syncPresumedRates();
- }
 
  if(price){applyRegimeUI({preset:false});calcIntegrated();saveSimulation('price');}
  else{revApplyUI({preset:false});revCalcIntegrated();saveSimulation('revenue');}
@@ -1086,7 +1036,6 @@ function buildRevenuePdf(client,year){
  const regimeLabel=REGIME_LABELS[input.regime]||input.regime;
  const period=$('revRevenuePeriod')?.value||'mensal';
  const currentRows=[['Faturamento bruto',money(base.revenue)]];
-
  if(input.regime==='simples'||input.regime==='simples_hybrid'){
   currentRows.push(['DAS / tributos',money(base.taxes)]);
  }else{
@@ -1097,38 +1046,31 @@ function buildRevenuePdf(client,year){
   if((c.iss||0)>0) currentRows.push(['ISS',money(c.iss)]);
   if((c.ipi||0)>0) currentRows.push(['IPI',money(c.ipi)]);
  }
- currentRows.push(['Total de tributos sobre vendas',money(base.taxes)]);
- currentRows.push(['Receita após tributos sobre vendas',money(base.net)]);
- if(base.incomeTaxDetail?.applicable){
-  currentRows.push(['IRPJ estimado',money(base.irpj)]);
-  currentRows.push(['CSLL estimada',money(base.csll)]);
-  currentRows.push(['Saldo após tributos considerados',money(base.afterIncomeTaxes)]);
- }
-
+ currentRows.push(['Total de tributos',money(base.taxes)]);
+ currentRows.push(['Faturamento líquido',money(base.net)]);
  const futureRows=[
   ['Faturamento projetado',money(future.revenue)],
   ['CBS',money(future.cbs||0)],
   ['IBS',money(future.ibs||0)],
   ['DAS / tributos remanescentes',money(future.remnant||0)],
-  ['Tributos sobre vendas',money(future.taxes)]
+  ['Tributos brutos',money(future.taxes)]
  ];
  if((future.purchaseCredit||0)>0){
   futureRows.push(['Créditos estimados',money(future.purchaseCredit)]);
-  futureRows.push(['Carga líquida sobre vendas',money(future.netTax)]);
- }
- futureRows.push(['Receita após tributos sobre vendas',money((future.purchaseCredit||0)>0?future.economicNet:future.net)]);
- if(future.incomeTaxDetail?.applicable){
-  futureRows.push(['IRPJ estimado',money(future.irpj)]);
-  futureRows.push(['CSLL estimada',money(future.csll)]);
-  futureRows.push(['Saldo após tributos considerados',money(future.afterIncomeTaxes)]);
+  futureRows.push(['Carga líquida',money(future.netTax)]);
+  futureRows.push(['Líquido após créditos',money(future.economicNet)]);
+ }else{
+  futureRows.push(['Faturamento líquido',money(future.net)]);
  }
 
  const annual=[{year:2026,...base}];
  for(let y=2027;y<=2033;y++) annual.push(RTAV_ENGINE.futureRevenueScenario(input,y));
- const tableHeaders=['Ano','Faturamento','Tributos vendas','IRPJ + CSLL','Saldo após tributos'];
+ const hasCredit=annual.some(function(x){return (x.purchaseCredit||0)>0;});
+ const tableHeaders=hasCredit?['Ano','Faturamento','Tributos','Créditos','Carga líquida']:['Ano','Faturamento','Tributos','Carga','Líquido'];
  const tableRows=annual.map(function(x){
-  const salesNet=(x.purchaseCredit||0)>0?x.economicNet:x.net;
-  return [x.year,money(x.revenue),money(x.taxes),money(x.incomeTaxes||0),money(x.incomeTaxDetail?.applicable?x.afterIncomeTaxes:salesNet)];
+  return hasCredit
+   ?[x.year,money(x.revenue),money(x.taxes),money(x.purchaseCredit||0),money(x.netTax??x.taxes)]
+   :[x.year,money(x.revenue),money(x.taxes),pct(x.revenue?x.taxes/x.revenue*100:0),money(x.net)];
  });
 
  return {
@@ -1137,16 +1079,16 @@ function buildRevenuePdf(client,year){
   kpis:[
    ['Faturamento atual',money(base.revenue),'2026 · '+period],
    ['Faturamento projetado',money(future.revenue),String(year)],
-   ['Tributos sobre vendas',money(future.taxes),pct(future.revenue?future.taxes/future.revenue*100:0)+' do faturamento'],
-   [future.incomeTaxDetail?.applicable?'IRPJ + CSLL':'Receita após vendas',future.incomeTaxDetail?.applicable?money(future.incomeTaxes):money((future.purchaseCredit||0)>0?future.economicNet:future.net),future.incomeTaxDetail?.applicable?'Separados dos tributos sobre vendas':'Após tributos sobre vendas']
+   ['Tributos brutos',money(future.taxes),pct(future.revenue?future.taxes/future.revenue*100:0)+' do faturamento'],
+   [(future.purchaseCredit||0)>0?'Carga líquida':'Faturamento líquido',(future.purchaseCredit||0)>0?money(future.netTax):money(future.net),(future.purchaseCredit||0)>0?'Após créditos estimados':'Após tributos']
   ],
   currentRows,
   futureRows,
   tableHeaders,
   tableRows,
-  note:future.incomeTaxDetail?.applicable
-   ?'IRPJ e CSLL são apresentados separadamente dos tributos sobre vendas. No Lucro Presumido, a estimativa usa as bases de presunção e a regra vigente da LC 224; no Lucro Real, depende das bases tributáveis informadas.'
-   :'A projeção preserva a receita após tributos sobre vendas considerada em 2026. Premissas RTAV devem ser validadas para a operação real.'
+  note:(future.purchaseCredit||0)>0
+   ?'Os créditos das aquisições são estimativas econômicas baseadas nos percentuais informados. O aproveitamento efetivo depende dos requisitos legais e documentais aplicáveis.'
+   :'A projeção preserva o faturamento líquido considerado em 2026. Premissas RTAV devem ser validadas para a operação real.'
  };
 }
 
@@ -1194,7 +1136,7 @@ const PRICE_STATE_IDS=[
 const REVENUE_STATE_IDS=[
  'revTaxRegime','revCurrentRevenue','revRevenuePeriod','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate',
  'revSnRbt12','revSnAnnex','revYear','revRateMode','revRateReduction','revCbsRate','revIbsRate','revHybridRateMode',
- 'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revPresumedActivity','revIrpjPresumptionPct','revCsllPresumptionPct','revAnnualRevenueProjection','revRealIrpjBase','revRealCsllBase','revenueQuickPreset','revenueClientName'
+ 'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset','revenueClientName'
 ];
 
 function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-v1';}
@@ -1349,16 +1291,7 @@ function revenueInputFromState(data){
   simple:{annex:data?.revSnAnnex||'III',rbt12:numberFromState(data,'revSnRbt12')},
   future:{mode:data?.revRateMode||'rtav',reduction:numberFromState(data,'revRateReduction'),cbs:numberFromState(data,'revCbsRate'),ibs:numberFromState(data,'revIbsRate')},
   hybridFuture:{mode:data?.revHybridRateMode||'rtav',reduction:numberFromState(data,'revHybridReduction'),cbs:numberFromState(data,'revHybridCbsRate'),ibs:numberFromState(data,'revHybridIbsRate')},
-  purchases:{creditablePct:numberFromState(data,'revCreditablePurchasesPct'),usePct:numberFromState(data,'revPurchaseCreditUsePct',100)},
-  incomeTax:{
-   period:data?.revRevenuePeriod||'mensal',
-   presumedActivity:data?.revPresumedActivity||'commerce_industry',
-   irpjPresumptionPct:numberFromState(data,'revIrpjPresumptionPct',8),
-   csllPresumptionPct:numberFromState(data,'revCsllPresumptionPct',12),
-   annualRevenueProjection:numberFromState(data,'revAnnualRevenueProjection'),
-   realIrpjBase:numberFromState(data,'revRealIrpjBase'),
-   realCsllBase:numberFromState(data,'revRealCsllBase')
-  }
+  purchases:{creditablePct:numberFromState(data,'revCreditablePurchasesPct'),usePct:numberFromState(data,'revPurchaseCreditUsePct',100)}
  };
 }
 
@@ -1428,36 +1361,11 @@ $('hybridRateMode')?.addEventListener('change',function(){
  $(id)?.addEventListener('input',calcIntegrated);
 });
 
-let revAnnualProjectionManual=false;
-
-function syncPresumedRates(){
- const mode=$('revPresumedActivity')?.value||'commerce_industry';
- const presets=RTAV_RULES.incomeTaxes?.presumptions||{};
- if(mode!=='custom'){
-  const p=presets[mode]||presets.commerce_industry;
-  if(p){
-   $('revIrpjPresumptionPct').value=p.irpj;
-   $('revCsllPresumptionPct').value=p.csll;
-  }
- }
- const manual=mode==='custom';
- if($('revIrpjPresumptionPct')) $('revIrpjPresumptionPct').readOnly=!manual;
- if($('revCsllPresumptionPct')) $('revCsllPresumptionPct').readOnly=!manual;
- revCalcIntegrated();
-}
-
-function syncAnnualRevenueProjection(force=false){
- if(revAnnualProjectionManual&&!force) return;
- const current=Math.max(0,num('revCurrentRevenue'));
- const period=$('revRevenuePeriod')?.value||'mensal';
- if($('revAnnualRevenueProjection')) $('revAnnualRevenueProjection').value=(period==='mensal'?current*12:current).toFixed(2);
-}
-
 $('revTaxRegime')?.addEventListener('change',function(){revApplyUI({preset:true});});
 $('revSnAnnex')?.addEventListener('change',function(){revUpdateSnSummary();revCalcIntegrated();});
 $('revSnRbt12')?.addEventListener('input',function(){revUpdateSnSummary();revCalcIntegrated();});
 $('revYear')?.addEventListener('change',revApplyYearPreset);
-$('revRevenuePeriod')?.addEventListener('change',function(){syncAnnualRevenueProjection();revCalcIntegrated();});
+$('revRevenuePeriod')?.addEventListener('change',revCalcIntegrated);
 $('exportRevenueExcelBtn')?.addEventListener('click',exportRevenueExcel);
 $('revenueQuickPreset')?.addEventListener('change',function(){applyQuickPreset('revenue');});
 $('revenuePresentationBtn')?.addEventListener('click',function(){togglePresentation('revenue');});
@@ -1477,10 +1385,7 @@ $('revHybridRateMode')?.addEventListener('change',function(){
  const manual=$('revHybridRateMode').value==='manual';
  $('revHybridCbsRate').readOnly=!manual;$('revHybridIbsRate').readOnly=!manual;revApplyYearPreset();
 });
-$('revCurrentRevenue')?.addEventListener('input',function(){syncAnnualRevenueProjection();revCalcIntegrated();});
-$('revPresumedActivity')?.addEventListener('change',syncPresumedRates);
-$('revAnnualRevenueProjection')?.addEventListener('input',function(){revAnnualProjectionManual=true;revCalcIntegrated();});
-['revIrpjPresumptionPct','revCsllPresumptionPct','revRealIrpjBase','revRealCsllBase','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate','revRateReduction','revCbsRate','revIbsRate','revHybridReduction','revHybridCbsRate','revHybridIbsRate'].forEach(function(id){
+['revCurrentRevenue','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate','revRateReduction','revCbsRate','revIbsRate','revHybridReduction','revHybridCbsRate','revHybridIbsRate'].forEach(function(id){
  $(id)?.addEventListener('input',revCalcIntegrated);
 });
 
@@ -1488,6 +1393,17 @@ $('revAnnualRevenueProjection')?.addEventListener('input',function(){revAnnualPr
 $('practiceSearch')?.addEventListener('input',renderPracticeGrid);
 $('practiceRegimeFilter')?.addEventListener('change',renderPracticeGrid);
 $('practiceSectorFilter')?.addEventListener('change',renderPracticeGrid);
+['lpRevenue','lpPresumption'].forEach(function(id){$(id)?.addEventListener('input',calcLP);});
+function calcLP(){
+ if(!$('lpResult')) return;
+ const revenue=num('lpRevenue'),pres=num('lpPresumption')/100,limit=5000000;
+ const before=revenue*pres,normal=Math.min(revenue,limit),excess=Math.max(0,revenue-limit),newPres=pres*1.10,after=normal*pres+excess*newPres;
+ $('lpResult').innerHTML=
+  '<div><small>Base sem acréscimo</small><b>'+money(before)+'</b></div>'+
+  '<div><small>Presunção sobre excedente</small><b>'+pct(newPres*100)+'</b></div>'+
+  '<div class="main-result"><small>Base com LC 224</small><strong>'+money(after)+'</strong><span>Diferença: '+money(after-before)+' · análise simplificada da base.</span></div>';
+}
+
 renderHome();
 searchModules('');
 
@@ -1502,14 +1418,8 @@ const revenueRestored=restoreSimulation('revenue');
 if(priceRestored) applyRegimeUI({preset:false});
 else calcIntegrated();
 
-if(revenueRestored){
- revAnnualProjectionManual=true;
- revApplyUI({preset:false});
-}else{
- syncAnnualRevenueProjection(true);
- syncPresumedRates();
- revCalcIntegrated();
-}
+if(revenueRestored) revApplyUI({preset:false});
+else revCalcIntegrated();
 
 bindAutosave('price');
 bindAutosave('revenue');
@@ -1519,3 +1429,4 @@ renderScenarioOptions('revenue');
 let initialTool='price';
 try{initialTool=localStorage.getItem('jaguar-rtav-active-tool')||'price';}catch(e){}
 showTaxTool(initialTool==='revenue'?'revenue':'price');
+calcLP();
