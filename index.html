@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090909"><meta name="description" content="Jaguar × RTAV — Reforma Tributária">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Jaguar RTAV">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon-192.png">
 <title>Jaguar × RTAV — Reforma Tributária</title>
 <style>
@@ -114,16 +119,25 @@ function showInstallHelp(mode){
     body.innerHTML='<p>Você já está usando o aplicativo instalado. As próximas atualizações serão carregadas pelo mesmo app.</p>';
   }else if(isIOS){
     title.textContent='Instalar no iPhone ou iPad';
-    body.innerHTML='<ol><li>Abra este site no <strong>Safari</strong>.</li><li>Toque no botão <strong>Compartilhar</strong>.</li><li>Escolha <strong>Adicionar à Tela de Início</strong>.</li><li>Confirme em <strong>Adicionar</strong>.</li></ol><p>Depois disso, o Jaguar RTAV aparecerá como um aplicativo na sua tela inicial.</p>';
+    body.innerHTML='<ol><li>Abra o Jaguar RTAV no <strong>Safari</strong>.</li><li>Toque em <strong>Compartilhar</strong>.</li><li>Escolha <strong>Adicionar à Tela de Início</strong>.</li><li>Deixe <strong>Abrir como App</strong> ativado.</li><li>Toque em <strong>Adicionar</strong>.</li></ol><p>Com <strong>Abrir como App</strong> ligado, ele abre em janela própria, separado do Safari. Esse é o modo de instalação de web apps definido pelo iOS.</p>';
   }else{
     title.textContent='Instalar Jaguar RTAV';
-    body.innerHTML='<p>Se a janela de instalação não apareceu automaticamente, abra o menu do navegador e procure por <strong>Instalar aplicativo</strong>, <strong>Instalar Jaguar RTAV</strong> ou <strong>Adicionar à tela inicial</strong>.</p><p>No Chrome e Edge, a opção também pode aparecer como um ícone de instalação na barra de endereço.</p>';
+    body.innerHTML='<p>No Android, abra este endereço no <strong>Google Chrome</strong>. Em aparelhos com Google Play Services, o Chrome pode instalar o Jaguar RTAV como <strong>WebAPK</strong>, aparecendo como aplicativo no launcher e nas configurações do sistema.</p><p>Abra o menu ⋮ do Chrome e procure por <strong>Instalar app</strong> ou <strong>Instalar Jaguar RTAV</strong>. Se aparecer apenas <strong>Adicionar à tela inicial</strong>, esse navegador/aparelho não está oferecendo WebAPK naquele momento.</p>';
   }
   modal.classList.add('show');
 }
 
 function closeInstallHelp(){document.getElementById('installModal').classList.remove('show')}
 
+window.addEventListener('DOMContentLoaded',()=>{
+  const s=document.getElementById('installStatus');
+  const ua=navigator.userAgent.toLowerCase();
+  const android=ua.includes('android');
+  if(!isStandalone && s){
+    if(isIOS) s.textContent='No iPhone/iPad, use Adicionar à Tela de Início com “Abrir como App” ativado.';
+    else if(android) s.textContent='No Android, use Google Chrome para instalação como WebAPK quando disponível.';
+  }
+});
 if(isStandalone){
   window.addEventListener('DOMContentLoaded',()=>{
     const b=document.getElementById('installBtn');
