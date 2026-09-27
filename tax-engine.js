@@ -97,8 +97,6 @@
  }
 
  function normalizeInput(input={}){
-  const activity=input.incomeTax?.presumedActivity||'commerce_industry';
-  const preset=RULES.incomeTaxes?.presumptions?.[activity]||RULES.incomeTaxes?.presumptions?.commerce_industry||{irpj:8,csll:12};
   return {
    regime:input.regime||'presumido',
    amount:Math.max(0,Number(input.amount)||0),
@@ -126,15 +124,6 @@
    purchases:{
     creditablePct:clamp(input.purchases?.creditablePct,0,100),
     usePct:clamp(input.purchases?.usePct??100,0,100)
-   },
-   incomeTax:{
-    period:input.incomeTax?.period==='anual'?'anual':'mensal',
-    presumedActivity:activity,
-    irpjPresumptionPct:clamp(input.incomeTax?.irpjPresumptionPct??preset.irpj,0,100),
-    csllPresumptionPct:clamp(input.incomeTax?.csllPresumptionPct??preset.csll,0,100),
-    annualRevenueProjection:Math.max(0,Number(input.incomeTax?.annualRevenueProjection)||0),
-    realIrpjBase:Math.max(0,Number(input.incomeTax?.realIrpjBase)||0),
-    realCsllBase:Math.max(0,Number(input.incomeTax?.realCsllBase)||0)
    }
   };
  }
@@ -187,74 +176,8 @@
   return {year:2026,regime:cfg.regime,revenue:value,taxes,net,components,cbs:null,ibs:null,remnant:taxes,purchaseCredit:0,netTax:taxes,economicNet:net};
  }
 
- function incomeTaxEstimate(input,revenue){
-  const cfg=normalizeInput(input);
-  const rules=RULES.incomeTaxes||{};
-  const value=Math.max(0,Number(revenue)||0);
-  const period=cfg.incomeTax.period;
-  const months=period==='anual'?12:1;
-
-  if(cfg.regime!=='presumido'&&cfg.regime!=='real'){
-   return {applicable:false,method:'none',irpjBase:0,csllBase:0,irpj:0,csll:0,total:0};
-  }
-
-  if(cfg.regime==='presumido'){
-   const annualReference=cfg.incomeTax.annualRevenueProjection>0
-    ?cfg.incomeTax.annualRevenueProjection
-    :cfg.amount*(period==='anual'?1:12);
-   const scale=cfg.amount>0?value/cfg.amount:1;
-   const annualRevenue=Math.max(0,annualReference*scale);
-   const threshold=Number(rules.presumedAnnualThreshold)||5000000;
-   const regularRevenue=Math.min(annualRevenue,threshold);
-   const excessRevenue=Math.max(0,annualRevenue-threshold);
-   const boost=1+(Number(rules.lc224PresumptionIncrease)||10)/100;
-   const irpjPct=cfg.incomeTax.irpjPresumptionPct/100;
-   const csllPct=cfg.incomeTax.csllPresumptionPct/100;
-   const irpjBaseAnnual=regularRevenue*irpjPct+excessRevenue*irpjPct*boost;
-   const csllBaseAnnual=regularRevenue*csllPct+excessRevenue*csllPct*boost;
-   const additionalThreshold=(Number(rules.irpjAdditionalMonthlyThreshold)||20000)*12;
-   const irpjAnnual=irpjBaseAnnual*((Number(rules.irpjRate)||15)/100)
-    +Math.max(0,irpjBaseAnnual-additionalThreshold)*((Number(rules.irpjAdditionalRate)||10)/100);
-   const csllAnnual=csllBaseAnnual*((Number(rules.csllGeneralRate)||9)/100);
-   const divisor=period==='anual'?1:12;
-   return {
-    applicable:true,method:'presumido',period,annualRevenue,
-    irpjBase:irpjBaseAnnual/divisor,csllBase:csllBaseAnnual/divisor,
-    irpj:irpjAnnual/divisor,csll:csllAnnual/divisor,total:(irpjAnnual+csllAnnual)/divisor,
-    lc224ExcessAnnual:excessRevenue,
-    irpjPresumptionPct:cfg.incomeTax.irpjPresumptionPct,
-    csllPresumptionPct:cfg.incomeTax.csllPresumptionPct
-   };
-  }
-
-  const scale=cfg.amount>0?value/cfg.amount:1;
-  const irpjBase=cfg.incomeTax.realIrpjBase*scale;
-  const csllBase=cfg.incomeTax.realCsllBase*scale;
-  const threshold=(Number(rules.irpjAdditionalMonthlyThreshold)||20000)*months;
-  const irpj=irpjBase*((Number(rules.irpjRate)||15)/100)
-   +Math.max(0,irpjBase-threshold)*((Number(rules.irpjAdditionalRate)||10)/100);
-  const csll=csllBase*((Number(rules.csllGeneralRate)||9)/100);
-  return {
-   applicable:true,method:'real',period,irpjBase,csllBase,irpj,csll,total:irpj+csll,
-   baseScale:scale
-  };
- }
-
- function attachIncomeTaxes(input,scenario){
-  const inc=incomeTaxEstimate(input,scenario.revenue);
-  const beforeIncomeTaxes=scenario.economicNet??scenario.net;
-  return Object.assign({},scenario,{
-   irpj:inc.irpj,
-   csll:inc.csll,
-   incomeTaxes:inc.total,
-   incomeTaxDetail:inc,
-   beforeIncomeTaxes,
-   afterIncomeTaxes:beforeIncomeTaxes-inc.total
-  });
- }
-
  function currentPriceScenario(input){return currentBaseScenario(input,'price');}
- function currentRevenueScenario(input){return attachIncomeTaxes(input,currentBaseScenario(input,'revenue'));}
+ function currentRevenueScenario(input){return currentBaseScenario(input,'revenue');}
 
  function priceScenarioAtPrice(input,year,projected){
   const cfg=normalizeInput(input);
@@ -328,7 +251,7 @@
   const purchaseCredit=p.type==='simple'?0:revenue*(cfg.purchases.creditablePct/100)*((p.cbsRate||0)+(p.ibsRate||0))*(cfg.purchases.usePct/100);
   const netTax=Math.max(0,taxes-purchaseCredit);
   const economicNet=Math.max(0,revenue-netTax);
-  return attachIncomeTaxes(cfg,{year,regime:cfg.regime,revenue,cbs,ibs,remnant,taxes,net,cleanBase,purchaseCredit,netTax,economicNet,params:p});
+  return {year,regime:cfg.regime,revenue,cbs,ibs,remnant,taxes,net,cleanBase,purchaseCredit,netTax,economicNet,params:p};
  }
 
  function futureRevenueScenario(input,year,keepGross=false){
@@ -373,13 +296,6 @@
    messages.push({level:'info',code:'simple_credit',message:'No Simples padrão, a simulação não apropria créditos de IBS/CBS das aquisições dentro do regime.'});
   }
 
-  if(kind==='revenue'&&cfg.regime==='real'&&cfg.incomeTax.realIrpjBase===0&&cfg.incomeTax.realCsllBase===0){
-   messages.push({level:'info',code:'real_income_tax_base',message:'Informe as bases tributáveis estimadas do IRPJ e da CSLL para incluir esses tributos no Lucro Real.'});
-  }
-  if(kind==='revenue'&&cfg.regime==='presumido'&&cfg.incomeTax.annualRevenueProjection<=0){
-   messages.push({level:'warning',code:'presumed_annual_revenue',message:'Informe a receita anual projetada para aplicar corretamente a estimativa do Lucro Presumido e a regra da LC 224.'});
-  }
-
   const futureMode=cfg.regime==='simples_hybrid'?cfg.hybridFuture.mode:cfg.future.mode;
   const futureCfg=cfg.regime==='simples_hybrid'?cfg.hybridFuture:cfg.future;
   if(futureMode==='manual'&&futureCfg.cbs===0&&futureCfg.ibs===0){
@@ -421,40 +337,32 @@
   const cfg=normalizeInput(input);
   const base=currentRevenueScenario(cfg);
   if(Number(year)===2026){
-   const rows=[
+   return [
     ['Faturamento bruto 2026',base.revenue],
-    ['Tributos sobre vendas considerados',base.taxes],
-    ['Receita após tributos sobre vendas',base.net]
+    ['Tributos atuais considerados',base.taxes],
+    ['Faturamento líquido 2026',base.net]
    ];
-   if(base.incomeTaxDetail?.applicable){
-    rows.push(['IRPJ estimado',base.irpj],['CSLL estimada',base.csll],['IRPJ + CSLL',base.incomeTaxes],['Saldo após tributos considerados',base.afterIncomeTaxes]);
-   }
-   return rows;
   }
   const x=futureRevenueScenario(cfg,Number(year));
-  const rows=[
-   ['Receita após tributos sobre vendas preservada de 2026',base.net],
+  return [
+   ['Faturamento líquido preservado de 2026',base.net],
    ['Base limpa usada no novo sistema',x.cleanBase],
    ['CBS calculada',x.cbs],
    ['IBS calculado',x.ibs],
    ['Tributos/DAS remanescentes',x.remnant],
-   ['Tributos brutos sobre vendas',x.taxes],
+   ['Tributos brutos',x.taxes],
    ['Créditos estimados das aquisições',x.purchaseCredit],
-   ['Carga líquida sobre vendas após créditos',x.netTax],
+   ['Carga líquida após créditos',x.netTax],
    ['Faturamento bruto projetado',x.revenue]
   ];
-  if(x.incomeTaxDetail?.applicable){
-   rows.push(['IRPJ estimado',x.irpj],['CSLL estimada',x.csll],['IRPJ + CSLL',x.incomeTaxes],['Saldo após tributos considerados',x.afterIncomeTaxes]);
-  }
-  return rows;
  }
 
  return Object.freeze({
-  version:'1.1.0',
+  version:'1.0.0',
   rulesVersion:RULES.version,
   clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
   currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,
-  currentRevenueScenario,revenueScenarioAtRevenue,futureRevenueScenario,incomeTaxEstimate,
+  currentRevenueScenario,revenueScenarioAtRevenue,futureRevenueScenario,
   validatePriceInput:input=>validateInput(input,'price'),
   validateRevenueInput:input=>validateInput(input,'revenue'),
   priceMemory,revenueMemory
