@@ -91,10 +91,26 @@ function openModule(id){
  go('modulePage');
 }
 
+let activeTimelineYear='2027';
 function pickYear(y){
- document.querySelectorAll('.year').forEach(b=>b.classList.toggle('active',b.dataset.year===y));
+ if(!TIMELINE[y]) return;
+ activeTimelineYear=String(y);
+ document.querySelectorAll('.year').forEach(b=>b.classList.toggle('active',b.dataset.year===String(y)));
  const o=TIMELINE[y];
  $('timelinePanel').innerHTML=`<span class="eyebrow">TRANSIÇÃO</span><h3>${y} · ${o.label}</h3><p>${o.text}</p>`;
+ const years=Object.keys(TIMELINE);
+ const idx=years.indexOf(String(y));
+ const pctDone=years.length>1?(idx/(years.length-1))*100:0;
+ if($('transitionProgressFill')) $('transitionProgressFill').style.width=`${pctDone}%`;
+ if($('transitionProgressLabel')) $('transitionProgressLabel').textContent=y;
+}
+
+function moveYear(direction){
+ const years=Object.keys(TIMELINE);
+ let idx=years.indexOf(activeTimelineYear);
+ if(idx<0) idx=0;
+ idx=Math.min(years.length-1,Math.max(0,idx+direction));
+ pickYear(years[idx]);
 }
 
 function searchModules(q){
@@ -102,9 +118,21 @@ function searchModules(q){
  const result=STUDY_MODULES.filter(m=>JSON.stringify(m).toLowerCase().includes(q));
  $('searchResults').innerHTML=result.length?result.map(moduleCard).join(''):'<div class="empty">Nenhum conteúdo encontrado.</div>';
 }
+function runHeroSearch(){
+ const q=$('heroSearch')?.value||'';
+ if($('searchInput')) $('searchInput').value=q;
+ searchModules(q);
+ go('search');
+}
+function quickSearch(term){
+ if($('heroSearch')) $('heroSearch').value=term;
+ if($('searchInput')) $('searchInput').value=term;
+ searchModules(term);
+ go('search');
+}
 $('searchInput')?.addEventListener('input',e=>searchModules(e.target.value));
 $('heroSearch')?.addEventListener('keydown',e=>{
- if(e.key==='Enter'){ $('searchInput').value=e.target.value; searchModules(e.target.value); go('search'); }
+ if(e.key==='Enter') runHeroSearch();
 });
 
 const TRANSITION={
