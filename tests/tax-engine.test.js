@@ -101,3 +101,47 @@ close(rules.transition[2033].cbs,9.21,1e-10,'CBS padrão 2033 deve ser 9,21%');
 assert.ok(rules.metadata.warning.includes('Premissas'));
 
 console.log('✓ tax-engine: todos os testes passaram');
+
+// Regressão RTAV: Anexo III, faixa 4, líquido preservado sem créditos.
+const hybrid={...simple,regime:'simples_hybrid',amount:1000000};
+for(const calculate of [engine.futurePriceScenario,engine.futureRevenueScenario]){
+ const x=calculate(hybrid,2027);
+ close(x.net,875640,.005,'Líquido do slide');
+ close(x.residualBase,976967.38,.005,'Base DAS residual do slide');
+ close(x.remnant,101327.38,.005,'DAS residual do slide');
+ close(x.excludedTax,39486.09,.005,'ISS excluído do slide');
+ close(x.cleanBase,937481.29,.005,'Base CBS do slide');
+ close(x.cbs,86342.03,.005,'CBS do slide');
+ close(x.ibs,937.481292889,.000001,'IBS usa a mesma base');
+ close(x.price??x.revenue,1064246.8920009993,.01,'Total com CBS e IBS por fora');
+}
+// Preço/faturamento, inversão com bruto fixo, todas as faixas e transição.
+for(const annex of ['I','II','III','IV','V']){
+ for(const rbt12 of [100000,250000,500000,1000000,3500000,4000000]){
+  for(let year=2027;year<=2033;year++){
+   for(const rates of [{mode:'rtav'},{mode:'manual',cbs:9.21,ibs:.1,reduction:60},{mode:'manual',cbs:0,ibs:0}]){
+    const input={...hybrid,simple:{annex,rbt12},hybridFuture:rates};
+    const p=engine.futurePriceScenario(input,year),r=engine.futureRevenueScenario(input,year);
+    close(p.price,r.revenue,1e-7,'Paridade preço/faturamento');
+    close(p.net,engine.currentPriceScenario(input).net,1e-7,'Preservação líquido');
+    close(p.residualBase-p.excludedTax,p.cleanBase,1e-7,'Base exclui apenas ICMS/ISS');
+    close(p.price-p.cbs-p.ibs,p.residualBase,1e-7,'CBS/IBS fora do DAS');
+    close(p.remnant+p.cbs+p.ibs+p.net,p.price,1e-7,'Reconciliação');
+    const inverse=engine.revenueScenarioAtRevenue(input,year,r.revenue);
+    close(inverse.net,r.net,1e-7,'Inversão');
+    const fixed=engine.futureRevenueScenario(input,year,true);
+    close(fixed.revenue,input.amount,1e-7,'Bruto fixo');
+    close(fixed.revenue,fixed.net+fixed.taxes,1e-7,'Bruto fixo reconciliado');
+    if(year===2033) close(p.excludedTax,0,1e-8,'Sem ISS/ICMS em 2033');
+   }
+  }
+ }
+}
+const hybridB2B=engine.futurePriceScenario({...hybrid,buyer:{profile:'b2b',usePct:100}},2027);
+close(hybridB2B.buyerCredit,hybridB2B.cbs+hybridB2B.ibs,1e-7);
+for(const memory of [engine.priceMemory,engine.revenueMemory]){
+ const rows=memory(hybrid,2027);
+ assert.ok(rows.some(row=>row[0].includes('ISS no DAS')));
+ assert.ok(rows.some(row=>row[0].includes('Base da CBS/IBS')));
+}
+console.log('✓ híbrido: slides, 630 cenários, inversão e memórias validados');
