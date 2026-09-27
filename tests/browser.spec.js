@@ -31,5 +31,14 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await expect(page.locator('#revKpis')).toContainText('Créditos estimados');
  await expect(page.locator('#revYearlyTable tr')).toHaveCount(8);
 
+ // O PDF deve ser um relatório executivo próprio, não uma cópia da tela.
+ await page.evaluate(()=>{window.print=()=>{};});
+ await page.locator('#revenuePrintBtn').click();
+ await expect(page.locator('#printReport')).toContainText('Resumo executivo');
+ await expect(page.locator('#printReport')).toContainText('Comparação tributária');
+ await expect(page.locator('#printReport')).toContainText('Evolução 2026–2033');
+ await expect(page.locator('#printReport')).not.toContainText('Exemplo editável');
+ await expect(page.locator('#printReport')).not.toContainText('Restaurar padrão');
+
  expect(errors).toEqual([]);
 });
