@@ -85,6 +85,9 @@ test('Simples híbrido separa ISS e bases em preço, faturamento, PDF e Excel',a
  await page.locator('#revenuePrintBtn').click();
  await expect(page.locator('#printReport')).toContainText('39.486,09');
  await expect(page.locator('#printReport')).toContainText('86.342,03');
+ await expect(page.locator('#printReport')).not.toContainText('Base do DAS residual');
+ await expect(page.locator('#printReport')).not.toContainText('Base da CBS/IBS');
+ await expect(page.locator('#printReport')).not.toContainText('excluído da base CBS/IBS');
  const sheets=await page.evaluate(()=>{
   const out=[];
   downloadSpreadsheet=(...args)=>out.push(args);
