@@ -223,6 +223,57 @@
  .timeline-shell{grid-template-columns:34px 1fr 34px}
  .command-stats{margin-bottom:0}
 }
+
+/* ===== ANÁLISE ANUAL SIMPLIFICADA ===== */
+#tools .yearly-head{margin-bottom:14px}
+#tools .yearly-subtitle{margin:5px 0 0!important;text-align:left!important;max-width:none!important}
+#tools .year-price-strip{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin:13px 0 17px}
+#tools .year-price-card{border:1px solid #dfded8;background:#fff;border-radius:13px;padding:10px;text-align:left;transition:transform .14s,border-color .14s,background .14s;min-width:0}
+#tools .year-price-card:hover{transform:translateY(-2px);border-color:#aaa}
+#tools .year-price-card.active{background:#111;color:#fff;border-color:#111}
+#tools .year-price-card small,#tools .year-price-card b,#tools .year-price-card span{display:block}
+#tools .year-price-card small{font-size:8px;color:#999;font-weight:850}
+#tools .year-price-card b{font-size:15px;letter-spacing:-.025em;margin:5px 0 3px;white-space:nowrap}
+#tools .year-price-card span{font-size:8px;color:#777;white-space:nowrap}
+#tools .year-price-card.active small,#tools .year-price-card.active span{color:#aaa}
+#tools .yearly-summary-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:3px 0 8px}
+#tools .yearly-summary-head b,#tools .yearly-summary-head small{display:block}
+#tools .yearly-summary-head b{font-size:13px}
+#tools .yearly-summary-head small{font-size:9px;color:#888;margin-top:2px}
+#tools .yearly-legend.compact{margin:0;padding:0;border:0;background:transparent}
+#tools .compact-yearly-wrap{max-height:none;overflow:auto}
+#tools .compact-yearly-table{min-width:760px!important}
+#tools .compact-yearly-table tbody tr{cursor:pointer}
+#tools .compact-yearly-table th,#tools .compact-yearly-table td{padding:12px 13px}
+#tools .compact-yearly-table td:first-child{font-size:12px;font-weight:900}
+#tools .compact-yearly-table td:nth-child(2) strong{font-size:13px}
+#tools .year-detail-panel{margin-top:10px;background:#111;color:#fff;border-radius:17px;padding:18px;display:none}
+#tools .year-detail-panel.visible{display:block}
+#tools .year-detail-top{display:flex;align-items:start;justify-content:space-between;gap:14px;padding-bottom:13px;border-bottom:1px solid #2c2c2c}
+#tools .year-detail-top h4{font-size:21px;letter-spacing:-.03em;margin:4px 0 0}
+#tools .year-detail-top span{font-size:8px;color:#999;text-transform:uppercase;letter-spacing:.1em}
+#tools .year-detail-price{text-align:right}
+#tools .year-detail-price b{display:block;font-size:23px}
+#tools .year-detail-price small{font-size:8px;color:#999}
+#tools .year-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:13px}
+#tools .year-detail-item{border:1px solid #303030;background:#171717;border-radius:11px;padding:11px}
+#tools .year-detail-item small,#tools .year-detail-item b{display:block}
+#tools .year-detail-item small{font-size:7.5px;color:#888;text-transform:uppercase;letter-spacing:.07em}
+#tools .year-detail-item b{font-size:13px;margin-top:5px}
+#tools .year-detail-foot{margin-top:11px;font-size:9px;color:#aaa;line-height:1.55}
+#tools .yearly-note{margin-top:9px}
+@media(max-width:1000px){
+ #tools .year-price-strip{grid-template-columns:repeat(4,1fr)}
+ #tools .year-detail-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+ #tools .year-price-strip{grid-template-columns:repeat(2,1fr)}
+ #tools .yearly-summary-head{display:block}
+ #tools .yearly-legend.compact{margin-top:8px}
+ #tools .year-detail-top{display:block}
+ #tools .year-detail-price{text-align:left;margin-top:10px}
+ #tools .year-detail-grid{grid-template-columns:1fr 1fr}
+}
 </style>
 <script>
 (async()=>{
@@ -485,42 +536,39 @@
 
    <section class="yearly-analysis">
     <div class="yearly-head">
-     <div><span class="eyebrow">EVOLUÇÃO DO CENÁRIO</span><h3>2026 → 2033</h3></div>
+     <div><span class="eyebrow">EVOLUÇÃO DO PREÇO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Visão rápida da formação de preço ao longo da transição.</p></div>
      <div class="yearly-actions">
-      <p>2026 é a base atual. 2027–2033 usam as premissas do regime selecionado.</p>
       <button id="exportExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar análise</button>
      </div>
     </div>
-    <div class="yearly-legend">
-     <span><i class="legend-base"></i>Base 2026</span>
-     <span><i class="legend-selected"></i>Ano destacado</span>
-     <span><b>Δ R$</b> diferença absoluta</span>
-     <span><b>Δ %</b> reajuste acumulado e anual</span>
+
+    <div id="yearlyPriceStrip" class="year-price-strip"></div>
+
+    <div class="yearly-summary-head">
+     <div><b>Resumo anual</b><small>Clique em um ano para ver os detalhes tributários.</small></div>
+     <div class="yearly-legend compact">
+      <span><i class="legend-base"></i>Base</span>
+      <span><i class="legend-selected"></i>Selecionado</span>
+     </div>
     </div>
-    <div class="comparison-wrap yearly-wrap">
-     <table class="comparison-table yearly-table">
+
+    <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
+     <table class="comparison-table yearly-table compact-yearly-table">
       <thead>
        <tr>
         <th>Ano</th>
-        <th>Regime</th>
-        <th>Sistema</th>
-        <th>Preço</th>
-        <th>CBS</th>
-        <th>IBS</th>
-        <th>DAS / tributos remanescentes</th>
-        <th>Crédito</th>
-        <th>Custo efetivo</th>
-        <th>Custo vs. 2026</th>
-        <th>Receita líquida no preço calculado</th>
-        <th>Líquido se mantivesse preço 2026</th>
-        <th>Diferença R$</th>
+        <th>Preço recomendado</th>
         <th>Reajuste vs. 2026</th>
         <th>Variação anual</th>
+        <th>Crédito</th>
+        <th>Custo efetivo</th>
        </tr>
       </thead>
       <tbody id="yearlyProjectionTable"></tbody>
      </table>
     </div>
+
+    <div id="yearDetailPanel" class="year-detail-panel"></div>
     <div id="yearlyProjectionNote" class="rate-note yearly-note"></div>
    </section>
   </section>
@@ -564,7 +612,7 @@
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260927-22"></script>
-<script src="app-v2.js?v=20260927-22"></script>
+<script src="content-v2.js?v=20260927-23"></script>
+<script src="app-v2.js?v=20260927-23"></script>
 </body>
 </html>
