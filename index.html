@@ -460,6 +460,12 @@
  .calc-memory>summary{display:none!important}
  .calc-memory .memory-grid{display:grid!important}
 }
+
+/* ===== ACESSIBILIDADE DE FOCO ===== */
+.skip-link{position:fixed;left:12px;top:-60px;z-index:9999;background:#111;color:#fff;padding:10px 13px;border-radius:9px;text-decoration:none;font-size:11px;font-weight:850;transition:top .15s}
+.skip-link:focus{top:12px}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #111;outline-offset:3px}
+.integrated-head button:focus-visible,.year-detail-panel button:focus-visible{outline-color:#fff}
 </style>
 <script>
 (async()=>{
@@ -477,6 +483,7 @@
 </script>
 </head>
 <body>
+<a class="skip-link" href="#mainContent">Pular para o conteúdo</a>
 <header class="top">
  <div class="topin">
   <div class="brand"><div class="mark">J</div><div><b>JAGUAR × RTAV</b><small>Reforma Tributária · estudo interno</small></div></div>
@@ -490,7 +497,7 @@
  </div>
 </header>
 
-<main>
+<main id="mainContent" tabindex="-1">
 <section id="home" class="view active">
  <div class="hero home-presentation interactive-hero">
   <div class="hero-copy">
