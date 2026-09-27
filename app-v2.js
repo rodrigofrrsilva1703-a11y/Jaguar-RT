@@ -18,16 +18,44 @@ function moduleCard(m){
  </button>`;
 }
 
-function renderHome(){
- if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
- if($('moduleGrid')) $('moduleGrid').innerHTML=STUDY_MODULES.map(moduleCard).join('');
- $('practiceGrid').innerHTML=PRACTICES.map((p,i)=>`<article class="practice-card">
+function renderPracticeGrid(){
+ const q=($('practiceSearch')?.value||'').trim().toLowerCase();
+ const regime=$('practiceRegimeFilter')?.value||'';
+ const sector=$('practiceSectorFilter')?.value||'';
+
+ const filtered=PRACTICES.filter(p=>{
+  const text=JSON.stringify(p).toLowerCase();
+  const matchQ=!q||text.includes(q);
+  const matchRegime=!regime||(p.regimes||[]).includes(regime);
+  const matchSector=!sector||p.sector===sector;
+  return matchQ&&matchRegime&&matchSector;
+ });
+
+ if(!$('practiceGrid')) return;
+ $('practiceGrid').innerHTML=filtered.length?filtered.map(p=>{
+  const i=PRACTICES.indexOf(p);
+  return `<article class="practice-card">
    <div><span class="tag">${p.tag}</span><span class="practice-code">${p.id}</span></div>
    <h3>${p.title}</h3>
    <p>${p.subtitle}</p>
    <div class="practice-meta"><span>${p.steps.length} etapas</span><span>resolução completa</span></div>
    <button class="practice-open" onclick="openPractice(${i})">Abrir caso completo →</button>
- </article>`).join('');
+  </article>`;
+ }).join(''):'<div class="empty">Nenhum caso encontrado com esses filtros.</div>';
+}
+
+function renderClientFaq(){
+ if(!$('clientFaqGrid')||typeof CLIENT_FAQ==='undefined') return;
+ $('clientFaqGrid').innerHTML=CLIENT_FAQ.map(item=>`
+  <details><summary>${item.q}</summary><p>${item.a}</p></details>
+ `).join('');
+}
+
+function renderHome(){
+ if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
+ if($('moduleGrid')) $('moduleGrid').innerHTML=STUDY_MODULES.map(moduleCard).join('');
+ renderPracticeGrid();
+ renderClientFaq();
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
