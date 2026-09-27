@@ -122,7 +122,7 @@
     usePct:clamp(input.buyer?.usePct??100,0,100)
    },
    purchases:{
-    enabled:input.purchases?.enabled===undefined?true:!!input.purchases.enabled,
+    enabled:!!input.purchases?.enabled,
     creditablePct:clamp(input.purchases?.creditablePct,0,100),
     usePct:clamp(input.purchases?.usePct??100,0,100)
    }
