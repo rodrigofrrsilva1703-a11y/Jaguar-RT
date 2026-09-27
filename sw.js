@@ -1,5 +1,5 @@
-const CACHE='jaguar-rtav-v2';
-const STATIC=['./manifest.webmanifest','./icon.svg'];
+const CACHE='jaguar-rtav-v3';
+const STATIC=['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
