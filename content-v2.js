@@ -647,202 +647,234 @@ const STUDY_MODULES = [
   {
     "id": "10",
     "title": "Reduções e regimes específicos",
-    "subtitle": "30%, 60%, alíquota zero, bares, restaurantes, hotelaria e por que CNAE sozinho não resolve.",
-    "intro": "A alíquota-padrão é apenas o começo. A LC 214 traz regimes diferenciados, que reduzem alíquotas para operações enquadradas, e regimes específicos, que podem alterar alíquota, base e crédito.",
-    "before": "Benefícios atuais estão espalhados entre diversos tributos, legislações e entes.",
-    "after": "A LC 214 organiza reduções e regimes próprios dentro da estrutura de IBS/CBS, com listas, anexos, requisitos profissionais e tratamentos de crédito específicos.",
+    "subtitle": "Como aplicar benefícios corretamente sem confundir percentual de redução, CNAE e enquadramento legal.",
+    "intro": "A alíquota-padrão não se aplica de forma idêntica a todas as operações. A LC 214 cria regimes diferenciados, com reduções sobre as alíquotas, e regimes específicos, que podem alterar base, alíquota, crédito e forma de apuração.",
+    "before": "No sistema atual, benefícios estão espalhados entre legislações federais, estaduais e municipais.",
+    "after": "No IBS/CBS, muitos tratamentos favorecidos são organizados na própria LC 214, mas o enquadramento continua dependendo da operação, da classificação e dos requisitos legais.",
     "blocks": [
       {
-        "t": "Redução de 30% — profissionais",
+        "t": "1. Redução de 30% para profissões listadas",
         "k": "REGRA OFICIAL",
-        "x": "O art. 127 reduz em 30% as alíquotas para serviços de profissões listadas, entre elas contabilistas, desde que cumpridos os requisitos legais. Para pessoa jurídica há condições sobre sócios, atividade e prestação direta dos serviços."
+        "x": "O art. 127 reduz em 30% as alíquotas de IBS/CBS sobre serviços de profissionais listados, entre eles contabilistas. A redução exige o atendimento das condições legais aplicáveis à pessoa física ou jurídica."
       },
       {
-        "t": "Redução de 60%",
-        "k": "REGRA OFICIAL",
-        "x": "A lei prevê redução de 60% para grupos como educação, saúde, dispositivos médicos, medicamentos, alimentos, certos produtos de higiene, agro, cultura, comunicação institucional e atividades desportivas, sempre conforme definições, listas e anexos."
-      },
-      {
-        "t": "Alíquota zero",
-        "k": "REGRA OFICIAL",
-        "x": "Existem hipóteses específicas de redução a zero. Nunca aplique zero apenas porque o produto pertence genericamente a saúde, alimentos ou agro; confira a classificação e a hipótese legal."
-      },
-      {
-        "t": "Bares e restaurantes",
-        "k": "REGIME ESPECÍFICO",
-        "x": "Alimentação enquadrada no regime tem redução de 40% das alíquotas. A base possui exclusões próprias, como certas gorjetas e valores de intermediação. O adquirente não pode se creditar do IBS/CBS sobre alimentação e bebidas abrangidas pelo regime."
-      },
-      {
-        "t": "Hotelaria e parques",
-        "k": "REGIME ESPECÍFICO",
-        "x": "As alíquotas são reduzidas em 40%. O fornecedor pode apropriar créditos de suas aquisições conforme as regras gerais, mas o adquirente do serviço de hotelaria/parques não se credita do IBS/CBS da operação."
-      },
-      {
-        "t": "Redução não é alíquota final",
-        "k": "FÓRMULA",
-        "x": "Alíquota final = alíquota aplicável × (1 − percentual de redução). Se a premissa do exercício for 28% e a redução for 60%, o resultado didático é 11,2%."
-      },
-      {
-        "t": "CNAE não basta",
+        "t": "2. Escritório contábil não entra automaticamente",
         "k": "ATENÇÃO",
-        "x": "O enquadramento pode depender de NBS, NCM, Anexo, natureza da operação, habilitação profissional e requisitos societários. Classificar apenas pelo CNAE pode gerar conclusão errada."
+        "x": "A atividade estar relacionada à contabilidade não basta, por si só, para concluir o benefício. É necessário verificar habilitação, composição societária, atividade efetivamente prestada e demais requisitos do art. 127."
+      },
+      {
+        "t": "3. Redução de 60%",
+        "k": "REGRA OFICIAL",
+        "x": "A LC 214 prevê redução de 60% para grupos como educação, saúde, dispositivos médicos, medicamentos, alimentos, certos produtos de higiene, agro, produções culturais, comunicação institucional e atividades desportivas, sempre conforme definições e listas legais."
+      },
+      {
+        "t": "4. Alíquota zero",
+        "k": "REGRA OFICIAL",
+        "x": "Há hipóteses específicas de redução a zero. Não aplique alíquota zero por descrição genérica do produto; confirme NCM/NBS, anexo, registro e demais requisitos quando exigidos."
+      },
+      {
+        "t": "5. Bares e restaurantes",
+        "k": "REGIME ESPECÍFICO",
+        "x": "O regime específico alcança as operações definidas nos arts. 273 e seguintes. As alíquotas são reduzidas em 40%; a base possui exclusões próprias, e o adquirente não pode apropriar crédito de IBS/CBS sobre alimentação e bebidas abrangidas pelo regime."
+      },
+      {
+        "t": "6. Hotelaria, parques de diversão e temáticos",
+        "k": "REGIME ESPECÍFICO",
+        "x": "As alíquotas são reduzidas em 40%. O fornecedor pode apropriar créditos de suas aquisições conforme as regras gerais; o adquirente dos serviços abrangidos não apropria crédito de IBS/CBS da operação."
+      },
+      {
+        "t": "7. Redução não é alíquota final",
+        "k": "FÓRMULA",
+        "x": "Alíquota final = alíquota aplicável × (1 − redução). Exemplo didático: referência de 28% com redução de 60% resulta em 11,2%."
+      },
+      {
+        "t": "8. CNAE sozinho não resolve",
+        "k": "ERRO COMUM",
+        "x": "O enquadramento pode depender de NCM, NBS, anexo legal, natureza da operação, habilitação profissional, registro regulatório e requisitos societários. O CNAE é apenas uma informação do diagnóstico."
+      },
+      {
+        "t": "9. Crédito também pode mudar",
+        "k": "NA PRÁTICA",
+        "x": "Alguns regimes preservam crédito das aquisições do fornecedor e restringem o crédito do adquirente. Sempre analise os dois lados da cadeia antes de comparar carga apenas pela alíquota."
       }
     ],
     "qa": [
       [
-        "Todo escritório contábil recebe 30% de redução?",
-        "Não automaticamente. A atividade de contabilista está listada, mas a prestação precisa atender aos requisitos do art. 127, inclusive os aplicáveis à pessoa jurídica."
+        "Todo escritório contábil tem redução de 30%?",
+        "Não automaticamente. A profissão está listada, mas a prestação precisa atender aos requisitos legais."
       ],
       [
-        "Restaurante toma crédito das compras?",
-        "A vedação expressa do art. 276 é ao adquirente da alimentação/bebida. A análise dos créditos do próprio fornecedor deve seguir as regras do regime e das aquisições."
+        "Redução de 60% significa pagar alíquota de 60%?",
+        "Não. Significa aplicar apenas 40% da alíquota que seria utilizada sem a redução."
       ],
       [
-        "Hotel gera crédito para uma empresa cliente?",
-        "O art. 283 veda ao adquirente o crédito de IBS/CBS sobre os serviços de hotelaria, parques de diversão e parques temáticos abrangidos pelo regime."
+        "Restaurante gera crédito ao cliente sobre a alimentação abrangida?",
+        "A LC 214 veda ao adquirente a apropriação de crédito de IBS/CBS nessas operações abrangidas pelo regime específico."
+      ],
+      [
+        "Hotel pode tomar crédito das próprias compras?",
+        "A lei permite ao fornecedor de hotelaria/parques apropriar créditos de suas aquisições conforme as regras gerais, embora vede o crédito ao adquirente do serviço abrangido."
       ]
     ],
-    "legal": "LC 214/2025, arts. 127 a 146 e arts. 273 a 283, texto atualizado pela LC 227/2026; RTAV."
+    "legal": "LC 214/2025, arts. 127 a 146 e arts. 273 a 283, texto atualizado pela LC 227/2026; Decreto 12.955/2026 para a CBS; RTAV."
   },
   {
     "id": "11",
     "title": "Recolhimento, documentos e apuração assistida",
-    "subtitle": "Split payment, recolhimento pelo adquirente, DF-e e por que a rotina fiscal muda.",
-    "intro": "Fato gerador, crédito, documento e recolhimento são peças diferentes que passam a conversar em tempo quase real. O contador precisa entender cada camada para não chamar tudo de split payment.",
-    "before": "A rotina atual muitas vezes reconstrói a apuração por escriturações e declarações depois da emissão e do pagamento.",
-    "after": "A arquitetura de IBS/CBS conecta documento fiscal eletrônico, extinção do débito, crédito, liquidação financeira e apuração assistida. A implantação tecnológica é gradual e possui cronogramas próprios.",
+    "subtitle": "Split payment, recolhimento pelo adquirente, DF-e e o novo fluxo de conferência.",
+    "intro": "Fato gerador, documento fiscal, extinção do débito, crédito e pagamento são etapas diferentes. A nova arquitetura conecta essas etapas eletronicamente, mas a implantação é gradual e cada mecanismo possui regra própria.",
+    "before": "Grande parte da rotina atual reconstrói a apuração depois da emissão, por meio de escriturações, declarações e conciliações.",
+    "after": "IBS/CBS aproximam documento fiscal, apuração, pagamento e crédito. Isso aumenta a importância de cadastro, parametrização e conferência de dados na origem.",
     "blocks": [
       {
-        "t": "Split payment",
+        "t": "1. Split payment",
         "k": "REGRA OFICIAL",
-        "x": "Prestadores de serviços de pagamento e operadores de sistemas de pagamento deverão, nas condições legais, segregar e recolher IBS/CBS na liquidação financeira. A lei prevê procedimento padrão e simplificado."
+        "x": "Nas transações alcançadas, prestadores e operadores de sistemas de pagamento segregam e recolhem IBS/CBS na liquidação financeira. A LC 214 prevê procedimento padrão e procedimento simplificado."
       },
       {
-        "t": "Implementação gradual",
+        "t": "2. Não começa tudo de uma vez",
         "k": "REGRA OFICIAL",
-        "x": "A LC 214 determina que ato conjunto do CGIBS e da RFB estabeleça implementação gradual e pode prever hipóteses facultativas. Portanto, não se deve afirmar que todo pagamento terá split desde o primeiro dia."
+        "x": "A própria LC 214 determina implementação gradual do split payment e admite hipóteses facultativas definidas em ato conjunto. Não afirme que toda transação estará sujeita ao mecanismo desde o primeiro dia."
       },
       {
-        "t": "Recolhimento pelo adquirente",
+        "t": "3. Recolhimento pelo adquirente",
         "k": "REGRA OFICIAL",
-        "x": "É outra modalidade de extinção do débito prevista na lei e não deve ser confundida com split. Aplica-se nas hipóteses e condições próprias do art. 36."
+        "x": "É modalidade distinta do split payment. O adquirente sujeito ao regime regular pode recolher IBS/CBS da operação quando utilizar instrumento de pagamento que não permita a segregação prevista nos arts. 32 e 33, observadas as condições do art. 36."
       },
       {
-        "t": "Apuração assistida",
+        "t": "4. Apuração assistida",
         "k": "REGRA OFICIAL",
-        "x": "CGIBS e RFB podem apresentar ao contribuinte a apuração assistida. O contribuinte pode confirmar ou ajustar; a ausência de manifestação dentro do prazo possui efeitos legais relevantes, por isso conferência continua indispensável."
+        "x": "RFB e CGIBS podem disponibilizar apuração assistida. O contribuinte pode confirmar ou ajustar; a falta de manifestação no prazo pode fazer presumir correto o saldo apresentado e constituir o crédito tributário."
       },
       {
-        "t": "Documento fiscal eletrônico",
+        "t": "5. Documento fiscal idôneo",
+        "k": "PONTO CENTRAL",
+        "x": "O documento fiscal eletrônico é peça-chave para crédito e apuração. Cadastro do item, natureza da operação, destino, regime, classificação e campos de IBS/CBS precisam estar corretos na origem."
+      },
+      {
+        "t": "6. Ato Conjunto nº 4/2026",
+        "k": "CRONOGRAMA DF-e",
+        "x": "O Ato Conjunto RFB/CGIBS nº 4, de 30/07/2026, estabelece datas de início da obrigatoriedade dos documentos fiscais eletrônicos abrangidos. Leiaute publicado e início da obrigatoriedade são marcos diferentes."
+      },
+      {
+        "t": "7. Ato Técnico Conjunto nº 4/2026",
+        "k": "SPLIT PAYMENT",
+        "x": "É outro ato: o Ato Técnico Conjunto RFB/CGIBS nº 4, de 28/08/2026, aprova documentação técnica e padrões operacionais da Plataforma Pública do Split Payment. Não confunda com o Ato Conjunto do cronograma de DF-e."
+      },
+      {
+        "t": "8. NFS-e",
+        "k": "ATUALIZAÇÃO 2026",
+        "x": "A Nota Técnica 009/2026 consolida adaptações do leiaute da NFS-e. Para ME/EPP optantes do Simples sujeitas à NFS-e, o padrão nacional torna-se obrigatório em 1º/11/2026; os efeitos de CBS/IBS começam em 1º/1/2027."
+      },
+      {
+        "t": "9. O papel do contador",
         "k": "NA PRÁTICA",
-        "x": "O crédito é ligado a documento fiscal eletrônico idôneo. Cadastro, natureza da operação, destino, item, regime e campos de IBS/CBS passam a ser parte central da qualidade da apuração."
-      },
-      {
-        "t": "Cronograma oficial de DF-e",
-        "k": "ATUALIZAÇÃO 2026",
-        "x": "RFB e CGIBS publicaram cronograma de obrigatoriedade e leiautes dos documentos fiscais, com marcos em 2026 e 2027. O site deve ser revisado quando esses marcos forem atualizados."
-      },
-      {
-        "t": "NFS-e e NT 009",
-        "k": "ATUALIZAÇÃO 2026",
-        "x": "A Nota Técnica 009 consolidou adaptações do layout da NFS-e para a Reforma. Para optantes do Simples, a NFS-e nacional tornou-se obrigatória a partir de 1º/11/2026, e os efeitos de CBS/IBS no regime começam em 1º/1/2027."
-      },
-      {
-        "t": "Novo papel do contador",
-        "k": "RTAV",
-        "x": "A direção é menos reconstrução manual e mais parametrização, conferência, exceções, conciliação, análise de caixa e consultoria. Isso não significa fim das obrigações nem ausência de revisão humana."
+        "x": "A tendência é deslocar trabalho de digitação/reconstrução para parametrização, conciliação, tratamento de exceções, validação de crédito, caixa e análise. A conferência humana continua necessária."
       }
     ],
     "qa": [
       [
         "Split payment é o fato gerador?",
-        "Não."
+        "Não. Fato gerador define quando ocorre a incidência; split payment é uma forma de recolhimento."
       ],
       [
-        "Apuração assistida elimina a conferência do escritório?",
-        "Não. A lei prevê confirmação, ajustes e consequências para falta de manifestação."
+        "Ato Conjunto nº 4 e Ato Técnico Conjunto nº 4 são a mesma coisa?",
+        "Não. O primeiro trata do cronograma de obrigatoriedade de DF-e; o segundo da documentação técnica da plataforma de split payment."
       ],
       [
-        "Todos os documentos mudam na mesma data?",
-        "Não. Há cronogramas e leiautes por documento/operação; é preciso acompanhar as orientações oficiais."
+        "Apuração assistida elimina a responsabilidade do contribuinte?",
+        "Não. Há possibilidade de confirmação/ajuste e efeitos legais para ausência de manifestação."
+      ],
+      [
+        "Todos os documentos fiscais mudam na mesma data?",
+        "Não. Existe cronograma por documento e operação; acompanhe as orientações oficiais."
       ]
     ],
-    "legal": "LC 214/2025, arts. 27, 31 a 36, 45 a 48; Ato Conjunto RFB/CGIBS nº 4/2026; orientações RFB/CGIBS; NT 009 NFS-e."
+    "legal": "LC 214/2025, arts. 27, 31 a 36, 44 a 48; Ato Conjunto RFB/CGIBS nº 4, de 30/07/2026; Ato Técnico Conjunto RFB/CGIBS nº 4, de 28/08/2026; Orientações RTC da Receita Federal; NT 009/2026 da NFS-e."
   },
   {
     "id": "12",
     "title": "Planejamento e conversa com o cliente",
-    "subtitle": "Do diagnóstico técnico ao plano de ação 2026–2033.",
-    "intro": "O objetivo do treinamento não é transformar o contador em alguém que recita artigos. É transformar regra em decisão: preço, margem, regime, fornecedor, contrato, caixa e sistema. O material do RTAV chama isso de diagnóstico e prognóstico.",
-    "before": "Planejamento muitas vezes termina na comparação de percentuais ou no valor de uma guia.",
-    "after": "A transição exige cenário por cenário, com premissas explícitas e atualização contínua conforme alíquotas, regulamentos e dados reais do cliente.",
+    "subtitle": "Como transformar regra tributária em diagnóstico, cenário e plano de ação.",
+    "intro": "O objetivo final do RTAV é sair da explicação abstrata da lei e chegar a uma decisão empresarial fundamentada. O contador precisa separar fatos, premissas e estimativas; projetar a transição; e comunicar o impacto em linguagem que o cliente consiga usar.",
+    "before": "Planejamento tributário muitas vezes termina na comparação de alíquotas ou no valor de uma guia.",
+    "after": "Na Reforma, o diagnóstico precisa integrar operação, destino, preço, faturamento, regime, clientes, fornecedores, crédito, documentos, contratos, sistemas e caixa.",
     "blocks": [
       {
-        "t": "1. Diagnóstico do negócio",
+        "t": "1. Comece pelo mapa do negócio",
         "k": "MÉTODO",
-        "x": "Mapeie faturamento, regime, margem, produtos/serviços, clientes, fornecedores, destinos, antecipações, contratos, benefícios, créditos, documentos e sistemas."
+        "x": "Liste faturamento, regime, produtos/serviços, clientes, fornecedores, destinos, contratos, antecipações, benefícios, créditos, documentos e sistemas. Sem esse inventário, a projeção nasce incompleta."
       },
       {
-        "t": "2. Separar regra de estimativa",
+        "t": "2. Classifique cada informação",
         "k": "MÉTODO",
-        "x": "Em cada planilha ou apresentação, marque o que é REGRA OFICIAL, RTAV, ESTIMATIVA, AGUARDA REGULAMENTAÇÃO e PREMISSA DO CLIENTE. Isso evita que 9%, 27,91% ou 28% virem “verdades oficiais” por repetição."
+        "x": "Marque claramente: REGRA OFICIAL, PREMISSA RTAV, ESTIMATIVA, PREMISSA DO CLIENTE ou PONTO PENDENTE. Isso impede que uma simulação de 9% ou 28% vire 'alíquota oficial' por repetição."
       },
       {
-        "t": "3. Projetar por ano",
+        "t": "3. Projete 2027–2033",
         "k": "MÉTODO",
-        "x": "Faça cenários de 2027 a 2033, porque ICMS/ISS, IBS e alíquotas de referência mudam ao longo da transição."
+        "x": "Monte cenários por ano. A transição muda a participação de ICMS/ISS e IBS, por isso um único cálculo não serve para todo o período."
       },
       {
-        "t": "4. Recalcular venda e compra",
-        "k": "MÉTODO",
-        "x": "Projete preço líquido, CBS/IBS, tributos remanescentes, crédito de compras e custo efetivo. Depois reconstrua a DRE."
+        "t": "4. Analise preço e faturamento separadamente",
+        "k": "NO SITE",
+        "x": "Use a ferramenta de preço para uma venda individual e a ferramenta de faturamento para a visão macro. Ambas partem do líquido de 2026 e mostram a evolução tributária anual."
       },
       {
-        "t": "5. Analisar regime",
-        "k": "MÉTODO",
-        "x": "Para Simples, compare puro x híbrido; para Presumido x Real, use DRE completa. Não decida regime por uma única alíquota."
-      },
-      {
-        "t": "6. Rever contratos",
-        "k": "NA PRÁTICA",
-        "x": "Mapeie cláusulas de preço, tributos, reajuste, repasse, antecipação, prazo, destino e reequilíbrio. A transição pode mudar custo mesmo sem mudança comercial aparente."
-      },
-      {
-        "t": "7. Preparar sistemas e cadastros",
-        "k": "NA PRÁTICA",
-        "x": "Revise ERP, emissor, cadastro de item/serviço, NCM/NBS, endereço de destino, regime do cliente, regras de crédito, integração financeira e documentos fiscais."
-      },
-      {
-        "t": "8. Preparar caixa",
-        "k": "NA PRÁTICA",
-        "x": "Antecipações, novos momentos de exigência, split/recolhimento pelo adquirente e mudança de crédito podem alterar capital de giro."
-      },
-      {
-        "t": "9. Entregar cenários, não um palpite",
+        "t": "5. Vá além quando o trabalho exigir",
         "k": "RTAV",
-        "x": "Mostre DRE atual x projetada, preço que preserva receita líquida, preço que preserva margem, custo efetivo do cliente e plano de ação."
+        "x": "Para uma consultoria completa, acrescente compras, créditos de fornecedores, custos, despesas e DRE. A ferramenta tributária simplificada não substitui esse diagnóstico econômico."
       },
       {
-        "t": "10. Revisar continuamente",
+        "t": "6. Compare regimes corretamente",
+        "k": "MÉTODO",
+        "x": "No Simples, compare recolhimento dentro do regime e opção pelo regime regular de IBS/CBS quando aplicável. No Presumido x Real, use cálculo completo de IRPJ/CSLL e não apenas a margem presumida."
+      },
+      {
+        "t": "7. Revise contratos",
+        "k": "NA PRÁTICA",
+        "x": "Mapeie preço, tributos, repasse, reajuste, antecipação, prazo, destino e cláusulas de reequilíbrio. O efeito econômico pode mudar mesmo sem alteração aparente no contrato."
+      },
+      {
+        "t": "8. Prepare cadastro e sistema",
+        "k": "NA PRÁTICA",
+        "x": "Revise ERP, emissor, NCM/NBS, cadastro de destino, regime do cliente, regras de redução, documentos fiscais e integrações financeiras."
+      },
+      {
+        "t": "9. Prepare o caixa",
+        "k": "NA PRÁTICA",
+        "x": "Antecipações, split payment, recolhimento pelo adquirente e momento de crédito podem alterar capital de giro. Simular carga sem olhar fluxo financeiro pode gerar decisão incompleta."
+      },
+      {
+        "t": "10. Entregue uma análise explicável",
+        "k": "COMUNICAÇÃO",
+        "x": "Mostre 2026 como base e explique, ano a ano, o que muda em tributos, preço ou faturamento. O cliente precisa entender a causa da mudança, não apenas receber um percentual."
+      },
+      {
+        "t": "11. Atualize o diagnóstico",
         "k": "ATENÇÃO",
-        "x": "A legislação e os atos operacionais continuam evoluindo. Atualize o diagnóstico quando sair alíquota oficial, regulamentação, mudança de regime, mix, fornecedor, cliente ou contrato."
+        "x": "Alíquotas, atos operacionais, cadastro, mix, fornecedores e contratos podem mudar. Registre a data e as fontes de cada cenário e revise sempre que houver fato novo relevante."
       }
     ],
     "qa": [
       [
-        "Posso prometer ao cliente hoje qual será a carga exata até 2033?",
-        "Não. Há alíquotas futuras e atos operacionais que ainda são fixados ao longo do processo. O correto é trabalhar com cenários identificados."
+        "Posso prometer hoje a carga exata de todos os anos até 2033?",
+        "Não. Parte das alíquotas futuras e dos atos operacionais é definida ao longo da implementação. Trabalhe com cenários identificados e atualizados."
       ],
       [
-        "Qual é a primeira urgência para 2026?",
-        "Qualidade de cadastro e documento, decisão de Simples quando aplicável, entendimento do ano-teste, preparação de sistemas e projeção econômica para 2027."
+        "Qual é a prioridade do cliente em 2026?",
+        "Depende do perfil, mas cadastro/documento, sistemas, Simples quando aplicável, entendimento do ano-teste e projeção para 2027 são frentes centrais."
       ],
       [
-        "O contador deve dizer qual preço o empresário é obrigado a usar?",
-        "Não. O contador calcula impactos e faixas; a decisão comercial pertence à empresa."
+        "A calculadora substitui uma revisão fiscal completa?",
+        "Não. Ela organiza a análise tributária de preço e faturamento; operações especiais exigem enquadramento próprio."
+      ],
+      [
+        "O contador deve decidir o preço comercial do cliente?",
+        "Não. O contador demonstra efeitos e cenários; a decisão comercial é da empresa."
       ]
     ],
-    "legal": "RTAV; Material de Estudo; EC 132/2023; LC 214/2025 atualizada pela LC 227/2026; LC 224/2025; orientações RFB/CGIBS de 2026."
+    "legal": "RTAV; Material de Estudo; EC 132/2023; LC 214/2025 atualizada pela LC 227/2026; LC 224/2025; Decreto 12.955/2026; orientações RFB/CGIBS vigentes em setembro de 2026."
   }
 ];
 
