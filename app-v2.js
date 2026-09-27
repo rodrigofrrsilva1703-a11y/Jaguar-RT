@@ -181,11 +181,8 @@ const SN_LABELS={
  V:'Anexo V · Serviços'
 };
 
-const SN_TABLES=RTAV_RULES.simpleTables;
-
 const clamp=RTAV_ENGINE.clamp;
 const effectPct=RTAV_ENGINE.effectPct;
-const deltaMoney=(before,after)=>after-before;
 const effectText=v=>`${v>=0?'+':''}${pct(v)}`;
 let yearlyRows=[];
 
@@ -248,20 +245,6 @@ function applyRegimeUI({preset=true}={}){
  }
  updateSnSummary();
  applyYearPreset();
-}
-
-function getRegularRates(year,hybrid=false){
- const p=TRANSITION[year]||TRANSITION[2027];
- const mode=hybrid?($('hybridRateMode')?.value||'rtav'):($('rateMode')?.value||'rtav');
- const reduction=clamp(hybrid?num('hybridReduction'):num('rateReduction'),0,100);
- const factor=1-reduction/100;
- let cbs=0,ibs=0;
- if(mode==='rtav'){cbs=p.cbs;ibs=p.ibs;}
- else{
-  cbs=clamp(hybrid?num('hybridCbsRate'):num('cbsRate'),0,100);
-  ibs=clamp(hybrid?num('hybridIbsRate'):num('ibsRate'),0,100);
- }
- return {cbs:cbs*factor,ibs:ibs*factor,reduction,mode};
 }
 
 function applyYearPreset(){
@@ -609,21 +592,6 @@ function revUpdateSnSummary(){
  }
 }
 
-function revGetRates(year,hybrid=false){
- const p=TRANSITION[year]||TRANSITION[2027];
- const mode=hybrid?($('revHybridRateMode')?.value||'rtav'):($('revRateMode')?.value||'rtav');
- const reduction=clamp(hybrid?num('revHybridReduction'):num('revRateReduction'),0,100);
- const factor=1-reduction/100;
- let cbs=0,ibs=0;
-
- if(mode==='rtav'){cbs=p.cbs;ibs=p.ibs;}
- else{
-  cbs=clamp(hybrid?num('revHybridCbsRate'):num('revCbsRate'),0,100);
-  ibs=clamp(hybrid?num('revHybridIbsRate'):num('revIbsRate'),0,100);
- }
- return {cbs:cbs*factor,ibs:ibs*factor};
-}
-
 function revApplyUI(opts={}){
  const preset=opts.preset!==false;
  const r=revRegime(),simple=revIsSimple(r);
@@ -861,7 +829,7 @@ function columnWidths(headers,rows){
  });
 }
 
-function downloadSpreadsheet(filename,headers,rows,premises){
+function downloadSpreadsheet(filename,headers,rows,premises,memory=[]){
  if(window.XLSX){
   const analysisData=[headers].concat(rows);
   const premiseData=[['Premissa','Valor']].concat(premises);
@@ -896,6 +864,11 @@ function downloadSpreadsheet(filename,headers,rows,premises){
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Análise 2026-2033');
   XLSX.utils.book_append_sheet(wb,wsPremises,'Premissas');
+  if(memory&&memory.length){
+   const wsMemory=XLSX.utils.aoa_to_sheet([['Etapa','Valor']].concat(memory));
+   wsMemory['!cols']=[{wch:40},{wch:24}];
+   XLSX.utils.book_append_sheet(wb,wsMemory,'Memória de cálculo');
+  }
   XLSX.writeFile(wb,filename,{compression:true});
   return;
  }
@@ -909,10 +882,15 @@ function downloadSpreadsheet(filename,headers,rows,premises){
   return '<Row>'+xlsCell(row[0])+(typeof row[1]==='number'?xlsCell(row[1],'Number'):xlsCell(row[1]))+'</Row>';
  }).join('');
 
+ const memoryXml=(memory||[]).map(function(row){
+  return '<Row>'+xlsCell(row[0])+(typeof row[1]==='number'?xlsCell(row[1],'Number'):xlsCell(row[1]))+'</Row>';
+ }).join('');
  const xml='<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>'+
   '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'+
   '<Worksheet ss:Name="Analise 2026-2033"><Table><Row>'+headersXml+'</Row>'+rowsXml+'</Table></Worksheet>'+
-  '<Worksheet ss:Name="Premissas"><Table><Row>'+xlsCell('Premissa')+xlsCell('Valor')+'</Row>'+premXml+'</Table></Worksheet></Workbook>';
+  '<Worksheet ss:Name="Premissas"><Table><Row>'+xlsCell('Premissa')+xlsCell('Valor')+'</Row>'+premXml+'</Table></Worksheet>'+
+  (memoryXml?'<Worksheet ss:Name="Memoria de calculo"><Table><Row>'+xlsCell('Etapa')+xlsCell('Valor')+'</Row>'+memoryXml+'</Table></Worksheet>':'')+
+  '</Workbook>';
 
  const blob=new Blob(['\ufeff',xml],{type:'application/vnd.ms-excel;charset=utf-8'});
  const url=URL.createObjectURL(blob),a=document.createElement('a');
@@ -936,7 +914,8 @@ function exportPriceExcel(){
    ['Aproveitamento futuro CBS/IBS %',num('priceBuyerCreditPct')],
    ['PIS %',num('pisRate')],['Cofins %',num('cofinsRate')],['ICMS %',num('icmsRate')],
    ['ISS %',num('issRate')],['IPI %',num('ipiRate')]
-  ]
+  ],
+  RTAV_ENGINE.priceMemory(priceEngineInput(),Number($('priceYear')?.value||2027))
  );
 }
 
@@ -955,7 +934,8 @@ function exportRevenueExcel(){
    ['Aproveitamento estimado dos créditos %',num('revPurchaseCreditUsePct')],
    ['PIS %',num('revPisRate')],['Cofins %',num('revCofinsRate')],['ICMS %',num('revIcmsRate')],
    ['ISS %',num('revIssRate')],['IPI %',num('revIpiRate')]
-  ]
+  ],
+  RTAV_ENGINE.revenueMemory(revenueEngineInput(),Number($('revYear')?.value||2027))
  );
 }
 
@@ -996,6 +976,19 @@ function togglePresentation(kind){
 
 function printTaxReport(kind){
  showTaxTool(kind);
+ const price=kind==='price';
+ const header=$(price?'pricePrintHeader':'revenuePrintHeader');
+ const client=($(price?'priceClientName':'revenueClientName')?.value||'').trim()||'Cliente não identificado';
+ const year=price?($('priceYear')?.value||'2027'):($('revYear')?.value||'2027');
+ const title=price?'Relatório de preço de venda':'Relatório de faturamento';
+ const now=new Date().toLocaleDateString('pt-BR');
+ if(header){
+  header.innerHTML='<div class="print-brand">Jaguar Assessoria Contábil × RTAV</div>'+
+   '<h1>'+title+'</h1>'+
+   '<p><strong>Cliente:</strong> '+client+' · <strong>Ano analisado:</strong> '+year+'</p>'+
+   '<p><strong>Data:</strong> '+now+' · <strong>Motor:</strong> '+RTAV_ENGINE.version+' · <strong>Regras:</strong> '+RTAV_ENGINE.rulesVersion+'</p>'+
+   '<p>Simulação para planejamento. Premissas RTAV permanecem identificadas como premissas e não substituem o enquadramento aplicável à operação.</p>';
+ }
  setTimeout(function(){window.print();},80);
 }
 
