@@ -21,8 +21,19 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
 
  await page.locator('#priceAdvanced').evaluate(el=>{el.open=true;});
+ await page.locator('#priceTakesCbsIbsCredit').check();
+ await expect(page.locator('#priceOwnCreditFields')).toBeVisible();
+ await page.locator('#priceCreditablePurchasesPct').fill('50');
+ await page.locator('#pricePurchaseCreditUsePct').fill('100');
+ await expect(page.locator('#integratedKpis')).toContainText('Crédito CBS/IBS da empresa');
+ await expect(page.locator('#futureTaxSummary')).toContainText('Carga líquida após créditos');
+
  await page.locator('#priceBuyerProfile').selectOption('b2b');
  await expect(page.locator('#integratedKpis')).toContainText('Custo efetivo do comprador');
+
+ await page.evaluate(()=>{window.print=()=>{};});
+ await page.locator('#pricePrintBtn').click();
+ await expect(page.locator('#printReport')).toContainText('Créditos CBS/IBS da empresa');
 
  await page.evaluate(()=>showTaxTool('revenue'));
  await expect(page.locator('#revenueToolPanel')).toHaveClass(/active/);
