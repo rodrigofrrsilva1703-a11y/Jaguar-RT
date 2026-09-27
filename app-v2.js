@@ -423,7 +423,10 @@ function currentScenario(){
   taxes=Object.values(components).reduce((a,b)=>a+b,0);
  }
 
- return {year:2026,regime:r,price,taxes,net:Math.max(0,price-taxes),components,cbs:null,ibs:null,remnant:taxes};
+ const buyerProfile=$('priceBuyerProfile')?.value||'b2c';
+ const buyerCredit=buyerProfile==='b2b'?Math.min(price,Math.max(0,num('priceCurrentBuyerCredit'))):0;
+ const buyerCost=Math.max(0,price-buyerCredit);
+ return {year:2026,regime:r,price,taxes,net:Math.max(0,price-taxes),components,cbs:null,ibs:null,remnant:taxes,buyerCredit,buyerCost};
 }
 
 function paramsForYear(year){
@@ -463,7 +466,11 @@ function scenarioAtPrice(year,projected){
   taxes=cbs+ibs+remnant;
   net=Math.max(0,projected-taxes);
  }
- return {year,regime:regime(),price:projected,cbs,ibs,remnant,taxes,net};
+ const buyerProfile=$('priceBuyerProfile')?.value||'b2c';
+ const buyerUse=clamp(num('priceBuyerCreditPct'),0,100)/100;
+ const buyerCredit=buyerProfile==='b2b'?(cbs+ibs)*buyerUse:0;
+ const buyerCost=Math.max(0,projected-buyerCredit);
+ return {year,regime:regime(),price:projected,cbs,ibs,remnant,taxes,net,buyerCredit,buyerCost};
 }
 
 function futureScenario(year,keepGross=false){
@@ -527,6 +534,10 @@ function currentTaxRows(base){
  if(c.ipi>0) rows.push(['IPI',money(c.ipi)]);
  rows.push(['Total de tributos',money(base.taxes)]);
  rows.push(['Valor líquido',money(base.net)]);
+ if(($('priceBuyerProfile')?.value||'b2c')==='b2b'){
+  rows.push(['Crédito atual informado',money(base.buyerCredit||0)]);
+  rows.push(['Custo efetivo do comprador',money(base.buyerCost??base.price)]);
+ }
  return rows;
 }
 
@@ -538,6 +549,10 @@ function futureTaxRows(x){
  rows.push(['Total de tributos',money(x.taxes)]);
  rows.push(['Carga sobre o preço',pct(x.price?x.taxes/x.price*100:0)]);
  rows.push(['Valor líquido',money(x.net)]);
+ if(($('priceBuyerProfile')?.value||'b2c')==='b2b'){
+  rows.push(['Crédito potencial do comprador',money(x.buyerCredit||0)]);
+  rows.push(['Custo efetivo do comprador',money(x.buyerCost??x.price)]);
+ }
  return rows;
 }
 
