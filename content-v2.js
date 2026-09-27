@@ -2,177 +2,204 @@ const STUDY_MODULES = [
   {
     "id": "01",
     "title": "Mapa completo da Reforma",
-    "subtitle": "A visão geral para entender CBS, IBS, Imposto Seletivo e os cinco pilares do RTAV.",
-    "intro": "A Reforma Tributária do Consumo foi criada pela EC 132/2023 e regulamentada principalmente pela LC 214/2025, hoje já alterada pela LC 227/2026. Para estudar sem se perder, use os cinco pilares do RTAV: incidência, fato gerador, base de cálculo, local da operação e alíquota. Depois acrescente crédito, recolhimento, documentos e transição.",
-    "before": "O consumo é tributado por vários tributos com lógicas diferentes: PIS/Pasep e Cofins na esfera federal, IPI sobre produtos industrializados, ICMS estadual e ISS municipal. Regime, atividade e operação mudam bastante o cálculo.",
-    "after": "A tributação geral do consumo passa a se concentrar em CBS, de competência da União, e IBS, de competência compartilhada entre Estados, Municípios e Distrito Federal. O Imposto Seletivo é um tributo federal separado para hipóteses definidas em lei.",
+    "subtitle": "A espinha dorsal para entender IBS, CBS, Imposto Seletivo e não se perder nos detalhes.",
+    "intro": "Comece pela arquitetura, não pela alíquota. A EC 132/2023 criou a nova estrutura constitucional e a LC 214/2025, alterada pela LC 227/2026, disciplina IBS, CBS e Imposto Seletivo. Para estudar qualquer operação, siga sempre a mesma ordem: incidência → fato gerador → local → base → alíquota → crédito → recolhimento → documento → transição.",
+    "before": "No sistema atual, PIS/Pasep, Cofins, IPI, ICMS e ISS possuem competências, bases, créditos e regras próprias. O resultado muda conforme atividade, produto, serviço, destino e regime.",
+    "after": "O consumo passa a ter dois tributos gerais coordenados — CBS federal e IBS de competência compartilhada — além do Imposto Seletivo nas hipóteses legais. A arquitetura é comum, mas a carga efetiva não é automaticamente igual para todos os setores ou operações.",
     "blocks": [
       {
-        "t": "Incidência — o que é tributado",
+        "t": "1. Incidência — primeiro pergunte o que está sendo fornecido",
         "k": "REGRA OFICIAL",
-        "x": "A regra geral do IBS e da CBS alcança operações onerosas com bens e serviços. A lei define bens de forma ampla, incluindo bens materiais, imateriais e direitos; serviços são as demais operações que não sejam enquadradas como operações com bens."
+        "x": "IBS e CBS incidem, como regra, sobre operações onerosas com bens e serviços. O conceito de bens inclui bens materiais, imateriais e direitos; operações não onerosas só são tributadas nas hipóteses expressamente previstas em lei."
       },
       {
-        "t": "Não é um único imposto",
-        "k": "RESPOSTA DIRETA",
-        "x": "O modelo é chamado de IVA dual porque existem dois tributos gerais coordenados: CBS e IBS. O IBS ainda é composto pelas parcelas estadual e municipal do destino."
+        "t": "2. IVA dual — dois tributos, uma lógica coordenada",
+        "k": "CONCEITO",
+        "x": "CBS pertence à União. O IBS reúne as competências estadual e municipal do destino. Por isso não é correto dizer que a Reforma criou um único imposto sobre consumo."
       },
       {
-        "t": "Princípio da neutralidade",
+        "t": "3. Neutralidade",
         "k": "REGRA OFICIAL",
-        "x": "A LC 214 estabelece a neutralidade como princípio do IBS e da CBS: a estrutura deve buscar não distorcer decisões de consumo e de organização econômica, ressalvadas as exceções previstas na Constituição e na própria lei."
+        "x": "A LC 214 estabelece a neutralidade como princípio: IBS e CBS devem evitar distorcer decisões de consumo e de organização econômica, observadas as exceções constitucionais e legais."
       },
       {
-        "t": "Imposto Seletivo",
+        "t": "4. Imposto Seletivo",
         "k": "REGRA OFICIAL",
-        "x": "É um tributo federal diferente de CBS e IBS. Entra em vigor a partir de 2027 e incide sobre bens e serviços definidos em lei por impacto à saúde ou ao meio ambiente. Não use o apelido “imposto do pecado” como definição técnica."
+        "x": "É tributo federal separado de IBS/CBS e entra em vigor a partir de 2027. Incide nas hipóteses definidas em lei sobre bens e serviços prejudiciais à saúde ou ao meio ambiente."
       },
       {
-        "t": "O que não deve ser simplificado",
+        "t": "5. O que continua exigindo enquadramento",
         "k": "ATENÇÃO",
-        "x": "Dizer que “tudo vira 28%” ou que “todos os setores pagarão igual” está errado. Existem alíquotas por ente, reduções, alíquota zero, regimes específicos, Simples Nacional e regras próprias por operação."
+        "x": "Destino, redução de alíquota, alíquota zero, regime específico, Simples Nacional, classificação do item e natureza da operação continuam relevantes. 'Tudo vira 28%' não é uma regra jurídica."
       },
       {
-        "t": "Método de estudo Jaguar",
+        "t": "6. Roteiro mental Jaguar",
         "k": "MÉTODO",
-        "x": "Para qualquer cliente, responda nesta ordem: o que é a operação → quando ocorre → qual a base → onde é tributada → qual alíquota → quais créditos → como recolhe → qual documento → qual impacto em preço, margem e caixa."
+        "x": "Para qualquer caso, responda: o que é a operação? quando ocorre? onde ocorre? qual a base? qual alíquota? existe redução ou regime específico? quais créditos? como será recolhido? qual documento? qual efeito na transição?"
+      },
+      {
+        "t": "7. Regra oficial x premissa de aula",
+        "k": "DIDÁTICA",
+        "x": "Números como 9%, 27,91% e 28% aparecem no RTAV como premissas ou referências de exercício. Sempre marque no estudo o que é legislação vigente e o que é hipótese de simulação."
       }
     ],
     "qa": [
       [
         "A Reforma elimina todos os tributos atuais de uma vez?",
-        "Não. Há transição até 2033. PIS/Cofins saem primeiro; ICMS e ISS são reduzidos gradualmente a partir de 2029; o IPI tem redução a zero em grande parte das hipóteses a partir de 2027, preservadas exceções legais."
+        "Não. A substituição ocorre por transição: PIS/Cofins saem antes, ICMS/ISS diminuem gradualmente de 2029 a 2032 e o novo modelo entra integralmente em 2033."
       ],
       [
-        "CBS e IBS valem igual para indústria, comércio e serviços?",
-        "A arquitetura geral é comum, mas a carga e a forma prática podem diferir por alíquota, destino, redução, regime específico, crédito e enquadramento."
+        "CBS e IBS terão exatamente a mesma carga para indústria, comércio e serviços?",
+        "Não necessariamente. A estrutura geral é comum, mas alíquota, destino, reduções, regimes específicos e créditos podem alterar a carga efetiva."
       ],
       [
-        "A LC 214 ainda é a mesma de janeiro de 2025?",
-        "Não. Ela já recebeu alterações importantes, inclusive pela LC 227/2026. Por isso o site usa o texto atualizado."
+        "O IBS é federal?",
+        "Não. É de competência compartilhada entre Estados, Municípios e Distrito Federal. A CBS é federal."
+      ],
+      [
+        "Posso usar 28% como alíquota padrão definitiva?",
+        "Não. Use apenas como premissa identificada quando o exercício pedir. A alíquota aplicável depende das regras oficiais do período e da operação."
       ]
     ],
-    "legal": "EC 132/2023; LC 214/2025, arts. 1º a 6º, em texto atualizado pela LC 227/2026; Receita Federal — Entenda a RTC; RTAV."
+    "legal": "EC 132/2023; LC 214/2025, arts. 1º a 6º, texto atualizado pela LC 227/2026; Decreto 12.955/2026 para a CBS; Receita Federal — Entenda a RTC; RTAV."
   },
   {
     "id": "02",
     "title": "Fato gerador e pagamentos antecipados",
-    "subtitle": "Fornecimento, sinal, parcelas, ajuste definitivo e a diferença para split payment.",
-    "intro": "O RTAV resume o tema como “pagamento/recebimento ou fornecimento — o que acontecer primeiro”. Essa frase ajuda a memorizar a consequência prática, mas a redação legal precisa ser entendida com precisão: a regra geral é o fornecimento, e o pagamento integral ou parcial anterior gera antecipação tributária.",
-    "before": "No exemplo do evento, ISS acompanha a prestação do serviço, ICMS acompanha a saída/circulação da mercadoria e PIS/Cofins seguem as regras de receita do regime aplicável. Um sinal antes da futura saída não é tratado como o fato gerador do ICMS da saída.",
-    "after": "No IBS/CBS, o fato gerador ocorre no fornecimento. Se houver pagamento antes, a lei exige antecipações sobre cada parcela paga; no fornecimento, calcula-se o valor definitivo da operação e ajusta-se o que já foi antecipado.",
+    "subtitle": "Fornecimento, execução continuada, sinal, parcelas e por que antecipação não é split payment.",
+    "intro": "O atalho 'pagamento ou fornecimento, o que vier primeiro' ajuda em exercícios, mas não substitui a regra legal. O art. 10 parte do fornecimento, cria regra própria para operações continuadas/fracionadas e disciplina antecipações quando há pagamento antes do fornecimento.",
+    "before": "Nos tributos atuais, o momento tributário depende da legislação de cada tributo. Um sinal comercial, por si só, não deve ser tratado como se todas as incidências atuais seguissem a mesma regra.",
+    "after": "No IBS/CBS, o momento do fornecimento é a referência geral. Pagamento antecipado gera antecipação tributária; no fornecimento é feito o cálculo definitivo e o valor antecipado é ajustado.",
     "blocks": [
       {
-        "t": "Regra geral",
+        "t": "1. Regra geral",
         "k": "REGRA OFICIAL",
-        "x": "O art. 10 considera ocorrido o fato gerador no momento do fornecimento. A própria lei detalha momentos específicos para transporte, serviços e outras situações."
+        "x": "O fato gerador ocorre no momento do fornecimento. Para serviços em geral, a lei considera o término do fornecimento, sem prejuízo das hipóteses específicas do art. 10."
       },
       {
-        "t": "Execução continuada ou fracionada",
+        "t": "2. Execução continuada ou fracionada",
         "k": "REGRA OFICIAL",
-        "x": "A redação atualizada pela LC 227/2026 traz regra própria: nessas operações, considera-se o primeiro entre a exigibilidade da parcela da contraprestação e o pagamento da obrigação correspondente."
+        "x": "Nessas operações, o fato gerador ocorre na primeira entre: a exigibilidade da parte da contraprestação correspondente a cada pagamento e o pagamento da obrigação decorrente do fornecimento."
       },
       {
-        "t": "Pagamento antes do fornecimento",
+        "t": "3. Pagamento antes do fornecimento",
         "k": "REGRA OFICIAL",
-        "x": "Na data de cada pagamento anterior, há antecipação: a base é o valor da parcela paga. No fornecimento, a base definitiva é o valor total da operação, incluindo o que já havia sido antecipado."
+        "x": "Cada pagamento integral ou parcial anterior ao fornecimento gera antecipação. A base da antecipação é o valor da parcela paga."
       },
       {
-        "t": "Qual alíquota usar na antecipação?",
+        "t": "4. Alíquota da antecipação",
         "k": "REGRA OFICIAL",
-        "x": "Para a antecipação, usa-se a alíquota vigente e aplicável na data do documento fiscal correspondente ao pagamento ou na data do pagamento, o que ocorrer primeiro. No fornecimento, o cálculo definitivo usa a alíquota vigente na data do fornecimento."
+        "x": "Usa-se a alíquota vigente e aplicável na data do documento fiscal eletrônico correspondente ao pagamento ou na data do pagamento, o que ocorrer primeiro."
       },
       {
-        "t": "Exemplo RTAV 28/01 → 10/02",
-        "k": "EXEMPLO RTAV",
-        "x": "Sinal de 10% em 28/01 e entrega em 10/02: a parcela paga antes gera antecipação. Na entrega, calcula-se a operação inteira e ajusta-se o que já foi antecipado."
-      },
-      {
-        "t": "Se o negócio for cancelado",
+        "t": "5. Ajuste no fornecimento",
         "k": "REGRA OFICIAL",
-        "x": "Se o fornecimento não ocorrer, inclusive por distrato, a lei remete às regras de cancelamento e de pagamento indevido ou a maior, conforme o caso."
+        "x": "No fornecimento, calcula-se o valor definitivo sobre o total da operação com a alíquota vigente nessa data. Se a antecipação foi menor, surge diferença a débito; se foi maior, aplicam-se as regras de pagamento indevido ou a maior."
       },
       {
-        "t": "Não é split payment",
-        "k": "ATENÇÃO",
-        "x": "Fato gerador e antecipação tratam do momento tributário. Split payment é mecanismo de segregação e recolhimento na liquidação financeira."
+        "t": "6. Exemplo do RTAV",
+        "k": "EXEMPLO DIDÁTICO",
+        "x": "Sinal em 28/01 e entrega em 10/02: a parcela paga antes gera antecipação. Na entrega, a operação é recalculada integralmente e o antecipado é confrontado com o valor definitivo."
+      },
+      {
+        "t": "7. Cancelamento",
+        "k": "REGRA OFICIAL",
+        "x": "Se o fornecimento não ocorrer, inclusive por distrato, aplicam-se as regras de cancelamento previstas na legislação."
+      },
+      {
+        "t": "8. Não confunda com split payment",
+        "k": "ERRO COMUM",
+        "x": "Antecipação responde 'quando o débito nasce/é antecipado'. Split payment responde 'como o tributo é segregado e recolhido na liquidação financeira'. São camadas diferentes."
       }
     ],
     "qa": [
       [
-        "Receber um sinal pode antecipar tributo?",
-        "Sim. No regime regular de IBS/CBS, pagamento anterior ao fornecimento pode gerar antecipação sobre a parcela paga."
+        "Receber sinal antes da entrega pode gerar IBS/CBS?",
+        "Pode gerar antecipação sobre a parcela paga, observadas as regras do art. 10."
       ],
       [
-        "Se o cliente só pagar depois do fornecimento, o pagamento vira o fato gerador?",
-        "Não como regra geral. Sem antecipação, o fornecimento continua sendo o evento central previsto no art. 10."
+        "Pagamento posterior ao fornecimento muda o fato gerador geral?",
+        "Não. Fora das regras específicas, o fornecimento continua sendo a referência."
       ],
       [
-        "A nota de antecipação citada no RTAV é a mesma coisa que split payment?",
-        "Não. O documento registra a antecipação; split payment é outra camada, ligada à forma de recolhimento."
+        "Execução continuada segue exatamente a mesma regra de uma venda única?",
+        "Não. O §3º do art. 10 traz regra própria ligada à exigibilidade da parcela e ao pagamento."
+      ],
+      [
+        "Antecipação e split payment são a mesma coisa?",
+        "Não. Uma trata do momento tributário; a outra é modalidade de recolhimento."
       ]
     ],
-    "legal": "LC 214/2025, art. 10, com redação atualizada pela LC 227/2026; RTAV; Material de Estudo, págs. 1–3."
+    "legal": "LC 214/2025, art. 10, texto atualizado pela LC 227/2026; RTAV; Material de Estudo, págs. 1–3."
   },
   {
     "id": "03",
     "title": "Base de cálculo: por dentro × por fora",
-    "subtitle": "O que entra, o que sai e como a base muda a formação do preço.",
-    "intro": "A maior armadilha da reprecificação é olhar apenas para a alíquota. A Reforma muda também a composição da base. A LC 214 parte do valor da operação e enumera valores que entram e que não entram na base de IBS/CBS.",
-    "before": "No método de precificação do RTAV, tributos atuais aparecem embutidos no preço e são retirados para chegar ao líquido econômico. O ICMS é o principal exemplo de tributo tratado “por dentro” no evento.",
-    "after": "IBS e CBS não integram a própria base. Durante a transição, a lei também exclui da base de IBS/CBS os montantes de ICMS, ISS, PIS/Cofins e outros itens expressamente previstos.",
+    "subtitle": "Como limpar a base, identificar exclusões e entender o efeito no preço.",
+    "intro": "A alíquota sozinha não explica a carga. O primeiro passo é saber sobre qual valor ela incide. A LC 214 adota como base geral o valor da operação e lista expressamente o que integra e o que não integra essa base.",
+    "before": "No método do RTAV, tributos atuais são retirados do preço para descobrir o valor líquido usado como referência. ICMS e ISS aparecem nos exercícios como tributos tratados 'por dentro' na formação atual do preço.",
+    "after": "IBS e CBS não integram a própria base. De 2026 a 2032, ICMS, ISS, PIS/Pasep e Cofins incidentes na operação também ficam excluídos da base de IBS/CBS, além das demais exclusões legais.",
     "blocks": [
       {
-        "t": "Ponto de partida",
+        "t": "1. Base geral",
         "k": "REGRA OFICIAL",
-        "x": "A base geral de IBS e CBS é o valor da operação. Esse valor inclui o que o fornecedor cobra a qualquer título, como certos acréscimos, juros, encargos, transporte cobrado como parte da operação e outras importâncias previstas em lei."
+        "x": "A base de IBS/CBS é o valor da operação. Em regra, entram os valores cobrados pelo fornecedor a qualquer título, inclusive certos acréscimos, juros, encargos, transporte, seguros e outros componentes previstos no art. 12."
       },
       {
-        "t": "O que não integra a base",
+        "t": "2. Exclusões expressas",
         "k": "REGRA OFICIAL",
-        "x": "Entre as exclusões estão o próprio IBS/CBS, IPI, descontos incondicionais e, de 2026 a 2032, os montantes de ICMS, ISS, PIS/Pasep e Cofins incidentes na operação, além das demais exclusões legais."
+        "x": "Não integram a base, entre outros: o próprio IBS/CBS, IPI, descontos incondicionais e, de 2026 a 2032, ICMS, ISS, PIS/Pasep e Cofins incidentes na operação."
       },
       {
-        "t": "Imposto Seletivo",
+        "t": "3. Imposto Seletivo",
+        "k": "PONTO TÉCNICO",
+        "x": "O Imposto Seletivo não está entre as exclusões gerais do §2º do art. 12. Por isso, quando incidente e compondo o valor da operação, não deve ser retirado automaticamente da base de IBS/CBS; verifique a regra específica aplicável."
+      },
+      {
+        "t": "4. Fórmula por fora",
+        "k": "FÓRMULA DIDÁTICA",
+        "x": "Em um exercício com somente tributo por fora: valor final = base limpa × (1 + alíquota). Essa é a lógica usada para ensinar CBS/IBS no RTAV."
+      },
+      {
+        "t": "5. Fórmula por dentro",
+        "k": "FÓRMULA DIDÁTICA",
+        "x": "Quando o tributo está embutido no preço: preço bruto = líquido ÷ (1 − alíquota embutida). É fórmula de formação de preço, não substituto da apuração legal do tributo."
+      },
+      {
+        "t": "6. Transição",
+        "k": "MÉTODO RTAV",
+        "x": "Entre 2027 e 2032, o exercício pode ter CBS/IBS no formato novo e ICMS/ISS ainda remanescentes. A sequência didática é: limpar a situação atual → aplicar o novo → embutir o velho que ainda resta."
+      },
+      {
+        "t": "7. Erro mais comum",
+        "k": "ERRO COMUM",
+        "x": "Somar CBS/IBS diretamente sobre o preço atual pode produzir cascata econômica na simulação, porque o preço atual já contém tributos do sistema antigo."
+      },
+      {
+        "t": "8. Relação inversa com ICMS/ISS",
         "k": "ATENÇÃO",
-        "x": "O Imposto Seletivo não aparece entre as exclusões gerais do §2º do art. 12; por isso não deve ser automaticamente retirado da base de IBS/CBS sem verificar a regra específica da operação."
-      },
-      {
-        "t": "Por fora",
-        "k": "FÓRMULA DIDÁTICA",
-        "x": "Quando o exercício contém somente tributo por fora: valor com tributo = base limpa × (1 + alíquota). Essa é a lógica usada no RTAV para explicar CBS/IBS."
-      },
-      {
-        "t": "Por dentro",
-        "k": "FÓRMULA DIDÁTICA",
-        "x": "Na formação de preço do evento: preço bruto = preço líquido ÷ (1 − alíquota embutida). É uma fórmula de precificação; a apuração fiscal real deve respeitar a legislação de cada tributo."
-      },
-      {
-        "t": "Transição 2027–2032",
-        "k": "NA PRÁTICA",
-        "x": "O preço pode conviver com CBS/IBS por fora e ICMS/ISS remanescentes no sistema antigo. Por isso o método do RTAV é: limpar → aplicar o novo → tratar o velho remanescente."
-      },
-      {
-        "t": "CBS/IBS na base de ICMS/ISS",
-        "k": "PONTO DE ATENÇÃO",
-        "x": "O material do RTAV registra debate e contencioso sobre a relação inversa durante a transição. Não trate uma tese judicial ou opinião do evento como regra pacificada para todos os clientes."
+        "x": "O fato de ICMS/ISS não integrarem a base de IBS/CBS não resolve automaticamente o tratamento inverso durante a transição. O material do RTAV registra controvérsia; não apresente tese judicial como regra pacificada."
       }
     ],
     "qa": [
       [
-        "Posso somar CBS/IBS sobre o preço atual?",
-        "Não é um bom método de reprecificação. O preço atual já incorpora tributos e margens; o RTAV primeiro identifica o líquido-alvo."
-      ],
-      [
         "IBS e CBS entram na própria base?",
-        "Não. A lei os exclui expressamente."
+        "Não. O art. 12 os exclui expressamente."
       ],
       [
-        "Todo tributo antigo fica fora da base para sempre?",
-        "Não. A exclusão de ICMS, ISS, PIS/Cofins prevista no art. 12 está vinculada ao período de transição indicado na lei."
+        "ICMS e ISS entram na base de IBS/CBS durante toda a transição?",
+        "De 2026 a 2032, os montantes incidentes na operação estão entre as exclusões previstas no art. 12."
+      ],
+      [
+        "Desconto sempre reduz a base?",
+        "Não. A exclusão é para desconto incondicional que atenda à definição legal."
+      ],
+      [
+        "Posso aplicar a nova alíquota diretamente sobre o preço atual?",
+        "Para reprecificação, não é o método recomendado pelo RTAV. Primeiro identifique a base/líquido que está sendo preservado."
       ]
     ],
-    "legal": "LC 214/2025, art. 12, texto atualizado; RTAV; Material de Estudo, págs. 3–4 e 8–9."
+    "legal": "LC 214/2025, art. 12, texto atualizado pela LC 227/2026; Decreto 12.955/2026; RTAV; Material de Estudo, págs. 3–4 e 8–9."
   },
   {
     "id": "04",
