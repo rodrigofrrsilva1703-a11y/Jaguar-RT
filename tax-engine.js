@@ -122,6 +122,7 @@
     usePct:clamp(input.buyer?.usePct??100,0,100)
    },
    purchases:{
+    enabled:input.purchases?.enabled===undefined?true:!!input.purchases.enabled,
     creditablePct:clamp(input.purchases?.creditablePct,0,100),
     usePct:clamp(input.purchases?.usePct??100,0,100)
    }
@@ -231,7 +232,7 @@
    net=Math.max(0,price-taxes);
   }
 
-  const purchaseCredit=p.type==='simple'?0:price*(cfg.purchases.creditablePct/100)*((p.cbsRate||0)+(p.ibsRate||0))*(cfg.purchases.usePct/100);
+  const purchaseCredit=(!cfg.purchases.enabled||p.type==='simple')?0:price*(cfg.purchases.creditablePct/100)*((p.cbsRate||0)+(p.ibsRate||0))*(cfg.purchases.usePct/100);
   const netTax=Math.max(0,taxes-purchaseCredit);
   const economicNet=Math.max(0,price-netTax);
   const buyerCredit=cfg.buyer.profile==='b2b'?(cbs+ibs)*(cfg.buyer.usePct/100):0;
@@ -245,7 +246,7 @@
   let projected=base.price;
 
   if(!keepGross){
-   const hasOwnCredit=cfg.purchases.creditablePct>0&&p.type!=='simple';
+   const hasOwnCredit=cfg.purchases.enabled&&cfg.purchases.creditablePct>0&&p.type!=='simple';
    if(hasOwnCredit){
     const unit=priceScenarioAtPrice(cfg,year,1);
     projected=unit.economicNet>0?base.net/unit.economicNet:0;
@@ -332,7 +333,10 @@
    messages.push({level:'warning',code:'buyer_credit',message:'O crédito atual informado é maior que o preço. O cálculo limita o crédito ao valor da venda.'});
   }
 
-  if(kind==='price'&&cfg.regime==='simples'&&cfg.purchases.creditablePct>0){
+  if(kind==='price'&&cfg.purchases.enabled&&cfg.purchases.creditablePct===0){
+   messages.push({level:'info',code:'own_credit_base_zero',message:'Crédito CBS/IBS ativado: informe o percentual das compras/insumos que gera crédito para refletir o efeito no preço.'});
+  }
+  if(kind==='price'&&cfg.regime==='simples'&&cfg.purchases.enabled&&cfg.purchases.creditablePct>0){
    messages.push({level:'info',code:'simple_own_credit',message:'No Simples padrão, a simulação de preço não apropria créditos próprios de IBS/CBS das aquisições dentro do regime.'});
   }
 
