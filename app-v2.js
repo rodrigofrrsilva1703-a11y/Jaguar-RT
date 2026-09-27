@@ -363,8 +363,24 @@ function regimeExplanation(){
  return 'No modo manual, as alíquotas informadas são tratadas como premissas para a formação anual do preço.';
 }
 
+function updateScenarioStrip(){
+ const r=regime();
+ const year=$('priceYear')?.value||'2027';
+ const strategy=$('priceStrategy')?.selectedOptions?.[0]?.textContent||'';
+ if($('activeRegimeBadge')) $('activeRegimeBadge').textContent=REGIME_LABELS[r]||r;
+ if($('activeYearBadge')) $('activeYearBadge').textContent=year;
+ if($('activeStrategyBadge')){
+  const short=strategy
+   .replace('Formar preço para ','')
+   .replace(' (simulação)','')
+   .replace('Preservar o ','');
+  $('activeStrategyBadge').textContent=short||strategy;
+ }
+}
+
 function calcIntegrated(){
  if(!$('integratedKpis')) return;
+ updateScenarioStrip();
  const base=currentScenario();
  const y=Number($('priceYear')?.value||2027);
  const future=futureScenario(y);
