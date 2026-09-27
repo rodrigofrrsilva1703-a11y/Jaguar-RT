@@ -20,14 +20,15 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await expect(page.locator('#integratedKpis')).toContainText('Preço em 2027');
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
 
- await page.locator('#priceAdvanced').evaluate(el=>{el.open=true;});
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeVisible();
  await page.locator('#priceTakesCbsIbsCredit').check();
- await expect(page.locator('#priceOwnCreditFields')).toBeVisible();
- await page.locator('#priceCreditablePurchasesPct').fill('50');
- await page.locator('#pricePurchaseCreditUsePct').fill('100');
- await expect(page.locator('#integratedKpis')).toContainText('Crédito CBS/IBS da empresa');
- await expect(page.locator('#futureTaxSummary')).toContainText('Carga líquida após créditos');
+ await expect(page.locator('#integratedKpis')).toContainText('Crédito CBS/IBS');
+ await expect(page.locator('#futureTaxSummary')).toContainText('Crédito CBS/IBS');
+ await expect(page.locator('#futureTaxSummary')).toContainText('Tributos líquidos');
+ await expect(page.locator('#futureTaxSummary')).not.toContainText('%');
+ await expect(page.locator('#currentTaxSummary')).not.toContainText('%');
 
+ await page.locator('#priceAdvanced').evaluate(el=>{el.open=true;});
  await page.locator('#priceBuyerProfile').selectOption('b2b');
  await expect(page.locator('#integratedKpis')).toContainText('Custo efetivo do comprador');
 
