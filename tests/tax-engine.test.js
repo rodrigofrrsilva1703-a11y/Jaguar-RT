@@ -24,7 +24,7 @@ const presumido={
 const pBase=engine.currentPriceScenario(presumido);
 close(pBase.net,78.35,1e-8,'Líquido atual comércio');
 const p2027=engine.futurePriceScenario(presumido,2027);
-close(p2027.price,104.14817073170733,0.001,'Preço projetado comércio 2027');
+close(p2027.price,104.4443719512195,0.001,'Preço projetado comércio 2027 com CBS 9,21%');
 close(p2027.net,pBase.net,1e-8,'Líquido preservado comércio');
 
 // Lucro Real: exemplo de serviço R$ 100.
@@ -39,7 +39,7 @@ const realServico={
 const rBase=engine.currentPriceScenario(realServico);
 close(rBase.net,85.75,1e-8,'Líquido atual serviço LR');
 const r2027=engine.futurePriceScenario(realServico,2027);
- close(r2027.price,98.38684210526316,0.001,'Preço projetado serviço 2027');
+close(r2027.price,98.66665789473684,0.001,'Preço projetado serviço 2027 com CBS 9,21%');
 close(r2027.net,rBase.net,1e-8,'Líquido preservado serviço');
 
 // Preservação do líquido ao longo da transição.
@@ -96,6 +96,8 @@ assert.ok(errors.some(x=>x.level==='error'),'Deve alertar valor zerado');
 
 // Metadados: premissas futuras devem estar identificadas.
 assert.equal(rules.transition[2027].sourceType,'premissa');
+close(rules.transition[2027].cbs,9.21,1e-10,'CBS padrão 2027 deve ser 9,21%');
+close(rules.transition[2033].cbs,9.21,1e-10,'CBS padrão 2033 deve ser 9,21%');
 assert.ok(rules.metadata.warning.includes('Premissas'));
 
 console.log('✓ tax-engine: todos os testes passaram');
