@@ -543,35 +543,107 @@ function calcIntegrated(){
  renderYearlyProjection();
 }
 
+let yearDetailSelected=null;
+
+function selectYearDetail(year){
+ yearDetailSelected=Number(year);
+ if(year>=2027&&$('priceYear')){
+  $('priceYear').value=String(year);
+  applyYearPreset();
+ }else{
+  renderYearlyProjection();
+ }
+}
+
+function renderYearDetail(year){
+ if(!$('yearDetailPanel')||!yearlyRows.length) return;
+ const x=yearlyRows.find(r=>r.year===Number(year))||yearlyRows[0];
+ if(!x) return;
+ const base=yearlyRows[0];
+ const regimeLabel=REGIME_LABELS[x.regime]||x.regime;
+ const cbs=x.cbs===null?'—':money(x.cbs);
+ const ibs=x.ibs===null?'—':money(x.ibs);
+ const priceEffect=x.year===2026?'Base':effectText(x.delta);
+ const annualEffect=x.year===2026?'Base':effectText(x.annualDelta);
+ const costEffect=x.year===2026?'Base':effectText(x.costDelta);
+
+ let context='Ano-base antes da aplicação da nova formação de preço.';
+ if(x.year>2026){
+  context=`Preço ${priceEffect} em relação a 2026 e ${annualEffect} em relação ao ano anterior. O custo efetivo do comprador fica em ${money(x.cost)}, uma variação de ${costEffect} contra 2026.`;
+ }
+
+ $('yearDetailPanel').classList.add('visible');
+ $('yearDetailPanel').innerHTML=`
+  <div class="year-detail-top">
+   <div><span>DETALHES DO ANO · ${regimeLabel}</span><h4>${x.year} · ${x.system}</h4></div>
+   <div class="year-detail-price"><small>PREÇO RECOMENDADO</small><b>${money(x.price)}</b></div>
+  </div>
+  <div class="year-detail-grid">
+   <div class="year-detail-item"><small>CBS</small><b>${cbs}</b></div>
+   <div class="year-detail-item"><small>IBS</small><b>${ibs}</b></div>
+   <div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>${money(x.remnant)}</b></div>
+   <div class="year-detail-item"><small>Crédito do comprador</small><b>${money(x.credit)}</b></div>
+   <div class="year-detail-item"><small>Custo efetivo</small><b>${money(x.cost)}</b></div>
+   <div class="year-detail-item"><small>Receita líquida</small><b>${money(x.net)}</b></div>
+   <div class="year-detail-item"><small>Líquido sem reajuste</small><b>${money(x.noAdjustNet)}</b></div>
+   <div class="year-detail-item"><small>Diferença no preço</small><b>${x.year===2026?'—':money(x.diff)}</b></div>
+  </div>
+  <div class="year-detail-foot">${context}</div>
+ `;
+}
+
 function renderYearlyProjection(){
  if(!$('yearlyProjectionTable')) return;
  const base=currentScenario(),selectedYear=Number($('priceYear')?.value||2027),r=regime(),strategy=$('priceStrategy')?.value||'net';
  const rows=[{year:2026,regime:r,system:'Atual',price:base.price,cbs:null,ibs:null,remnant:base.remnant,credit:base.credit,cost:base.cost,costDelta:0,net:base.net,noAdjustNet:base.net,diff:0,delta:0,annualDelta:0}];
  let prevPrice=base.price;
+
  for(let year=2027;year<=2033;year++){
   const x=futureScenario(year),noAdjust=futureScenario(year,'gross');
-  rows.push({year,regime:r,system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma regular',price:x.price,cbs:x.cbs,ibs:x.ibs,remnant:x.remnant,credit:x.credit,cost:x.cost,costDelta:effectPct(base.cost,x.cost),net:x.net,noAdjustNet:noAdjust.net,diff:x.price-base.price,delta:effectPct(base.price,x.price),annualDelta:effectPct(prevPrice,x.price)});
+  rows.push({
+   year,regime:r,
+   system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma regular',
+   price:x.price,cbs:x.cbs,ibs:x.ibs,remnant:x.remnant,credit:x.credit,cost:x.cost,
+   costDelta:effectPct(base.cost,x.cost),net:x.net,noAdjustNet:noAdjust.net,
+   diff:x.price-base.price,delta:effectPct(base.price,x.price),annualDelta:effectPct(prevPrice,x.price)
+  });
   prevPrice=x.price;
  }
  yearlyRows=rows;
 
+ if(yearDetailSelected===null||!rows.some(x=>x.year===yearDetailSelected)) yearDetailSelected=selectedYear;
+
+ if($('yearlyPriceStrip')){
+  $('yearlyPriceStrip').innerHTML=rows.map(x=>`
+   <button type="button" class="year-price-card ${x.year===yearDetailSelected?'active':''}" onclick="selectYearDetail(${x.year})">
+    <small>${x.year}</small>
+    <b>${money(x.price)}</b>
+    <span>${x.year===2026?'Base':effectText(x.delta)+' vs. 2026'}</span>
+   </button>
+  `).join('');
+ }
+
  $('yearlyProjectionTable').innerHTML=rows.map(x=>{
-  const cls=x.year===2026?'current-year':(x.year===selectedYear?'selected-year':'');
-  return `<tr class="${cls}">
-   <td>${x.year}</td><td>${REGIME_LABELS[x.regime]}</td><td><span class="system-pill">${x.system}</span></td>
-   <td><strong>${money(x.price)}</strong></td><td>${x.cbs===null?'—':money(x.cbs)}</td><td>${x.ibs===null?'—':money(x.ibs)}</td>
-   <td>${money(x.remnant)}</td><td>${money(x.credit)}</td><td><strong>${money(x.cost)}</strong></td><td class="${x.costDelta<0?'effect-down':'effect-up'}">${x.year===2026?'Base':effectText(x.costDelta)}</td><td>${money(x.net)}</td><td>${money(x.noAdjustNet)}</td>
-   <td class="${x.diff<0?'effect-down':'effect-up'}">${x.year===2026?'—':money(x.diff)}</td>
+  const cls=x.year===2026?'current-year':(x.year===yearDetailSelected?'selected-year':'');
+  return `<tr class="${cls}" onclick="selectYearDetail(${x.year})">
+   <td>${x.year}</td>
+   <td><strong>${money(x.price)}</strong></td>
    <td class="${x.delta<0?'effect-down':'effect-up'}">${x.year===2026?'Base':effectText(x.delta)}</td>
    <td class="${x.annualDelta<0?'effect-down':'effect-up'}">${x.year===2026?'Base':effectText(x.annualDelta)}</td>
+   <td>${money(x.credit)}</td>
+   <td><strong>${money(x.cost)}</strong></td>
   </tr>`;
  }).join('');
 
+ renderYearDetail(yearDetailSelected);
+
  let note=strategy==='net'
-  ? 'Cada ano é recalculado para preservar o mesmo líquido econômico de 2026. A coluna “Líquido se mantivesse preço 2026” mostra o impacto sem reajuste.'
-  : strategy==='gross'?'O preço foi mantido por escolha da estratégia; a receita líquida mostra o impacto tributário.':'O preço manual é repetido nos anos futuros e a receita líquida varia.';
- if(r==='simples') note+=' No Simples padrão, a alíquota total do DAS pode permanecer igual em várias faixas; nesse caso o preço permanece igual corretamente, mas CBS, IBS, crédito e custo efetivo mudam com a partilha legal.';
- if(r==='simples_hybrid') note+=' No híbrido, o DAS remanescente é calculado automaticamente retirando CBS/IBS da partilha do Anexo selecionado.';
+  ? 'O preço recomendado de cada ano preserva o líquido econômico de 2026. Clique em qualquer ano para abrir CBS, IBS, tributos remanescentes, receita líquida e o cenário sem reajuste.'
+  : strategy==='gross'
+   ? 'Nesta estratégia o preço é mantido por escolha. Use os detalhes do ano para visualizar o impacto nos tributos, crédito, custo e receita líquida.'
+   : 'O preço manual é aplicado aos anos futuros. Clique em um ano para visualizar a composição completa.';
+ if(r==='simples') note+=' No Simples padrão, o preço pode permanecer igual quando a alíquota efetiva total do DAS não muda, mesmo que a composição CBS/IBS e o custo do comprador mudem.';
+ if(r==='simples_hybrid') note+=' No híbrido, o painel detalhado mostra o DAS remanescente separado de CBS/IBS.';
  $('yearlyProjectionNote').textContent=note;
 }
 
