@@ -145,6 +145,14 @@
  #tools .fields.three{grid-template-columns:1fr}
  #tools .wide{grid-column:auto}
 }
+
+#tools .sn-auto-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+#tools .sn-auto-card{background:#fff;border:1px solid #e0dfda;border-radius:12px;padding:10px}
+#tools .sn-auto-card small,#tools .sn-auto-card b,#tools .sn-auto-card span{display:block}
+#tools .sn-auto-card small{font-size:8px;color:#888;letter-spacing:.07em;text-transform:uppercase}
+#tools .sn-auto-card b{font-size:15px;margin:5px 0 2px}
+#tools .sn-auto-card span{font-size:8.5px;color:#777;line-height:1.4}
+@media(max-width:720px){#tools .sn-auto-summary{grid-template-columns:1fr}}
 </style>
 <script>
 (async()=>{
@@ -280,9 +288,17 @@
      <div id="simplesCurrentFields" class="regime-panel wide" style="display:none">
       <div class="fields three">
        <div class="field"><label>RBT12 R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
-       <div class="field"><label>Alíquota nominal %</label><input id="snNominal" type="number" step=".01" value="16"></div>
-       <div class="field"><label>Parcela a deduzir R$</label><input id="snDeduction" type="number" step=".01" value="35640"></div>
-       <div class="field wide"><label>Alíquota efetiva atual do DAS</label><input id="snCurrentEffective" type="text" value="12,4360%" readonly><small class="field-help">Calculada por [(RBT12 × alíquota nominal) − parcela a deduzir] ÷ RBT12.</small></div>
+       <div class="field"><label>Anexo do Simples</label>
+        <select id="snAnnex">
+         <option value="I">Anexo I · Comércio</option>
+         <option value="II">Anexo II · Indústria</option>
+         <option value="III" selected>Anexo III · Serviços</option>
+         <option value="IV">Anexo IV · Serviços</option>
+         <option value="V">Anexo V · Serviços</option>
+        </select>
+       </div>
+       <div class="field"><label>Faixa apurada</label><input id="snBandLabel" type="text" value="4ª faixa" readonly></div>
+       <div class="field wide"><label>Alíquota efetiva do DAS em 2026</label><input id="snCurrentEffective" type="text" value="12,4360%" readonly><small class="field-help">Calculada automaticamente pela tabela do Anexo selecionado e pelo RBT12.</small></div>
       </div>
      </div>
 
@@ -307,32 +323,19 @@
 
      <div id="simplesFutureFields" class="regime-panel wide" style="display:none">
       <div id="simpleStandardRates">
-       <div class="rate-note">Simples padrão: informe a alíquota efetiva total do DAS esperada em cada ano. O preço é recalculado para preservar o mesmo líquido de 2026. Se a alíquota efetiva for igual em todos os anos, o preço também poderá ficar igual — isso não é erro.</div>
-       <div class="annual-rate-grid">
-        <div class="annual-rate"><b>2027</b><input id="snDas2027" type="number" step=".0001" value="12.436"><small>DAS efetivo %</small></div>
-        <div class="annual-rate"><b>2028</b><input id="snDas2028" type="number" step=".0001" value="12.436"><small>DAS efetivo %</small></div>
-        <div class="annual-rate"><b>2029</b><input id="snDas2029" type="number" step=".0001" value="12.436"><small>DAS efetivo %</small></div>
-        <div class="annual-rate"><b>2030</b><input id="snDas2030" type="number" step=".0001" value="12.436"><small>DAS efetivo %</small></div>
-        <div class="annual-rate"><b>2031</b><input id="snDas2031" type="number" step=".0001" value="12.436"><small>DAS efetivo %</small></div>
-        <div class="annual-rate"><b>2032</b><input id="snDas2032" type="number" step=".0001" value="12.436"><small>DAS efetivo %</small></div>
-        <div class="annual-rate"><b>2033</b><input id="snDas2033" type="number" step=".0001" value="12.436"><small>DAS efetivo %</small></div>
-       </div>
-       <div class="fields three simple-credit-fields">
-        <div class="field"><label>Parcela efetiva CBS no DAS %</label><input id="snCbsDasRate" type="number" min="0" max="100" step=".0001" value="0"></div>
-        <div class="field"><label>Parcela efetiva IBS no DAS %</label><input id="snIbsDasRate" type="number" min="0" max="100" step=".0001" value="0"></div>
-       </div>
+       <div class="rate-note"><b>Cálculo automático pelo Anexo.</b> O sistema usa o RBT12, a faixa, a alíquota efetiva e a partilha legal de CBS/IBS de cada ano. No Simples padrão, o preço só muda quando a carga total do DAS muda; mesmo quando o preço não muda, o crédito gerado ao comprador pode mudar bastante.</div>
+       <div id="snAutoSummary" class="sn-auto-summary"></div>
       </div>
 
       <div id="hybridRegularRates" style="display:none">
+       <div class="rate-note"><b>Simples híbrido automático.</b> A ferramenta retira do DAS as parcelas de CBS e IBS previstas para o Anexo/faixa e mantém o restante como DAS remanescente. Depois calcula CBS/IBS pelo regime regular por fora.</div>
        <div class="fields three">
-        <div class="field"><label>DAS remanescente fixo %</label><input id="hybridFixedDasRate" type="number" min="0" max="100" step=".0001" value="5"><small class="field-help">IRPJ, CSLL, CPP e outras parcelas que não participam da transição ICMS/ISS.</small></div>
-        <div class="field"><label>ICMS/ISS efetivo dentro do DAS em 2026 %</label><input id="hybridOldDasRate" type="number" min="0" max="100" step=".0001" value="3"><small class="field-help">Essa parcela é reduzida na transição: 100%, 90%, 80%, 70%, 60% e 0%.</small></div>
         <div class="field"><label>Modo CBS/IBS regular</label><select id="hybridRateMode"><option value="rtav">Estimativa RTAV</option><option value="manual">Manual / oficial</option></select></div>
         <div class="field"><label>Redução de alíquota %</label><input id="hybridReduction" type="number" min="0" max="100" step=".01" value="0"></div>
-        <div class="field"><label>CBS regular %</label><input id="hybridCbsRate" type="number" step=".001" value="9" readonly></div>
+        <div class="field"><label>CBS regular %</label><input id="hybridCbsRate" type="number" step=".001" value="8.9" readonly></div>
         <div class="field"><label>IBS regular %</label><input id="hybridIbsRate" type="number" step=".001" value=".1" readonly></div>
        </div>
-       <div class="rate-note">No híbrido, o DAS remanescente é dividido em uma parcela fixa e uma parcela de ICMS/ISS que diminui conforme a transição. CBS e IBS são calculados por fora no regime regular.</div>
+       <div id="hybridAutoSummary" class="sn-auto-summary"></div>
       </div>
      </div>
 
@@ -451,7 +454,7 @@
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260927-15"></script>
-<script src="app-v2.js?v=20260927-15"></script>
+<script src="content-v2.js?v=20260927-16"></script>
+<script src="app-v2.js?v=20260927-16"></script>
 </body>
 </html>
