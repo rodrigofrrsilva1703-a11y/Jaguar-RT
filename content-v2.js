@@ -204,187 +204,219 @@ const STUDY_MODULES = [
   {
     "id": "04",
     "title": "Destino e alíquotas",
-    "subtitle": "Como identificar o local da operação e montar CBS + IBS sem usar uma alíquota fictícia como regra.",
-    "intro": "“Tributar no destino” é correto, mas insuficiente. Primeiro é preciso descobrir qual é o local da operação segundo o art. 11; depois aplicar as alíquotas do ente correspondente. O endereço do cliente resolve apenas algumas hipóteses.",
-    "before": "ICMS e ISS atuais possuem regras próprias de origem, destino, local do estabelecimento, local da prestação, DIFAL e inúmeras exceções.",
-    "after": "O IBS é formado pela alíquota do Estado de destino somada à alíquota do Município de destino. A CBS é definida pela União. Cada ente fixa sua alíquota por lei específica, e na falta dela aplica-se a alíquota de referência da esfera correspondente.",
+    "subtitle": "Como localizar a operação e montar CBS + IBS sem transformar estimativas em regra.",
+    "intro": "Dizer apenas 'o imposto vai para o destino' é insuficiente. O art. 11 define o local da operação conforme o tipo de bem ou serviço; só depois de identificar esse local é possível determinar as alíquotas de IBS aplicáveis.",
+    "before": "ICMS e ISS atuais usam regras próprias de origem, destino, estabelecimento, local da prestação e exceções específicas.",
+    "after": "No IBS, o destino jurídico da operação define as parcelas estadual e municipal. A CBS é federal. As alíquotas de cada ente são fixadas por lei específica, usando-se a referência quando a legislação assim determinar.",
     "blocks": [
       {
-        "t": "Bem móvel material",
+        "t": "1. Bem móvel material",
         "k": "REGRA OFICIAL",
-        "x": "Em regra, o local é o da entrega ou disponibilização ao destinatário. Nas operações não presenciais existem regras para identificar o destino final informado ao fornecedor ou ao transportador."
+        "x": "Em regra, o local é o da entrega ou disponibilização ao destinatário. Em operação não presencial, a lei traz critérios para identificar o destino final informado ao fornecedor ou ao transportador."
       },
       {
-        "t": "Imóveis e serviços ligados a imóveis",
+        "t": "2. Imóveis",
         "k": "REGRA OFICIAL",
-        "x": "O local é onde o imóvel está situado."
+        "x": "Para bem imóvel, direito relacionado ao imóvel e serviços prestados fisicamente sobre ele, o local é onde o imóvel está situado."
       },
       {
-        "t": "Serviço presencial sobre pessoa",
+        "t": "3. Serviço presencial",
         "k": "REGRA OFICIAL",
-        "x": "O local é o da prestação. Eventos, feiras, congressos e congêneres possuem regra do local do evento."
+        "x": "Serviço prestado fisicamente sobre pessoa ou fruído presencialmente por pessoa física usa o local da prestação. Feiras, congressos, espetáculos e congêneres usam o local do evento."
       },
       {
-        "t": "Transporte",
+        "t": "4. Transporte",
         "k": "REGRA OFICIAL",
-        "x": "Transporte de passageiros usa o local de início; transporte de carga usa o local da entrega/disponibilização indicado no documento fiscal, conforme as regras atuais da LC 214."
+        "x": "Transporte de passageiros usa o local de início. Transporte de carga usa o local da entrega ou disponibilização do bem ao destinatário indicado no documento fiscal."
       },
       {
-        "t": "Regra residual",
+        "t": "5. Regra residual",
         "k": "REGRA OFICIAL",
-        "x": "Para bens e serviços não abrangidos pelas regras específicas, nas operações onerosas, a lei utiliza o domicílio principal do adquirente no País; há regras próprias quando adquirente e destinatário são pessoas diferentes."
+        "x": "Para operação onerosa não abrangida pelas regras específicas, usa-se, em regra, o domicílio principal do adquirente residente ou domiciliado no País; se ele estiver no exterior, pode ser usado o domicílio do destinatário residente no País."
       },
       {
-        "t": "Como se forma o IBS",
-        "k": "REGRA OFICIAL",
-        "x": "A alíquota do IBS da operação é a soma da alíquota estadual e municipal do destino; no Distrito Federal aplica-se a alíquota correspondente às competências acumuladas."
+        "t": "6. Domicílio principal não é qualquer endereço",
+        "k": "ATENÇÃO",
+        "x": "Para pessoa jurídica, a lei considera o estabelecimento para o qual o bem ou serviço é fornecido. Quando não houver cadastro regular, existem critérios combinados de endereço, pagamento e geolocalização."
       },
       {
-        "t": "Quem fixa as alíquotas",
+        "t": "7. Como se forma o IBS",
         "k": "REGRA OFICIAL",
-        "x": "União, Estados e Municípios fixam suas alíquotas por lei específica. A lei permite vincular a alíquota à referência ou defini-la sem essa vinculação; sem lei própria, aplica-se a referência."
+        "x": "A alíquota do IBS da operação corresponde à soma da alíquota do Estado de destino e da alíquota do Município de destino; no Distrito Federal, aplica-se a alíquota correspondente às competências acumuladas."
       },
       {
-        "t": "26,5%, 27,91%, 28%, 9% e 9,21%",
-        "k": "ESTIMATIVAS RTAV",
-        "x": "Esses números aparecem no evento como referências ou estimativas para exercícios. Não são uma alíquota universal pronta para qualquer operação. As alíquotas de referência são fixadas por resolução do Senado nos períodos previstos em lei."
+        "t": "8. Quem fixa as alíquotas",
+        "k": "REGRA OFICIAL",
+        "x": "União, Estados e Municípios fixam suas alíquotas por lei específica. Na ausência de lei própria, aplicam-se as alíquotas de referência da respectiva esfera, conforme a LC 214."
+      },
+      {
+        "t": "9. Números do RTAV",
+        "k": "PREMISSA DIDÁTICA",
+        "x": "9%, 9,21%, 26,5%, 27,91% e 28% são referências ou estimativas usadas em exercícios do evento. Não devem ser cadastradas como alíquota universal de cliente."
       }
     ],
     "qa": [
       [
-        "O endereço de cobrança sempre define o IBS?",
-        "Não. O art. 11 possui regras específicas por tipo de bem ou serviço."
+        "O endereço de cobrança sempre define o destino do IBS?",
+        "Não. O art. 11 usa regras diferentes conforme o tipo de operação."
       ],
       [
-        "A mesma atividade terá uma única alíquota no Brasil inteiro?",
-        "A CBS é federal; o IBS depende das alíquotas do Estado e Município de destino, além de reduções e regimes próprios."
+        "Venda de mercadoria entregue em outro Estado usa qual referência de destino?",
+        "Em regra, o local da entrega ou disponibilização ao destinatário, observadas as regras específicas da operação."
       ],
       [
-        "Cada Município pode criar uma alíquota diferente por atividade?",
-        "A regra é uma alíquota do ente para todas as operações, ressalvadas as hipóteses previstas em lei, como regimes diferenciados e específicos."
+        "A mesma atividade terá uma alíquota única em todo o Brasil?",
+        "A CBS é federal, mas o IBS resulta das alíquotas estadual e municipal do destino, além das reduções e regimes previstos em lei."
+      ],
+      [
+        "Posso usar 28% para qualquer município?",
+        "Não. Esse número deve ser tratado como premissa de exercício, não como alíquota oficial universal."
       ]
     ],
-    "legal": "LC 214/2025, arts. 11 e 14 a 18, atualizados pela LC 227/2026; RTAV."
+    "legal": "LC 214/2025, arts. 11 e 14 a 18, texto atualizado pela LC 227/2026; Receita Federal — Entenda a RTC; RTAV."
   },
   {
     "id": "05",
     "title": "Transição 2026–2033",
-    "subtitle": "O calendário oficial, sem confundir percentual de transição com alíquota nominal.",
-    "intro": "A transição é onde mais surgem confusões. Há três conceitos diferentes: alíquota-teste de 2026, alíquota simbólica de IBS em 2027–2028 e percentuais de redução de ICMS/ISS versus crescimento do IBS entre 2029 e 2032.",
-    "before": "Até o início da transição convivem PIS/Cofins, IPI, ICMS e ISS nas regras atuais.",
-    "after": "O novo sistema é introduzido por etapas, com CBS primeiro, IBS em fase inicial e substituição gradual de ICMS/ISS até 2033.",
+    "subtitle": "O calendário oficial, separando alíquota-teste, alíquota nominal e percentual de transição.",
+    "intro": "A transição mistura três conceitos diferentes: teste de 2026, IBS inicial de 2027–2028 e substituição gradual de ICMS/ISS pelo IBS de 2029 a 2032. Não confunda percentual de transição com alíquota nominal.",
+    "before": "O sistema atual mantém PIS/Pasep, Cofins, IPI, ICMS e ISS, cada qual com suas regras.",
+    "after": "CBS e IBS entram por etapas. PIS/Cofins saem em 2027; ICMS/ISS diminuem gradualmente a partir de 2029 e são extintos em 2033; o IPI permanece apenas nas hipóteses residuais previstas.",
     "blocks": [
       {
-        "t": "2026 — ano-teste",
+        "t": "2026 — ano de teste",
         "k": "REGRA OFICIAL",
-        "x": "A LC 214 prevê IBS estadual de 0,1% e CBS de 0,9%. O valor recolhido é compensável na forma legal; além disso, o recolhimento fica dispensado para sujeitos passivos que cumprirem as obrigações acessórias previstas. As alíquotas-teste não se aplicam às operações dos optantes do Simples Nacional."
+        "x": "A fase de teste usa CBS de 0,9% e IBS total de 0,1%. Os valores seguem as regras legais de compensação/dispensa; a Receita informa que o recolhimento pode ser dispensado para contribuintes que cumpram as obrigações acessórias previstas."
+      },
+      {
+        "t": "Simples em 2026",
+        "k": "REGRA OFICIAL",
+        "x": "As alíquotas-teste de 2026 não se aplicam às operações dos optantes do Simples Nacional, conforme a disciplina de transição."
       },
       {
         "t": "2027 e 2028",
         "k": "REGRA OFICIAL",
-        "x": "PIS/Pasep e Cofins são extintos; o IBS é 0,05% estadual + 0,05% municipal; a CBS corresponde à alíquota fixada para o período, reduzida em 0,1 ponto percentual. O Imposto Seletivo entra em vigor e o IPI é reduzido a zero em grande parte das hipóteses, preservadas exceções legais."
+        "x": "PIS/Pasep e Cofins são extintos. Há IBS de 0,1% e CBS com a redução legal de 0,1 ponto percentual no período. O Imposto Seletivo entra em vigor e o IPI é reduzido a zero para quase todos os produtos, preservadas exceções legais."
       },
       {
-        "t": "A CBS de 2027 não é “9% oficial” por definição",
+        "t": "9% não é uma alíquota universal oficial",
         "k": "ATENÇÃO",
-        "x": "A alíquota de referência da CBS para 2027 é fixada segundo o mecanismo legal por resolução do Senado. O 9% utilizado no RTAV é premissa de simulação do evento."
+        "x": "O 9% usado no RTAV é uma premissa didática. A alíquota de referência da CBS é fixada segundo o mecanismo legal; não transforme a premissa da aula em cadastro fiscal definitivo."
       },
       {
-        "t": "2029",
+        "t": "2029 — 90/10",
         "k": "REGRA OFICIAL",
-        "x": "A transição do ICMS/ISS para o IBS entra na fase 90/10: ICMS e ISS são reduzidos para 90% e o IBS avança segundo a proporção prevista."
+        "x": "ICMS e ISS passam a 90% das alíquotas do sistema antigo e o IBS avança na proporção de 10% da transição. '10%' aqui é proporção de transição, não alíquota nominal de IBS."
       },
       {
-        "t": "2030 a 2032",
+        "t": "2030, 2031 e 2032",
         "k": "REGRA OFICIAL",
-        "x": "2030: 80/20; 2031: 70/30; 2032: 60/40. Esses percentuais representam a transição entre sistemas, não alíquotas nominais de 20%, 30% ou 40%."
+        "x": "2030: 80/20; 2031: 70/30; 2032: 60/40. A leitura correta é redução progressiva de ICMS/ISS e aumento progressivo da participação do IBS."
       },
       {
         "t": "2033",
         "k": "REGRA OFICIAL",
-        "x": "Entra em vigência integral o novo modelo e ICMS/ISS são extintos. Continuam CBS, IBS, Imposto Seletivo e o IPI apenas nas hipóteses residuais previstas."
+        "x": "O novo modelo entra integralmente em vigor e ICMS/ISS são extintos. Permanecem CBS, IBS, Imposto Seletivo e o IPI nas hipóteses residuais previstas."
       },
       {
-        "t": "Por que recalcular ano a ano",
-        "k": "NA PRÁTICA",
-        "x": "Preço, débito, crédito e efeito no caixa mudam conforme os tributos antigos recuam e o novo sistema avança. Uma projeção de 2027 não deve ser reaproveitada como se valesse até 2033."
+        "t": "Como estudar a transição",
+        "k": "MÉTODO",
+        "x": "Monte uma linha para cada ano. Para cada linha, separe: tributo antigo remanescente, CBS, IBS, carga total, crédito e efeito no preço ou faturamento. Nunca replique 2027 como se fosse igual até 2033."
       }
     ],
     "qa": [
       [
-        "10% de IBS em 2029 quer dizer alíquota nominal de 10%?",
-        "Não. É a proporção da transição do IBS naquele ano, aplicada segundo as alíquotas de referência e regras legais."
+        "10% de IBS em 2029 significa alíquota nominal de 10%?",
+        "Não. É a proporção da transição naquele ano."
       ],
       [
-        "Optante do Simples precisa aplicar 0,9% + 0,1% em 2026?",
-        "A LC 214 exclui das alíquotas-teste de 2026 as operações dos contribuintes optantes pelo Simples Nacional."
+        "2027 e 2028 já têm IBS?",
+        "Sim, há IBS de 0,1% no período."
       ],
       [
-        "O IPI desaparece totalmente em 2027?",
-        "Não. A regra geral é redução a zero para quase todos os produtos, com preservação de hipóteses relacionadas, entre outras, à Zona Franca de Manaus."
+        "O IPI acaba totalmente em 2027?",
+        "Não. A regra geral é redução a zero para quase todos os produtos, com hipóteses residuais preservadas."
+      ],
+      [
+        "Posso usar a mesma projeção de 2027 até 2033?",
+        "Não. A composição tributária muda ano a ano."
       ]
     ],
-    "legal": "LC 214/2025, arts. 342 a 349 e regras correlatas, texto atualizado; Receita Federal — Entenda a RTC."
+    "legal": "LC 214/2025, regras de transição dos arts. 342 e seguintes, texto atualizado; Receita Federal — Entenda a RTC, atualização de 03/07/2026; RTAV."
   },
   {
     "id": "06",
     "title": "Créditos e custo efetivo",
-    "subtitle": "Quando nasce o crédito, quanto pode ser apropriado e por que o cliente olha custo, não só preço.",
-    "intro": "A não cumulatividade é um dos pilares econômicos do novo IVA, mas a frase “se destacou, tomou crédito” é incompleta. A legislação atual condiciona a apropriação a documento fiscal idôneo e, como regra, à extinção do débito da operação anterior, com exceções previstas em lei.",
-    "before": "Hoje, regras de crédito variam conforme ICMS, IPI e PIS/Cofins, regime tributário, tipo de aquisição e limitações específicas.",
-    "after": "No regime regular, IBS e CBS têm disciplina própria de crédito, separada entre os dois tributos. A cadeia passa a ligar documento fiscal, extinção do débito, crédito do adquirente e mecanismos de recolhimento.",
+    "subtitle": "Quando nasce o crédito, como ele é segregado e por que preço pago não é o mesmo que custo econômico.",
+    "intro": "A não cumulatividade do novo IVA é ampla, mas não significa 'imposto destacado = crédito automático'. No regime regular, documento fiscal idôneo e extinção do débito da etapa anterior são elementos centrais, com exceções previstas na própria lei.",
+    "before": "Hoje, ICMS, IPI e PIS/Cofins têm sistemas de crédito diferentes, com vedações e critérios próprios.",
+    "after": "No regime regular de IBS/CBS, os créditos são apropriados separadamente por tributo e conectados ao documento fiscal e às formas legais de extinção do débito.",
     "blocks": [
       {
-        "t": "Quem pode se creditar",
+        "t": "1. Quem pode apropriar",
         "k": "REGRA OFICIAL",
-        "x": "O contribuinte sujeito ao regime regular pode apropriar créditos de IBS e CBS nas aquisições, ressalvadas hipóteses de uso/consumo pessoal e outras vedações legais."
+        "x": "O contribuinte sujeito ao regime regular pode apropriar créditos de IBS e CBS nas aquisições, ressalvadas operações de uso ou consumo pessoal e demais vedações legais."
       },
       {
-        "t": "Dois requisitos centrais",
+        "t": "2. Documento fiscal idôneo",
         "k": "REGRA OFICIAL",
-        "x": "A operação precisa ser comprovada por documento fiscal eletrônico idôneo; como regra, a apropriação ocorre quando os débitos correspondentes da operação anterior forem extintos pelas formas previstas na lei."
+        "x": "A operação precisa estar comprovada por documento fiscal eletrônico idôneo. Sem documentação correta, o crédito pode não ser apropriável."
       },
       {
-        "t": "IBS e CBS não se misturam",
+        "t": "3. Extinção do débito",
         "k": "REGRA OFICIAL",
-        "x": "Os créditos são apropriados de forma segregada: crédito de IBS não compensa CBS e crédito de CBS não compensa IBS."
+        "x": "Como regra, o crédito surge quando os débitos de IBS/CBS da operação anterior são extintos por uma das modalidades previstas na lei."
       },
       {
-        "t": "Split e recolhimento pelo adquirente",
+        "t": "4. Exceção enquanto certos mecanismos não estiverem implementados",
         "k": "REGRA OFICIAL",
-        "x": "A própria lei prevê exceção temporária ao requisito de extinção quando ainda não tiver sido implementado nem split payment nem recolhimento pelo adquirente, nas condições do art. 48."
+        "x": "O art. 48 dispensa temporariamente o requisito de extinção se não tiver sido implementado nem o split payment nem o recolhimento pelo adquirente, condicionando o crédito ao destaque correto no documento fiscal."
       },
       {
-        "t": "Fornecedor do Simples",
+        "t": "5. IBS e CBS são controles separados",
         "k": "REGRA OFICIAL",
-        "x": "Se o fornecedor permanece com IBS/CBS dentro do Simples, ele próprio não apropria créditos desses tributos; o adquirente no regime regular pode se creditar em montante equivalente ao IBS/CBS devido por meio do Simples, observadas as regras aplicáveis."
+        "x": "Crédito de IBS não compensa CBS e crédito de CBS não compensa IBS. A escrituração precisa manter os dois saldos segregados."
       },
       {
-        "t": "Custo efetivo",
+        "t": "6. Fornecedor do Simples",
+        "k": "REGRA OFICIAL",
+        "x": "Se o fornecedor recolher IBS/CBS dentro do Simples, ele não apropria créditos desses tributos. O adquirente no regime regular pode apropriar crédito equivalente ao IBS/CBS devido via Simples, observados os requisitos legais."
+      },
+      {
+        "t": "7. Simples no regime regular",
+        "k": "REGRA OFICIAL",
+        "x": "Se o optante do Simples escolher apurar IBS/CBS pelo regime regular, esses tributos passam a seguir as regras gerais de débito e crédito da LC 214."
+      },
+      {
+        "t": "8. Custo efetivo",
         "k": "MÉTODO RTAV",
-        "x": "Custo efetivo = preço pago − créditos tributários aproveitáveis. É por isso que o mesmo aumento de preço pode ser bom para um comprador e ruim para outro."
+        "x": "Para análise comercial: custo efetivo = preço pago − créditos efetivamente aproveitáveis. O crédito depende do regime e da operação, então duas empresas podem ter custos econômicos diferentes pagando a mesma nota."
       },
       {
-        "t": "Exemplo R$ 104,15",
+        "t": "9. Exemplo R$ 104,15",
         "k": "EXEMPLO RTAV",
-        "x": "No material, R$ 104,15 menos R$ 7,05 de crédito resulta em R$ 97,10. O exercício isola CBS e ignora outros créditos para explicar o conceito; não deve ser generalizado para uma apuração real."
+        "x": "No exercício, R$ 104,15 − R$ 7,05 = R$ 97,10. O exemplo isola determinados créditos e não deve ser tratado como apuração completa de qualquer empresa."
       }
     ],
     "qa": [
       [
-        "Imposto destacado na nota sempre vira crédito?",
-        "Não. É preciso verificar regime do adquirente, documento idôneo, extinção do débito, vedações e regras específicas."
+        "Imposto destacado sempre vira crédito?",
+        "Não. Verifique regime, documento fiscal, extinção do débito, vedações e regras específicas."
       ],
       [
-        "Fornecedor do Simples nunca gera crédito?",
-        "Não. No Simples sem opção pelo regime regular, o adquirente do regime regular pode ter crédito equivalente ao IBS/CBS devido via Simples, conforme a lei."
+        "Crédito de CBS pode quitar IBS?",
+        "Não. A apropriação e a compensação são segregadas."
       ],
       [
-        "Crédito é só uma questão fiscal?",
-        "Não. Ele altera custo efetivo, margem e poder de negociação na cadeia B2B."
+        "Fornecedor do Simples nunca gera crédito ao cliente?",
+        "Incorreto. O adquirente no regime regular pode ter crédito equivalente ao IBS/CBS devido pelo fornecedor via Simples, na forma da lei."
+      ],
+      [
+        "Por que o crédito é importante na negociação?",
+        "Porque altera o custo efetivo do comprador, mesmo quando o preço da nota é maior."
       ]
     ],
-    "legal": "LC 214/2025, arts. 47 a 57, especialmente arts. 47 e 48, em texto atualizado pela LC 227/2026; RTAV."
+    "legal": "LC 214/2025, arts. 41 e 47 a 57, especialmente arts. 47 e 48, texto atualizado pela LC 227/2026; RTAV; Material de Estudo, pág. 10."
   },
   {
     "id": "07",
