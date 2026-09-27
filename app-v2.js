@@ -985,7 +985,7 @@ function printTaxReport(kind){
  if(header){
   header.innerHTML='<div class="print-brand">Jaguar Assessoria Contábil × RTAV</div>'+
    '<h1>'+title+'</h1>'+
-   '<p><strong>Cliente:</strong> '+client+' · <strong>Ano analisado:</strong> '+year+'</p>'+
+   '<p><strong>Cliente:</strong> '+xmlEsc(client)+' · <strong>Ano analisado:</strong> '+xmlEsc(year)+'</p>'+
    '<p><strong>Data:</strong> '+now+' · <strong>Motor:</strong> '+RTAV_ENGINE.version+' · <strong>Regras:</strong> '+RTAV_ENGINE.rulesVersion+'</p>'+
    '<p>Simulação para planejamento. Premissas RTAV permanecem identificadas como premissas e não substituem o enquadramento aplicável à operação.</p>';
  }
@@ -1070,7 +1070,7 @@ function renderScenarioOptions(kind){
  const store=readNamedScenarios();
  const rows=store[kind]||[];
  select.innerHTML='<option value="">'+(rows.length?'Selecione um cenário':'Nenhum cenário salvo')+'</option>'+
-  rows.map(function(x){return '<option value="'+x.id+'">'+x.name+(x.client?' · '+x.client:'')+'</option>';}).join('');
+  rows.map(function(x){return '<option value="'+x.id+'">'+xmlEsc(x.name)+(x.client?' · '+xmlEsc(x.client):'')+'</option>';}).join('');
 }
 
 function saveNamedScenario(kind){
@@ -1096,7 +1096,7 @@ function saveNamedScenario(kind){
  const select=$(kind==='price'?'priceScenarioSelect':'revenueScenarioSelect');
  if(select) select.value=item.id;
  const panel=$(kind==='price'?'priceScenarioCompare':'revenueScenarioCompare');
- if(panel) panel.innerHTML='<div class="validation-message info">Cenário “'+name+'” salvo neste navegador.</div>';
+ if(panel) panel.innerHTML='<div class="validation-message info">Cenário “'+xmlEsc(name)+'” salvo neste navegador.</div>';
 }
 
 function selectedNamedScenario(kind){
@@ -1173,7 +1173,7 @@ function compareNamedScenario(kind){
    compareItem('Tributos',other.taxes,current.taxes)+
    compareItem('Valor líquido',other.net,current.net)+
    compareItem('Custo comprador',other.buyerCost??other.price,current.buyerCost??current.price)+
-  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+saved.name+'.</div>';
+  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'.</div>';
  }else{
   const year=Number($('revYear')?.value||2027);
   const current=RTAV_ENGINE.futureRevenueScenario(revenueEngineInput(),year);
@@ -1183,7 +1183,7 @@ function compareNamedScenario(kind){
    compareItem('Tributos brutos',other.taxes,current.taxes)+
    compareItem('Carga líquida',other.netTax??other.taxes,current.netTax??current.taxes)+
    compareItem('Líquido econômico',other.economicNet??other.net,current.economicNet??current.net)+
-  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+saved.name+'.</div>';
+  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'.</div>';
  }
 }
 
