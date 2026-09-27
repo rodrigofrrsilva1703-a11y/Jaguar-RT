@@ -1,7 +1,30 @@
 const $=id=>document.getElementById(id);
 const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const pct=v=>Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:4})+'%';
-const num=id=>Number($(id)?.value||0);
+
+function parseMoneyInput(value){
+ const raw=String(value??'').trim().replace(/\s+/g,'').replace(/^R\$/i,'');
+ if(!raw) return 0;
+ let normalized=raw;
+ if(raw.includes(',')) normalized=raw.replace(/\./g,'').replace(',','.');
+ else if(/^-?\d{1,3}(\.\d{3})+$/.test(raw)) normalized=raw.replace(/\./g,'');
+ const parsed=Number(normalized);
+ return Number.isFinite(parsed)?parsed:0;
+}
+const num=id=>{
+ const el=$(id);
+ if(!el) return 0;
+ return el.classList.contains('money-input')?parseMoneyInput(el.value):Number(el.value||0);
+};
+function formatMoneyInput(el){
+ if(!el) return;
+ const value=parseMoneyInput(el.value);
+ el.value=value.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function formatPrimaryMoneyInputs(){
+ ['priceNow','revCurrentRevenue'].forEach(function(id){formatMoneyInput($(id));});
+}
+const signedMoney=(value,sign)=>sign+' '+money(value);
 
 function go(id){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -326,7 +349,10 @@ function updateScenarioStrip(){
 }
 
 function summaryRows(rows){
- return '<div class="tax-summary-list">'+rows.map(([label,value,strong])=>`<div class="tax-summary-row"><span>${label}</span><b>${value}</b></div>`).join('')+'</div>';
+ return '<div class="tax-summary-list">'+rows.map(([label,value,role])=>{
+  const cls=role?' flow-'+role:'';
+  return `<div class="tax-summary-row${cls}"><span>${label}</span><b>${value}</b></div>`;
+ }).join('')+'</div>';
 }
 
 function currentTaxRows(base){
@@ -667,32 +693,31 @@ function revFutureScenario(year,keepGross=false){
 }
 
 function revCurrentRows(base){
- const rows=[['Faturamento bruto',money(base.revenue)]];
+ const rows=[['Faturamento bruto',signedMoney(base.revenue,'+'),'plus']];
  if(!revIsSimple(base.regime)){
   const c=base.components;
-  if(c.pis>0) rows.push(['PIS',money(c.pis)]);
-  if(c.cofins>0) rows.push(['Cofins',money(c.cofins)]);
-  if(c.icms>0) rows.push(['ICMS',money(c.icms)]);
-  if(c.iss>0) rows.push(['ISS',money(c.iss)]);
-  if(c.ipi>0) rows.push(['IPI',money(c.ipi)]);
- }else rows.push(['DAS / tributos',money(base.taxes)]);
- rows.push(['Total de tributos',money(base.taxes)]);
- rows.push(['Faturamento líquido',money(base.net)]);
+  if(c.pis>0) rows.push(['PIS',signedMoney(c.pis,'−'),'minus']);
+  if(c.cofins>0) rows.push(['Cofins',signedMoney(c.cofins,'−'),'minus']);
+  if(c.icms>0) rows.push(['ICMS',signedMoney(c.icms,'−'),'minus']);
+  if(c.iss>0) rows.push(['ISS',signedMoney(c.iss,'−'),'minus']);
+  if(c.ipi>0) rows.push(['IPI',signedMoney(c.ipi,'−'),'minus']);
+ }else rows.push(['DAS / tributos',signedMoney(base.taxes,'−'),'minus']);
+ rows.push(['Faturamento líquido',signedMoney(base.net,'='),'result']);
  return rows;
 }
 
 function revFutureRows(x){
- const rows=[['Faturamento bruto projetado',money(x.revenue)]];
- if(x.cbs>0) rows.push(['CBS',money(x.cbs)]);
- if(x.ibs>0) rows.push(['IBS',money(x.ibs)]);
- if(x.remnant>0) rows.push(['DAS / tributos remanescentes',money(x.remnant)]);
- rows.push(['Total de tributos',money(x.taxes)]);
+ const rows=[['Faturamento bruto projetado',signedMoney(x.revenue,'+'),'plus']];
+ if(x.cbs>0) rows.push(['CBS',signedMoney(x.cbs,'−'),'minus']);
+ if(x.ibs>0) rows.push(['IBS',signedMoney(x.ibs,'−'),'minus']);
+ if(x.remnant>0) rows.push(['DAS / tributos remanescentes',signedMoney(x.remnant,'−'),'minus']);
+ rows.push(['Total de tributos',signedMoney(x.taxes,'−'),'minus']);
  if((x.purchaseCredit||0)>0){
-  rows.push(['Créditos estimados das aquisições',money(x.purchaseCredit)]);
-  rows.push(['Carga líquida após créditos',money(x.netTax)]);
-  rows.push(['Líquido econômico após créditos',money(x.economicNet)]);
+  rows.push(['Créditos estimados das aquisições',signedMoney(x.purchaseCredit,'+'),'plus']);
+  rows.push(['Carga líquida após créditos',signedMoney(x.netTax,'−'),'minus']);
+  rows.push(['Líquido econômico após créditos',signedMoney(x.economicNet,'='),'result']);
  }
- rows.push(['Faturamento líquido antes dos créditos',money(x.net)]);
+ rows.push(['Faturamento líquido antes dos créditos',signedMoney(x.net,'='),'result']);
  return rows;
 }
 
@@ -1259,6 +1284,7 @@ function applySnapshot(kind,data){
   if(el.type==='checkbox') el.checked=!!data[id];
   else el.value=data[id];
  });
+ formatPrimaryMoneyInputs();
  if(kind==='price'){applyRegimeUI({preset:false});calcIntegrated();saveSimulation('price');}
  else{revApplyUI({preset:false});revCalcIntegrated();saveSimulation('revenue');}
 }
@@ -1272,7 +1298,8 @@ function loadNamedScenario(kind){
 }
 
 function numberFromState(data,id,fallback=0){
- const v=Number(data?.[id]);
+ const raw=data?.[id];
+ const v=(id==='priceNow'||id==='revCurrentRevenue')?parseMoneyInput(raw):Number(raw);
  return Number.isFinite(v)?v:fallback;
 }
 
@@ -1371,6 +1398,7 @@ $('hybridRateMode')?.addEventListener('change',function(){
 ['priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate','hybridReduction','hybridCbsRate','hybridIbsRate'].forEach(function(id){
  $(id)?.addEventListener('input',calcIntegrated);
 });
+$('priceNow')?.addEventListener('blur',function(){formatMoneyInput(this);calcIntegrated();});
 
 $('revTaxRegime')?.addEventListener('change',function(){revApplyUI({preset:true});});
 $('revSnAnnex')?.addEventListener('change',function(){revUpdateSnSummary();revCalcIntegrated();});
@@ -1399,6 +1427,7 @@ $('revHybridRateMode')?.addEventListener('change',function(){
 ['revCurrentRevenue','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate','revRateReduction','revCbsRate','revIbsRate','revHybridReduction','revHybridCbsRate','revHybridIbsRate'].forEach(function(id){
  $(id)?.addEventListener('input',revCalcIntegrated);
 });
+$('revCurrentRevenue')?.addEventListener('blur',function(){formatMoneyInput(this);revCalcIntegrated();});
 
 
 $('practiceSearch')?.addEventListener('input',renderPracticeGrid);
@@ -1425,6 +1454,7 @@ revApplyUI({preset:true});
 
 const priceRestored=restoreSimulation('price');
 const revenueRestored=restoreSimulation('revenue');
+formatPrimaryMoneyInputs();
 
 if(priceRestored) applyRegimeUI({preset:false});
 else calcIntegrated();

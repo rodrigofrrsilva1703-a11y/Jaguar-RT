@@ -9,7 +9,9 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await page.evaluate(()=>go('tools'));
 
  await expect(page.locator('#priceToolPanel')).toHaveClass(/active/);
- await page.locator('#priceNow').fill('100');
+ await page.locator('#priceNow').fill('1.234,56');
+ await page.locator('#priceNow').blur();
+ await expect(page.locator('#priceNow')).toHaveValue('1.234,56');
  await page.locator('#taxRegime').selectOption('presumido');
  await page.locator('#pisRate').fill('0.65');
  await page.locator('#cofinsRate').fill('3');
@@ -24,7 +26,13 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
 
  await page.evaluate(()=>showTaxTool('revenue'));
  await expect(page.locator('#revenueToolPanel')).toHaveClass(/active/);
- await page.locator('#revCurrentRevenue').fill('100000');
+ await page.locator('#revCurrentRevenue').fill('100.000,50');
+ await page.locator('#revCurrentRevenue').blur();
+ await expect(page.locator('#revCurrentRevenue')).toHaveValue('100.000,50');
+ await expect(page.locator('#revCurrentSummary')).toContainText('PIS');
+ await expect(page.locator('#revCurrentSummary')).toContainText('Cofins');
+ await expect(page.locator('#revCurrentSummary')).toContainText('ICMS');
+ await expect(page.locator('#revCurrentSummary')).not.toContainText('Total de tributos');
  await page.locator('#revenueAdvanced').evaluate(el=>{el.open=true;});
  await page.locator('#revCreditablePurchasesPct').fill('50');
  await page.locator('#revYear').selectOption('2027');
