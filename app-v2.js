@@ -397,15 +397,21 @@ function futureTaxRows(x){
  if(x.ibs>0) rows.push(['IBS',money(x.ibs)]);
  if(x.remnant>0) rows.push([regime()==='simples'?'DAS remanescente':'Tributos remanescentes',money(x.remnant)]);
  rows.push(['Total de tributos',money(x.taxes)]);
- rows.push(['Carga sobre o preço',pct(x.price?x.taxes/x.price*100:0)]);
- rows.push(['Valor líquido',money(x.net)]);
+ if((x.purchaseCredit||0)>0){
+  rows.push(['Créditos CBS/IBS da empresa',money(x.purchaseCredit)]);
+  rows.push(['Carga líquida após créditos',money(x.netTax)]);
+  rows.push(['Carga líquida sobre o preço',pct(x.price?x.netTax/x.price*100:0)]);
+  rows.push(['Líquido econômico após créditos',money(x.economicNet)]);
+ }else{
+  rows.push(['Carga sobre o preço',pct(x.price?x.taxes/x.price*100:0)]);
+  rows.push(['Valor líquido',money(x.net)]);
+ }
  if(($('priceBuyerProfile')?.value||'b2c')==='b2b'){
   rows.push(['Crédito potencial do comprador',money(x.buyerCredit||0)]);
   rows.push(['Custo efetivo do comprador',money(x.buyerCost??x.price)]);
  }
  return rows;
 }
-
 
 function renderTaxChart(id,rows,mode){
  const el=$(id);
@@ -474,10 +480,11 @@ function calcIntegrated(){
  const priceDelta=effectPct(base.price,future.price);
  const prev=y===2027?base:futureScenario(y-1);
  const annualDelta=effectPct(prev.price,future.price);
+ const hasOwnCredit=(future.purchaseCredit||0)>0;
 
  let signal='PREÇO ESTÁVEL',headline='O preço projetado ficou próximo ao valor atual.';
- if(priceDelta>.05){signal='AUMENTO DE PREÇO';headline='A projeção indica aumento do preço para preservar o mesmo líquido de 2026.';}
- else if(priceDelta<-.05){signal='REDUÇÃO DE PREÇO';headline='A projeção permite preço menor mantendo o mesmo líquido de 2026.';}
+ if(priceDelta>.05){signal='AUMENTO DE PREÇO';headline='A projeção indica aumento do preço para preservar o mesmo resultado de 2026.';}
+ else if(priceDelta<-.05){signal='REDUÇÃO DE PREÇO';headline='A projeção permite preço menor mantendo o mesmo resultado de 2026.';}
 
  $('resultSignal').textContent=signal;
  $('regimeResultNote').textContent=REGIME_LABELS[regime()]+' · '+regimeExplanation();
@@ -487,21 +494,26 @@ function calcIntegrated(){
   '<div class="integrated-kpi dark"><small>Preço atual</small><b>'+money(base.price)+'</b><span>2026</span></div>'+
   '<div class="integrated-kpi"><small>Tributos atuais</small><b>'+money(base.taxes)+'</b><span>Carga '+pct(base.price?base.taxes/base.price*100:0)+'</span></div>'+
   '<div class="integrated-kpi dark"><small>Preço em '+y+'</small><b>'+money(future.price)+'</b><span>'+effectText(priceDelta)+' vs. 2026</span></div>'+
-  '<div class="integrated-kpi"><small>Valor líquido</small><b>'+money(future.net)+'</b><span>Base preservada: '+money(base.net)+'</span></div>'+
+  (hasOwnCredit
+   ?'<div class="integrated-kpi"><small>Crédito CBS/IBS da empresa</small><b>'+money(future.purchaseCredit)+'</b><span>Carga líquida '+money(future.netTax)+'</span></div>'+
+    '<div class="integrated-kpi dark"><small>Líquido econômico</small><b>'+money(future.economicNet)+'</b><span>Base preservada: '+money(base.net)+'</span></div>'
+   :'<div class="integrated-kpi"><small>Valor líquido</small><b>'+money(future.net)+'</b><span>Base preservada: '+money(base.net)+'</span></div>')+
   (b2b?'<div class="integrated-kpi dark"><small>Custo efetivo do comprador</small><b>'+money(future.buyerCost)+'</b><span>Crédito potencial '+money(future.buyerCredit)+'</span></div>':'');
 
  $('currentTaxSummary').innerHTML=summaryRows(currentTaxRows(base));
  $('futureTaxSummary').innerHTML=summaryRows(futureTaxRows(future));
+ const ownCreditSentence=hasOwnCredit
+  ?' A empresa aproveita '+money(future.purchaseCredit)+' de créditos estimados de CBS/IBS; a carga líquida fica em '+money(future.netTax)+' e o líquido econômico em '+money(future.economicNet)+'.'
+  :'';
  const buyerSentence=b2b?' Para o comprador PJ, o crédito potencial considerado é '+money(future.buyerCredit)+' e o custo efetivo estimado fica em '+money(future.buyerCost)+'.':'';
+ const preserved=hasOwnCredit?future.economicNet:future.net;
  $('integratedExplanation').innerHTML=
   '<b>'+headline+'</b><p>Em 2026, '+money(base.taxes)+' do preço correspondem aos tributos considerados e o valor líquido é '+money(base.net)+
   '. Em '+y+', o preço projetado é <strong>'+money(future.price)+'</strong> ('+effectText(priceDelta)+' contra 2026 e '+effectText(annualDelta)+
-  ' contra o ano anterior), mantendo o líquido em '+money(future.net)+'.'+buyerSentence+'</p>';
+  ' contra o ano anterior), preservando '+money(preserved)+'.'+ownCreditSentence+buyerSentence+'</p>';
 
  renderYearlyProjection();
 }
-
-let yearDetailSelected=null;
 
 function selectYearDetail(year){
  yearDetailSelected=Number(year);
@@ -517,10 +529,15 @@ function renderYearDetail(year){
  const base=yearlyRows[0];
  const isBase=x.year===2026;
  const priceChange=isBase?0:effectPct(base.price,x.price);
+ const hasOwnCredit=(x.purchaseCredit||0)>0;
+ const load=x.netTax??x.taxes;
+ const economicNet=x.economicNet??x.net;
 
  const analysis=isBase
   ? 'Em 2026, de cada '+money(x.price)+' vendidos, '+money(x.taxes)+' correspondem aos tributos considerados e '+money(x.net)+' permanecem como valor líquido.'
-  : 'Em '+x.year+', o preço projetado é '+money(x.price)+' ('+effectText(priceChange)+' contra 2026). Os tributos somam '+money(x.taxes)+' e o líquido preservado é '+money(x.net)+'.';
+  : hasOwnCredit
+   ? 'Em '+x.year+', o preço projetado é '+money(x.price)+' ('+effectText(priceChange)+' contra 2026). Os tributos brutos somam '+money(x.taxes)+', os créditos CBS/IBS da empresa são '+money(x.purchaseCredit)+', a carga líquida fica em '+money(load)+' e o líquido econômico preservado em '+money(economicNet)+'.'
+   : 'Em '+x.year+', o preço projetado é '+money(x.price)+' ('+effectText(priceChange)+' contra 2026). Os tributos somam '+money(x.taxes)+' e o líquido preservado é '+money(x.net)+'.';
 
  $('yearDetailPanel').classList.add('visible');
  $('yearDetailPanel').innerHTML=
@@ -530,11 +547,12 @@ function renderYearDetail(year){
   '</div>'+
   '<div class="year-detail-grid tax-detail">'+
    '<div class="year-detail-item"><small>Total de tributos</small><b>'+money(x.taxes)+'</b></div>'+
-   '<div class="year-detail-item"><small>Carga</small><b>'+pct(x.price?x.taxes/x.price*100:0)+'</b></div>'+
-   '<div class="year-detail-item"><small>Valor líquido</small><b>'+money(x.net)+'</b></div>'+
+   '<div class="year-detail-item"><small>'+(hasOwnCredit?'Carga líquida':'Carga')+'</small><b>'+pct(x.price?load/x.price*100:0)+'</b></div>'+
+   '<div class="year-detail-item"><small>'+(hasOwnCredit?'Líquido econômico':'Valor líquido')+'</small><b>'+money(economicNet)+'</b></div>'+
    '<div class="year-detail-item"><small>CBS</small><b>'+(x.cbs===null?'—':money(x.cbs))+'</b></div>'+
    '<div class="year-detail-item"><small>IBS</small><b>'+(x.ibs===null?'—':money(x.ibs))+'</b></div>'+
    '<div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>'+money(x.remnant)+'</b></div>'+
+   (hasOwnCredit?'<div class="year-detail-item"><small>Crédito CBS/IBS da empresa</small><b>'+money(x.purchaseCredit)+'</b></div><div class="year-detail-item"><small>Carga líquida em R$</small><b>'+money(load)+'</b></div>':'')+
    ((($('priceBuyerProfile')?.value||'b2c')==='b2b')?'<div class="year-detail-item"><small>Crédito potencial comprador</small><b>'+money(x.buyerCredit||0)+'</b></div><div class="year-detail-item"><small>Custo efetivo comprador</small><b>'+money(x.buyerCost??x.price)+'</b></div>':'')+
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+analysis+'</p></div>';
@@ -568,22 +586,29 @@ function renderYearlyProjection(){
   '</button>'
  ).join('');
 
+ const hasOwnCredit=rows.some(x=>(x.purchaseCredit||0)>0);
+ if($('priceYearlyLoadHeader')) $('priceYearlyLoadHeader').textContent=hasOwnCredit?'Carga líquida':'Carga';
+ if($('priceYearlyNetHeader')) $('priceYearlyNetHeader').textContent=hasOwnCredit?'Líquido econômico':'Valor líquido';
+
  $('yearlyProjectionTable').innerHTML=rows.map(x=>{
   const cls=x.year===2026?'current-year':(x.year===yearDetailSelected?'selected-year':'');
+  const load=x.netTax??x.taxes;
+  const economicNet=x.economicNet??x.net;
   return '<tr class="'+cls+'" onclick="selectYearDetail('+x.year+')">'+
    '<td>'+x.year+'</td><td><strong>'+money(x.price)+'</strong></td><td>'+money(x.taxes)+'</td>'+
-   '<td>'+pct(x.price?x.taxes/x.price*100:0)+'</td><td><strong>'+money(x.net)+'</strong></td>'+
+   '<td>'+pct(x.price?load/x.price*100:0)+'</td><td><strong>'+money(economicNet)+'</strong></td>'+
   '</tr>';
  }).join('');
 
  renderYearDetail(yearDetailSelected);
 
- let note='O preço de cada ano é calculado para preservar o mesmo valor líquido por venda de 2026.';
- if(r==='simples') note+=' No Simples padrão, o preço pode permanecer igual quando a alíquota efetiva total do DAS não muda.';
+ let note=hasOwnCredit
+  ?'Com crédito próprio ativado, o preço de cada ano considera os créditos estimados de CBS/IBS das aquisições e preserva o mesmo líquido econômico de 2026.'
+  :'O preço de cada ano é calculado para preservar o mesmo valor líquido por venda de 2026.';
+ if(r==='simples') note+=' No Simples padrão, o simulador não apropria créditos próprios de CBS/IBS das aquisições dentro do regime.';
  if(r==='simples_hybrid') note+=' No híbrido, CBS/IBS ficam fora do DAS e o remanescente permanece separado.';
  $('yearlyProjectionNote').textContent=note;
 }
-
 
 function showTaxTool(which){
  const price=which!=='revenue';
