@@ -301,7 +301,7 @@ const STUDY_MODULES = [
       {
         "t": "9% não é uma alíquota universal oficial",
         "k": "ATENÇÃO",
-        "x": "O 9% usado no RTAV é uma premissa didática. A alíquota de referência da CBS é fixada segundo o mecanismo legal; não transforme a premissa da aula em cadastro fiscal definitivo."
+        "x": "O RTAV trabalha com referências didáticas de alíquota. Na calculadora, a CBS usa 9,21% como premissa padrão editável; isso não deve ser tratado como alíquota oficial universal do cliente."
       },
       {
         "t": "2029 — 90/10",
