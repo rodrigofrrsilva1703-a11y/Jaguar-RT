@@ -429,13 +429,33 @@ function renderTaxChart(id,rows,mode){
  }).join('');
 }
 
+function renderValidation(id,messages){
+ const el=$(id);
+ if(!el) return;
+ el.innerHTML=(messages||[]).map(function(item){
+  return '<div class="validation-message '+item.level+'">'+item.message+'</div>';
+ }).join('');
+}
+
+function renderMemory(id,rows){
+ const el=$(id);
+ if(!el) return;
+ el.innerHTML=(rows||[]).map(function(row){
+  const value=typeof row[1]==='number'?money(row[1]):String(row[1]??'');
+  return '<div class="memory-row"><span>'+row[0]+'</span><b>'+value+'</b></div>';
+ }).join('');
+}
+
 function calcIntegrated(){
  if(!$('integratedKpis')) return;
  updateScenarioStrip();
 
+ const input=priceEngineInput();
+ renderValidation('priceValidation',RTAV_ENGINE.validatePriceInput(input));
  const base=currentScenario();
  const y=Number($('priceYear')?.value||2027);
  const future=futureScenario(y);
+ renderMemory('priceMemory',RTAV_ENGINE.priceMemory(input,y));
  const priceDelta=effectPct(base.price,future.price);
  const prev=y===2027?base:futureScenario(y-1);
  const annualDelta=effectPct(prev.price,future.price);
@@ -712,9 +732,12 @@ let revenueYearlyRows=[],revYearDetailSelected=null;
 
 function revCalcIntegrated(){
  if(!$('revKpis')) return;
+ const input=revenueEngineInput();
+ renderValidation('revenueValidation',RTAV_ENGINE.validateRevenueInput(input));
  const base=revCurrentScenario();
  const y=Number($('revYear')?.value||2027);
  const future=revFutureScenario(y);
+ renderMemory('revenueMemory',RTAV_ENGINE.revenueMemory(input,y));
  const unchanged=revFutureScenario(y,true);
  const delta=effectPct(base.revenue,future.revenue);
  const period=$('revRevenuePeriod')?.value||'mensal';
@@ -979,12 +1002,12 @@ function printTaxReport(kind){
 const PRICE_STATE_IDS=[
  'taxRegime','priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','snRbt12','snAnnex',
  'priceYear','rateMode','rateReduction','cbsRate','ibsRate','hybridRateMode','hybridReduction','hybridCbsRate','hybridIbsRate',
- 'priceBuyerProfile','priceCurrentBuyerCredit','priceBuyerCreditPct','priceQuickPreset'
+ 'priceBuyerProfile','priceCurrentBuyerCredit','priceBuyerCreditPct','priceQuickPreset','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
  'revTaxRegime','revCurrentRevenue','revRevenuePeriod','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate',
  'revSnRbt12','revSnAnnex','revYear','revRateMode','revRateReduction','revCbsRate','revIbsRate','revHybridRateMode',
- 'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset'
+ 'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset','revenueClientName'
 ];
 
 function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-v1';}
@@ -1025,6 +1048,157 @@ function bindAutosave(kind){
  });
 }
 
+function snapshotState(kind){
+ const ids=kind==='price'?PRICE_STATE_IDS:REVENUE_STATE_IDS;
+ const data={};
+ ids.forEach(function(id){
+  const el=$(id); if(!el) return;
+  data[id]=el.type==='checkbox'?el.checked:el.value;
+ });
+ return data;
+}
+
+function namedScenarioKey(){return 'jaguar-rtav-named-scenarios-v1';}
+
+function readNamedScenarios(){
+ try{
+  const data=JSON.parse(localStorage.getItem(namedScenarioKey())||'null');
+  return data&&typeof data==='object'?data:{price:[],revenue:[]};
+ }catch(e){return {price:[],revenue:[]};}
+}
+
+function writeNamedScenarios(store){
+ try{localStorage.setItem(namedScenarioKey(),JSON.stringify(store));}catch(e){}
+}
+
+function renderScenarioOptions(kind){
+ const select=$(kind==='price'?'priceScenarioSelect':'revenueScenarioSelect');
+ if(!select) return;
+ const store=readNamedScenarios();
+ const rows=store[kind]||[];
+ select.innerHTML='<option value="">'+(rows.length?'Selecione um cenário':'Nenhum cenário salvo')+'</option>'+
+  rows.map(function(x){return '<option value="'+x.id+'">'+x.name+(x.client?' · '+x.client:'')+'</option>';}).join('');
+}
+
+function saveNamedScenario(kind){
+ const nameInput=$(kind==='price'?'priceScenarioName':'revenueScenarioName');
+ const clientInput=$(kind==='price'?'priceClientName':'revenueClientName');
+ const name=(nameInput?.value||'').trim();
+ if(!name){
+  const panel=$(kind==='price'?'priceScenarioCompare':'revenueScenarioCompare');
+  if(panel) panel.innerHTML='<div class="validation-message warning">Dê um nome ao cenário antes de salvar.</div>';
+  return;
+ }
+ const store=readNamedScenarios();
+ const item={
+  id:String(Date.now()),
+  name,
+  client:(clientInput?.value||'').trim(),
+  savedAt:new Date().toISOString(),
+  data:snapshotState(kind)
+ };
+ store[kind]=[item].concat(store[kind]||[]).slice(0,30);
+ writeNamedScenarios(store);
+ renderScenarioOptions(kind);
+ const select=$(kind==='price'?'priceScenarioSelect':'revenueScenarioSelect');
+ if(select) select.value=item.id;
+ const panel=$(kind==='price'?'priceScenarioCompare':'revenueScenarioCompare');
+ if(panel) panel.innerHTML='<div class="validation-message info">Cenário “'+name+'” salvo neste navegador.</div>';
+}
+
+function selectedNamedScenario(kind){
+ const id=$(kind==='price'?'priceScenarioSelect':'revenueScenarioSelect')?.value||'';
+ const rows=readNamedScenarios()[kind]||[];
+ return rows.find(function(x){return x.id===id;})||null;
+}
+
+function applySnapshot(kind,data){
+ const ids=kind==='price'?PRICE_STATE_IDS:REVENUE_STATE_IDS;
+ ids.forEach(function(id){
+  const el=$(id); if(!el||data[id]===undefined) return;
+  if(el.type==='checkbox') el.checked=!!data[id];
+  else el.value=data[id];
+ });
+ if(kind==='price'){applyRegimeUI({preset:false});calcIntegrated();saveSimulation('price');}
+ else{revApplyUI({preset:false});revCalcIntegrated();saveSimulation('revenue');}
+}
+
+function loadNamedScenario(kind){
+ const item=selectedNamedScenario(kind);
+ if(!item) return;
+ applySnapshot(kind,item.data||{});
+ const client=$(kind==='price'?'priceClientName':'revenueClientName');
+ if(client&&item.client) client.value=item.client;
+}
+
+function numberFromState(data,id,fallback=0){
+ const v=Number(data?.[id]);
+ return Number.isFinite(v)?v:fallback;
+}
+
+function priceInputFromState(data){
+ return {
+  regime:data?.taxRegime||'presumido',
+  amount:numberFromState(data,'priceNow'),
+  currentRates:{
+   pis:numberFromState(data,'pisRate'),cofins:numberFromState(data,'cofinsRate'),
+   icms:numberFromState(data,'icmsRate'),iss:numberFromState(data,'issRate'),ipi:numberFromState(data,'ipiRate')
+  },
+  simple:{annex:data?.snAnnex||'III',rbt12:numberFromState(data,'snRbt12')},
+  future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate')},
+  hybridFuture:{mode:data?.hybridRateMode||'rtav',reduction:numberFromState(data,'hybridReduction'),cbs:numberFromState(data,'hybridCbsRate'),ibs:numberFromState(data,'hybridIbsRate')},
+  buyer:{profile:data?.priceBuyerProfile||'b2c',currentCredit:numberFromState(data,'priceCurrentBuyerCredit'),usePct:numberFromState(data,'priceBuyerCreditPct',100)}
+ };
+}
+
+function revenueInputFromState(data){
+ return {
+  regime:data?.revTaxRegime||'presumido',
+  amount:numberFromState(data,'revCurrentRevenue'),
+  currentRates:{
+   pis:numberFromState(data,'revPisRate'),cofins:numberFromState(data,'revCofinsRate'),
+   icms:numberFromState(data,'revIcmsRate'),iss:numberFromState(data,'revIssRate'),ipi:numberFromState(data,'revIpiRate')
+  },
+  simple:{annex:data?.revSnAnnex||'III',rbt12:numberFromState(data,'revSnRbt12')},
+  future:{mode:data?.revRateMode||'rtav',reduction:numberFromState(data,'revRateReduction'),cbs:numberFromState(data,'revCbsRate'),ibs:numberFromState(data,'revIbsRate')},
+  hybridFuture:{mode:data?.revHybridRateMode||'rtav',reduction:numberFromState(data,'revHybridReduction'),cbs:numberFromState(data,'revHybridCbsRate'),ibs:numberFromState(data,'revHybridIbsRate')},
+  purchases:{creditablePct:numberFromState(data,'revCreditablePurchasesPct'),usePct:numberFromState(data,'revPurchaseCreditUsePct',100)}
+ };
+}
+
+function compareNamedScenario(kind){
+ const saved=selectedNamedScenario(kind);
+ const panel=$(kind==='price'?'priceScenarioCompare':'revenueScenarioCompare');
+ if(!saved||!panel) return;
+
+ if(kind==='price'){
+  const year=Number($('priceYear')?.value||2027);
+  const current=RTAV_ENGINE.futurePriceScenario(priceEngineInput(),year);
+  const other=RTAV_ENGINE.futurePriceScenario(priceInputFromState(saved.data),year);
+  panel.innerHTML='<div class="scenario-compare-grid">'+
+   compareItem('Preço',other.price,current.price)+
+   compareItem('Tributos',other.taxes,current.taxes)+
+   compareItem('Valor líquido',other.net,current.net)+
+   compareItem('Custo comprador',other.buyerCost??other.price,current.buyerCost??current.price)+
+  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+saved.name+'.</div>';
+ }else{
+  const year=Number($('revYear')?.value||2027);
+  const current=RTAV_ENGINE.futureRevenueScenario(revenueEngineInput(),year);
+  const other=RTAV_ENGINE.futureRevenueScenario(revenueInputFromState(saved.data),year);
+  panel.innerHTML='<div class="scenario-compare-grid">'+
+   compareItem('Faturamento',other.revenue,current.revenue)+
+   compareItem('Tributos brutos',other.taxes,current.taxes)+
+   compareItem('Carga líquida',other.netTax??other.taxes,current.netTax??current.taxes)+
+   compareItem('Líquido econômico',other.economicNet??other.net,current.economicNet??current.net)+
+  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+saved.name+'.</div>';
+ }
+}
+
+function compareItem(label,saved,current){
+ const delta=effectPct(saved,current);
+ return '<div class="scenario-compare-item"><small>'+label+'</small><b>'+money(current)+'</b><span>Salvo: '+money(saved)+' · '+effectText(delta)+'</span></div>';
+}
+
 function resetSimulation(kind){
  try{localStorage.removeItem(stateKey(kind));}catch(e){}
  location.reload();
@@ -1039,6 +1213,9 @@ $('priceQuickPreset')?.addEventListener('change',function(){applyQuickPreset('pr
 $('pricePresentationBtn')?.addEventListener('click',function(){togglePresentation('price');});
 $('pricePrintBtn')?.addEventListener('click',function(){printTaxReport('price');});
 $('resetPriceSimulation')?.addEventListener('click',function(){resetSimulation('price');});
+$('savePriceScenario')?.addEventListener('click',function(){saveNamedScenario('price');});
+$('loadPriceScenario')?.addEventListener('click',function(){loadNamedScenario('price');});
+$('comparePriceScenario')?.addEventListener('click',function(){compareNamedScenario('price');});
 $('priceBuyerProfile')?.addEventListener('change',calcIntegrated);
 $('priceCurrentBuyerCredit')?.addEventListener('input',calcIntegrated);
 $('priceBuyerCreditPct')?.addEventListener('input',calcIntegrated);
@@ -1065,6 +1242,9 @@ $('revenueQuickPreset')?.addEventListener('change',function(){applyQuickPreset('
 $('revenuePresentationBtn')?.addEventListener('click',function(){togglePresentation('revenue');});
 $('revenuePrintBtn')?.addEventListener('click',function(){printTaxReport('revenue');});
 $('resetRevenueSimulation')?.addEventListener('click',function(){resetSimulation('revenue');});
+$('saveRevenueScenario')?.addEventListener('click',function(){saveNamedScenario('revenue');});
+$('loadRevenueScenario')?.addEventListener('click',function(){loadNamedScenario('revenue');});
+$('compareRevenueScenario')?.addEventListener('click',function(){compareNamedScenario('revenue');});
 $('revCreditablePurchasesPct')?.addEventListener('input',revCalcIntegrated);
 $('revPurchaseCreditUsePct')?.addEventListener('input',revCalcIntegrated);
 
@@ -1114,6 +1294,8 @@ else revCalcIntegrated();
 
 bindAutosave('price');
 bindAutosave('revenue');
+renderScenarioOptions('price');
+renderScenarioOptions('revenue');
 
 let initialTool='price';
 try{initialTool=localStorage.getItem('jaguar-rtav-active-tool')||'price';}catch(e){}
