@@ -18,12 +18,14 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await expect(page.locator('#integratedKpis')).toContainText('Preço em 2027');
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
 
+ await page.locator('#priceAdvanced').evaluate(el=>{el.open=true;});
  await page.locator('#priceBuyerProfile').selectOption('b2b');
  await expect(page.locator('#integratedKpis')).toContainText('Custo efetivo do comprador');
 
  await page.evaluate(()=>showTaxTool('revenue'));
  await expect(page.locator('#revenueToolPanel')).toHaveClass(/active/);
  await page.locator('#revCurrentRevenue').fill('100000');
+ await page.locator('#revenueAdvanced').evaluate(el=>{el.open=true;});
  await page.locator('#revCreditablePurchasesPct').fill('50');
  await page.locator('#revYear').selectOption('2027');
  await expect(page.locator('#revKpis')).toContainText('Créditos estimados');
