@@ -163,16 +163,7 @@ $('heroSearch')?.addEventListener('keydown',e=>{
  if(e.key==='Enter') runHeroSearch();
 });
 
-const TRANSITION={
- 2026:{old:1,cbs:0,ibs:0,note:'2026 é usado como cenário-base.'},
- 2027:{old:1,cbs:8.9,ibs:.1,note:'Premissa didática RTAV: total de 9% em 2027, separado em CBS 8,9% + IBS 0,1%.'},
- 2028:{old:1,cbs:8.9,ibs:.1,note:'Premissa didática RTAV: mesma estrutura usada para 2027.'},
- 2029:{old:.9,cbs:9,ibs:1.891,note:'RTAV: CBS 9% + 10% de IBS cheio estimado em 18,91%; ICMS/ISS a 90%.'},
- 2030:{old:.8,cbs:9,ibs:3.782,note:'RTAV: CBS 9% + 20% de IBS cheio estimado; ICMS/ISS a 80%.'},
- 2031:{old:.7,cbs:9,ibs:5.673,note:'RTAV: CBS 9% + 30% de IBS cheio estimado; ICMS/ISS a 70%.'},
- 2032:{old:.6,cbs:9,ibs:7.564,note:'RTAV: CBS 9% + 40% de IBS cheio estimado; ICMS/ISS a 60%.'},
- 2033:{old:0,cbs:9,ibs:18.91,note:'RTAV: projeção didática total de 27,91%; ICMS/ISS extintos.'}
-};
+const TRANSITION=RTAV_RULES.transition;
 
 const REGIME_LABELS={
  presumido:'Lucro Presumido',
@@ -190,51 +181,10 @@ const SN_LABELS={
  V:'Anexo V · Serviços'
 };
 
-const SN_TABLES={
- I:{
-  rates26:[[180000,4,0],[360000,7.3,5940],[720000,9.5,13860],[1800000,10.7,22500],[3600000,14.3,87300],[4800000,19,378000]],
-  rates27:[[180000,4,0],[360000,7.3,5940],[720000,9.5,13860],[1800000,10.7,22500],[3600000,14.3,87300],[4800000,18.9,378000]],
-  cbs27:[15.33,15.33,15.33,15.33,15.33,34.02],
-  ibs27:[.17,.17,.17,.17,.17,0],
-  cbs29:[15.5,15.5,15.5,15.5,15.5,34.4],
-  oldBase:[34,34,33.5,33.5,33.5,0]
- },
- II:{
-  rates26:[[180000,4.5,0],[360000,7.8,5940],[720000,10,13860],[1800000,11.2,22500],[3600000,14.7,85500],[4800000,30,720000]],
-  rates27:[[180000,4.5,0],[360000,7.8,5940],[720000,10,13860],[1800000,11.2,22500],[3600000,14.7,85500],[4800000,29.9,720000]],
-  cbs27:[13.85,13.85,13.85,13.85,13.85,25.22],
-  ibs27:[.15,.15,.15,.15,.15,0],
-  cbs29:[14,14,14,14,14,25.5],
-  oldBase:[32,32,32,32,32,0]
- },
- III:{
-  rates26:[[180000,6,0],[360000,11.2,9360],[720000,13.5,17640],[1800000,16,35640],[3600000,21,125640],[4800000,33,648000]],
-  rates27:[[180000,6,0],[360000,11.2,9360],[720000,13.5,17640],[1800000,16,35640],[3600000,21,125640],[4800000,32.9,648000]],
-  cbs27:[15.43,16.91,16.42,16.42,15.43,19.29],
-  ibs27:[.17,.19,.19,.19,.17,0],
-  cbs29:[15.6,17.1,16.6,16.6,15.6,19.5],
-  oldBase:[33.5,32,32.5,32.5,33.5,0]
- },
- IV:{
-  rates26:[[180000,4.5,0],[360000,9,8100],[720000,10.2,12420],[1800000,14,39780],[3600000,22,183780],[4800000,33,828000]],
-  rates27:[[180000,4.5,0],[360000,9,8100],[720000,10.2,12420],[1800000,14,39780],[3600000,22,183780],[4800000,32.9,828000]],
-  cbs27:[21.26,24.73,23.74,22.75,21.76,24.7],
-  ibs27:[.24,.27,.26,.25,.24,0],
-  cbs29:[21.5,25,24,23,22,25],
-  oldBase:[44.5,40,40,40,40,0]
- },
- V:{
-  rates26:[[180000,15.5,0],[360000,18,4500],[720000,19.5,9900],[1800000,20.5,17100],[3600000,23,62100],[4800000,30.5,540000]],
-  rates27:[[180000,15.5,0],[360000,18,4500],[720000,19.5,9900],[1800000,20.5,17100],[3600000,23,62100],[4800000,30.4,540000]],
-  cbs27:[16.96,16.96,17.95,18.94,16.96,19.78],
-  ibs27:[.19,.19,.20,.21,.19,0],
-  cbs29:[17.15,17.15,18.15,19.15,17.15,20],
-  oldBase:[14,17,19,21,23.5,0]
- }
-};
+const SN_TABLES=RTAV_RULES.simpleTables;
 
-const clamp=(v,min,max)=>Math.min(max,Math.max(min,Number(v)||0));
-const effectPct=(before,after)=>before?((after/before)-1)*100:0;
+const clamp=RTAV_ENGINE.clamp;
+const effectPct=RTAV_ENGINE.effectPct;
 const deltaMoney=(before,after)=>after-before;
 const effectText=v=>`${v>=0?'+':''}${pct(v)}`;
 let yearlyRows=[];
@@ -243,77 +193,18 @@ function regime(){ return $('taxRegime')?.value||'presumido'; }
 function isSimpleRegime(r=regime()){ return r==='simples'||r==='simples_hybrid'; }
 function snAnnex(){ return $('snAnnex')?.value||'III'; }
 
-function snBand(rbt12){
- const r=Math.max(0,Number(rbt12)||0);
- if(r<=180000)return 0;
- if(r<=360000)return 1;
- if(r<=720000)return 2;
- if(r<=1800000)return 3;
- if(r<=3600000)return 4;
- return 5;
-}
+function snBand(rbt12){ return RTAV_ENGINE.snBand(rbt12); }
 
 function snRateRow(year,annex=snAnnex(),rbt12=num('snRbt12')){
- const table=SN_TABLES[annex]||SN_TABLES.III;
- const rows=(year===2027||year===2028)?table.rates27:table.rates26;
- const band=snBand(rbt12);
- return {band,row:rows[band]};
+ return RTAV_ENGINE.snRateRow(year,annex,rbt12);
 }
 
 function snEffective(year,annex=snAnnex(),rbt12=num('snRbt12')){
- const {band,row}=snRateRow(year,annex,rbt12);
- const r=Math.max(0,Number(rbt12)||0);
- const nominal=row[1]/100;
- const deduction=row[2];
- const eff=r?Math.max(0,(r*nominal-deduction)/r):0;
- return {band,nominal,deduction,eff};
+ return RTAV_ENGINE.snEffective(year,annex,rbt12);
 }
 
 function snShares(year,annex=snAnnex(),rbt12=num('snRbt12')){
- const t=SN_TABLES[annex]||SN_TABLES.III;
- const {band,eff}=snEffective(year,annex,rbt12);
-
- let cbsShare=0,ibsShare=0,oldShare=0;
- if(year===2027||year===2028){
-  cbsShare=t.cbs27[band]||0;
-  ibsShare=t.ibs27[band]||0;
-  oldShare=t.oldBase[band]||0;
- }else{
-  cbsShare=t.cbs29[band]||0;
-  const base=t.oldBase[band]||0;
-  const ibsFactor=year===2029?.10:year===2030?.20:year===2031?.30:year===2032?.40:1;
-  oldShare=base*(1-ibsFactor);
-  ibsShare=base*ibsFactor;
- }
-
- // Regras especiais de teto de ISS na 5ª faixa dos Anexos III e IV.
- if(band===4&&annex==='III'&&eff>.1492537&&year<=2032){
-  if(year===2027||year===2028){
-   const residual=Math.max(0,eff-.05);
-   return {band,eff,cbsEff:residual*.2320,ibsEff:residual*.0026,oldEff:.05,otherEff:Math.max(0,eff-(residual*.2320)-(residual*.0026)-.05),special:true};
-  }
-  const residual=Math.max(0,eff-.05);
-  const ibsFixed=year===2029?.005:year===2030?.01:year===2031?.015:year===2032?.02:.05;
-  const oldFixed=Math.max(0,.05-ibsFixed);
-  const cbsEff=residual*.2346;
-  return {band,eff,cbsEff,ibsEff:ibsFixed,oldEff:oldFixed,otherEff:Math.max(0,eff-cbsEff-ibsFixed-oldFixed),special:true};
- }
- if(band===4&&annex==='IV'&&eff>.125&&year<=2032){
-  if(year===2027||year===2028){
-   const residual=Math.max(0,eff-.05);
-   return {band,eff,cbsEff:residual*.3627,ibsEff:residual*.0040,oldEff:.05,otherEff:Math.max(0,eff-(residual*.3627)-(residual*.0040)-.05),special:true};
-  }
-  const residual=Math.max(0,eff-.05);
-  const ibsFixed=year===2029?.005:year===2030?.01:year===2031?.015:year===2032?.02:.05;
-  const oldFixed=Math.max(0,.05-ibsFixed);
-  const cbsEff=residual*.3667;
-  return {band,eff,cbsEff,ibsEff:ibsFixed,oldEff:oldFixed,otherEff:Math.max(0,eff-cbsEff-ibsFixed-oldFixed),special:true};
- }
-
- const cbsEff=eff*(cbsShare/100);
- const ibsEff=eff*(ibsShare/100);
- const oldEff=eff*(oldShare/100);
- return {band,eff,cbsEff,ibsEff,oldEff,otherEff:Math.max(0,eff-cbsEff-ibsEff-oldEff),special:false};
+ return RTAV_ENGINE.snShares(year,annex,rbt12);
 }
 
 function updateSnSummary(){
@@ -403,93 +294,32 @@ function applyYearPreset(){
 }
 
 
+function priceEngineInput(){
+ return {
+  regime:regime(),
+  amount:Math.max(0,num('priceNow')),
+  currentRates:{pis:num('pisRate'),cofins:num('cofinsRate'),icms:num('icmsRate'),iss:num('issRate'),ipi:num('ipiRate')},
+  simple:{annex:snAnnex(),rbt12:num('snRbt12')},
+  future:{mode:$('rateMode')?.value||'rtav',reduction:num('rateReduction'),cbs:num('cbsRate'),ibs:num('ibsRate')},
+  hybridFuture:{mode:$('hybridRateMode')?.value||'rtav',reduction:num('hybridReduction'),cbs:num('hybridCbsRate'),ibs:num('hybridIbsRate')},
+  buyer:{profile:$('priceBuyerProfile')?.value||'b2c',currentCredit:num('priceCurrentBuyerCredit'),usePct:num('priceBuyerCreditPct')}
+ };
+}
+
 function currentScenario(){
- const r=regime();
- const price=Math.max(0,num('priceNow'));
- let taxes=0;
- let components={};
-
- if(isSimpleRegime(r)){
-  const eff=snEffective(2026).eff;
-  taxes=price*eff;
-  components={das:taxes};
- }else{
-  const pis=clamp(num('pisRate'),0,100)/100;
-  const cofins=clamp(num('cofinsRate'),0,100)/100;
-  const icms=clamp(num('icmsRate'),0,100)/100;
-  const iss=clamp(num('issRate'),0,100)/100;
-  const ipi=clamp(num('ipiRate'),0,100)/100;
-  components={pis:price*pis,cofins:price*cofins,icms:price*icms,iss:price*iss,ipi:price*ipi};
-  taxes=Object.values(components).reduce((a,b)=>a+b,0);
- }
-
- const buyerProfile=$('priceBuyerProfile')?.value||'b2c';
- const buyerCredit=buyerProfile==='b2b'?Math.min(price,Math.max(0,num('priceCurrentBuyerCredit'))):0;
- const buyerCost=Math.max(0,price-buyerCredit);
- return {year:2026,regime:r,price,taxes,net:Math.max(0,price-taxes),components,cbs:null,ibs:null,remnant:taxes,buyerCredit,buyerCost};
+ return RTAV_ENGINE.currentPriceScenario(priceEngineInput());
 }
 
 function paramsForYear(year){
- const r=regime();
- if(r==='simples'){
-  const sh=snShares(year);
-  return {type:'simple',dasRate:sh.eff,cbsInside:sh.cbsEff,ibsInside:sh.ibsEff};
- }
- if(r==='simples_hybrid'){
-  const sh=snShares(year);
-  const remRate=Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff);
-  const rates=getRegularRates(year,true);
-  return {type:'hybrid',remRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
- }
- const p=TRANSITION[year]||TRANSITION[2027];
- const oldRate=((clamp(num('icmsRate'),0,100)+clamp(num('issRate'),0,100))*p.old)/100;
- const rates=getRegularRates(year,false);
- return {type:'regular',remRate:oldRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
+ return RTAV_ENGINE.paramsForYear(priceEngineInput(),year);
 }
 
 function scenarioAtPrice(year,projected){
- const p=paramsForYear(year);
- let cbs=0,ibs=0,remnant=0,taxes=0,net=0;
-
- if(p.type==='simple'){
-  taxes=projected*p.dasRate;
-  cbs=projected*p.cbsInside;
-  ibs=projected*p.ibsInside;
-  remnant=Math.max(0,taxes-cbs-ibs);
-  net=Math.max(0,projected-taxes);
- }else{
-  const newRate=p.cbsRate+p.ibsRate;
-  const cleanBase=(1+newRate)>0?projected*(1-p.remRate)/(1+newRate):0;
-  cbs=cleanBase*p.cbsRate;
-  ibs=cleanBase*p.ibsRate;
-  remnant=projected*p.remRate;
-  taxes=cbs+ibs+remnant;
-  net=Math.max(0,projected-taxes);
- }
- const buyerProfile=$('priceBuyerProfile')?.value||'b2c';
- const buyerUse=clamp(num('priceBuyerCreditPct'),0,100)/100;
- const buyerCredit=buyerProfile==='b2b'?(cbs+ibs)*buyerUse:0;
- const buyerCost=Math.max(0,projected-buyerCredit);
- return {year,regime:regime(),price:projected,cbs,ibs,remnant,taxes,net,buyerCredit,buyerCost};
+ return RTAV_ENGINE.priceScenarioAtPrice(priceEngineInput(),year,projected);
 }
 
 function futureScenario(year,keepGross=false){
- const base=currentScenario();
- const p=paramsForYear(year);
- let projected=base.price;
-
- if(!keepGross){
-  if(p.type==='simple') projected=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
-  else{
-   const newRate=p.cbsRate+p.ibsRate;
-   projected=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
-  }
- }
-
- projected=Math.max(0,projected);
- const out=scenarioAtPrice(year,projected);
- out.priceDelta=effectPct(base.price,out.price);
- return out;
+ return RTAV_ENGINE.futurePriceScenario(priceEngineInput(),year,keepGross);
 }
 
 function regimeExplanation(){
@@ -820,96 +650,32 @@ function revApplyYearPreset(){
  revCalcIntegrated();
 }
 
+function revenueEngineInput(){
+ return {
+  regime:revRegime(),
+  amount:Math.max(0,num('revCurrentRevenue')),
+  currentRates:{pis:num('revPisRate'),cofins:num('revCofinsRate'),icms:num('revIcmsRate'),iss:num('revIssRate'),ipi:num('revIpiRate')},
+  simple:{annex:revAnnex(),rbt12:revRbt12()},
+  future:{mode:$('revRateMode')?.value||'rtav',reduction:num('revRateReduction'),cbs:num('revCbsRate'),ibs:num('revIbsRate')},
+  hybridFuture:{mode:$('revHybridRateMode')?.value||'rtav',reduction:num('revHybridReduction'),cbs:num('revHybridCbsRate'),ibs:num('revHybridIbsRate')},
+  purchases:{creditablePct:num('revCreditablePurchasesPct'),usePct:num('revPurchaseCreditUsePct')}
+ };
+}
+
 function revCurrentScenario(){
- const r=revRegime();
- const revenue=Math.max(0,num('revCurrentRevenue'));
- let taxes=0,components={};
-
- if(revIsSimple(r)){
-  const eff=revSnEffective(2026).eff;
-  taxes=revenue*eff;
-  components={das:taxes};
- }else{
-  const pis=clamp(num('revPisRate'),0,100)/100;
-  const cofins=clamp(num('revCofinsRate'),0,100)/100;
-  const icms=clamp(num('revIcmsRate'),0,100)/100;
-  const iss=clamp(num('revIssRate'),0,100)/100;
-  const ipi=clamp(num('revIpiRate'),0,100)/100;
-  components={pis:revenue*pis,cofins:revenue*cofins,icms:revenue*icms,iss:revenue*iss,ipi:revenue*ipi};
-  taxes=Object.values(components).reduce(function(a,b){return a+b;},0);
- }
-
- const purchaseCredit=0;
- const netTax=taxes;
- const economicNet=Math.max(0,revenue-netTax);
- return {year:2026,regime:r,revenue:revenue,taxes:taxes,net:Math.max(0,revenue-taxes),components:components,cbs:null,ibs:null,remnant:taxes,purchaseCredit,netTax,economicNet};
+ return RTAV_ENGINE.currentRevenueScenario(revenueEngineInput());
 }
 
 function revParamsForYear(year){
- const r=revRegime();
-
- if(r==='simples'){
-  const sh=revSnShares(year);
-  return {type:'simple',dasRate:sh.eff,cbsInside:sh.cbsEff,ibsInside:sh.ibsEff};
- }
-
- if(r==='simples_hybrid'){
-  const sh=revSnShares(year);
-  const rates=revGetRates(year,true);
-  return {type:'hybrid',remRate:Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff),cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
- }
-
- const p=TRANSITION[year]||TRANSITION[2027];
- const oldRate=((clamp(num('revIcmsRate'),0,100)+clamp(num('revIssRate'),0,100))*p.old)/100;
- const rates=revGetRates(year,false);
- return {type:'regular',remRate:oldRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100};
+ return RTAV_ENGINE.paramsForYear(revenueEngineInput(),year);
 }
 
 function revScenarioAtRevenue(year,gross){
- const p=revParamsForYear(year);
- let cbs=0,ibs=0,remnant=0,taxes=0,net=0;
-
- if(p.type==='simple'){
-  taxes=gross*p.dasRate;
-  cbs=gross*p.cbsInside;
-  ibs=gross*p.ibsInside;
-  remnant=Math.max(0,taxes-cbs-ibs);
-  net=Math.max(0,gross-taxes);
- }else{
-  const newRate=p.cbsRate+p.ibsRate;
-  const cleanBase=(1+newRate)>0?gross*(1-p.remRate)/(1+newRate):0;
-  cbs=cleanBase*p.cbsRate;
-  ibs=cleanBase*p.ibsRate;
-  remnant=gross*p.remRate;
-  taxes=cbs+ibs+remnant;
-  net=Math.max(0,gross-taxes);
- }
-
- const eligibleBasePct=clamp(num('revCreditablePurchasesPct'),0,100)/100;
- const usePct=clamp(num('revPurchaseCreditUsePct'),0,100)/100;
- const purchaseCredit=(p.type==='simple')?0:(gross*eligibleBasePct*((p.cbsRate||0)+(p.ibsRate||0))*usePct);
- const netTax=Math.max(0,taxes-purchaseCredit);
- const economicNet=Math.max(0,gross-netTax);
- return {year:year,regime:revRegime(),revenue:gross,cbs:cbs,ibs:ibs,remnant:remnant,taxes:taxes,net:net,purchaseCredit,netTax,economicNet};
+ return RTAV_ENGINE.revenueScenarioAtRevenue(revenueEngineInput(),year,gross);
 }
 
 function revFutureScenario(year,keepGross=false){
- const base=revCurrentScenario();
- const p=revParamsForYear(year);
- let gross=base.revenue;
-
- if(!keepGross){
-  if(p.type==='simple') gross=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
-  else{
-   const newRate=p.cbsRate+p.ibsRate;
-   gross=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
-  }
- }
-
- gross=Math.max(0,gross);
- const out=revScenarioAtRevenue(year,gross);
- out.delta=effectPct(base.revenue,out.revenue);
- return out;
+ return RTAV_ENGINE.futureRevenueScenario(revenueEngineInput(),year,keepGross);
 }
 
 function revCurrentRows(base){
