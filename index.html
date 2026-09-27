@@ -358,6 +358,55 @@
 @media(max-width:650px){
  #tools .tool-switcher{grid-template-columns:1fr}
 }
+
+/* ===== UX PROFISSIONAL: filtros, avançado, gráficos, reunião ===== */
+.practice-filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:9px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:14px}
+.client-faq{margin-top:34px}.client-faq .section-head.compact{margin-bottom:12px}
+.client-faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.client-faq-grid details{background:#fff;border:1px solid var(--line);border-radius:13px;padding:0 13px}
+.client-faq-grid summary{cursor:pointer;padding:13px 0;font-size:11px;font-weight:850}
+.client-faq-grid details p{margin:0;padding:0 0 13px;color:#6f6f69;font-size:9px;line-height:1.6}
+.tool-head-actions{display:flex;gap:7px;align-items:stretch;flex-wrap:wrap;justify-content:flex-end}
+.mini-action{border:1px solid #343434;background:#151515;color:#ddd;border-radius:10px;padding:8px 10px;font-size:8px;font-weight:850}
+.mini-action:hover,.mini-action[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
+.advanced-analysis{margin:12px 0 0;border:1px solid #deddd7;background:#fafaf7;border-radius:14px}
+.advanced-analysis summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;font-size:10px;font-weight:900}
+.advanced-analysis summary small{font-size:8px;color:#888;font-weight:600}
+.advanced-analysis[open] summary{border-bottom:1px solid #e5e4df}
+.advanced-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:12px 14px 5px}
+.advanced-analysis .rate-note{margin:5px 14px 13px}
+.autosave-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 2px 0;color:#8a8a84;font-size:8px}
+.autosave-row button{border:0;background:transparent;color:#666;text-decoration:underline;font-size:8px;cursor:pointer}
+.chart-card{border:1px solid #deddd8;background:#fff;border-radius:15px;padding:13px;margin:10px 0}
+.chart-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:10px}
+.chart-head h4{margin:3px 0 0;font-size:13px}.chart-head>small{font-size:8px;color:#888}
+.tax-chart{min-height:190px;display:flex;align-items:flex-end;gap:8px;overflow-x:auto;padding:8px 2px 2px}
+.tax-chart-col{min-width:62px;flex:1;display:flex;flex-direction:column;gap:5px;justify-content:flex-end}
+.tax-chart-bars{height:130px;display:flex;align-items:flex-end;justify-content:center;gap:2px;border-bottom:1px solid #ddd}
+.tax-chart-bar{width:12px;min-height:2px;background:#111;border-radius:3px 3px 0 0;position:relative}
+.tax-chart-bar.secondary{opacity:.55}.tax-chart-bar.tertiary{opacity:.25}.tax-chart-bar.credit{background:#fff;border:1px solid #111;box-sizing:border-box}
+.tax-chart-col b{font-size:8px;text-align:center}.tax-chart-col small{font-size:7px;color:#888;text-align:center}
+.tax-tool-panel.presentation-mode .tax-input-grid,
+.tax-tool-panel.presentation-mode .advanced-analysis,
+.tax-tool-panel.presentation-mode .autosave-row,
+.tax-tool-panel.presentation-mode .rate-note,
+.tax-tool-panel.presentation-mode .tool-legal{display:none!important}
+.tax-tool-panel.presentation-mode .integrated-tool{border-color:#bbb}
+.tax-tool-panel.presentation-mode .integrated-results{margin-top:8px}
+@media(max-width:760px){
+ .practice-filters{grid-template-columns:1fr}
+ .client-faq-grid{grid-template-columns:1fr}
+ .advanced-grid{grid-template-columns:1fr}
+ .tool-head-actions{justify-content:flex-start}
+}
+@media print{
+ body *{visibility:hidden!important}
+ .tax-tool-panel.active,.tax-tool-panel.active *{visibility:visible!important}
+ .tax-tool-panel.active{position:absolute;left:0;top:0;width:100%;display:block!important}
+ .tax-tool-panel.active .tax-input-grid,.tax-tool-panel.active .advanced-analysis,.tax-tool-panel.active .autosave-row,.tax-tool-panel.active .mini-action,.tax-tool-panel.active .export-btn{display:none!important}
+ .tax-tool-panel.active .integrated-tool{border:0!important;box-shadow:none!important}
+ nav,.sidebar,.topbar{display:none!important}
+}
 </style>
 <script>
 (async()=>{
@@ -472,7 +521,19 @@
 
 <section id="practice" class="view">
  <div class="section-head"><div><span class="eyebrow">LABORATÓRIO DE CASOS</span><h2>Práticas explicadas passo a passo</h2></div><p>Cenário, premissas, cálculo, interpretação e conversa com o cliente.</p></div>
- <div id="practiceGrid" class="practice-grid"></div>
+
+ <div class="practice-filters" aria-label="Filtros dos casos">
+  <div class="field"><label for="practiceSearch">Buscar caso</label><input id="practiceSearch" type="search" placeholder="Preço, Simples, crédito, LC 224..."></div>
+  <div class="field"><label for="practiceRegimeFilter">Regime</label><select id="practiceRegimeFilter"><option value="">Todos</option><option value="simples">Simples</option><option value="presumido">Lucro Presumido</option><option value="real">Lucro Real</option><option value="geral">Geral / múltiplos</option></select></div>
+  <div class="field"><label for="practiceSectorFilter">Setor</label><select id="practiceSectorFilter"><option value="">Todos</option><option value="comercio">Comércio</option><option value="servicos">Serviços</option><option value="b2b">B2B / cadeia</option><option value="geral">Geral</option></select></div>
+ </div>
+
+ <div id="practiceGrid" class="practice-grid" aria-live="polite"></div>
+
+ <section class="client-faq">
+  <div class="section-head compact"><div><span class="eyebrow">DORES REAIS DO CLIENTE</span><h2>Perguntas que aparecem na reunião</h2></div><p>Respostas curtas, com caminho para o estudo completo.</p></div>
+  <div id="clientFaqGrid" class="client-faq-grid"></div>
+ </section>
 </section>
 
 <section id="practicePage" class="view"></section>
@@ -500,7 +561,11 @@
      <h3>Quanto do preço é tributo e como ele muda até 2033?</h3>
      <p>Informe o preço atual e os tributos aplicáveis. A ferramenta encontra o líquido de 2026 e reconstrói o preço ano a ano.</p>
     </div>
-    <div class="integration-badge"><b>Venda unitária</b><small>Preço · tributos · líquido</small></div>
+    <div class="tool-head-actions">
+     <div class="integration-badge"><b>Venda unitária</b><small>Preço · tributos · líquido</small></div>
+     <button id="pricePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
+     <button id="pricePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
+    </div>
    </div>
 
    <div class="scenario-strip">
@@ -591,17 +656,31 @@
     </section>
    </div>
 
+   <details id="priceAdvanced" class="advanced-analysis">
+    <summary><span>Análise avançada</span><small>B2B/B2C e crédito econômico do comprador</small></summary>
+    <div class="advanced-grid">
+     <div class="field"><label for="priceBuyerProfile">Perfil da venda</label>
+      <select id="priceBuyerProfile"><option value="b2c" selected>Consumidor final / sem crédito</option><option value="b2b">PJ no regime regular / com crédito</option></select>
+     </div>
+     <div class="field"><label for="priceCurrentBuyerCredit">Crédito atual aproveitável por venda R$</label><input id="priceCurrentBuyerCredit" type="number" min="0" step=".01" value="0"></div>
+     <div class="field"><label for="priceBuyerCreditPct">Aproveitamento do CBS/IBS destacado %</label><input id="priceBuyerCreditPct" type="number" min="0" max="100" step=".01" value="100"></div>
+    </div>
+    <div class="rate-note">O crédito do comprador é uma análise econômica adicional. O direito efetivo depende do regime, documento fiscal, extinção do débito e demais requisitos legais.</div>
+   </details>
+
+   <div class="autosave-row"><span id="priceSaveStatus">Simulação salva neste navegador</span><button id="resetPriceSimulation" type="button">Restaurar padrão</button></div>
+
    <section class="integrated-results tax-results">
     <div class="result-head"><div><span class="eyebrow">RESULTADO DO PREÇO</span><h3>2026 × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal"></div></div>
     <div id="regimeResultNote" class="regime-result-note"></div>
-    <div id="integratedKpis" class="integrated-kpis tax-kpis"></div>
+    <div id="integratedKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
 
     <div class="tax-compare-grid">
      <article class="tax-summary-card current"><span class="eyebrow">2026 · ATUAL</span><div id="currentTaxSummary"></div></article>
      <article class="tax-summary-card reform"><span class="eyebrow" id="futureTaxEyebrow">2027 · REFORMA</span><div id="futureTaxSummary"></div></article>
     </div>
 
-    <div id="integratedExplanation" class="integrated-explanation"></div>
+    <div id="integratedExplanation" class="integrated-explanation" aria-live="polite"></div>
 
     <section class="yearly-analysis">
      <div class="yearly-head">
@@ -609,6 +688,10 @@
       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar preço</button></div>
      </div>
      <div id="yearlyPriceStrip" class="year-price-strip"></div>
+     <div class="chart-card">
+      <div class="chart-head"><div><span class="eyebrow">VISUAL DA TRANSIÇÃO</span><h4>Composição tributária por ano</h4></div><small>CBS · IBS · tributos remanescentes</small></div>
+      <div id="priceTaxChart" class="tax-chart" role="img" aria-label="Gráfico da composição tributária de 2026 a 2033"></div>
+     </div>
      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
       <table class="comparison-table yearly-table compact-yearly-table price-year-table">
        <thead><tr><th>Ano</th><th>Preço</th><th>Tributos</th><th>Carga</th><th>Valor líquido</th></tr></thead>
@@ -630,7 +713,11 @@
      <h3>Quanto do faturamento vira tributo e quanto permanece líquido?</h3>
      <p>Informe a receita atual e o regime. A ferramenta projeta o faturamento bruto necessário em cada ano para preservar o mesmo faturamento líquido de 2026.</p>
     </div>
-    <div class="integration-badge"><b>Visão macro</b><small>Receita · tributos · líquido</small></div>
+    <div class="tool-head-actions">
+     <div class="integration-badge"><b>Visão macro</b><small>Receita · tributos · líquido</small></div>
+     <button id="revenuePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
+     <button id="revenuePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
+    </div>
    </div>
 
    <div class="scenario-strip">
@@ -722,17 +809,28 @@
     </section>
    </div>
 
+   <details id="revenueAdvanced" class="advanced-analysis">
+    <summary><span>Análise avançada</span><small>Créditos estimados das aquisições</small></summary>
+    <div class="advanced-grid">
+     <div class="field"><label for="revCreditablePurchasesPct">Base estimada de compras/serviços com direito a crédito (% do faturamento)</label><input id="revCreditablePurchasesPct" type="number" min="0" max="100" step=".01" value="0"></div>
+     <div class="field"><label for="revPurchaseCreditUsePct">Aproveitamento estimado dos créditos %</label><input id="revPurchaseCreditUsePct" type="number" min="0" max="100" step=".01" value="100"></div>
+    </div>
+    <div class="rate-note">No regime regular, a estimativa reduz a carga líquida com base nas aquisições informadas. No Simples padrão, a empresa não apropria esses créditos de IBS/CBS dentro do regime.</div>
+   </details>
+
+   <div class="autosave-row"><span id="revenueSaveStatus">Simulação salva neste navegador</span><button id="resetRevenueSimulation" type="button">Restaurar padrão</button></div>
+
    <section class="integrated-results tax-results">
     <div class="result-head"><div><span class="eyebrow">RESULTADO DO FATURAMENTO</span><h3>2026 × <span id="revResultYearLabel">2027</span></h3></div><div id="revResultSignal" class="result-signal"></div></div>
     <div id="revRegimeResultNote" class="regime-result-note"></div>
-    <div id="revKpis" class="integrated-kpis tax-kpis"></div>
+    <div id="revKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
 
     <div class="tax-compare-grid">
      <article class="tax-summary-card current"><span class="eyebrow">2026 · ATUAL</span><div id="revCurrentSummary"></div></article>
      <article class="tax-summary-card reform"><span class="eyebrow" id="revFutureEyebrow">2027 · REFORMA</span><div id="revFutureSummary"></div></article>
     </div>
 
-    <div id="revExplanation" class="integrated-explanation"></div>
+    <div id="revExplanation" class="integrated-explanation" aria-live="polite"></div>
 
     <section class="yearly-analysis">
      <div class="yearly-head">
@@ -740,6 +838,10 @@
       <div class="yearly-actions"><button id="exportRevenueExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar faturamento</button></div>
      </div>
      <div id="revYearStrip" class="year-price-strip"></div>
+     <div class="chart-card">
+      <div class="chart-head"><div><span class="eyebrow">VISUAL DA TRANSIÇÃO</span><h4>Tributos e créditos no faturamento</h4></div><small>Débito · crédito estimado · carga líquida</small></div>
+      <div id="revenueTaxChart" class="tax-chart" role="img" aria-label="Gráfico da carga tributária do faturamento de 2026 a 2033"></div>
+     </div>
      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
       <table class="comparison-table yearly-table compact-yearly-table revenue-year-table">
        <thead><tr><th>Ano</th><th>Faturamento bruto</th><th>Tributos</th><th>Carga</th><th>Faturamento líquido</th></tr></thead>
