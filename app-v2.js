@@ -575,18 +575,21 @@ function calcIntegrated(){
  $('resultSignal').textContent=signal;
  $('regimeResultNote').textContent=REGIME_LABELS[regime()]+' · '+regimeExplanation();
 
+ const b2b=($('priceBuyerProfile')?.value||'b2c')==='b2b';
  $('integratedKpis').innerHTML=
   '<div class="integrated-kpi dark"><small>Preço atual</small><b>'+money(base.price)+'</b><span>2026</span></div>'+
   '<div class="integrated-kpi"><small>Tributos atuais</small><b>'+money(base.taxes)+'</b><span>Carga '+pct(base.price?base.taxes/base.price*100:0)+'</span></div>'+
   '<div class="integrated-kpi dark"><small>Preço em '+y+'</small><b>'+money(future.price)+'</b><span>'+effectText(priceDelta)+' vs. 2026</span></div>'+
-  '<div class="integrated-kpi"><small>Valor líquido</small><b>'+money(future.net)+'</b><span>Base preservada: '+money(base.net)+'</span></div>';
+  '<div class="integrated-kpi"><small>Valor líquido</small><b>'+money(future.net)+'</b><span>Base preservada: '+money(base.net)+'</span></div>'+
+  (b2b?'<div class="integrated-kpi dark"><small>Custo efetivo do comprador</small><b>'+money(future.buyerCost)+'</b><span>Crédito potencial '+money(future.buyerCredit)+'</span></div>':'');
 
  $('currentTaxSummary').innerHTML=summaryRows(currentTaxRows(base));
  $('futureTaxSummary').innerHTML=summaryRows(futureTaxRows(future));
+ const buyerSentence=b2b?' Para o comprador PJ, o crédito potencial considerado é '+money(future.buyerCredit)+' e o custo efetivo estimado fica em '+money(future.buyerCost)+'.':'';
  $('integratedExplanation').innerHTML=
   '<b>'+headline+'</b><p>Em 2026, '+money(base.taxes)+' do preço correspondem aos tributos considerados e o valor líquido é '+money(base.net)+
   '. Em '+y+', o preço projetado é <strong>'+money(future.price)+'</strong> ('+effectText(priceDelta)+' contra 2026 e '+effectText(annualDelta)+
-  ' contra o ano anterior), mantendo o líquido em '+money(future.net)+'.</p>';
+  ' contra o ano anterior), mantendo o líquido em '+money(future.net)+'.'+buyerSentence+'</p>';
 
  renderYearlyProjection();
 }
@@ -625,6 +628,7 @@ function renderYearDetail(year){
    '<div class="year-detail-item"><small>CBS</small><b>'+(x.cbs===null?'—':money(x.cbs))+'</b></div>'+
    '<div class="year-detail-item"><small>IBS</small><b>'+(x.ibs===null?'—':money(x.ibs))+'</b></div>'+
    '<div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>'+money(x.remnant)+'</b></div>'+
+   ((($('priceBuyerProfile')?.value||'b2c')==='b2b')?'<div class="year-detail-item"><small>Crédito potencial comprador</small><b>'+money(x.buyerCredit||0)+'</b></div><div class="year-detail-item"><small>Custo efetivo comprador</small><b>'+money(x.buyerCost??x.price)+'</b></div>':'')+
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+analysis+'</p></div>';
 }
