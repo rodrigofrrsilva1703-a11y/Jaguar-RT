@@ -28,9 +28,7 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await page.locator('#revenueAdvanced').evaluate(el=>{el.open=true;});
  await page.locator('#revCreditablePurchasesPct').fill('50');
  await page.locator('#revYear').selectOption('2027');
- await expect(page.locator('#revKpis')).toContainText('IRPJ + CSLL');
- await expect(page.locator('#revCurrentSummary')).toContainText('IRPJ estimado');
- await expect(page.locator('#revCurrentSummary')).toContainText('CSLL estimada');
+ await expect(page.locator('#revKpis')).toContainText('Créditos estimados');
  await expect(page.locator('#revYearlyTable tr')).toHaveCount(8);
 
  // O PDF deve ser um relatório executivo próprio, não uma cópia da tela.
@@ -41,9 +39,8 @@ test('calculadoras carregam e recalculam sem erro de console',async({page})=>{
  await expect(page.locator('#printReport')).toContainText('PIS');
  await expect(page.locator('#printReport')).toContainText('Cofins');
  await expect(page.locator('#printReport')).toContainText('ICMS');
- await expect(page.locator('#printReport')).toContainText('Total de tributos sobre vendas');
- await expect(page.locator('#printReport')).toContainText('IRPJ estimado');
- await expect(page.locator('#printReport')).toContainText('CSLL estimada');
+ await expect(page.locator('#printReport')).toContainText('Total de tributos');
+ await expect(page.locator('#printReport')).not.toContainText('Tributos considerados');
  await expect(page.locator('#printReport')).toContainText('Evolução 2026–2033');
  await expect(page.locator('#printReport')).not.toContainText('Exemplo editável');
  await expect(page.locator('#printReport')).not.toContainText('Restaurar padrão');
