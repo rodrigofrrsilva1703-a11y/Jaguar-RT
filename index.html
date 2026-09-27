@@ -502,6 +502,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  .pdf-note{background:#f5f5f2;border-radius:8px;padding:9px;font-size:7.8px;line-height:1.5;color:#555}
  .pdf-footer{margin-top:12px;padding-top:8px;border-top:1px solid #ddd;font-size:6.8px;color:#777;line-height:1.45}
 }
+
+.income-tax-block{margin:10px 14px 14px;padding-top:2px;border-top:1px solid #e4e3de}
+.income-tax-block .subpanel-title{margin-top:10px}
 </style>
 <script>
 (async()=>{
@@ -835,11 +838,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <div class="integrated-head">
     <div>
      <span class="tag">CALCULADORA DE FATURAMENTO</span>
-     <h3>Quanto do faturamento vira tributo e quanto permanece líquido?</h3>
-     <p>Informe a receita atual e o regime. A ferramenta projeta o faturamento bruto necessário em cada ano para preservar o mesmo faturamento líquido de 2026.</p>
+     <h3>Quanto da receita vai para tributos e quanto permanece após os tributos sobre vendas?</h3>
+     <p>Informe a receita atual e o regime. A ferramenta projeta a receita bruta necessária em cada ano para preservar a mesma receita após tributos sobre vendas de 2026, mantendo IRPJ e CSLL em uma camada separada.</p>
     </div>
     <div class="tool-head-actions">
-     <div class="integration-badge"><b>Visão macro</b><small>Receita · tributos · líquido</small></div>
+     <div class="integration-badge"><b>Visão macro</b><small>Receita · tributos sobre vendas · IRPJ/CSLL</small></div>
      <button id="revenuePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
      <button id="revenuePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
     </div>
@@ -849,7 +852,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div><small>REGIME</small><b id="revActiveRegimeBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="revActiveYearBadge">2027</b></div>
     <div><small>PERÍODO</small><b id="revPeriodBadge">Mensal</b></div>
-    <div class="scenario-strip-note"><small>BASE</small><b>Faturamento líquido de 2026</b></div>
+    <div class="scenario-strip-note"><small>BASE</small><b>Receita após tributos sobre vendas de 2026</b></div>
    </div>
 
    <div class="tax-input-grid">
@@ -945,12 +948,42 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    </div>
 
    <details id="revenueAdvanced" class="advanced-analysis">
-    <summary><span>Análise avançada</span><small>Créditos estimados das aquisições</small></summary>
+    <summary><span>Análise avançada</span><small>Créditos das aquisições + IRPJ/CSLL</small></summary>
     <div class="advanced-grid">
      <div class="field"><label for="revCreditablePurchasesPct">Base estimada de compras/serviços com direito a crédito (% do faturamento)</label><input id="revCreditablePurchasesPct" type="number" min="0" max="100" step=".01" value="0"></div>
      <div class="field"><label for="revPurchaseCreditUsePct">Aproveitamento estimado dos créditos %</label><input id="revPurchaseCreditUsePct" type="number" min="0" max="100" step=".01" value="100"></div>
     </div>
-    <div class="rate-note">No regime regular, a estimativa reduz a carga líquida com base nas aquisições informadas. No Simples padrão, a empresa não apropria esses créditos de IBS/CBS dentro do regime.</div>
+    <div class="rate-note">No regime regular, os créditos de IBS/CBS reduzem a carga líquida das vendas quando forem efetivamente aproveitáveis.</div>
+
+    <div id="revIncomeTaxBlock" class="income-tax-block">
+     <div class="subpanel-title"><b>IRPJ e CSLL</b><small>Mostrados separadamente porque incidem sobre lucro/base presumida, e não diretamente sobre cada venda.</small></div>
+
+     <div id="revPresumedIncomeFields">
+      <div class="fields three">
+       <div class="field"><label for="revPresumedActivity">Atividade para presunção</label>
+        <select id="revPresumedActivity">
+         <option value="commerce_industry" selected>Comércio / indústria · IRPJ 8% · CSLL 12%</option>
+         <option value="services_general">Serviços em geral · IRPJ 32% · CSLL 32%</option>
+         <option value="custom">Percentuais personalizados</option>
+        </select>
+       </div>
+       <div class="field"><label for="revAnnualRevenueProjection">Receita anual projetada R$</label><input id="revAnnualRevenueProjection" type="number" min="0" step=".01" value="1200000"><small class="field-help">Usada para a LC 224 e adicional do IRPJ; ajuste se o faturamento não for uniforme.</small></div>
+       <div class="field"><label for="revIrpjPresumptionPct">Presunção IRPJ %</label><input id="revIrpjPresumptionPct" type="number" min="0" max="100" step=".01" value="8"></div>
+       <div class="field"><label for="revCsllPresumptionPct">Presunção CSLL %</label><input id="revCsllPresumptionPct" type="number" min="0" max="100" step=".01" value="12"></div>
+      </div>
+      <div class="rate-note">Estimativa anual de planejamento: a LC 224 acrescenta 10% aos percentuais de presunção sobre a parcela da receita anual acima de R$ 5 milhões. O IRPJ considera adicional de 10% sobre a base que exceder R$ 20 mil por mês do período.</div>
+     </div>
+
+     <div id="revRealIncomeFields" style="display:none">
+      <div class="fields three">
+       <div class="field"><label for="revRealIrpjBase">Base tributável estimada do IRPJ R$</label><input id="revRealIrpjBase" type="number" min="0" step=".01" value="0"></div>
+       <div class="field"><label for="revRealCsllBase">Base tributável estimada da CSLL R$</label><input id="revRealCsllBase" type="number" min="0" step=".01" value="0"></div>
+      </div>
+      <div class="rate-note">No Lucro Real, IRPJ e CSLL não podem ser obtidos apenas pelo faturamento. Informe as bases tributáveis estimadas do período; na projeção futura, a ferramenta mantém a mesma proporção dessas bases em relação à receita.</div>
+     </div>
+
+     <div id="revIncomeTaxNote" class="rate-note"></div>
+    </div>
    </details>
 
    <div id="revenueValidation" class="validation-panel" aria-live="polite"></div>
@@ -988,7 +1021,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
     <section class="yearly-analysis">
      <div class="yearly-head">
-      <div><span class="eyebrow">FATURAMENTO ANO A ANO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Receita bruta, tributos e faturamento líquido.</p></div>
+      <div><span class="eyebrow">FATURAMENTO ANO A ANO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Receita bruta, tributos sobre vendas, IRPJ/CSLL e saldo após tributos considerados.</p></div>
       <div class="yearly-actions"><button id="exportRevenueExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
      <div id="revYearStrip" class="year-price-strip"></div>
@@ -998,7 +1031,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
      </div>
      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
       <table class="comparison-table yearly-table compact-yearly-table revenue-year-table">
-       <thead><tr><th>Ano</th><th>Faturamento bruto</th><th>Tributos</th><th>Carga</th><th>Faturamento líquido</th></tr></thead>
+       <thead><tr><th>Ano</th><th>Faturamento bruto</th><th>Tributos sobre vendas</th><th>Receita após vendas</th><th>IRPJ + CSLL</th><th>Saldo após tributos</th></tr></thead>
        <tbody id="revYearlyTable"></tbody>
       </table>
      </div>
@@ -1006,22 +1039,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
      <div id="revYearlyNote" class="rate-note yearly-note"></div>
     </section>
 
-    <div class="support-title compact-support"><span class="eyebrow">COMPLEMENTO</span><h3>Lucro Presumido · LC 224</h3></div>
-    <div class="tools-grid support-grid single-support">
-     <article class="tool">
-      <span class="tag">LC 224</span><h3>Base presumida sobre receita acima de R$ 5 milhões</h3>
-      <div class="fields">
-       <div class="field"><label>Receita anual</label><input id="lpRevenue" type="number" step=".01" value="10000000"></div>
-       <div class="field"><label>Presunção original %</label><input id="lpPresumption" type="number" step=".01" value="32"></div>
-      </div>
-      <div id="lpResult" class="calc-result"></div>
-     </article>
-    </div>
    </section>
   </article>
  </div>
 
- <div class="legal-box tool-legal"><b>Importante</b><p>As duas calculadoras são independentes. A de preço analisa uma venda individual; a de faturamento analisa a receita total do período. Ambas usam 2026 como base e projetam a transição até 2033.</p></div>
+ <div class="legal-box tool-legal"><b>Importante</b><p>As duas calculadoras são independentes. Na ferramenta de faturamento, tributos sobre vendas aparecem separados de IRPJ/CSLL. No Lucro Presumido, IRPJ/CSLL são estimados pelas bases de presunção; no Lucro Real, dependem das bases tributáveis informadas.</p></div>
 </section>
 
 <section id="sources" class="view">
