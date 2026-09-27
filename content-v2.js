@@ -975,6 +975,16 @@ const SOURCES = [
     "Inclui o Ato Técnico Conjunto nº 4/2026, referente à documentação técnica da Plataforma Pública do Split Payment."
   ],
   [
+    "Receita Federal — IRPJ",
+    "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/IRPJ",
+    "Alíquota geral do IRPJ, adicional de 10% e regras gerais de apuração do lucro."
+  ],
+  [
+    "Receita Federal — CSLL",
+    "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/CSLL",
+    "Alíquota da CSLL e critérios de base no Lucro Real e no Lucro Presumido."
+  ],
+  [
     "RTAV + Material de Estudo 26/09/2026",
     "#",
     "Base didática do treinamento. Exemplos, estimativas e opiniões do palestrante são identificados e não substituem a regra oficial."
