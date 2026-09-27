@@ -516,7 +516,7 @@ function futureScenario(year,strategyOverride=null){
  }else if(strategy==='gross'){
   projected=base.price;
  }else{
-  projected=Math.max(0,num('manualProjectedPrice'));
+  projected=base.price;
  }
 
  projected=Math.max(0,projected);
