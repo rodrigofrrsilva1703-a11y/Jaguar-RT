@@ -300,6 +300,46 @@
  #tools .sim-sections{grid-template-columns:1fr}
  #tools .year-analysis-grid{grid-template-columns:1fr}
 }
+
+/* ===== CALCULADORA TRIBUTÁRIA ENXUTA ===== */
+#tools .tax-flow{grid-template-columns:repeat(5,1fr)}
+#tools .tax-input-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+#tools .tax-input-grid .sim-block{height:max-content}
+#tools .subpanel-title{margin:16px 0 9px;padding-top:13px;border-top:1px solid #ecebe6}
+#tools .subpanel-title b,#tools .subpanel-title small{display:block}
+#tools .subpanel-title b{font-size:11px}.subpanel-title small{font-size:8.5px;color:#888;margin-top:3px}
+#tools .tax-method{margin-top:15px;border:1px solid #deddd8;background:#f7f7f4;border-radius:14px;padding:13px}
+#tools .tax-method>div{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;padding:9px 0;border-bottom:1px solid #e5e4df}
+#tools .tax-method>div:last-child{border-bottom:0;padding-bottom:0}
+#tools .tax-method>div>b{width:22px;height:22px;border-radius:7px;background:#111;color:#fff;display:grid;place-items:center;font-size:8px}
+#tools .tax-method p{margin:0;font-size:9px;line-height:1.5;color:#6d6d68}
+#tools .tax-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+#tools .tax-compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+#tools .tax-summary-card{background:#fff;border:1px solid #ddddd7;border-radius:17px;padding:16px}
+#tools .tax-summary-card.reform{background:#111;color:#fff;border-color:#111}
+#tools .tax-summary-list{display:grid;gap:0;margin-top:8px}
+#tools .tax-summary-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #ecebe6;font-size:10px}
+#tools .reform .tax-summary-row{border-bottom-color:#2c2c2c}
+#tools .tax-summary-row:last-child{border-bottom:0}
+#tools .tax-summary-row span{color:#777}.reform .tax-summary-row span{color:#999}
+#tools .tax-summary-row b{font-size:12px}
+#tools .revenue-analysis{margin-top:24px;padding-top:20px;border-top:1px solid #deddd7}
+#tools .revenue-kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:12px}
+#tools .tax-year-table{min-width:920px!important}
+#tools .year-detail-grid.tax-detail{grid-template-columns:repeat(3,minmax(0,1fr))}
+#tools .tax-analysis-text{margin-top:12px;border-top:1px solid #2d2d2d;padding-top:12px}
+#tools .tax-analysis-text b{display:block;font-size:11px;margin-bottom:5px}
+#tools .tax-analysis-text p{margin:0;color:#aaa;font-size:9px;line-height:1.65}
+@media(max-width:900px){
+ #tools .tax-input-grid{grid-template-columns:1fr}
+ #tools .tax-kpis,#tools .revenue-kpis{grid-template-columns:1fr 1fr}
+}
+@media(max-width:650px){
+ #tools .tax-flow{grid-template-columns:1fr}
+ #tools .tax-compare-grid{grid-template-columns:1fr}
+ #tools .tax-kpis,#tools .revenue-kpis{grid-template-columns:1fr}
+ #tools .year-detail-grid.tax-detail{grid-template-columns:1fr 1fr}
+}
 </style>
 <script>
 (async()=>{
@@ -421,36 +461,36 @@
 
 <section id="tools" class="view">
  <div class="section-head">
-  <div><span class="eyebrow">ANÁLISE INTEGRADA</span><h2>Preço, regime, crédito, custo e resultado</h2></div>
-  <p>Um único cenário alimenta toda a análise.</p>
+  <div><span class="eyebrow">CALCULADORA TRIBUTÁRIA</span><h2>Preço de venda e faturamento na Reforma</h2></div>
+  <p>Compare 2026 com cada ano da transição, sem misturar custos operacionais.</p>
  </div>
 
- <div class="flowline" aria-label="Fluxo do simulador">
-  <span>1 · Regime</span><i>→</i><span>2 · Dados atuais</span><i>→</i><span>3 · Reforma</span><i>→</i><span>4 · Créditos</span><i>→</i><span>5 · Margem</span><i>→</i><span>6 · Análise 2026–33</span>
+ <div class="flowline tax-flow" aria-label="Fluxo da calculadora">
+  <span>1 · Regime</span><i>→</i><span>2 · Preço e faturamento</span><i>→</i><span>3 · Tributos atuais</span><i>→</i><span>4 · Reforma</span><i>→</i><span>5 · Análise anual</span>
  </div>
 
- <article class="integrated-tool">
+ <article class="integrated-tool tax-calculator">
   <div class="integrated-head">
    <div>
-    <span class="tag">SIMULADOR INTEGRADO</span>
-    <h3>Da tributação atual ao custo do cliente</h3>
-    <p>Escolha o regime da empresa e o simulador adapta a lógica. Para o Simples, o DAS entra no cálculo; no híbrido, CBS e IBS saem do DAS e passam ao regime regular.</p>
+    <span class="tag">SIMULADOR 2026 → 2033</span>
+    <h3>Veja quanto é imposto, quanto sobra líquido e como o preço muda.</h3>
+    <p>Informe o cenário atual do cliente. A calculadora limpa os tributos de 2026 e reconstrói automaticamente cada ano da Reforma.</p>
    </div>
-   <div class="integration-badge"><b>4 regimes</b><small>Presumido · Real · SN · SN híbrido</small></div>
+   <div class="integration-badge"><b>Preço + faturamento</b><small>Visão unitária e visão macro</small></div>
   </div>
 
   <div class="scenario-strip">
    <div><small>REGIME</small><b id="activeRegimeBadge">Lucro Presumido</b></div>
-   <div><small>ANO DESTACADO</small><b id="activeYearBadge">2027</b></div>
-   <div><small>CÁLCULO</small><b id="activeStrategyBadge">Automático</b></div>
-   <div class="scenario-strip-note"><small>OBJETIVO</small><b>Resultado e análise anual</b></div>
+   <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
+   <div><small>MÉTODO</small><b>Primeiro o novo, depois o velho</b></div>
+   <div class="scenario-strip-note"><small>BASE</small><b>Valor líquido de 2026</b></div>
   </div>
 
-  <div class="sim-sections">
+  <div class="tax-input-grid">
    <section class="sim-block">
-    <div class="sim-title"><span>01</span><div><b>Empresa e cenário atual</b><small>Regime, preço e carga atual.</small></div></div>
+    <div class="sim-title"><span>01</span><div><b>Cenário atual</b><small>Regime, preço praticado e faturamento.</small></div></div>
     <div class="fields three">
-     <div class="field wide"><label>Regime tributário da empresa</label>
+     <div class="field wide"><label>Regime tributário</label>
       <select id="taxRegime">
        <option value="presumido" selected>Lucro Presumido</option>
        <option value="real">Lucro Real</option>
@@ -459,148 +499,125 @@
        <option value="manual">Outro / manual</option>
       </select>
      </div>
-     <div class="field wide"><label>Preço atual R$</label><input id="priceNow" type="number" step=".01" value="100"></div>
-
-     <div id="regularCurrentFields" class="regime-panel wide">
-      <div class="fields three">
-       <div class="field"><label>PIS atual %</label><input id="pisRate" type="number" step=".01" value=".65"></div>
-       <div class="field"><label>Cofins atual %</label><input id="cofinsRate" type="number" step=".01" value="3"></div>
-       <div class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" step=".01" value="18"></div>
-       <div class="field"><label>ISS atual %</label><input id="issRate" type="number" step=".01" value="0"></div>
-       <div class="field"><label>IPI atual %</label><input id="ipiRate" type="number" step=".01" value="0"></div>
-      </div>
+     <div class="field"><label>Preço atual do produto/serviço R$</label><input id="priceNow" type="number" step=".01" value="100"></div>
+     <div class="field"><label>Faturamento atual R$</label><input id="currentRevenue" type="number" step=".01" value="100000"></div>
+     <div class="field"><label>Período do faturamento</label>
+      <select id="revenuePeriod"><option value="mensal" selected>Mensal</option><option value="anual">Anual</option></select>
      </div>
+    </div>
 
-     <div id="simplesCurrentFields" class="regime-panel wide" style="display:none">
-      <div class="fields three">
-       <div class="field"><label>RBT12 R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
-       <div class="field"><label>Anexo do Simples</label>
-        <select id="snAnnex">
-         <option value="I">Anexo I · Comércio</option>
-         <option value="II">Anexo II · Indústria</option>
-         <option value="III" selected>Anexo III · Serviços</option>
-         <option value="IV">Anexo IV · Serviços</option>
-         <option value="V">Anexo V · Serviços</option>
-        </select>
-       </div>
-       <div class="field"><label>Faixa apurada</label><input id="snBandLabel" type="text" value="4ª faixa" readonly></div>
-       <div class="field wide"><label>Alíquota efetiva do DAS em 2026</label><input id="snCurrentEffective" type="text" value="12,4360%" readonly><small class="field-help">Calculada automaticamente pela tabela do Anexo selecionado e pelo RBT12.</small></div>
-      </div>
+    <div id="regularCurrentFields" class="regime-panel">
+     <div class="subpanel-title"><b>Tributos atuais da venda</b><small>Informe as alíquotas aplicáveis ao cenário do cliente.</small></div>
+     <div class="fields three">
+      <div class="field"><label>PIS %</label><input id="pisRate" type="number" step=".01" value=".65"></div>
+      <div class="field"><label>Cofins %</label><input id="cofinsRate" type="number" step=".01" value="3"></div>
+      <div class="field"><label>ICMS %</label><input id="icmsRate" type="number" step=".01" value="18"></div>
+      <div class="field"><label>ISS %</label><input id="issRate" type="number" step=".01" value="0"></div>
+      <div class="field"><label>IPI %</label><input id="ipiRate" type="number" step=".01" value="0"></div>
      </div>
+    </div>
 
-     <div class="field wide"><label>Créditos atuais aproveitáveis pelo comprador R$</label><input id="currentBuyerCredit" type="number" step=".01" value="0"><small class="field-help">É o crédito do comprador na situação atual, não o crédito da empresa vendedora.</small></div>
+    <div id="simplesCurrentFields" class="regime-panel" style="display:none">
+     <div class="subpanel-title"><b>Simples Nacional</b><small>A ferramenta identifica faixa e alíquota efetiva pelo RBT12.</small></div>
+     <div class="fields three">
+      <div class="field"><label>RBT12 R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
+      <div class="field"><label>Anexo</label>
+       <select id="snAnnex">
+        <option value="I">Anexo I · Comércio</option>
+        <option value="II">Anexo II · Indústria</option>
+        <option value="III" selected>Anexo III · Serviços</option>
+        <option value="IV">Anexo IV · Serviços</option>
+        <option value="V">Anexo V · Serviços</option>
+       </select>
+      </div>
+      <div class="field"><label>Faixa</label><input id="snBandLabel" type="text" value="4ª faixa" readonly></div>
+      <div class="field wide"><label>Alíquota efetiva do DAS em 2026</label><input id="snCurrentEffective" type="text" readonly></div>
+     </div>
     </div>
    </section>
 
    <section class="sim-block">
-    <div class="sim-title"><span>02</span><div><b>Cenário da Reforma</b><small>Ano e regras tributárias aplicáveis.</small></div></div>
+    <div class="sim-title"><span>02</span><div><b>Reforma</b><small>Premissas usadas na projeção anual.</small></div></div>
     <div class="fields three">
      <div class="field"><label>Ano destacado</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
 
      <div id="regularFutureFields" class="regime-panel wide">
       <div class="fields three">
-       <div class="field"><label>Modo de alíquota</label><select id="rateMode"><option value="rtav">Estimativa RTAV</option><option value="manual">Manual / oficial aplicável</option></select></div>
+       <div class="field"><label>Alíquotas futuras</label><select id="rateMode"><option value="rtav">Estimativa RTAV</option><option value="manual">Manual / aplicável</option></select></div>
        <div class="field"><label>Redução de alíquota %</label><input id="rateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
-       <div class="field"><label>CBS projetada %</label><input id="cbsRate" type="number" step=".001" value="9" readonly></div>
-       <div class="field"><label>IBS projetado %</label><input id="ibsRate" type="number" step=".001" value=".1" readonly></div>
+       <div class="field"><label>CBS %</label><input id="cbsRate" type="number" step=".001" value="8.9" readonly></div>
+       <div class="field"><label>IBS %</label><input id="ibsRate" type="number" step=".001" value=".1" readonly></div>
       </div>
      </div>
 
      <div id="simplesFutureFields" class="regime-panel wide" style="display:none">
       <div id="simpleStandardRates">
-       <div class="rate-note"><b>Cálculo automático pelo Anexo.</b> O sistema usa o RBT12, a faixa, a alíquota efetiva e a partilha legal de CBS/IBS de cada ano. No Simples padrão, o preço só muda quando a carga total do DAS muda; mesmo quando o preço não muda, o crédito gerado ao comprador pode mudar bastante.</div>
+       <div class="rate-note"><b>Simples padrão:</b> o DAS continua sendo calculado pelo Anexo e RBT12. A composição de CBS/IBS muda conforme a transição.</div>
        <div id="snAutoSummary" class="sn-auto-summary"></div>
       </div>
-
       <div id="hybridRegularRates" style="display:none">
-       <div class="rate-note"><b>Simples híbrido automático.</b> A ferramenta retira do DAS as parcelas de CBS e IBS previstas para o Anexo/faixa e mantém o restante como DAS remanescente. Depois calcula CBS/IBS pelo regime regular por fora.</div>
+       <div class="rate-note"><b>Simples híbrido:</b> CBS/IBS são retirados do DAS e calculados no regime regular.</div>
        <div class="fields three">
-        <div class="field"><label>Modo CBS/IBS regular</label><select id="hybridRateMode"><option value="rtav">Estimativa RTAV</option><option value="manual">Manual / oficial</option></select></div>
-        <div class="field"><label>Redução de alíquota %</label><input id="hybridReduction" type="number" min="0" max="100" step=".01" value="0"></div>
-        <div class="field"><label>CBS regular %</label><input id="hybridCbsRate" type="number" step=".001" value="8.9" readonly></div>
-        <div class="field"><label>IBS regular %</label><input id="hybridIbsRate" type="number" step=".001" value=".1" readonly></div>
+        <div class="field"><label>Alíquotas CBS/IBS</label><select id="hybridRateMode"><option value="rtav">Estimativa RTAV</option><option value="manual">Manual / aplicável</option></select></div>
+        <div class="field"><label>Redução %</label><input id="hybridReduction" type="number" min="0" max="100" step=".01" value="0"></div>
+        <div class="field"><label>CBS %</label><input id="hybridCbsRate" type="number" step=".001" value="8.9" readonly></div>
+        <div class="field"><label>IBS %</label><input id="hybridIbsRate" type="number" step=".001" value=".1" readonly></div>
        </div>
        <div id="hybridAutoSummary" class="sn-auto-summary"></div>
       </div>
      </div>
-
     </div>
     <div id="rateNote" class="rate-note"></div>
-   </section>
 
-   <section class="sim-block">
-    <div class="sim-title"><span>03</span><div><b>Crédito do comprador</b><small>O regime do comprador define se ele usa os créditos gerados.</small></div></div>
-    <div class="fields three">
-     <div class="field wide"><label>Regime / perfil do comprador</label>
-      <select id="buyerCreditProfile">
-       <option value="full" selected>Regime regular — aproveitar CBS/IBS</option>
-       <option value="none">Simples/MEI — sem apropriação no regime regular</option>
-       <option value="manual">Percentuais manuais</option>
-      </select>
-     </div>
-     <div class="field"><label>Aproveitamento CBS %</label><input id="cbsCreditPct" type="number" min="0" max="100" step=".01" value="100" readonly></div>
-     <div class="field"><label>Aproveitamento IBS %</label><input id="ibsCreditPct" type="number" min="0" max="100" step=".01" value="100" readonly></div>
-     <div class="field wide"><label>Outros créditos projetados R$</label><input id="otherProjectedCredit" type="number" step=".01" value="0"></div>
+    <div class="tax-method">
+     <span class="eyebrow">COMO O PREÇO É FORMADO</span>
+     <div><b>1</b><p>Retira os tributos atuais e encontra o <strong>valor líquido de 2026</strong>.</p></div>
+     <div><b>2</b><p>Aplica <strong>CBS + IBS</strong> do ano analisado.</p></div>
+     <div><b>3</b><p>Embutem-se <strong>ICMS/ISS remanescentes</strong> durante a transição.</p></div>
     </div>
-    <div class="rate-note">No Simples padrão, o crédito de um adquirente sujeito ao regime regular é limitado aos valores de IBS/CBS devidos via Simples. No híbrido, CBS/IBS seguem o regime regular. Sempre valide documento, extinção do débito e demais requisitos.</div>
-   </section>
-
-   <section class="sim-block margin-block">
-    <div class="sim-title"><span>04</span><div><b>Margem da empresa</b><small>Custos e créditos das compras do próprio cliente.</small></div></div>
-    <div class="fields three">
-     <div class="field wide"><label>Custos e despesas atuais por venda R$</label><input id="sellerOperatingCost" type="number" min="0" step=".01" value="60"><small class="field-help">Informe custos e despesas ligados à venda antes dos créditos recuperáveis.</small></div>
-     <div class="field"><label>Créditos atuais nas compras R$</label><input id="currentSellerCredit" type="number" min="0" step=".01" value="0"></div>
-     <div class="field"><label>Base líquida das compras com crédito R$</label><input id="sellerCreditBase" type="number" min="0" step=".01" value="60"></div>
-     <div class="field"><label>Aproveitamento dos créditos %</label><input id="sellerCreditPct" type="number" min="0" max="100" step=".01" value="100"></div>
-     <div class="field"><label>Outros créditos projetados R$</label><input id="otherSellerCredit" type="number" min="0" step=".01" value="0"></div>
-    </div>
-    <div id="sellerMarginPreview" class="margin-preview"></div>
-    <div class="rate-note">Análise simplificada para isolar o efeito da Reforma: mantém os custos/despesas informados constantes e projeta os créditos de CBS/IBS sobre a base de compras indicada. Não inclui inflação nem renegociação de fornecedores.</div>
    </section>
   </div>
 
-  <section class="integrated-results">
-   <div class="result-head"><div><span class="eyebrow">RESULTADO CONSOLIDADO</span><h3>Preço e custo na mesma leitura</h3></div><div id="resultSignal" class="result-signal"></div></div>
-   <div id="regimeResultNote" class="regime-result-note"></div>
-   <div id="integratedKpis" class="integrated-kpis"></div>
-   <div class="comparison-wrap">
-    <table class="comparison-table">
-     <thead><tr><th>Indicador</th><th>2026</th><th>Ano destacado</th><th>Efeito</th></tr></thead>
-     <tbody id="integratedTable"></tbody>
-    </table>
+  <section class="integrated-results tax-results">
+   <div class="result-head">
+    <div><span class="eyebrow">COMPARAÇÃO DIRETA</span><h3>2026 × <span id="resultYearLabel">2027</span></h3></div>
+    <div id="resultSignal" class="result-signal"></div>
    </div>
+   <div id="regimeResultNote" class="regime-result-note"></div>
+
+   <div id="integratedKpis" class="integrated-kpis tax-kpis"></div>
+
+   <div class="tax-compare-grid">
+    <article class="tax-summary-card current">
+     <span class="eyebrow">2026 · ATUAL</span>
+     <div id="currentTaxSummary"></div>
+    </article>
+    <article class="tax-summary-card reform">
+     <span class="eyebrow" id="futureTaxEyebrow">2027 · REFORMA</span>
+     <div id="futureTaxSummary"></div>
+    </article>
+   </div>
+
    <div id="integratedExplanation" class="integrated-explanation"></div>
+
+   <section class="revenue-analysis">
+    <div class="yearly-head">
+     <div><span class="eyebrow">IMPACTO NO FATURAMENTO</span><h3 id="revenueTitle">Faturamento mensal</h3><p class="yearly-subtitle">Projeção mantendo o mesmo volume de vendas de 2026.</p></div>
+    </div>
+    <div id="revenueKpis" class="integrated-kpis revenue-kpis"></div>
+   </section>
 
    <section class="yearly-analysis">
     <div class="yearly-head">
-     <div><span class="eyebrow">EVOLUÇÃO DO PREÇO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Visão rápida da formação de preço ao longo da transição.</p></div>
-     <div class="yearly-actions">
-      <button id="exportExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar análise</button>
-     </div>
+     <div><span class="eyebrow">EVOLUÇÃO ANUAL</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Preço, tributos, líquido e faturamento na transição.</p></div>
+     <div class="yearly-actions"><button id="exportExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar análise</button></div>
     </div>
 
     <div id="yearlyPriceStrip" class="year-price-strip"></div>
 
-    <div class="yearly-summary-head">
-     <div><b>Resumo anual</b><small>Clique em um ano para ver os detalhes tributários.</small></div>
-     <div class="yearly-legend compact">
-      <span><i class="legend-base"></i>Base</span>
-      <span><i class="legend-selected"></i>Selecionado</span>
-     </div>
-    </div>
-
     <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
-     <table class="comparison-table yearly-table compact-yearly-table">
-      <thead>
-       <tr>
-        <th>Ano</th>
-        <th>Preço recomendado</th>
-        <th>Reajuste vs. 2026</th>
-        <th>Variação anual</th>
-        <th>Crédito</th>
-        <th>Custo efetivo</th>
-       </tr>
-      </thead>
+     <table class="comparison-table yearly-table compact-yearly-table tax-year-table">
+      <thead><tr><th>Ano</th><th>Preço</th><th>Tributos</th><th>Valor líquido</th><th>Faturamento projetado</th><th>Tributos no faturamento</th></tr></thead>
       <tbody id="yearlyProjectionTable"></tbody>
      </table>
     </div>
@@ -611,11 +628,10 @@
   </section>
  </article>
 
- <div class="support-title"><span class="eyebrow">COMPLEMENTO DO DIAGNÓSTICO</span><h3>Lucro Presumido · LC 224</h3><p>Use quando o regime selecionado for Lucro Presumido e quiser analisar a alteração da base presumida.</p></div>
+ <div class="support-title"><span class="eyebrow">COMPLEMENTO</span><h3>Lucro Presumido · LC 224</h3><p>Use apenas quando quiser analisar a alteração da base presumida.</p></div>
  <div class="tools-grid support-grid single-support">
   <article class="tool">
    <span class="tag">LC 224</span><h3>Base presumida sobre receita acima de R$ 5 milhões</h3>
-   <p class="desc">Mostra a alteração da base presumida. Não substitui um cálculo completo de IRPJ/CSLL.</p>
    <div class="fields">
     <div class="field"><label>Receita anual</label><input id="lpRevenue" type="number" step=".01" value="10000000"></div>
     <div class="field"><label>Presunção original %</label><input id="lpPresumption" type="number" step=".01" value="32"></div>
@@ -624,7 +640,7 @@
   </article>
  </div>
 
- <div class="legal-box tool-legal"><b>Importante</b><p>Esta é uma ferramenta de planejamento. Lucro Presumido e Lucro Real usam o regime regular de IBS/CBS. No Simples padrão, CBS/IBS permanecem no recolhimento unificado; no Simples híbrido, a empresa continua no Simples para os demais tributos e recolhe CBS/IBS pelo regime regular fora do DAS. Os campos do Simples são premissas editáveis porque a alíquota efetiva depende do anexo, faixa, atividade, RBT12 e regulamentação aplicável.</p></div>
+ <div class="legal-box tool-legal"><b>Importante</b><p>Simulação para planejamento e comparação. As alíquotas RTAV são premissas didáticas quando não houver alíquota oficial específica informada. A projeção de faturamento pressupõe o mesmo volume de vendas de 2026.</p></div>
 </section>
 
 <section id="sources" class="view">
@@ -649,7 +665,7 @@
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260927-28"></script>
-<script src="app-v2.js?v=20260927-28"></script>
+<script src="content-v2.js?v=20260927-29"></script>
+<script src="app-v2.js?v=20260927-29"></script>
 </body>
 </html>
