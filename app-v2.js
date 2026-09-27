@@ -794,7 +794,40 @@ function exportAnalysisExcel(){
  if(!yearlyRows.length)renderYearlyProjection();
  const r=regime(),strategy=$('priceStrategy')?.selectedOptions?.[0]?.textContent||'';
  const rowsXml=yearlyRows.map(x=>`<Row>${xlsCell(x.year,'Number')}${xlsCell(REGIME_LABELS[x.regime])}${xlsCell(x.system)}${xlsCell(x.price,'Number')}${xlsCell(x.cbs??0,'Number')}${xlsCell(x.ibs??0,'Number')}${xlsCell(x.remnant,'Number')}${xlsCell(x.credit,'Number')}${xlsCell(x.cost,'Number')}${xlsCell(x.costDelta,'Number')}${xlsCell(x.net,'Number')}${xlsCell(x.noAdjustNet,'Number')}${xlsCell(x.sellerPurchaseCredit??0,'Number')}${xlsCell(x.sellerResult??0,'Number')}${xlsCell((x.sellerMargin??0)*100,'Number')}${xlsCell(x.diff,'Number')}${xlsCell(x.delta,'Number')}${xlsCell(x.annualDelta,'Number')}</Row>`).join('');
- const headers=['Ano','Regime','Sistema','Preço calculado','CBS','IBS','DAS / tributos remanescentes','Crédito','Custo efetivo','Custo vs 2026 (%)','Receita líquida no preço calculado','Líquido se mantivesse preço 2026','Diferença R$','Reajuste vs 2026 (%)','Variação anual (%)'].map(x=>xlsCell(x)).join('');
+ const headers=['Ano','Regime','Sistema','Preço calculado','CBS','IBS','DAS / tributos remanescentes','Crédito','Custo efetivo','Custo vs 2026 (%)','Receita líquida no preço calculado','Líquido se mantivesse preço 2026','Crédito das compras da empresa','Resultado operacional simplificado','Margem operacional (%)','Diferença R,'Reajuste vs 2026 (%)','Variação anual (%)'].map(x=>xlsCell(x)).join('');
+ const premises=[['Regime',REGIME_LABELS[r]],['Estratégia',strategy],['Preço 2026',num('priceNow')],['Anexo Simples',SN_LABELS[snAnnex()]],['RBT12',num('snRbt12')],['Alíquota efetiva SN 2026 %',snEffective(2026).eff*100],['Crédito atual comprador',num('currentBuyerCredit')],['PIS atual %',num('pisRate')],['Cofins atual %',num('cofinsRate')],['ICMS atual %',num('icmsRate')],['ISS atual %',num('issRate')],['IPI atual %',num('ipiRate')],['Aproveitamento CBS %',num('cbsCreditPct')],['Aproveitamento IBS %',num('ibsCreditPct')],['Outros créditos',num('otherProjectedCredit')]];
+ const premXml=premises.map(([a,b])=>`<Row>${xlsCell(a)}${typeof b==='number'?xlsCell(b,'Number'):xlsCell(b)}</Row>`).join('');
+ const xml=`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Analise 2026-2033"><Table><Row>${headers}</Row>${rowsXml}</Table></Worksheet><Worksheet ss:Name="Premissas"><Table><Row>${xlsCell('Premissa')}${xlsCell('Valor')}</Row>${premXml}</Table></Worksheet></Workbook>`;
+ const blob=new Blob(['\ufeff',xml],{type:'application/vnd.ms-excel;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=`analise-preco-reforma-${r}-2026-2033.xls`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+$('taxRegime')?.addEventListener('change',()=>applyRegimeUI({preset:true}));
+$('snAnnex')?.addEventListener('change',()=>{updateSnSummary();calcIntegrated();});
+$('snRbt12')?.addEventListener('input',()=>{updateSnSummary();calcIntegrated();});
+$('priceYear')?.addEventListener('change',applyYearPreset);
+$('priceStrategy')?.addEventListener('change',syncPriceStrategy);
+$('buyerCreditProfile')?.addEventListener('change',syncCreditProfile);
+$('exportExcelBtn')?.addEventListener('click',exportAnalysisExcel);
+$('rateMode')?.addEventListener('change',()=>{const manual=$('rateMode').value==='manual';$('cbsRate').readOnly=!manual;$('ibsRate').readOnly=!manual;applyYearPreset();});
+$('hybridRateMode')?.addEventListener('change',()=>{const manual=$('hybridRateMode').value==='manual';$('hybridCbsRate').readOnly=!manual;$('hybridIbsRate').readOnly=!manual;applyYearPreset();});
+
+['priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','currentBuyerCredit','rateReduction','cbsRate','ibsRate','manualProjectedPrice','cbsCreditPct','ibsCreditPct','otherProjectedCredit','hybridReduction','hybridCbsRate','hybridIbsRate'].forEach(id=>$(id)?.addEventListener('input',calcIntegrated));
+
+['lpRevenue','lpPresumption'].forEach(id=>$(id)?.addEventListener('input',calcLP));
+function calcLP(){
+ if(!$('lpResult'))return;
+ const revenue=num('lpRevenue'),pres=num('lpPresumption')/100,limit=5000000,before=revenue*pres,normal=Math.min(revenue,limit),excess=Math.max(0,revenue-limit),newPres=pres*1.10,after=normal*pres+excess*newPres;
+ $('lpResult').innerHTML=`<div><small>Base sem acréscimo</small><b>${money(before)}</b></div><div><small>Presunção sobre excedente</small><b>${pct(newPres*100)}</b></div><div class="main-result"><small>Base com LC 224</small><strong>${money(after)}</strong><span>Diferença: ${money(after-before)} · análise simplificada da base.</span></div>`;
+}
+
+renderHome();
+searchModules('');
+updateSnSummary();
+syncCreditProfile();
+syncPriceStrategy();
+applyRegimeUI({preset:true});
+calcLP();,'Reajuste vs 2026 (%)','Variação anual (%)'].map(x=>xlsCell(x)).join('');
  const premises=[['Regime',REGIME_LABELS[r]],['Estratégia',strategy],['Preço 2026',num('priceNow')],['Anexo Simples',SN_LABELS[snAnnex()]],['RBT12',num('snRbt12')],['Alíquota efetiva SN 2026 %',snEffective(2026).eff*100],['Crédito atual comprador',num('currentBuyerCredit')],['PIS atual %',num('pisRate')],['Cofins atual %',num('cofinsRate')],['ICMS atual %',num('icmsRate')],['ISS atual %',num('issRate')],['IPI atual %',num('ipiRate')],['Aproveitamento CBS %',num('cbsCreditPct')],['Aproveitamento IBS %',num('ibsCreditPct')],['Outros créditos',num('otherProjectedCredit')]];
  const premXml=premises.map(([a,b])=>`<Row>${xlsCell(a)}${typeof b==='number'?xlsCell(b,'Number'):xlsCell(b)}</Row>`).join('');
  const xml=`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Analise 2026-2033"><Table><Row>${headers}</Row>${rowsXml}</Table></Worksheet><Worksheet ss:Name="Premissas"><Table><Row>${xlsCell('Premissa')}${xlsCell('Valor')}</Row>${premXml}</Table></Worksheet></Workbook>`;
