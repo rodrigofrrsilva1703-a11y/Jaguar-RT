@@ -10,8 +10,16 @@
 <style>
 :root{--bg:#f4f4f1;--ink:#0a0a0a;--muted:#686868;--line:#d9d8d2;--white:#fff;--max:1260px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}.top{position:sticky;top:0;z-index:40;background:rgba(244,244,241,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.topin{max-width:var(--max);margin:auto;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px}.mark{width:40px;height:40px;border-radius:12px;background:#0a0a0a;color:#fff;display:grid;place-items:center;font-weight:900}.brand b{font-size:14px}.brand small{display:block;color:#777;font-size:10px;margin-top:1px}nav{display:flex;gap:4px}nav button{border:0;background:transparent;color:#555;padding:9px 11px;border-radius:10px}nav button:hover,nav button.active{background:#111;color:#fff}main{max-width:var(--max);margin:auto;padding:28px 20px 100px}.view{display:none}.view.active{display:block}.hero{background:#0b0b0b;color:#fff;border-radius:28px;padding:40px;display:grid;grid-template-columns:1.25fr .75fr;gap:30px}.eyebrow,.module-no{font-size:10px;text-transform:uppercase;letter-spacing:.15em;font-weight:850;color:#8a8a8a}.hero .eyebrow{color:#aaa}.hero h1{font-size:clamp(42px,6vw,76px);line-height:.96;letter-spacing:-.055em;margin:12px 0 16px;max-width:800px}.hero p{max-width:720px;color:#d2d2d2;line-height:1.7;margin:0}.hero-side{align-self:end;display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric{border:1px solid #323232;border-radius:14px;padding:14px}.metric b{display:block;font-size:26px}.metric small{color:#aaa}.searchbar{margin:18px 0}.searchbar input{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px 15px;outline:none}.section{margin-top:36px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:14px}.section-head h2{font-size:30px;letter-spacing:-.04em;margin:4px 0 0}.section-head p{margin:0;color:#777;font-size:12px}.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.module-card{border:1px solid var(--line);background:#fff;border-radius:18px;padding:19px;text-align:left;min-height:215px;display:flex;flex-direction:column;justify-content:space-between;transition:.18s ease}.module-card:hover{transform:translateY(-2px);box-shadow:0 14px 35px rgba(0,0,0,.07)}.module-card h3{font-size:21px;line-height:1.08;letter-spacing:-.025em;margin:18px 0 8px}.module-card p{font-size:12.5px;line-height:1.6;color:#666;margin:0}.card-foot{border-top:1px solid #eee;margin-top:18px;padding-top:12px;display:flex;justify-content:space-between;color:#777;font-size:10px;font-weight:800}.timeline{display:grid;grid-template-columns:repeat(8,1fr);gap:7px}.year{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 8px;text-align:left}.year b,.year small{display:block}.year small{font-size:9px;color:#777;margin-top:3px}.year.active{background:#111;color:#fff;border-color:#111}.year.active small{color:#bbb}.timeline-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:8px}.timeline-panel h3{margin:5px 0 7px}.timeline-panel p{margin:0;color:#555;line-height:1.65}.back{border:0;background:transparent;padding:0;color:#555;margin-bottom:18px}.page-title{font-size:clamp(42px,6vw,68px);line-height:.98;letter-spacing:-.055em;margin:7px 0 14px;max-width:950px}.page-lead{font-size:17px;line-height:1.75;color:#555;max-width:930px}.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}.compare-box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.compare-box.dark{background:#111;color:#fff;border-color:#111}.compare-box span{font-size:9px;font-weight:900;letter-spacing:.16em;color:#888}.compare-box.dark span{color:#aaa}.compare-box h3{margin:7px 0 9px}.compare-box p{margin:0;color:#555;line-height:1.65;font-size:13px}.compare-box.dark p{color:#d6d6d6}.lesson-stack{max-width:940px}.lesson-block{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px;margin-top:11px}.lesson-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.step-no{font-size:10px;color:#aaa;font-weight:900}.tag{font-size:8px;font-weight:900;letter-spacing:.06em;border:1px solid #bdbdb8;border-radius:999px;padding:5px 8px}.lesson-block h2{font-size:23px;letter-spacing:-.025em;margin:15px 0 8px}.lesson-block p{margin:0;color:#4e4e4e;line-height:1.75}.qa-wrap{max-width:940px;margin-top:30px}.qa-wrap h2{font-size:29px;letter-spacing:-.035em;margin:5px 0 12px}.qa{background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:8px;overflow:hidden}.qa summary{list-style:none;padding:16px 18px;font-weight:800;cursor:pointer}.qa summary::-webkit-details-marker{display:none}.qa summary:after{content:"+";float:right}.qa[open] summary:after{content:"–"}.qa div{padding:0 18px 18px;color:#555;line-height:1.7}.legal-box{max-width:940px;margin-top:18px;background:#ecece7;border-radius:14px;padding:15px}.legal-box b{font-size:11px}.legal-box p{font-size:11px;color:#666;line-height:1.55;margin:4px 0 0}.practice-grid,.source-grid,.tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.practice-card,.source-card,.tool{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.practice-card h3,.source-card h3,.tool h3{margin:10px 0 7px;letter-spacing:-.02em}.practice-card p,.source-card p{color:#666;line-height:1.6;font-size:12.5px}.practice-card{display:flex;flex-direction:column;min-height:245px}.practice-card>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:10px}.practice-code{font-size:9px;font-weight:900;color:#aaa;letter-spacing:.1em}.practice-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:16px}.practice-meta span{font-size:9px;background:#f0f0ec;border-radius:999px;padding:5px 7px;color:#666;font-weight:800}.practice-open{margin-top:12px;width:100%;border:0;background:#111;color:#fff;border-radius:10px;padding:11px 12px;font-weight:800;text-align:left}.case-hero{max-width:980px}.case-context{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:980px;margin:22px 0}.case-context>div,.case-premises{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.case-context h2,.case-premises h2,.case-resolution>h2{font-size:25px;letter-spacing:-.03em;margin:6px 0 10px}.case-context p{margin:0;color:#555;line-height:1.7}.case-premises{max-width:980px;margin-bottom:26px}.case-premises ul{margin:10px 0 0;padding-left:20px}.case-premises li{color:#555;line-height:1.65;margin:7px 0}.case-resolution{max-width:980px}.case-step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:10px}.case-step-top span{font-size:9px;font-weight:900;letter-spacing:.13em;color:#aaa}.case-step h3{font-size:20px;margin:10px 0 8px}.case-calc{background:#111;color:#fff;border-radius:12px;padding:13px 14px;font-size:15px;font-weight:850;margin:10px 0}.case-step p{margin:0;color:#555;line-height:1.7}.case-result{max-width:980px;background:#111;color:#fff;border-radius:20px;padding:24px;margin-top:20px}.case-result .eyebrow{color:#aaa}.case-result h2{font-size:27px;line-height:1.15;letter-spacing:-.035em;margin:7px 0 10px}.case-result p{margin:0;color:#d1d1d1;line-height:1.7}.case-two{max-width:980px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.case-note{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.case-note h3{margin:7px 0 8px}.case-note p{margin:0;color:#555;line-height:1.7}.case-note.client{background:#ecece7}.case-challenge{max-width:980px;background:#fff;border:1px solid var(--line);border-radius:16px;margin-top:10px;overflow:hidden}.case-challenge summary{cursor:pointer;padding:17px 20px;font-weight:850;list-style:none}.case-challenge summary::-webkit-details-marker{display:none}.case-challenge summary:after{content:"+";float:right}.case-challenge[open] summary:after{content:"–"}.case-challenge div{padding:0 20px 20px;color:#555;line-height:1.65}.case-challenge b{color:#111}.case-challenge p{margin-bottom:0}.source-card a{color:#111;font-size:11px;font-weight:850}.source-note{font-size:10px;color:#777}.tool h3{font-size:22px}.tool .desc{font-size:12px;color:#666;line-height:1.6;margin-bottom:14px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#777;font-weight:800;margin:0 0 5px}.field input,.field select{width:100%;border:1px solid var(--line);background:#fafafa;border-radius:10px;padding:10px}.wide{grid-column:1/-1}.rate-note{font-size:10.5px;line-height:1.55;color:#666;background:#f2f2ee;border-radius:10px;padding:10px;margin-top:10px}.calc-result{margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.calc-result>div{background:#f4f4f1;border-radius:11px;padding:12px}.calc-result small,.calc-result b{display:block}.calc-result small{font-size:9px;color:#777}.calc-result b{margin-top:4px}.calc-result .main-result{grid-column:1/-1;background:#111;color:#fff}.calc-result .main-result small{color:#aaa}.calc-result .main-result strong{display:block;font-size:28px;margin:4px 0}.calc-result .main-result span{font-size:10px;color:#bbb}.empty{background:#fff;border:1px solid var(--line);padding:20px;border-radius:15px;color:#777}.footer{margin-top:45px;padding-top:18px;border-top:1px solid var(--line);font-size:10px;color:#777;line-height:1.6}.bottom{display:none}
-@media(max-width:920px){nav{display:none}.hero{grid-template-columns:1fr}.module-grid{grid-template-columns:repeat(2,1fr)}.timeline{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:650px){main{padding:15px 12px 88px}.topin{padding:9px 12px}.brand small{display:none}.hero{padding:24px;border-radius:21px}.hero-side,.module-grid,.practice-grid,.source-grid,.tools-grid,.compare,.fields,.case-context,.case-two{grid-template-columns:1fr}.wide{grid-column:auto}.section-head{display:block}.section-head p{margin-top:5px}.timeline{grid-template-columns:repeat(4,1fr)}.bottom{position:fixed;left:8px;right:8px;bottom:8px;z-index:80;background:rgba(10,10,10,.96);display:grid;grid-template-columns:repeat(5,1fr);padding:5px;border-radius:15px}.bottom button{border:0;background:transparent;color:#bbb;padding:9px 2px;border-radius:9px;font-size:9px;font-weight:850}.bottom button.active{background:#fff;color:#111}.page-title{font-size:42px}.calc-result{grid-template-columns:1fr}}
+
+.flowline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 14px}.flowline span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:9px;font-weight:850;color:#555}.flowline i{font-style:normal;color:#aaa}
+.integrated-tool{background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden}.integrated-head{background:#111;color:#fff;padding:25px;display:flex;justify-content:space-between;gap:24px;align-items:end}.integrated-head h3{font-size:30px;letter-spacing:-.04em;margin:12px 0 8px}.integrated-head p{max-width:760px;color:#c9c9c9;line-height:1.65;margin:0;font-size:13px}.integrated-head .tag{border-color:#555}.integration-badge{border:1px solid #333;border-radius:14px;padding:13px 15px;min-width:190px}.integration-badge b,.integration-badge small{display:block}.integration-badge b{font-size:19px}.integration-badge small{color:#aaa;margin-top:3px;font-size:9px}
+.sim-sections{display:grid;grid-template-columns:repeat(3,1fr);gap:0}.sim-block{padding:21px;border-right:1px solid #ecece8}.sim-block:last-child{border-right:0}.sim-title{display:flex;gap:10px;align-items:flex-start;margin-bottom:15px}.sim-title>span{width:28px;height:28px;border-radius:9px;background:#111;color:#fff;display:grid;place-items:center;font-size:9px;font-weight:900}.sim-title b,.sim-title small{display:block}.sim-title b{font-size:15px}.sim-title small{color:#777;font-size:10px;line-height:1.45;margin-top:2px}.fields.three{grid-template-columns:repeat(2,1fr)}.field-help{display:block;color:#888;font-size:9px;line-height:1.45;margin-top:5px}.field input:disabled{opacity:.55;background:#eee}
+.integrated-results{border-top:1px solid var(--line);padding:25px;background:#f7f7f4}.result-head{display:flex;align-items:end;justify-content:space-between;gap:18px}.result-head h3{font-size:28px;letter-spacing:-.035em;margin:5px 0 0}.result-signal{font-size:10px;font-weight:900;border-radius:999px;padding:8px 11px;background:#111;color:#fff;text-align:right}
+.integrated-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}.integrated-kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}.integrated-kpi small,.integrated-kpi b,.integrated-kpi span{display:block}.integrated-kpi small{font-size:9px;color:#777}.integrated-kpi b{font-size:22px;letter-spacing:-.03em;margin:5px 0 2px}.integrated-kpi span{font-size:9px;color:#777}.integrated-kpi.dark{background:#111;color:#fff;border-color:#111}.integrated-kpi.dark small,.integrated-kpi.dark span{color:#aaa}
+.comparison-wrap{overflow:auto;margin-top:10px;border:1px solid var(--line);border-radius:14px;background:#fff}.comparison-table{border-collapse:collapse;width:100%;min-width:680px}.comparison-table th,.comparison-table td{padding:12px 14px;border-bottom:1px solid #eee;text-align:right;font-size:11px}.comparison-table th:first-child,.comparison-table td:first-child{text-align:left}.comparison-table th{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#888}.comparison-table tbody tr:last-child td{border-bottom:0}.comparison-table td strong{font-size:12px}.effect-up{font-weight:850}.effect-down{font-weight:850}.integrated-explanation{margin-top:10px;background:#111;color:#fff;border-radius:14px;padding:16px}.integrated-explanation b{display:block;font-size:13px;margin-bottom:5px}.integrated-explanation p{margin:0;color:#ccc;line-height:1.65;font-size:11px}
+.support-title{margin:30px 0 12px}.support-title h3{font-size:25px;letter-spacing:-.03em;margin:5px 0}.support-title p{color:#777;font-size:11px;margin:0}.support-grid{align-items:start}.tool-legal{max-width:none}
+@media(max-width:920px){nav{display:none}.hero{grid-template-columns:1fr}.module-grid{grid-template-columns:repeat(2,1fr)}.timeline{grid-template-columns:repeat(4,1fr)}.sim-sections{grid-template-columns:1fr}.sim-block{border-right:0;border-bottom:1px solid #ecece8}.integrated-kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){main{padding:15px 12px 88px}.topin{padding:9px 12px}.brand small{display:none}.hero{padding:24px;border-radius:21px}.hero-side,.module-grid,.practice-grid,.source-grid,.tools-grid,.compare,.fields,.case-context,.case-two,.integrated-kpis{grid-template-columns:1fr}.wide{grid-column:auto}.section-head{display:block}.section-head p{margin-top:5px}.timeline{grid-template-columns:repeat(4,1fr)}.bottom{position:fixed;left:8px;right:8px;bottom:8px;z-index:80;background:rgba(10,10,10,.96);display:grid;grid-template-columns:repeat(5,1fr);padding:5px;border-radius:15px}.bottom button{border:0;background:transparent;color:#bbb;padding:9px 2px;border-radius:9px;font-size:9px;font-weight:850}.bottom button.active{background:#fff;color:#111}.page-title{font-size:42px}.calc-result{grid-template-columns:1fr}.integrated-head,.result-head{display:block}.integration-badge{margin-top:16px}.result-signal{display:inline-block;margin-top:10px}.flowline i{display:none}}
 </style>
 <script>
 (async()=>{
@@ -52,7 +60,7 @@
   </div>
   <div class="hero-side">
    <div class="metric"><b>12</b><small>aulas completas</small></div>
-   <div class="metric"><b>4</b><small>calculadoras</small></div>
+   <div class="metric"><b>1</b><small>simulador integrado</small></div>
    <div class="metric"><b>2026–33</b><small>transição</small></div>
    <div class="metric"><b>3 bases</b><small>RTAV + material + lei</small></div>
   </div>
@@ -86,44 +94,83 @@
 <section id="practicePage" class="view"></section>
 
 <section id="tools" class="view">
- <div class="section-head"><div><span class="eyebrow">SIMULAÇÃO</span><h2>Ferramentas de cálculo</h2></div><p>Premissas identificadas; edite as alíquotas quando necessário.</p></div>
- <div class="tools-grid">
+ <div class="section-head">
+  <div><span class="eyebrow">ANÁLISE INTEGRADA</span><h2>Preço, crédito, custo e resultado</h2></div>
+  <p>Uma alteração alimenta toda a análise.</p>
+ </div>
 
-  <article class="tool">
-   <span class="tag">PRECIFICAÇÃO</span><h3>Novo preço por ano da transição</h3>
-   <p class="desc">Limpa os tributos atuais do preço, aplica CBS + IBS por fora e trata ICMS/ISS remanescentes. O modo RTAV usa estimativas didáticas; o modo manual permite informar as alíquotas efetivas.</p>
-   <div class="fields">
-    <div class="field"><label>Ano projetado</label><select id="priceYear"><option>2026</option><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
-    <div class="field"><label>Modo de alíquota</label><select id="rateMode"><option value="rtav">Estimativa RTAV</option><option value="manual">Manual / oficial aplicável</option></select></div>
-    <div class="field"><label>Preço atual</label><input id="priceNow" type="number" step=".01" value="100"></div>
-    <div class="field"><label>PIS atual %</label><input id="pisRate" type="number" step=".01" value=".65"></div>
-    <div class="field"><label>Cofins atual %</label><input id="cofinsRate" type="number" step=".01" value="3"></div>
-    <div class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" step=".01" value="18"></div>
-    <div class="field"><label>ISS atual %</label><input id="issRate" type="number" step=".01" value="0"></div>
-    <div class="field"><label>IPI atual %</label><input id="ipiRate" type="number" step=".01" value="0"></div>
-    <div class="field"><label>CBS projetada %</label><input id="cbsRate" type="number" step=".001" value="9" readonly></div>
-    <div class="field"><label>IBS projetado %</label><input id="ibsRate" type="number" step=".001" value=".1" readonly></div>
+ <div class="flowline" aria-label="Fluxo do simulador">
+  <span>1 · Preço atual</span><i>→</i><span>2 · CBS + IBS</span><i>→</i><span>3 · Crédito</span><i>→</i><span>4 · Custo efetivo</span><i>→</i><span>5 · Resultado</span>
+ </div>
+
+ <article class="integrated-tool">
+  <div class="integrated-head">
+   <div>
+    <span class="tag">SIMULADOR INTEGRADO</span>
+    <h3>Da formação do preço ao custo do cliente</h3>
+    <p>O preço projetado alimenta automaticamente os créditos de CBS/IBS e o custo efetivo. Você não precisa mais copiar resultados de uma ferramenta para outra.</p>
    </div>
-   <div id="rateNote" class="rate-note"></div>
-   <div id="priceResult" class="calc-result"></div>
-  </article>
+   <div class="integration-badge"><b>1 fluxo</b><small>preço → crédito → custo → resultado</small></div>
+  </div>
 
-  <article class="tool">
-   <span class="tag">CADEIA / CRÉDITO</span><h3>Custo efetivo do comprador</h3>
-   <p class="desc">Compara preço de compra menos créditos aproveitáveis. Informe apenas créditos que o comprador realmente possa utilizar.</p>
-   <div class="fields">
-    <div class="field"><label>Preço atual</label><input id="costNow" type="number" step=".01" value="100"></div>
-    <div class="field"><label>Créditos atuais</label><input id="creditNow" type="number" step=".01" value="0"></div>
-    <div class="field"><label>Preço projetado</label><input id="costFuture" type="number" step=".01" value="104.15"></div>
-    <div class="field"><label>Crédito CBS</label><input id="cbsCredit" type="number" step=".01" value="7.05"></div>
-    <div class="field"><label>Crédito IBS</label><input id="ibsCredit" type="number" step=".01" value="0"></div>
+  <div class="sim-sections">
+   <section class="sim-block">
+    <div class="sim-title"><span>01</span><div><b>Cenário atual</b><small>Quanto é cobrado hoje e quais tributos estão no exercício.</small></div></div>
+    <div class="fields three">
+     <div class="field"><label>Preço atual R$</label><input id="priceNow" type="number" step=".01" value="100"></div>
+     <div class="field"><label>PIS atual %</label><input id="pisRate" type="number" step=".01" value=".65"></div>
+     <div class="field"><label>Cofins atual %</label><input id="cofinsRate" type="number" step=".01" value="3"></div>
+     <div class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" step=".01" value="18"></div>
+     <div class="field"><label>ISS atual %</label><input id="issRate" type="number" step=".01" value="0"></div>
+     <div class="field"><label>IPI atual %</label><input id="ipiRate" type="number" step=".01" value="0"></div>
+     <div class="field wide"><label>Créditos atuais aproveitáveis pelo comprador R$</label><input id="currentBuyerCredit" type="number" step=".01" value="0"><small class="field-help">Informe apenas o crédito que o comprador realmente aproveita hoje. Ex.: PIS/Cofins, ICMS ou outro crédito pertinente ao cenário.</small></div>
+    </div>
+   </section>
+
+   <section class="sim-block">
+    <div class="sim-title"><span>02</span><div><b>Cenário da Reforma</b><small>Ano, alíquotas e estratégia de preço.</small></div></div>
+    <div class="fields three">
+     <div class="field"><label>Ano projetado</label><select id="priceYear"><option>2026</option><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
+     <div class="field"><label>Modo de alíquota</label><select id="rateMode"><option value="rtav">Estimativa RTAV</option><option value="manual">Manual / oficial aplicável</option></select></div>
+     <div class="field"><label>Redução de alíquota %</label><input id="rateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
+     <div class="field"><label>CBS projetada %</label><input id="cbsRate" type="number" step=".001" value="9" readonly></div>
+     <div class="field"><label>IBS projetado %</label><input id="ibsRate" type="number" step=".001" value=".1" readonly></div>
+     <div class="field"><label>Estratégia de preço</label><select id="priceStrategy"><option value="net" selected>Preservar receita líquida</option><option value="gross">Manter preço bruto atual</option><option value="manual">Preço projetado manual</option></select></div>
+     <div class="field wide" id="manualPriceField"><label>Preço projetado manual R$</label><input id="manualProjectedPrice" type="number" step=".01" value="100" disabled><small class="field-help">Ative “Preço projetado manual” para testar uma decisão comercial específica.</small></div>
+    </div>
+    <div id="rateNote" class="rate-note"></div>
+   </section>
+
+   <section class="sim-block">
+    <div class="sim-title"><span>03</span><div><b>Crédito do comprador</b><small>O crédito é calculado sobre a CBS/IBS gerada pelo próprio cenário.</small></div></div>
+    <div class="fields three">
+     <div class="field"><label>Perfil de crédito</label><select id="buyerCreditProfile"><option value="full" selected>Simular 100% de CBS/IBS</option><option value="none">Sem crédito CBS/IBS</option><option value="manual">Percentuais manuais</option></select></div>
+     <div class="field"><label>Aproveitamento CBS %</label><input id="cbsCreditPct" type="number" min="0" max="100" step=".01" value="100" readonly></div>
+     <div class="field"><label>Aproveitamento IBS %</label><input id="ibsCreditPct" type="number" min="0" max="100" step=".01" value="100" readonly></div>
+     <div class="field wide"><label>Outros créditos projetados R$</label><input id="otherProjectedCredit" type="number" step=".01" value="0"><small class="field-help">Use para créditos que não são CBS/IBS e que você deseja considerar no custo efetivo do comprador durante a transição.</small></div>
+    </div>
+    <div class="rate-note">Crédito integral é apenas uma premissa de simulação. O aproveitamento real depende do regime do adquirente, documento fiscal, extinção do débito, vedações e regras específicas.</div>
+   </section>
+  </div>
+
+  <section class="integrated-results">
+   <div class="result-head"><div><span class="eyebrow">RESULTADO CONSOLIDADO</span><h3>Preço e custo na mesma leitura</h3></div><div id="resultSignal" class="result-signal"></div></div>
+   <div id="integratedKpis" class="integrated-kpis"></div>
+   <div class="comparison-wrap">
+    <table class="comparison-table">
+     <thead><tr><th>Indicador</th><th>Hoje</th><th>Projetado</th><th>Efeito</th></tr></thead>
+     <tbody id="integratedTable"></tbody>
+    </table>
    </div>
-   <div id="costResult" class="calc-result"></div>
-  </article>
+   <div id="integratedExplanation" class="integrated-explanation"></div>
+  </section>
+ </article>
 
+ <div class="support-title"><span class="eyebrow">COMPLEMENTOS DO MESMO DIAGNÓSTICO</span><h3>Regime tributário</h3><p>Esses cálculos complementam a análise, mas não alteram automaticamente o preço porque dependem de informações próprias do regime.</p></div>
+ <div class="tools-grid support-grid">
   <article class="tool">
    <span class="tag">SIMPLES NACIONAL</span><h3>Alíquota efetiva do DAS</h3>
-   <p class="desc">Reproduz a fórmula do Simples usada no material. Não decide sozinho entre Simples puro e híbrido.</p>
+   <p class="desc">Use como informação complementar quando o cliente estiver no Simples. A decisão puro × híbrido exige também a análise de créditos e cadeia acima.</p>
    <div class="fields">
     <div class="field"><label>RBT12</label><input id="rbt12" type="number" step=".01" value="1000000"></div>
     <div class="field"><label>Alíquota nominal %</label><input id="snNominal" type="number" step=".01" value="16"></div>
@@ -134,17 +181,17 @@
   </article>
 
   <article class="tool">
-   <span class="tag">LC 224</span><h3>Presunção sobre receita acima de R$ 5 milhões</h3>
-   <p class="desc">Simula o acréscimo de 10% no percentual de presunção sobre a parcela anual excedente ao limite legal.</p>
+   <span class="tag">LC 224</span><h3>Base presumida sobre receita acima de R$ 5 milhões</h3>
+   <p class="desc">Mostra a alteração da base presumida para apoiar a análise Presumido × Real. Não é, sozinho, um cálculo de IRPJ/CSLL completo.</p>
    <div class="fields">
     <div class="field"><label>Receita anual</label><input id="lpRevenue" type="number" step=".01" value="10000000"></div>
     <div class="field"><label>Presunção original %</label><input id="lpPresumption" type="number" step=".01" value="32"></div>
    </div>
    <div id="lpResult" class="calc-result"></div>
   </article>
-
  </div>
- <div class="legal-box" style="margin-top:15px"><b>Importante</b><p>Estas ferramentas são educacionais e de planejamento. A alíquota aplicável depende do período, destino, operação, regime, reduções e atos oficiais. O modo “Estimativa RTAV” nunca deve ser tratado como cálculo fiscal definitivo.</p></div>
+
+ <div class="legal-box tool-legal"><b>Como usar</b><p>O simulador reproduz o método de planejamento ensinado no RTAV e conecta preço, CBS/IBS, crédito e custo efetivo. Ele não é motor fiscal. Antes de usar um resultado com cliente, confirme alíquotas, redução, destino, regime, crédito e regras oficiais aplicáveis à operação.</p></div>
 </section>
 
 <section id="sources" class="view">
