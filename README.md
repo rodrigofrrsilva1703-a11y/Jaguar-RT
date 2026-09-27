@@ -11,3 +11,5 @@ PWA de estudo interno sobre a Reforma Tributária, desenvolvido para a Jaguar As
 - Layout responsivo e instalável como PWA
 
 O site é estático e pode ser publicado gratuitamente pelo GitHub Pages.
+
+Publicação automática: GitHub Pages a partir da branch `main`.
