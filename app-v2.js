@@ -471,18 +471,18 @@ function calcIntegrated(){
  const b2b=($('priceBuyerProfile')?.value||'b2c')==='b2b';
  $('integratedKpis').innerHTML=
   '<div class="integrated-kpi dark"><small>Preço atual</small><b>'+money(base.price)+'</b><span>2026</span></div>'+
-  '<div class="integrated-kpi"><small>Tributos atuais</small><b>'+money(base.taxes)+'</b><span>Carga '+pct(base.price?base.taxes/base.price*100:0)+'</span></div>'+
+  '<div class="integrated-kpi"><small>Tributos atuais</small><b>'+money(base.taxes)+'</b><span>2026</span></div>'+
   '<div class="integrated-kpi dark"><small>Preço em '+y+'</small><b>'+money(future.price)+'</b><span>'+effectText(priceDelta)+' vs. 2026</span></div>'+
   (hasOwnCredit
-   ?'<div class="integrated-kpi"><small>Crédito CBS/IBS da empresa</small><b>'+money(future.purchaseCredit)+'</b><span>Carga líquida '+money(future.netTax)+'</span></div>'+
-    '<div class="integrated-kpi dark"><small>Líquido econômico</small><b>'+money(future.economicNet)+'</b><span>Base preservada: '+money(base.net)+'</span></div>'
+   ?'<div class="integrated-kpi"><small>Crédito CBS/IBS</small><b>'+money(future.purchaseCredit)+'</b><span>Tributos líquidos '+money(future.netTax)+'</span></div>'+
+    '<div class="integrated-kpi dark"><small>Valor líquido</small><b>'+money(future.economicNet)+'</b><span>Base preservada: '+money(base.net)+'</span></div>'
    :'<div class="integrated-kpi"><small>Valor líquido</small><b>'+money(future.net)+'</b><span>Base preservada: '+money(base.net)+'</span></div>')+
   (b2b?'<div class="integrated-kpi dark"><small>Custo efetivo do comprador</small><b>'+money(future.buyerCost)+'</b><span>Crédito potencial '+money(future.buyerCredit)+'</span></div>':'');
 
  $('currentTaxSummary').innerHTML=summaryRows(currentTaxRows(base));
  $('futureTaxSummary').innerHTML=summaryRows(futureTaxRows(future));
  const ownCreditSentence=hasOwnCredit
-  ?' A empresa aproveita '+money(future.purchaseCredit)+' de créditos estimados de CBS/IBS; a carga líquida fica em '+money(future.netTax)+' e o líquido econômico em '+money(future.economicNet)+'.'
+  ?' A simulação considera '+money(future.purchaseCredit)+' de crédito de CBS/IBS; os tributos líquidos ficam em '+money(future.netTax)+' e o valor líquido em '+money(future.economicNet)+'.'
   :'';
  const buyerSentence=b2b?' Para o comprador PJ, o crédito potencial considerado é '+money(future.buyerCredit)+' e o custo efetivo estimado fica em '+money(future.buyerCost)+'.':'';
  const preserved=hasOwnCredit?future.economicNet:future.net;
