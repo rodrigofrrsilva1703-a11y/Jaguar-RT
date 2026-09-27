@@ -274,6 +274,32 @@
  #tools .year-detail-price{text-align:left;margin-top:10px}
  #tools .year-detail-grid{grid-template-columns:1fr 1fr}
 }
+
+/* ===== MARGEM E ANÁLISE POR ANO ===== */
+#tools .sim-sections{grid-template-columns:repeat(2,minmax(0,1fr))}
+#tools .sim-block:nth-child(3){grid-column:auto}
+#tools .margin-block{background:linear-gradient(180deg,#fff 0%,#fbfbf8 100%)}
+#tools .margin-preview{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+#tools .margin-preview>div{border:1px solid #deddd7;background:#fff;border-radius:11px;padding:10px}
+#tools .margin-preview small,#tools .margin-preview b{display:block}
+#tools .margin-preview small{font-size:7.5px;color:#888;text-transform:uppercase;letter-spacing:.08em}
+#tools .margin-preview b{font-size:15px;margin-top:4px}
+#tools .year-analysis-box{margin-top:12px;border-top:1px solid #2d2d2d;padding-top:13px}
+#tools .year-analysis-box>span{font-size:7.5px;color:#888;letter-spacing:.1em;text-transform:uppercase;font-weight:900}
+#tools .year-analysis-box h5{font-size:15px;margin:5px 0 9px}
+#tools .year-analysis-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+#tools .year-analysis-point{background:#171717;border:1px solid #303030;border-radius:10px;padding:10px}
+#tools .year-analysis-point b,#tools .year-analysis-point small{display:block}
+#tools .year-analysis-point b{font-size:9px;color:#d8d8d8;margin-bottom:4px}
+#tools .year-analysis-point small{font-size:8.5px;line-height:1.5;color:#999}
+@media(max-width:1080px){
+ #tools .sim-sections{grid-template-columns:1fr 1fr}
+ #tools .sim-block:nth-child(3){grid-column:auto}
+}
+@media(max-width:720px){
+ #tools .sim-sections{grid-template-columns:1fr}
+ #tools .year-analysis-grid{grid-template-columns:1fr}
+}
 </style>
 <script>
 (async()=>{
@@ -400,7 +426,7 @@
  </div>
 
  <div class="flowline" aria-label="Fluxo do simulador">
-  <span>1 · Regime</span><i>→</i><span>2 · Preço atual</span><i>→</i><span>3 · Reforma</span><i>→</i><span>4 · Crédito</span><i>→</i><span>5 · Resultado 2026–33</span>
+  <span>1 · Regime</span><i>→</i><span>2 · Preço atual</span><i>→</i><span>3 · Reforma</span><i>→</i><span>4 · Créditos</span><i>→</i><span>5 · Margem</span><i>→</i><span>6 · Resultado 2026–33</span>
  </div>
 
  <article class="integrated-tool">
@@ -470,7 +496,7 @@
     <div class="sim-title"><span>02</span><div><b>Cenário da Reforma</b><small>Ano, estratégia e regras do regime.</small></div></div>
     <div class="fields three">
      <div class="field"><label>Ano destacado</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
-     <div class="field"><label>Estratégia de preço</label><select id="priceStrategy"><option value="net" selected>Formar preço para preservar o líquido de 2026</option><option value="gross">Manter preço de 2026 (simulação)</option><option value="manual">Preço projetado manual</option></select></div>
+     <div class="field"><label>Estratégia de preço</label><select id="priceStrategy"><option value="net" selected>Formar preço para preservar o líquido de 2026</option><option value="margin">Preservar margem operacional de 2026</option><option value="gross">Manter preço de 2026 (simulação)</option><option value="manual">Preço projetado manual</option></select></div>
 
      <div id="regularFutureFields" class="regime-panel wide">
       <div class="fields three">
@@ -519,6 +545,19 @@
      <div class="field wide"><label>Outros créditos projetados R$</label><input id="otherProjectedCredit" type="number" step=".01" value="0"></div>
     </div>
     <div class="rate-note">No Simples padrão, o crédito de um adquirente sujeito ao regime regular é limitado aos valores de IBS/CBS devidos via Simples. No híbrido, CBS/IBS seguem o regime regular. Sempre valide documento, extinção do débito e demais requisitos.</div>
+   </section>
+
+   <section class="sim-block margin-block">
+    <div class="sim-title"><span>04</span><div><b>Margem da empresa</b><small>Custos e créditos das compras do próprio cliente.</small></div></div>
+    <div class="fields three">
+     <div class="field wide"><label>Custos e despesas atuais por venda R$</label><input id="sellerOperatingCost" type="number" min="0" step=".01" value="60"><small class="field-help">Informe custos e despesas ligados à venda antes dos créditos recuperáveis.</small></div>
+     <div class="field"><label>Créditos atuais nas compras R$</label><input id="currentSellerCredit" type="number" min="0" step=".01" value="0"></div>
+     <div class="field"><label>Base líquida das compras com crédito R$</label><input id="sellerCreditBase" type="number" min="0" step=".01" value="60"></div>
+     <div class="field"><label>Aproveitamento dos créditos %</label><input id="sellerCreditPct" type="number" min="0" max="100" step=".01" value="100"></div>
+     <div class="field"><label>Outros créditos projetados R$</label><input id="otherSellerCredit" type="number" min="0" step=".01" value="0"></div>
+    </div>
+    <div id="sellerMarginPreview" class="margin-preview"></div>
+    <div class="rate-note">Análise simplificada para isolar o efeito da Reforma: mantém os custos/despesas informados constantes e projeta os créditos de CBS/IBS sobre a base de compras indicada. Não inclui inflação nem renegociação de fornecedores.</div>
    </section>
   </div>
 
@@ -612,7 +651,7 @@
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260927-24"></script>
-<script src="app-v2.js?v=20260927-24"></script>
+<script src="content-v2.js?v=20260927-25"></script>
+<script src="app-v2.js?v=20260927-25"></script>
 </body>
 </html>
