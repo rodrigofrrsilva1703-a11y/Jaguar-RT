@@ -1,5 +1,13 @@
 const CACHE='jaguar-rtav-v3';
-const STATIC=['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
+const BASE='/Jaguar-RTAV/';
+const STATIC=[
+  BASE,
+  BASE+'index.html',
+  BASE+'manifest.webmanifest',
+  BASE+'icon.svg',
+  BASE+'icon-192.png',
+  BASE+'icon-512.png'
+];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -23,10 +31,10 @@ self.addEventListener('fetch',event=>{
       fetch(req)
         .then(response=>{
           const copy=response.clone();
-          caches.open(CACHE).then(cache=>cache.put('./index.html',copy));
+          caches.open(CACHE).then(cache=>cache.put(BASE+'index.html',copy));
           return response;
         })
-        .catch(()=>caches.match('./index.html').then(r=>r||caches.match('./')))
+        .catch(()=>caches.match(BASE+'index.html'))
     );
     return;
   }
