@@ -789,7 +789,10 @@ function revCurrentScenario(){
   taxes=Object.values(components).reduce(function(a,b){return a+b;},0);
  }
 
- return {year:2026,regime:r,revenue:revenue,taxes:taxes,net:Math.max(0,revenue-taxes),components:components,cbs:null,ibs:null,remnant:taxes};
+ const purchaseCredit=0;
+ const netTax=taxes;
+ const economicNet=Math.max(0,revenue-netTax);
+ return {year:2026,regime:r,revenue:revenue,taxes:taxes,net:Math.max(0,revenue-taxes),components:components,cbs:null,ibs:null,remnant:taxes,purchaseCredit,netTax,economicNet};
 }
 
 function revParamsForYear(year){
@@ -832,7 +835,12 @@ function revScenarioAtRevenue(year,gross){
   net=Math.max(0,gross-taxes);
  }
 
- return {year:year,regime:revRegime(),revenue:gross,cbs:cbs,ibs:ibs,remnant:remnant,taxes:taxes,net:net};
+ const eligibleBasePct=clamp(num('revCreditablePurchasesPct'),0,100)/100;
+ const usePct=clamp(num('revPurchaseCreditUsePct'),0,100)/100;
+ const purchaseCredit=(p.type==='simple')?0:(gross*eligibleBasePct*((p.cbsRate||0)+(p.ibsRate||0))*usePct);
+ const netTax=Math.max(0,taxes-purchaseCredit);
+ const economicNet=Math.max(0,gross-netTax);
+ return {year:year,regime:revRegime(),revenue:gross,cbs:cbs,ibs:ibs,remnant:remnant,taxes:taxes,net:net,purchaseCredit,netTax,economicNet};
 }
 
 function revFutureScenario(year,keepGross=false){
@@ -875,7 +883,12 @@ function revFutureRows(x){
  if(x.ibs>0) rows.push(['IBS',money(x.ibs)]);
  if(x.remnant>0) rows.push(['DAS / tributos remanescentes',money(x.remnant)]);
  rows.push(['Total de tributos',money(x.taxes)]);
- rows.push(['Faturamento líquido',money(x.net)]);
+ if((x.purchaseCredit||0)>0){
+  rows.push(['Créditos estimados das aquisições',money(x.purchaseCredit)]);
+  rows.push(['Carga líquida após créditos',money(x.netTax)]);
+  rows.push(['Líquido econômico após créditos',money(x.economicNet)]);
+ }
+ rows.push(['Faturamento líquido antes dos créditos',money(x.net)]);
  return rows;
 }
 
