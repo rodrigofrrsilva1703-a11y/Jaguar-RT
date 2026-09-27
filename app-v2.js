@@ -513,6 +513,7 @@ function futureTaxRows(x){
  return rows;
 }
 
+
 function calcIntegrated(){
  if(!$('integratedKpis')) return;
  updateScenarioStrip();
@@ -520,39 +521,29 @@ function calcIntegrated(){
  const base=currentScenario();
  const y=Number($('priceYear')?.value||2027);
  const future=futureScenario(y);
- const noReprice=futureScenario(y,true);
  const priceDelta=effectPct(base.price,future.price);
- const annualPrev=y===2027?base:futureScenario(y-1);
- const annualDelta=effectPct(annualPrev.price,future.price);
+ const prev=y===2027?base:futureScenario(y-1);
+ const annualDelta=effectPct(prev.price,future.price);
 
  let signal='PREÇO ESTÁVEL',headline='O preço projetado ficou próximo ao valor atual.';
- if(priceDelta>.05){signal='AUMENTO DE PREÇO';headline='A carga tributária do período exige preço maior para preservar o mesmo líquido de 2026.';}
- else if(priceDelta<-.05){signal='REDUÇÃO DE PREÇO';headline='A nova estrutura tributária permite preço menor mantendo o mesmo líquido de 2026.';}
+ if(priceDelta>.05){signal='AUMENTO DE PREÇO';headline='A projeção indica aumento do preço para preservar o mesmo líquido de 2026.';}
+ else if(priceDelta<-.05){signal='REDUÇÃO DE PREÇO';headline='A projeção permite preço menor mantendo o mesmo líquido de 2026.';}
 
  $('resultSignal').textContent=signal;
  $('regimeResultNote').textContent=REGIME_LABELS[regime()]+' · '+regimeExplanation();
 
- $('integratedKpis').innerHTML=`
-  <div class="integrated-kpi dark"><small>Preço atual</small><b>${money(base.price)}</b><span>2026</span></div>
-  <div class="integrated-kpi"><small>Valor líquido atual</small><b>${money(base.net)}</b><span>Após ${money(base.taxes)} de tributos</span></div>
-  <div class="integrated-kpi dark"><small>Preço em ${y}</small><b>${money(future.price)}</b><span>${effectText(priceDelta)} vs. 2026</span></div>
-  <div class="integrated-kpi"><small>Tributos em ${y}</small><b>${money(future.taxes)}</b><span>Carga ${pct(future.price?future.taxes/future.price*100:0)}</span></div>
- `;
+ $('integratedKpis').innerHTML=
+  '<div class="integrated-kpi dark"><small>Preço atual</small><b>'+money(base.price)+'</b><span>2026</span></div>'+
+  '<div class="integrated-kpi"><small>Tributos atuais</small><b>'+money(base.taxes)+'</b><span>Carga '+pct(base.price?base.taxes/base.price*100:0)+'</span></div>'+
+  '<div class="integrated-kpi dark"><small>Preço em '+y+'</small><b>'+money(future.price)+'</b><span>'+effectText(priceDelta)+' vs. 2026</span></div>'+
+  '<div class="integrated-kpi"><small>Valor líquido</small><b>'+money(future.net)+'</b><span>Base preservada: '+money(base.net)+'</span></div>';
 
  $('currentTaxSummary').innerHTML=summaryRows(currentTaxRows(base));
  $('futureTaxSummary').innerHTML=summaryRows(futureTaxRows(future));
-
- const period=$('revenuePeriod')?.value||'mensal';
- if($('revenueTitle')) $('revenueTitle').textContent='Faturamento '+period;
-
- $('revenueKpis').innerHTML=`
-  <div class="integrated-kpi dark"><small>Faturamento 2026</small><b>${money(base.revenue)}</b><span>Líquido ${money(base.revenueNet)}</span></div>
-  <div class="integrated-kpi"><small>Faturamento projetado ${y}</small><b>${money(future.revenue)}</b><span>${effectText(future.revenueDelta)} com mesmo volume</span></div>
-  <div class="integrated-kpi"><small>Tributos no faturamento</small><b>${money(future.revenueTaxes)}</b><span>2026: ${money(base.revenueTaxes)}</span></div>
-  <div class="integrated-kpi dark"><small>Líquido se não reajustar</small><b>${money(noReprice.sameGrossRevenueNet)}</b><span>Com faturamento bruto mantido em ${money(base.revenue)}</span></div>
- `;
-
- $('integratedExplanation').innerHTML=`<b>${headline}</b><p>O cálculo parte do valor líquido de 2026, de <strong>${money(base.net)}</strong> por venda. Para ${y}, o preço necessário para preservar esse mesmo líquido é <strong>${money(future.price)}</strong> (${effectText(priceDelta)} vs. 2026 e ${effectText(annualDelta)} vs. ano anterior). Mantendo o mesmo volume de vendas, o faturamento bruto iria de ${money(base.revenue)} para ${money(future.revenue)}.</p>`;
+ $('integratedExplanation').innerHTML=
+  '<b>'+headline+'</b><p>Em 2026, '+money(base.taxes)+' do preço correspondem aos tributos considerados e o valor líquido é '+money(base.net)+
+  '. Em '+y+', o preço projetado é <strong>'+money(future.price)+'</strong> ('+effectText(priceDelta)+' contra 2026 e '+effectText(annualDelta)+
+  ' contra o ano anterior), mantendo o líquido em '+money(future.net)+'.</p>';
 
  renderYearlyProjection();
 }
@@ -564,49 +555,35 @@ function selectYearDetail(year){
  if(year>=2027&&$('priceYear')){
   $('priceYear').value=String(year);
   applyYearPreset();
- }else{
-  renderYearlyProjection();
- }
+ }else renderYearlyProjection();
 }
 
 function renderYearDetail(year){
  if(!$('yearDetailPanel')||!yearlyRows.length) return;
  const x=yearlyRows.find(r=>r.year===Number(year))||yearlyRows[0];
- if(!x) return;
  const base=yearlyRows[0];
- const regimeLabel=REGIME_LABELS[x.regime]||x.regime;
  const isBase=x.year===2026;
- const taxBurden=x.price?x.taxes/x.price*100:0;
- const revenueChange=isBase?0:effectPct(base.revenue,x.revenue);
  const priceChange=isBase?0:effectPct(base.price,x.price);
 
- let analysis='';
- if(isBase){
-  analysis=`Em 2026, de cada ${money(x.price)} vendidos, ${money(x.taxes)} correspondem aos tributos considerados e ${money(x.net)} permanecem como valor líquido. Sobre o faturamento informado, isso representa ${money(x.revenueTaxes)} de tributos e ${money(x.revenueNet)} líquidos.`;
- }else{
-  const direction=priceChange>.05?'aumento':priceChange<-.05?'redução':'estabilidade';
-  analysis=`Em ${x.year}, a projeção indica ${direction} do preço para ${money(x.price)} (${effectText(priceChange)} contra 2026). O total de tributos por venda é ${money(x.taxes)} e o valor líquido permanece em ${money(x.net)}. Com o mesmo volume de vendas de 2026, o faturamento projetado é ${money(x.revenue)} (${effectText(revenueChange)}), com ${money(x.revenueTaxes)} destinados aos tributos.`;
- }
+ const analysis=isBase
+  ? 'Em 2026, de cada '+money(x.price)+' vendidos, '+money(x.taxes)+' correspondem aos tributos considerados e '+money(x.net)+' permanecem como valor líquido.'
+  : 'Em '+x.year+', o preço projetado é '+money(x.price)+' ('+effectText(priceChange)+' contra 2026). Os tributos somam '+money(x.taxes)+' e o líquido preservado é '+money(x.net)+'.';
 
  $('yearDetailPanel').classList.add('visible');
- $('yearDetailPanel').innerHTML=`
-  <div class="year-detail-top">
-   <div><span>ANÁLISE TRIBUTÁRIA · ${regimeLabel}</span><h4>${x.year} · ${x.system}</h4></div>
-   <div class="year-detail-price"><small>PREÇO</small><b>${money(x.price)}</b></div>
-  </div>
-  <div class="year-detail-grid tax-detail">
-   <div class="year-detail-item"><small>Total de tributos</small><b>${money(x.taxes)}</b></div>
-   <div class="year-detail-item"><small>Carga sobre o preço</small><b>${pct(taxBurden)}</b></div>
-   <div class="year-detail-item"><small>Valor líquido</small><b>${money(x.net)}</b></div>
-   <div class="year-detail-item"><small>CBS</small><b>${x.cbs===null?'—':money(x.cbs)}</b></div>
-   <div class="year-detail-item"><small>IBS</small><b>${x.ibs===null?'—':money(x.ibs)}</b></div>
-   <div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>${money(x.remnant)}</b></div>
-   <div class="year-detail-item"><small>Faturamento projetado</small><b>${money(x.revenue)}</b></div>
-   <div class="year-detail-item"><small>Tributos no faturamento</small><b>${money(x.revenueTaxes)}</b></div>
-   <div class="year-detail-item"><small>Faturamento líquido</small><b>${money(x.revenueNet)}</b></div>
-  </div>
-  <div class="tax-analysis-text"><b>Leitura do ano</b><p>${analysis}</p></div>
- `;
+ $('yearDetailPanel').innerHTML=
+  '<div class="year-detail-top">'+
+   '<div><span>ANÁLISE DO PREÇO · '+REGIME_LABELS[x.regime]+'</span><h4>'+x.year+' · '+x.system+'</h4></div>'+
+   '<div class="year-detail-price"><small>PREÇO</small><b>'+money(x.price)+'</b></div>'+
+  '</div>'+
+  '<div class="year-detail-grid tax-detail">'+
+   '<div class="year-detail-item"><small>Total de tributos</small><b>'+money(x.taxes)+'</b></div>'+
+   '<div class="year-detail-item"><small>Carga</small><b>'+pct(x.price?x.taxes/x.price*100:0)+'</b></div>'+
+   '<div class="year-detail-item"><small>Valor líquido</small><b>'+money(x.net)+'</b></div>'+
+   '<div class="year-detail-item"><small>CBS</small><b>'+(x.cbs===null?'—':money(x.cbs))+'</b></div>'+
+   '<div class="year-detail-item"><small>IBS</small><b>'+(x.ibs===null?'—':money(x.ibs))+'</b></div>'+
+   '<div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>'+money(x.remnant)+'</b></div>'+
+  '</div>'+
+  '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+analysis+'</p></div>';
 }
 
 function renderYearlyProjection(){
@@ -614,55 +591,40 @@ function renderYearlyProjection(){
  const base=currentScenario();
  const selectedYear=Number($('priceYear')?.value||2027);
  const r=regime();
-
- const rows=[{
-  ...base,
-  system:'Atual',
-  diff:0,delta:0,annualDelta:0
- }];
+ const rows=[Object.assign({},base,{system:'Atual',delta:0,annualDelta:0})];
 
  let prevPrice=base.price;
  for(let year=2027;year<=2033;year++){
   const x=futureScenario(year);
-  rows.push({
-   ...x,
+  rows.push(Object.assign({},x,{
    system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma',
-   diff:x.price-base.price,
    delta:effectPct(base.price,x.price),
    annualDelta:effectPct(prevPrice,x.price)
-  });
+  }));
   prevPrice=x.price;
  }
  yearlyRows=rows;
 
  if(yearDetailSelected===null||!rows.some(x=>x.year===yearDetailSelected)) yearDetailSelected=selectedYear;
 
- if($('yearlyPriceStrip')){
-  $('yearlyPriceStrip').innerHTML=rows.map(x=>`
-   <button type="button" class="year-price-card ${x.year===yearDetailSelected?'active':''}" onclick="selectYearDetail(${x.year})">
-    <small>${x.year}</small>
-    <b>${money(x.price)}</b>
-    <span>${x.year===2026?'Base':effectText(x.delta)+' vs. 2026'}</span>
-   </button>
-  `).join('');
- }
+ $('yearlyPriceStrip').innerHTML=rows.map(x=>
+  '<button type="button" class="year-price-card '+(x.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+x.year+')">'+
+   '<small>'+x.year+'</small><b>'+money(x.price)+'</b><span>'+(x.year===2026?'Base':effectText(x.delta)+' vs. 2026')+'</span>'+
+  '</button>'
+ ).join('');
 
  $('yearlyProjectionTable').innerHTML=rows.map(x=>{
   const cls=x.year===2026?'current-year':(x.year===yearDetailSelected?'selected-year':'');
-  return `<tr class="${cls}" onclick="selectYearDetail(${x.year})">
-   <td>${x.year}</td>
-   <td><strong>${money(x.price)}</strong></td>
-   <td>${money(x.taxes)}</td>
-   <td><strong>${money(x.net)}</strong></td>
-   <td>${money(x.revenue)}</td>
-   <td>${money(x.revenueTaxes)}</td>
-  </tr>`;
+  return '<tr class="'+cls+'" onclick="selectYearDetail('+x.year+')">'+
+   '<td>'+x.year+'</td><td><strong>'+money(x.price)+'</strong></td><td>'+money(x.taxes)+'</td>'+
+   '<td>'+pct(x.price?x.taxes/x.price*100:0)+'</td><td><strong>'+money(x.net)+'</strong></td>'+
+  '</tr>';
  }).join('');
 
  renderYearDetail(yearDetailSelected);
 
- let note='O preço é recalculado automaticamente para preservar o mesmo valor líquido por venda de 2026. A projeção de faturamento pressupõe o mesmo volume de vendas.';
- if(r==='simples') note+=' No Simples padrão, o preço pode permanecer igual se a alíquota efetiva total do DAS não mudar, embora a composição interna de CBS/IBS possa variar.';
+ let note='O preço de cada ano é calculado para preservar o mesmo valor líquido por venda de 2026.';
+ if(r==='simples') note+=' No Simples padrão, o preço pode permanecer igual quando a alíquota efetiva total do DAS não muda.';
  if(r==='simples_hybrid') note+=' No híbrido, CBS/IBS ficam fora do DAS e o remanescente permanece separado.';
  $('yearlyProjectionNote').textContent=note;
 }
