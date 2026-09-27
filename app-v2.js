@@ -1054,12 +1054,64 @@ function revRenderYearly(){
 function xmlEsc(v){
  return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
 function xlsCell(value,type='String'){
  const val=type==='Number'?(Number(value)||0):xmlEsc(value);
  return '<Cell><Data ss:Type="'+type+'">'+val+'</Data></Cell>';
 }
 
+function columnWidths(headers,rows){
+ return headers.map(function(header,idx){
+  let max=String(header??'').length;
+  rows.forEach(function(row){
+   const v=row[idx];
+   const len=typeof v==='number'?String(Math.round(v*100)/100).length:String(v??'').length;
+   if(len>max) max=len;
+  });
+  return {wch:Math.min(Math.max(max+2,10),34)};
+ });
+}
+
 function downloadSpreadsheet(filename,headers,rows,premises){
+ if(window.XLSX){
+  const analysisData=[headers].concat(rows);
+  const premiseData=[['Premissa','Valor']].concat(premises);
+
+  const ws=XLSX.utils.aoa_to_sheet(analysisData);
+  const wsPremises=XLSX.utils.aoa_to_sheet(premiseData);
+
+  ws['!cols']=columnWidths(headers,rows);
+  wsPremises['!cols']=[{wch:34},{wch:28}];
+
+  if(ws['!ref']) ws['!autofilter']={ref:ws['!ref']};
+
+  // Formatos numéricos básicos: valores monetários e percentuais permanecem como números.
+  rows.forEach(function(row,rowIndex){
+   row.forEach(function(value,colIndex){
+    if(typeof value!=='number') return;
+    const addr=XLSX.utils.encode_cell({r:rowIndex+1,c:colIndex});
+    if(!ws[addr]) return;
+    const header=String(headers[colIndex]||'').toLowerCase();
+    if(header.includes('%')||header.includes('carga')) ws[addr].z='0.00';
+    else if(header.includes('ano')) ws[addr].z='0';
+    else ws[addr].z='#,##0.00';
+   });
+  });
+
+  premises.forEach(function(row,rowIndex){
+   if(typeof row[1]!=='number') return;
+   const addr=XLSX.utils.encode_cell({r:rowIndex+1,c:1});
+   if(wsPremises[addr]) wsPremises[addr].z='#,##0.00';
+  });
+
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Análise 2026-2033');
+  XLSX.utils.book_append_sheet(wb,wsPremises,'Premissas');
+  XLSX.writeFile(wb,filename,{compression:true});
+  return;
+ }
+
+ // Fallback compatível caso a biblioteca XLSX externa não carregue.
  const headersXml=headers.map(function(x){return xlsCell(x);}).join('');
  const rowsXml=rows.map(function(row){
   return '<Row>'+row.map(function(v){return typeof v==='number'?xlsCell(v,'Number'):xlsCell(v);}).join('')+'</Row>';
@@ -1075,14 +1127,16 @@ function downloadSpreadsheet(filename,headers,rows,premises){
 
  const blob=new Blob(['\ufeff',xml],{type:'application/vnd.ms-excel;charset=utf-8'});
  const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ a.href=url;
+ a.download=filename.replace(/\.xlsx$/i,'.xls');
+ document.body.appendChild(a);a.click();a.remove();
  setTimeout(function(){URL.revokeObjectURL(url);},1000);
 }
 
 function exportPriceExcel(){
  if(!yearlyRows.length) renderYearlyProjection();
  downloadSpreadsheet(
-  'analise-preco-'+regime()+'-2026-2033.xls',
+  'analise-preco-'+regime()+'-2026-2033.xlsx',
   ['Ano','Regime','Sistema','Preço','Tributos','Carga %','Valor líquido','CBS','IBS','DAS / tributos remanescentes','Crédito potencial comprador','Custo efetivo comprador'],
   yearlyRows.map(function(x){
    return [x.year,REGIME_LABELS[x.regime],x.system,x.price,x.taxes,x.price?x.taxes/x.price*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.buyerCredit??0,x.buyerCost??x.price];
@@ -1100,7 +1154,7 @@ function exportPriceExcel(){
 function exportRevenueExcel(){
  if(!revenueYearlyRows.length) revRenderYearly();
  downloadSpreadsheet(
-  'analise-faturamento-'+revRegime()+'-2026-2033.xls',
+  'analise-faturamento-'+revRegime()+'-2026-2033.xlsx',
   ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','DAS / tributos remanescentes','Créditos estimados das aquisições','Carga líquida','Líquido após créditos'],
   revenueYearlyRows.map(function(x){
    return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.economicNet??x.net];
