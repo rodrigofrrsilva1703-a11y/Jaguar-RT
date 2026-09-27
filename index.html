@@ -407,6 +407,12 @@
  .tax-tool-panel.active .integrated-tool{border:0!important;box-shadow:none!important}
  nav,.sidebar,.topbar{display:none!important}
 }
+
+.preset-row{display:grid;grid-template-columns:auto minmax(180px,260px) 1fr;gap:8px;align-items:center;background:#f7f7f4;border:1px solid #e5e4de;border-radius:11px;padding:8px 10px;margin-bottom:9px}
+.preset-row label{font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+.preset-row select{border:1px solid #d7d6d0;background:#fff;border-radius:8px;padding:7px;font-size:9px}
+.preset-row small{font-size:7.5px;color:#888}
+@media(max-width:650px){.preset-row{grid-template-columns:1fr}.preset-row select{width:100%}}
 </style>
 <script>
 (async()=>{
@@ -593,6 +599,16 @@
 
      <div id="regularCurrentFields" class="regime-panel">
       <div class="subpanel-title"><b>Tributos atuais da venda</b><small>Informe as alíquotas aplicáveis ao cenário do cliente.</small></div>
+      <div class="preset-row">
+       <label for="priceQuickPreset">Exemplo editável</label>
+       <select id="priceQuickPreset">
+        <option value="">Preenchimento manual</option>
+        <option value="commerce_lp">Comércio · LP · ICMS 18%</option>
+        <option value="services_lp">Serviços · LP · ISS 5%</option>
+        <option value="services_lr">Serviços · LR · ISS 5%</option>
+       </select>
+       <small>Atalho didático; confirme as alíquotas reais do cliente.</small>
+      </div>
       <div class="fields three">
        <div class="field"><label>PIS %</label><input id="pisRate" type="number" step=".01" value=".65"></div>
        <div class="field"><label>Cofins %</label><input id="cofinsRate" type="number" step=".01" value="3"></div>
@@ -746,6 +762,16 @@
 
      <div id="revRegularCurrentFields" class="regime-panel">
       <div class="subpanel-title"><b>Tributos atuais sobre a receita</b><small>Use as alíquotas aplicáveis ao faturamento analisado.</small></div>
+      <div class="preset-row">
+       <label for="revenueQuickPreset">Exemplo editável</label>
+       <select id="revenueQuickPreset">
+        <option value="">Preenchimento manual</option>
+        <option value="commerce_lp">Comércio · LP · ICMS 18%</option>
+        <option value="services_lp">Serviços · LP · ISS 5%</option>
+        <option value="services_lr">Serviços · LR · ISS 5%</option>
+       </select>
+       <small>Atalho didático; confirme as alíquotas reais do cliente.</small>
+      </div>
       <div class="fields three">
        <div class="field"><label>PIS %</label><input id="revPisRate" type="number" step=".01" value=".65"></div>
        <div class="field"><label>Cofins %</label><input id="revCofinsRate" type="number" step=".01" value="3"></div>
