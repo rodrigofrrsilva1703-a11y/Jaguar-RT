@@ -19,8 +19,8 @@ function moduleCard(m){
 }
 
 function renderHome(){
- $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
- $('moduleGrid').innerHTML=STUDY_MODULES.map(moduleCard).join('');
+ if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
+ if($('moduleGrid')) $('moduleGrid').innerHTML=STUDY_MODULES.map(moduleCard).join('');
  $('practiceGrid').innerHTML=PRACTICES.map((p,i)=>`<article class="practice-card">
    <div><span class="tag">${p.tag}</span><span class="practice-code">${p.id}</span></div>
    <h3>${p.title}</h3>
@@ -102,8 +102,8 @@ function searchModules(q){
  const result=STUDY_MODULES.filter(m=>JSON.stringify(m).toLowerCase().includes(q));
  $('searchResults').innerHTML=result.length?result.map(moduleCard).join(''):'<div class="empty">Nenhum conteúdo encontrado.</div>';
 }
-$('searchInput').addEventListener('input',e=>searchModules(e.target.value));
-$('heroSearch').addEventListener('keydown',e=>{
+$('searchInput')?.addEventListener('input',e=>searchModules(e.target.value));
+$('heroSearch')?.addEventListener('keydown',e=>{
  if(e.key==='Enter'){ $('searchInput').value=e.target.value; searchModules(e.target.value); go('search'); }
 });
 
