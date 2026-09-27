@@ -349,10 +349,7 @@ function updateScenarioStrip(){
 }
 
 function summaryRows(rows){
- return '<div class="tax-summary-list">'+rows.map(([label,value,role])=>{
-  const cls=role?' flow-'+role:'';
-  return `<div class="tax-summary-row${cls}"><span>${label}</span><b>${value}</b></div>`;
- }).join('')+'</div>';
+ return '<div class="tax-summary-list">'+rows.map(([label,value])=>`<div class="tax-summary-row"><span>${label}</span><b>${value}</b></div>`).join('')+'</div>';
 }
 
 function currentTaxRows(base){
@@ -693,31 +690,31 @@ function revFutureScenario(year,keepGross=false){
 }
 
 function revCurrentRows(base){
- const rows=[['Faturamento bruto',signedMoney(base.revenue,'+'),'plus']];
+ const rows=[['Faturamento bruto',money(base.revenue)]];
  if(!revIsSimple(base.regime)){
   const c=base.components;
-  if(c.pis>0) rows.push(['PIS',signedMoney(c.pis,'−'),'minus']);
-  if(c.cofins>0) rows.push(['Cofins',signedMoney(c.cofins,'−'),'minus']);
-  if(c.icms>0) rows.push(['ICMS',signedMoney(c.icms,'−'),'minus']);
-  if(c.iss>0) rows.push(['ISS',signedMoney(c.iss,'−'),'minus']);
-  if(c.ipi>0) rows.push(['IPI',signedMoney(c.ipi,'−'),'minus']);
- }else rows.push(['DAS / tributos',signedMoney(base.taxes,'−'),'minus']);
- rows.push(['Faturamento líquido',signedMoney(base.net,'='),'result']);
+  if(c.pis>0) rows.push(['PIS',signedMoney(c.pis,'−')]);
+  if(c.cofins>0) rows.push(['Cofins',signedMoney(c.cofins,'−')]);
+  if(c.icms>0) rows.push(['ICMS',signedMoney(c.icms,'−')]);
+  if(c.iss>0) rows.push(['ISS',signedMoney(c.iss,'−')]);
+  if(c.ipi>0) rows.push(['IPI',signedMoney(c.ipi,'−')]);
+ }else rows.push(['DAS / tributos',signedMoney(base.taxes,'−')]);
+ rows.push(['Faturamento líquido',money(base.net)]);
  return rows;
 }
 
 function revFutureRows(x){
- const rows=[['Faturamento bruto projetado',signedMoney(x.revenue,'+'),'plus']];
- if(x.cbs>0) rows.push(['CBS',signedMoney(x.cbs,'−'),'minus']);
- if(x.ibs>0) rows.push(['IBS',signedMoney(x.ibs,'−'),'minus']);
- if(x.remnant>0) rows.push(['DAS / tributos remanescentes',signedMoney(x.remnant,'−'),'minus']);
- rows.push(['Total de tributos',signedMoney(x.taxes,'−'),'minus']);
+ const rows=[['Faturamento bruto projetado',money(x.revenue)]];
+ if(x.cbs>0) rows.push(['CBS',signedMoney(x.cbs,'−')]);
+ if(x.ibs>0) rows.push(['IBS',signedMoney(x.ibs,'−')]);
+ if(x.remnant>0) rows.push(['DAS / tributos remanescentes',signedMoney(x.remnant,'−')]);
+ rows.push(['Total de tributos',signedMoney(x.taxes,'−')]);
  if((x.purchaseCredit||0)>0){
-  rows.push(['Créditos estimados das aquisições',signedMoney(x.purchaseCredit,'+'),'plus']);
-  rows.push(['Carga líquida após créditos',signedMoney(x.netTax,'−'),'minus']);
-  rows.push(['Líquido econômico após créditos',signedMoney(x.economicNet,'='),'result']);
+  rows.push(['Créditos estimados das aquisições',money(x.purchaseCredit)]);
+  rows.push(['Carga líquida após créditos',signedMoney(x.netTax,'−')]);
+  rows.push(['Líquido econômico após créditos',money(x.economicNet)]);
  }
- rows.push(['Faturamento líquido antes dos créditos',signedMoney(x.net,'='),'result']);
+ rows.push(['Faturamento líquido antes dos créditos',money(x.net)]);
  return rows;
 }
 
