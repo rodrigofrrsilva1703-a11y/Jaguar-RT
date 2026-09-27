@@ -122,6 +122,7 @@
     usePct:clamp(input.buyer?.usePct??100,0,100)
    },
    purchases:{
+    enabled:input.purchases?.enabled===undefined?true:!!input.purchases.enabled,
     creditablePct:clamp(input.purchases?.creditablePct,0,100),
     usePct:clamp(input.purchases?.usePct??100,0,100)
    }
@@ -231,8 +232,11 @@
    net=Math.max(0,price-taxes);
   }
 
+  const purchaseCredit=(!cfg.purchases.enabled||p.type==='simple')?0:price*(cfg.purchases.creditablePct/100)*((p.cbsRate||0)+(p.ibsRate||0))*(cfg.purchases.usePct/100);
+  const netTax=Math.max(0,taxes-purchaseCredit);
+  const economicNet=Math.max(0,price-netTax);
   const buyerCredit=cfg.buyer.profile==='b2b'?(cbs+ibs)*(cfg.buyer.usePct/100):0;
-  return {year,regime:cfg.regime,price,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,buyerCredit,buyerCost:Math.max(0,price-buyerCredit),params:p};
+  return {year,regime:cfg.regime,price,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,purchaseCredit,netTax,economicNet,buyerCredit,buyerCost:Math.max(0,price-buyerCredit),params:p};
  }
 
  function futurePriceScenario(input,year,keepGross=false){
@@ -242,7 +246,11 @@
   let projected=base.price;
 
   if(!keepGross){
-   if(p.type==='simple') projected=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
+   const hasOwnCredit=cfg.purchases.enabled&&cfg.purchases.creditablePct>0&&p.type!=='simple';
+   if(hasOwnCredit){
+    const unit=priceScenarioAtPrice(cfg,year,1);
+    projected=unit.economicNet>0?base.net/unit.economicNet:0;
+   }else if(p.type==='simple') projected=(1-p.dasRate)>0?base.net/(1-p.dasRate):0;
    else if(p.type==='hybrid') projected=hybridGrossFromNet(p,base.net);
    else{
     const newRate=p.cbsRate+p.ibsRate;
@@ -325,6 +333,13 @@
    messages.push({level:'warning',code:'buyer_credit',message:'O crédito atual informado é maior que o preço. O cálculo limita o crédito ao valor da venda.'});
   }
 
+  if(kind==='price'&&cfg.purchases.enabled&&cfg.purchases.creditablePct===0){
+   messages.push({level:'info',code:'own_credit_base_zero',message:'Crédito CBS/IBS ativado: informe o percentual das compras/insumos que gera crédito para refletir o efeito no preço.'});
+  }
+  if(kind==='price'&&cfg.regime==='simples'&&cfg.purchases.enabled&&cfg.purchases.creditablePct>0){
+   messages.push({level:'info',code:'simple_own_credit',message:'No Simples padrão, a simulação de preço não apropria créditos próprios de IBS/CBS das aquisições dentro do regime.'});
+  }
+
   if(kind==='revenue'&&cfg.regime==='simples'&&cfg.purchases.creditablePct>0){
    messages.push({level:'info',code:'simple_credit',message:'No Simples padrão, a simulação não apropria créditos de IBS/CBS das aquisições dentro do regime.'});
   }
@@ -350,16 +365,20 @@
   }
   const x=futurePriceScenario(cfg,Number(year));
   const p=x.params;
+  const hasOwnCredit=(x.purchaseCredit||0)>0;
   const rows=[
-   ['Valor líquido preservado de 2026',base.net],
+   [hasOwnCredit?'Líquido econômico-alvo (base 2026)':'Valor líquido preservado de 2026',base.net],
    ...hybridBaseMemory(x),
    [x.params?.type==='hybrid'?'Base da CBS/IBS após excluir '+x.params.excludedLabel:'Base limpa usada no novo sistema',x.cleanBase],
    ['CBS calculada',x.cbs],
    ['IBS calculado',x.ibs],
    ['Tributos/DAS remanescentes',x.remnant],
-   ['Total de tributos',x.taxes],
-   ['Preço projetado',x.price]
+   ['Total de tributos',x.taxes]
   ];
+  if(hasOwnCredit){
+   rows.push(['Créditos CBS/IBS da empresa',x.purchaseCredit],['Carga líquida após créditos',x.netTax],['Líquido econômico após créditos',x.economicNet]);
+  }
+  rows.push(['Preço projetado',x.price]);
   if(cfg.buyer.profile==='b2b'){
    rows.push(['Crédito potencial do comprador',x.buyerCredit],['Custo efetivo do comprador',x.buyerCost]);
   }
