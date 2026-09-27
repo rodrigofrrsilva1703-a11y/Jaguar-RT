@@ -1,245 +1,846 @@
 const STUDY_MODULES = [
-{
- id:"01", title:"Mapa completo da Reforma", subtitle:"Entenda primeiro o desenho geral antes de entrar nos cálculos.",
- intro:"A Reforma Tributária do consumo troca uma arquitetura fragmentada por um IVA dual: CBS, de competência federal, e IBS, compartilhado por Estados, Municípios e Distrito Federal. O Imposto Seletivo é um tributo separado. A melhor forma de estudar é sempre responder cinco perguntas: o que é tributado, quando nasce o tributo, qual é a base, onde a operação é tributada e qual alíquota se aplica.",
- before:"Hoje convivem PIS/Pasep, Cofins, IPI, ICMS e ISS, cada um com bases, créditos, competências e regras próprias.",
- after:"A nova arquitetura concentra a tributação geral do consumo em CBS + IBS, com transição gradual até 2033 e manutenção de tratamentos diferenciados e regimes específicos.",
- blocks:[
-  {t:"1. O que é tributado?",k:"REGRA OFICIAL",x:"IBS e CBS incidem, como regra, sobre operações onerosas com bens e serviços. A LC 214 trata bens de forma ampla, incluindo materiais, imateriais e direitos, e enquadra como serviços as demais operações que não sejam bens."},
-  {t:"2. Quando nasce?",k:"REGRA OFICIAL",x:"A regra geral é o momento do fornecimento. Se houver pagamento antes do fornecimento, surgem antecipações sobre a parcela paga. O RTAV resume isso didaticamente como “pagamento/recebimento ou fornecimento: o que vier primeiro produz efeito tributário”."},
-  {t:"3. Sobre qual base?",k:"REGRA OFICIAL",x:"A base geral é o valor da operação. IBS e CBS não integram a própria base. Por isso o material chama a nova lógica de tributação “por fora” ou de base limpa."},
-  {t:"4. Para qual lugar?",k:"REGRA OFICIAL",x:"O sistema segue o princípio do destino, mas não existe uma única regra de endereço para tudo. A LC 214 define o local conforme a natureza da operação: entrega do bem, local do imóvel, local da prestação presencial, início do transporte, domicílio principal do adquirente em hipóteses residuais etc."},
-  {t:"5. Quanto?",k:"ATENÇÃO",x:"A alíquota da operação resulta da CBS e das parcelas estadual/municipal do IBS aplicáveis. Porém, a alíquota-padrão geral futura não deve ser tratada como “28% fixos”. Os percentuais próximos de 26,5% a 28% usados no RTAV são estimativas/referências para simulação, não uma alíquota universal já definida para todas as operações."}
- ],
- qa:[
-  ["A Reforma cria um único imposto?","Não. A tributação geral do consumo passa a usar principalmente dois tributos coordenados: CBS (federal) e IBS (Estados/Municípios/DF), além do Imposto Seletivo em hipóteses próprias."],
-  ["Indústria, comércio e serviços pagarão exatamente a mesma coisa?","Não necessariamente. A arquitetura é comum, mas reduções, regimes específicos, destino, créditos, alíquotas dos entes e enquadramento da operação podem produzir cargas diferentes."]
- ],
- legal:"LC 214/2025, arts. 1º a 4º; material RTAV e Material de Estudo de 26/09/2026."
-},
-{
- id:"02", title:"Fato gerador e pagamentos antecipados", subtitle:"A diferença entre fornecimento, sinal, competência e split payment.",
- intro:"Este é um dos pontos em que o material do RTAV pode confundir se a frase-resumo for lida isoladamente. A lei usa o fornecimento como regra geral; o pagamento antecipado, porém, gera antecipação de IBS/CBS sobre a parcela paga.",
- before:"No exemplo didático do evento, ISS acompanha a prestação do serviço; ICMS acompanha a saída/circulação da mercadoria; PIS/Cofins se relacionam às regras de receita do regime aplicável.",
- after:"No IBS/CBS, a regra geral é o fornecimento. Se houver pagamento total ou parcial antes, a parcela antecipada gera antecipação tributária na data do pagamento, com ajuste definitivo no fornecimento.",
- blocks:[
-  {t:"A frase do RTAV",k:"RTAV",x:"“Recebimento/pagamento ou fornecimento — o que acontecer primeiro.” Use essa frase como memória operacional, não como substituição da redação legal."},
-  {t:"O que a lei efetivamente faz",k:"REGRA OFICIAL",x:"No pagamento anterior ao fornecimento, a base da antecipação é o valor de cada parcela paga. No fornecimento, calcula-se o valor definitivo sobre a operação inteira e ajusta-se o que já foi antecipado."},
-  {t:"Exemplo 28/01 → 10/02",k:"EXEMPLO RTAV",x:"Pedido em 28/01, sinal de 10% e entrega em 10/02: o sinal produz antecipação de IBS/CBS sobre 10%. Na entrega, a operação é calculada definitivamente e os 90% restantes completam o tratamento tributário."},
-  {t:"Impacto no caixa",k:"NA PRÁTICA",x:"Empresas que recebem sinal, adiantamento ou parcelas antes de entregar precisam integrar financeiro, faturamento e fiscal. O tributo pode aparecer antes da entrega física ou da conclusão do serviço."},
-  {t:"Isso é split payment?",k:"RESPOSTA DIRETA",x:"Não. Fato gerador e antecipação respondem quando nasce/exige-se o tributo. Split payment é uma forma de segregação e recolhimento do IBS/CBS na liquidação financeira."}
- ],
- qa:[
-  ["Se eu receber um sinal antes de entregar, posso ignorar até a nota final?","Não na lógica do IBS/CBS. O pagamento anterior ao fornecimento pode gerar antecipação tributária sobre a parcela paga, observadas as regras do documento fiscal e da apuração."],
-  ["O pagamento sempre vira o fato gerador principal?","Não. A regra geral continua sendo o fornecimento; o pagamento antecipado cria antecipação. Em operações continuadas/fracionadas existem regras específicas."]
- ],
- legal:"LC 214/2025, art. 10, especialmente §4º; RTAV; Material de Estudo, págs. 1–3."
-},
-{
- id:"03", title:"Base de cálculo: por dentro × por fora", subtitle:"A lógica que muda a formação do preço.",
- intro:"Não basta trocar a alíquota. O método de cálculo também muda. O material chama isso de sair de uma cultura de tributo embutido para uma base mais limpa.",
- before:"Nos exemplos do RTAV, ICMS e ISS são tratados na formação do preço como tributos “por dentro”; PIS/Cofins também aparecem embutidos nos preços dos cenários atuais.",
- after:"Na regra geral, a base de IBS/CBS é o valor da operação e o próprio IBS/CBS não integra essa base. É a lógica de cálculo “por fora”.",
- blocks:[
-  {t:"Fórmula por dentro",k:"FÓRMULA",x:"Preço bruto = preço líquido ÷ (1 − alíquota por dentro). Exemplo didático: líquido de R$ 800 e carga atual de 8,65% → R$ 800 ÷ 0,9135 = R$ 875,75."},
-  {t:"Fórmula por fora",k:"FÓRMULA",x:"Preço com tributo por fora = base limpa × (1 + alíquota). Exemplo RTAV: R$ 800 × 1,2791 = R$ 1.023,28 usando 27,91% apenas como parâmetro estimado do exercício."},
-  {t:"Transição",k:"TRANSIÇÃO",x:"Durante vários anos haverá convivência entre tributos antigos remanescentes e CBS/IBS. Por isso a reprecificação do evento segue a memória: primeiro limpe o preço, depois aplique o novo e, por último, embuta o velho que ainda restar."},
-  {t:"Cuidado com “27,91%”",k:"ESTIMATIVA",x:"Esse percentual aparece no material para ensinar cálculo. A ferramenta do site deixa CBS e IBS editáveis justamente porque a alíquota aplicável depende do ano, da operação, de reduções, do destino e das alíquotas efetivamente fixadas."}
- ],
- qa:[
-  ["Posso simplesmente pegar o preço de hoje e somar CBS/IBS?","Não é o método usado no RTAV. Isso pode criar efeito cascata porque o preço atual já contém tributos. Primeiro identifica-se o preço líquido-alvo."],
-  ["IBS e CBS entram na própria base?","Não na regra geral. O montante de IBS e CBS incidente na operação não integra a própria base."],
- ],
- legal:"LC 214/2025, art. 12; Material de Estudo, págs. 3–4 e 8–9."
-},
-{
- id:"04", title:"Destino e alíquotas", subtitle:"Quem recebe o IBS e por que o endereço importa.",
- intro:"O princípio do destino é central, mas precisa ser aplicado com técnica. Dizer apenas “é o endereço do comprador” é simplificação excessiva.",
- before:"ICMS e ISS atuais usam diversas regras de origem, destino, local do estabelecimento, local da prestação, DIFAL e exceções.",
- after:"O IBS segue regras de destino definidas na LC 214. O local pode ser a entrega do bem, o imóvel, o local do serviço presencial, o início do transporte ou, em situações residuais, o domicílio principal do adquirente/destinatário.",
- blocks:[
-  {t:"Bem móvel material",k:"REGRA OFICIAL",x:"Como regra do art. 11, considera-se o local da entrega ou disponibilização ao destinatário, com regras próprias para operações não presenciais."},
-  {t:"Serviço presencial",k:"REGRA OFICIAL",x:"Serviço prestado fisicamente sobre pessoa ou fruído presencialmente segue o local da prestação. Eventos têm regra do local do evento."},
-  {t:"Demais bens/serviços",k:"REGRA OFICIAL",x:"Para operações onerosas não enquadradas nas regras específicas, utiliza-se o domicílio principal do adquirente no País, com detalhamento cadastral próprio."},
-  {t:"São Paulo → Guarulhos / Santo André",k:"RTAV",x:"O exemplo serve para mostrar que a parcela municipal do IBS pode variar conforme o destino definido legalmente. Não use o exemplo para concluir que toda operação se resolve apenas pelo endereço de cobrança."},
-  {t:"Alíquota futura",k:"ATENÇÃO",x:"Cada ente fixará sua alíquota conforme a legislação. As alíquotas de referência são fixadas nos períodos previstos em lei. Em setembro de 2026, a alíquota-padrão geral de CBS de 2027 ainda não deve ser tratada como 9% oficial."}
- ],
- qa:[
-  ["A cidade onde a empresa está deixa de importar totalmente?","Para o IBS, a arrecadação segue o destino da operação conforme as regras legais. A localização da empresa continua importante para logística, custos, mão de obra, licenças e outros tributos."],
-  ["A mesma empresa pode ter IBS diferente conforme o cliente?","Sim, quando as alíquotas do destino aplicável forem diferentes. Por isso cadastro de endereço/destino e natureza da operação passam a ser críticos."]
- ],
- legal:"LC 214/2025, arts. 11, 14 a 16; RTAV."
-},
-{
- id:"05", title:"Transição 2026–2033", subtitle:"O calendário sem misturar taxa-teste, estimativa e alíquota definitiva.",
- intro:"Este módulo separa o que já está fixado em lei do que ainda será definido. Essa distinção é essencial para a ferramenta de preços.",
- before:"Até 2025, o sistema-base continua com PIS/Cofins, IPI, ICMS e ISS.",
- after:"A mudança ocorre em etapas: teste em 2026, CBS e IBS inicial em 2027–2028, redução gradual de ICMS/ISS entre 2029 e 2032 e vigência integral do novo modelo em 2033.",
- blocks:[
-  {t:"2026",k:"OFICIAL",x:"CBS 0,9% e IBS 0,1% como alíquotas de teste, com compensação/dispensa nos termos legais e sem aplicação geral aos optantes do Simples Nacional."},
-  {t:"2027–2028",k:"OFICIAL",x:"PIS/Cofins são extintos. IBS é 0,1% (0,05% estadual + 0,05% municipal). A CBS corresponde à alíquota de referência que vier a ser fixada, reduzida em 0,1 ponto percentual. O Imposto Seletivo entra em vigor; o IPI é reduzido a zero em grande parte das hipóteses, preservadas exceções legais."},
-  {t:"2029",k:"OFICIAL",x:"ICMS/ISS ficam em 90% das alíquotas atuais e o IBS entra na proporção de transição prevista para o ano."},
-  {t:"2030",k:"OFICIAL",x:"ICMS/ISS a 80%."},
-  {t:"2031",k:"OFICIAL",x:"ICMS/ISS a 70%."},
-  {t:"2032",k:"OFICIAL",x:"ICMS/ISS a 60%."},
-  {t:"2033",k:"OFICIAL",x:"Conclusão da transição principal: ICMS e ISS são extintos e o novo modelo entra em vigência integral."},
-  {t:"E os 9% de CBS do RTAV?",k:"ESTIMATIVA",x:"Use como premissa de simulação do evento, não como alíquota-padrão oficial já publicada. Na calculadora do site ela aparece identificada como estimativa e pode ser alterada."}
- ],
- qa:[
-  ["Posso fazer preço de 2027 usando 9% como número definitivo?","Não. Você pode simular com 9% porque foi a premissa do RTAV, mas deve marcar como estimativa até a fixação oficial aplicável."],
-  ["O 90/10 de 2029 significa que o IBS será exatamente 10%?","Não. Significa proporção de transição entre o sistema antigo e o IBS, não uma alíquota nominal universal de 10%."],
- ],
- legal:"LC 214/2025, arts. 343–349; EC 132/2023; Receita Federal — Entenda a RTC."
-},
-{
- id:"06", title:"Créditos e custo efetivo", subtitle:"Preço pago não é a mesma coisa que custo.",
- intro:"Uma das mensagens mais importantes do evento é olhar a cadeia. Para um comprador com direito a crédito, o que importa não é apenas o preço da nota, mas o custo depois dos créditos aproveitáveis.",
- before:"Hoje os créditos variam muito conforme ICMS, IPI, PIS/Cofins, regime e natureza da aquisição.",
- after:"No regime regular de IBS/CBS, a não cumulatividade é ampla, mas não é correto resumir como “todo imposto destacado vira crédito automaticamente”. A lei condiciona a apropriação ao documento fiscal idôneo e às regras de extinção do débito, com exceções específicas.",
- blocks:[
-  {t:"Regra geral de crédito",k:"REGRA OFICIAL",x:"Contribuinte no regime regular pode apropriar créditos quando os débitos da operação antecedente forem extintos nas formas previstas em lei, com documento fiscal eletrônico idôneo, ressalvadas vedações e regras específicas."},
-  {t:"Simples como fornecedor",k:"REGRA OFICIAL",x:"Se o fornecedor estiver no Simples e não optar pelo regime regular de IBS/CBS, o adquirente no regime regular pode ter crédito limitado ao IBS/CBS efetivamente devido via Simples, conforme a lei."},
-  {t:"Custo efetivo",k:"FÓRMULA",x:"Custo efetivo = preço pago − créditos tributários aproveitáveis. O RTAV usa essa conta para mostrar que uma compra pode ficar mais barata mesmo com preço de nota maior."},
-  {t:"Exemplo RTAV",k:"EXEMPLO",x:"Preço projetado R$ 104,15 e crédito CBS de R$ 7,05 → custo efetivo R$ 97,10. É um exemplo didático que desconsidera outros créditos para isolar o raciocínio."},
-  {t:"O ponto comercial",k:"NA PRÁTICA",x:"Fornecedor e cliente precisam olhar juntos: preço de venda, crédito gerado para o comprador, custo efetivo, margem e poder de negociação."}
- ],
- qa:[
-  ["Se a nota mostrar CBS/IBS, o comprador sempre se credita?","Não. É preciso verificar se o adquirente está no regime que permite crédito, se a operação é elegível e se os requisitos legais foram cumpridos."],
-  ["Empresa do Simples nunca gera crédito ao cliente?","Essa frase também é simplificação. A lei admite crédito ao adquirente no regime regular em montante ligado ao IBS/CBS devido pelo fornecedor no Simples; se o optante escolher regime regular de IBS/CBS, a dinâmica muda."],
- ],
- legal:"LC 214/2025, arts. 47–57; RTAV e Material de Estudo, pág. 10."
-},
-{
- id:"07", title:"Reprecificação, DRE e negociação", subtitle:"Primeiro o novo, depois o velho.",
- intro:"A ferramenta de preço do site segue o método do material: preservar um alvo econômico, e não simplesmente somar percentuais.",
- before:"Preço atual já carrega tributos e custos. Aplicar uma nova alíquota diretamente sobre ele pode duplicar carga na simulação.",
- after:"A projeção limpa o preço atual, aplica CBS/IBS por fora e depois trata ICMS/ISS remanescentes durante a transição.",
- blocks:[
-  {t:"Etapa 1 — limpar",k:"MÉTODO RTAV",x:"Preço líquido-alvo = preço atual − tributos atuais sobre a venda usados no cenário. É esse líquido que você decide preservar."},
-  {t:"Etapa 2 — aplicar CBS + IBS",k:"MÉTODO RTAV",x:"Preço intermediário = preço líquido × (1 + CBS + IBS aplicáveis à operação)."},
-  {t:"Etapa 3 — tributo antigo remanescente",k:"MÉTODO RTAV",x:"Preço projetado = preço intermediário ÷ (1 − percentual remanescente de ICMS/ISS embutido no cenário)."},
-  {t:"Exemplo comércio R$ 100",k:"RTAV",x:"PIS 0,65 + Cofins 3 + ICMS 18 → líquido R$ 78,35. Com CBS de 9% como premissa do evento: R$ 85,40. Embutindo ICMS 18% no exemplo de 2027: aproximadamente R$ 104,15."},
-  {t:"Três estratégias",k:"MATERIAL DE ESTUDO",x:"1) manter preço bruto; 2) manter receita líquida; 3) manter margem considerando custos e créditos. A decisão comercial pertence à empresa; a contabilidade entrega os números."},
-  {t:"Banda de negociação",k:"EXEMPLO RTAV",x:"O material mostra um caso em que +1,27% preservava margem considerando créditos e +3,61% preservava receita líquida. Isso é resultado daquele caso, não faixa universal."}
- ],
- qa:[
-  ["A reforma sempre aumenta preço?","Não. Dependendo do setor, crédito, carga atual, destino e estratégia, o preço que preserva o mesmo líquido pode subir, cair ou ficar próximo do atual."],
-  ["Qual preço é o “correto”?","Não existe um único preço automático. O contador pode calcular o preço que preserva receita líquida e o preço que preserva margem; o empresário escolhe a estratégia comercial."],
- ],
- legal:"Método RTAV e Material de Estudo, págs. 8–11. As alíquotas da ferramenta são premissas editáveis."
-},
-{
- id:"08", title:"Simples Nacional em 2027", subtitle:"Puro, híbrido, crédito e decisão comercial.",
- intro:"O Simples Nacional continua existindo. A grande novidade é a possibilidade de a empresa permanecer no Simples para os demais tributos e escolher o regime regular para IBS/CBS.",
- before:"O DAS concentra os tributos do Simples e a alíquota efetiva depende de RBT12, faixa, alíquota nominal e parcela a deduzir.",
- after:"CBS e IBS passam a integrar o Simples, mas o optante pode, nos prazos regulamentados, escolher recolher IBS/CBS pelo regime regular fora do DAS.",
- blocks:[
-  {t:"Simples “puro”",k:"REGRA OFICIAL",x:"A empresa mantém CBS/IBS dentro do recolhimento unificado do Simples. Para o primeiro semestre de 2027, se não houver opção pelo regime regular, essa é a sistemática aplicável."},
-  {t:"Simples “híbrido”",k:"REGRA OFICIAL",x:"A empresa continua no Simples para os demais tributos, mas CBS e IBS são apurados no regime regular, fora da guia única."},
-  {t:"Prazo 2027",k:"ATUALIZAÇÃO 2026",x:"Para o primeiro semestre de 2027, a Receita abriu a escolha em setembro de 2026. Há nova janela em março de 2027 para efeitos no segundo semestre."},
-  {t:"Por que isso importa no B2B?",k:"NA PRÁTICA",x:"Crédito do cliente, preço, fluxo de caixa e competitividade podem mudar. O híbrido não é automaticamente melhor: precisa simular tributo próprio e efeito comercial na cadeia."},
-  {t:"Alíquota efetiva do DAS",k:"FÓRMULA",x:"[(RBT12 × alíquota nominal) − parcela a deduzir] ÷ RBT12. O material usa RBT12 de R$ 1 milhão, nominal 16% e PD R$ 35.640, resultando em 12,436%."}
- ],
- qa:[
-  ["O Simples acaba com a reforma?","Não."],
-  ["Escolher IBS/CBS por fora tira a empresa do Simples?","Não. Ela pode permanecer no Simples para os demais tributos e apurar IBS/CBS no regime regular, conforme a opção permitida."],
-  ["O híbrido sempre é melhor para quem vende a empresas?","Não. Pode melhorar o crédito do cliente, mas a decisão depende de carga própria, margem, compras, clientes, caixa e preço."],
- ],
- legal:"Receita Federal/CGSN, Resoluções de 2026; LC 214/2025; RTAV."
-},
-{
- id:"09", title:"Lucro Presumido × Lucro Real e LC 224", subtitle:"O Presumido não acaba: a comparação muda.",
- intro:"O material do evento enfatiza que a extinção de PIS/Cofins reduz uma diferença importante entre Presumido e Real na tributação do consumo. Isso não significa fim do Lucro Presumido nem que a escolha passa a depender de uma única conta.",
- before:"No Presumido, IRPJ/CSLL partem de percentuais legais de presunção; no Real, partem do lucro contábil ajustado. PIS/Cofins também diferem hoje entre os regimes.",
- after:"Com CBS/IBS, a análise deve separar tributação do consumo de IRPJ/CSLL. Margem efetiva, adicionais de IRPJ, despesas dedutíveis, créditos, sazonalidade e compliance continuam relevantes.",
- blocks:[
-  {t:"LC 224 — o que mudou",k:"REGRA OFICIAL",x:"Nos regimes com base presumida, a LC 224 elevou em 10% os percentuais de presunção. No Lucro Presumido, esse acréscimo incide apenas sobre a parcela da receita bruta total que exceder R$ 5 milhões no ano-calendário, com regras de proporcionalidade."},
-  {t:"32% não vira 42%",k:"RESPOSTA DIRETA",x:"32% × 1,10 = 35,2%. É aumento de 10% do percentual de presunção, não acréscimo de 10 pontos percentuais."},
-  {t:"Exemplo R$ 10 milhões",k:"EXEMPLO",x:"R$ 5 mi × 32% = R$ 1,6 mi; excedente de R$ 5 mi × 35,2% = R$ 1,76 mi. Base simulada total: R$ 3,36 mi antes de calcular IRPJ/CSLL e adicional."},
-  {t:"Real x Presumido",k:"MÉTODO",x:"Compare a DRE completa. O exemplo do material com receita de R$ 200 mil e lucro efetivo de 20% mostra uma base efetiva menor no Real do que a presunção de 32%, mas o exercício simplificado ignora o adicional de IRPJ e outras particularidades."},
-  {t:"Não existe vencedor universal",k:"ATENÇÃO",x:"O RTAV aponta tendência de migração em certos perfis, mas isso é análise do palestrante. O regime deve ser decidido com dados reais da empresa."}
- ],
- qa:[
-  ["Lucro Presumido vai acabar em 2027?","Não. O regime continua existindo. O que muda é o ambiente econômico e tributário usado para comparar Presumido e Real."],
-  ["Se a margem real for menor que 32%, o Real sempre vence?","Não automaticamente. É um sinal importante para a base de IRPJ/CSLL, mas a decisão final exige adicional de IRPJ, adições/exclusões, benefícios, despesas, sazonalidade e custo operacional do regime."],
- ],
- legal:"LC 224/2025; RTAV e Material de Estudo, págs. 7–8."
-},
-{
- id:"10", title:"Reduções e regimes específicos", subtitle:"30%, 60%, zero e setores que não seguem a regra-padrão.",
- intro:"Nem toda operação usa a alíquota-padrão. A LC 214 contém regimes diferenciados e específicos. É essencial distinguir redução de alíquota de um regime que muda base, crédito ou forma de cálculo.",
- before:"Benefícios e tratamentos especiais estão espalhados entre vários tributos atuais.",
- after:"A nova legislação organiza reduções e regimes próprios dentro da estrutura de IBS/CBS, mas exige conferir atividade, operação, listas e requisitos legais.",
- blocks:[
-  {t:"Redução de 30%",k:"REGRA OFICIAL",x:"Aplica-se a serviços de determinadas profissões intelectuais fiscalizadas por conselho profissional, observados os requisitos legais. Contabilistas estão entre as categorias previstas."},
-  {t:"Redução de 60%",k:"REGRA OFICIAL",x:"Há hipóteses para educação, saúde, medicamentos, alimentos, agro, cultura e outros grupos definidos em lei e anexos."},
-  {t:"Redução a zero",k:"REGRA OFICIAL",x:"Existem hipóteses de alíquota zero, como determinados medicamentos, produtos de saúde menstrual, hortícolas, frutas e ovos, entre outras previstas em lei."},
-  {t:"Bares e restaurantes",k:"REGIME ESPECÍFICO",x:"O regime específico reduz as alíquotas em 40% para as operações enquadradas e veda crédito ao adquirente sobre alimentação/bebidas sujeitas a esse regime. A base também possui exclusões próprias em determinadas situações."},
-  {t:"Hotelaria e parques",k:"REGIME ESPECÍFICO",x:"Também há redução de 40% nas alíquotas dentro do regime específico, com regras próprias de documento e crédito."},
-  {t:"Fórmula de redução",k:"FÓRMULA",x:"Alíquota após redução = alíquota-padrão × (1 − redução). Ex.: estimativa de 28% com redução de 60% → 11,2%. O 28% continua sendo apenas premissa do exemplo."}
- ],
- qa:[
-  ["Ter CNAE de saúde garante redução de 60%?","Não por si só. É preciso conferir a operação, a classificação/lista aplicável e os requisitos da legislação."],
-  ["Redução de 40% em restaurantes significa pagar 40%?","Não. Significa reduzir em 40% a alíquota aplicável ao regime. Se a alíquota-base hipotética fosse 28%, 28% × 60% = 16,8%."],
- ],
- legal:"LC 214/2025; regulamentos de 2026; RTAV."
-},
-{
- id:"11", title:"Recolhimento, split payment e apuração assistida", subtitle:"Quando nasce o tributo é diferente de como ele é pago.",
- intro:"O evento menciona split payment, recolhimento pelo adquirente e apuração assistida. Eles não devem ser misturados com fato gerador.",
- before:"Hoje grande parte da rotina contábil reconstrói a apuração a partir de documentos, escriturações, pagamentos e declarações separadas.",
- after:"A nova arquitetura integra documentos fiscais eletrônicos, extinção dos débitos e apuração assistida. O split payment pode segregar IBS/CBS na liquidação financeira em hipóteses regulamentadas.",
- blocks:[
-  {t:"Split payment",k:"REGRA OFICIAL",x:"Na sistemática prevista em lei, a segregação e o recolhimento podem ocorrer na liquidação financeira da transação. A implementação é gradual e depende de atos conjuntos e infraestrutura."},
-  {t:"Recolhimento pelo adquirente",k:"REGRA OFICIAL",x:"Em determinadas condições, contribuinte do regime regular pode recolher IBS/CBS da operação quando o instrumento de pagamento não permitir a segregação prevista para split."},
-  {t:"Apuração assistida",k:"REGRA OFICIAL",x:"RFB e Comitê Gestor do IBS podem apresentar apuração assistida baseada em documentos fiscais eletrônicos, informações de extinção dos débitos e outros dados."},
-  {t:"O novo papel do contador",k:"NA PRÁTICA",x:"Menos reconstrução manual e mais parametrização, conferência, exceção, cadastro, conciliação, projeção e consultoria."},
-  {t:"Documentos",k:"ATENÇÃO",x:"Nota correta passa a impactar débito, crédito e apuração de forma ainda mais direta. Cadastro de produto/serviço, destino, regime e natureza da operação deixa de ser detalhe operacional."}
- ],
- qa:[
-  ["Split payment muda o fato gerador?","Não. Ele é mecanismo de recolhimento. O fato gerador e as antecipações seguem as regras próprias do art. 10."],
-  ["A apuração assistida significa que o contador não precisa conferir?","Não. A própria lei prevê confirmação e ajustes. A qualidade dos dados e a revisão continuam essenciais."],
- ],
- legal:"LC 214/2025, arts. 31–36 e 45–48; orientações RFB/CGIBS."
-},
-{
- id:"12", title:"Planejamento e conversa com o cliente", subtitle:"Transformar regra em decisão.",
- intro:"A mensagem central do material é consultiva: conhecimento técnico só gera valor quando vira preço, margem, regime, fluxo de caixa e decisão para o empresário.",
- before:"Planejamento tributário muitas vezes é apresentado apenas como comparação de guias e percentuais.",
- after:"Na transição, a análise precisa ligar venda, compra, créditos, DRE, preço, fornecedores, clientes, contratos, localização, sistemas e fluxo de caixa.",
- blocks:[
-  {t:"Diagnóstico",k:"MÉTODO",x:"Mapeie regime atual, faturamento, margem, produtos/serviços, carga atual, principais clientes, fornecedores, crédito, destino e recebimentos antecipados."},
-  {t:"Prognóstico",k:"MÉTODO",x:"Projete 2027, 2028, 2029… 2033. Mostre preço que preserva receita líquida, preço que preserva margem e impacto sobre o custo do cliente."},
-  {t:"DRE lado a lado",k:"RTAV",x:"A apresentação recomendada pelo material é DRE atual ao lado da DRE projetada, linha por linha, com os limites de preço que preservam o resultado."},
-  {t:"Perguntas para o cliente",k:"NA PRÁTICA",x:"Quem compra? O cliente toma crédito? Quem fornece? Há sinal antes da entrega? O contrato permite reajuste? O destino muda a alíquota? Existe redução/regime específico?"},
-  {t:"Plano de ação",k:"ENTREGA",x:"Não termine em “vai aumentar X%”. Termine com ações: preço, contrato, fornecedor, regime, cadastro, ERP, caixa, cronograma e data da próxima revisão."}
- ],
- qa:[
-  ["O objetivo é prever exatamente o imposto até 2033?","Não. Parte das alíquotas futuras ainda será fixada. O objetivo é construir cenários transparentes e atualizáveis, deixando claro o que é regra, estimativa e premissa."],
-  ["Quando recalcular?","Sempre que houver publicação de alíquota, mudança de regime, mudança relevante de mix, destino, fornecedor, contrato ou margem. Na transição, revisão anual será indispensável."],
- ],
- legal:"RTAV; Material de Estudo; legislação e orientações oficiais atualizadas."
-}
+  {
+    "id": "01",
+    "title": "Mapa completo da Reforma",
+    "subtitle": "A visão geral para entender CBS, IBS, Imposto Seletivo e os cinco pilares do RTAV.",
+    "intro": "A Reforma Tributária do Consumo foi criada pela EC 132/2023 e regulamentada principalmente pela LC 214/2025, hoje já alterada pela LC 227/2026. Para estudar sem se perder, use os cinco pilares do RTAV: incidência, fato gerador, base de cálculo, local da operação e alíquota. Depois acrescente crédito, recolhimento, documentos e transição.",
+    "before": "O consumo é tributado por vários tributos com lógicas diferentes: PIS/Pasep e Cofins na esfera federal, IPI sobre produtos industrializados, ICMS estadual e ISS municipal. Regime, atividade e operação mudam bastante o cálculo.",
+    "after": "A tributação geral do consumo passa a se concentrar em CBS, de competência da União, e IBS, de competência compartilhada entre Estados, Municípios e Distrito Federal. O Imposto Seletivo é um tributo federal separado para hipóteses definidas em lei.",
+    "blocks": [
+      {
+        "t": "Incidência — o que é tributado",
+        "k": "REGRA OFICIAL",
+        "x": "A regra geral do IBS e da CBS alcança operações onerosas com bens e serviços. A lei define bens de forma ampla, incluindo bens materiais, imateriais e direitos; serviços são as demais operações que não sejam enquadradas como operações com bens."
+      },
+      {
+        "t": "Não é um único imposto",
+        "k": "RESPOSTA DIRETA",
+        "x": "O modelo é chamado de IVA dual porque existem dois tributos gerais coordenados: CBS e IBS. O IBS ainda é composto pelas parcelas estadual e municipal do destino."
+      },
+      {
+        "t": "Princípio da neutralidade",
+        "k": "REGRA OFICIAL",
+        "x": "A LC 214 estabelece a neutralidade como princípio do IBS e da CBS: a estrutura deve buscar não distorcer decisões de consumo e de organização econômica, ressalvadas as exceções previstas na Constituição e na própria lei."
+      },
+      {
+        "t": "Imposto Seletivo",
+        "k": "REGRA OFICIAL",
+        "x": "É um tributo federal diferente de CBS e IBS. Entra em vigor a partir de 2027 e incide sobre bens e serviços definidos em lei por impacto à saúde ou ao meio ambiente. Não use o apelido “imposto do pecado” como definição técnica."
+      },
+      {
+        "t": "O que não deve ser simplificado",
+        "k": "ATENÇÃO",
+        "x": "Dizer que “tudo vira 28%” ou que “todos os setores pagarão igual” está errado. Existem alíquotas por ente, reduções, alíquota zero, regimes específicos, Simples Nacional e regras próprias por operação."
+      },
+      {
+        "t": "Método de estudo Jaguar",
+        "k": "MÉTODO",
+        "x": "Para qualquer cliente, responda nesta ordem: o que é a operação → quando ocorre → qual a base → onde é tributada → qual alíquota → quais créditos → como recolhe → qual documento → qual impacto em preço, margem e caixa."
+      }
+    ],
+    "qa": [
+      [
+        "A Reforma elimina todos os tributos atuais de uma vez?",
+        "Não. Há transição até 2033. PIS/Cofins saem primeiro; ICMS e ISS são reduzidos gradualmente a partir de 2029; o IPI tem redução a zero em grande parte das hipóteses a partir de 2027, preservadas exceções legais."
+      ],
+      [
+        "CBS e IBS valem igual para indústria, comércio e serviços?",
+        "A arquitetura geral é comum, mas a carga e a forma prática podem diferir por alíquota, destino, redução, regime específico, crédito e enquadramento."
+      ],
+      [
+        "A LC 214 ainda é a mesma de janeiro de 2025?",
+        "Não. Ela já recebeu alterações importantes, inclusive pela LC 227/2026. Por isso o site usa o texto atualizado."
+      ]
+    ],
+    "legal": "EC 132/2023; LC 214/2025, arts. 1º a 6º, em texto atualizado pela LC 227/2026; Receita Federal — Entenda a RTC; RTAV."
+  },
+  {
+    "id": "02",
+    "title": "Fato gerador e pagamentos antecipados",
+    "subtitle": "Fornecimento, sinal, parcelas, ajuste definitivo e a diferença para split payment.",
+    "intro": "O RTAV resume o tema como “pagamento/recebimento ou fornecimento — o que acontecer primeiro”. Essa frase ajuda a memorizar a consequência prática, mas a redação legal precisa ser entendida com precisão: a regra geral é o fornecimento, e o pagamento integral ou parcial anterior gera antecipação tributária.",
+    "before": "No exemplo do evento, ISS acompanha a prestação do serviço, ICMS acompanha a saída/circulação da mercadoria e PIS/Cofins seguem as regras de receita do regime aplicável. Um sinal antes da futura saída não é tratado como o fato gerador do ICMS da saída.",
+    "after": "No IBS/CBS, o fato gerador ocorre no fornecimento. Se houver pagamento antes, a lei exige antecipações sobre cada parcela paga; no fornecimento, calcula-se o valor definitivo da operação e ajusta-se o que já foi antecipado.",
+    "blocks": [
+      {
+        "t": "Regra geral",
+        "k": "REGRA OFICIAL",
+        "x": "O art. 10 considera ocorrido o fato gerador no momento do fornecimento. A própria lei detalha momentos específicos para transporte, serviços e outras situações."
+      },
+      {
+        "t": "Execução continuada ou fracionada",
+        "k": "REGRA OFICIAL",
+        "x": "A redação atualizada pela LC 227/2026 traz regra própria: nessas operações, considera-se o primeiro entre a exigibilidade da parcela da contraprestação e o pagamento da obrigação correspondente."
+      },
+      {
+        "t": "Pagamento antes do fornecimento",
+        "k": "REGRA OFICIAL",
+        "x": "Na data de cada pagamento anterior, há antecipação: a base é o valor da parcela paga. No fornecimento, a base definitiva é o valor total da operação, incluindo o que já havia sido antecipado."
+      },
+      {
+        "t": "Qual alíquota usar na antecipação?",
+        "k": "REGRA OFICIAL",
+        "x": "Para a antecipação, usa-se a alíquota vigente e aplicável na data do documento fiscal correspondente ao pagamento ou na data do pagamento, o que ocorrer primeiro. No fornecimento, o cálculo definitivo usa a alíquota vigente na data do fornecimento."
+      },
+      {
+        "t": "Exemplo RTAV 28/01 → 10/02",
+        "k": "EXEMPLO RTAV",
+        "x": "Sinal de 10% em 28/01 e entrega em 10/02: a parcela paga antes gera antecipação. Na entrega, calcula-se a operação inteira e ajusta-se o que já foi antecipado."
+      },
+      {
+        "t": "Se o negócio for cancelado",
+        "k": "REGRA OFICIAL",
+        "x": "Se o fornecimento não ocorrer, inclusive por distrato, a lei remete às regras de cancelamento e de pagamento indevido ou a maior, conforme o caso."
+      },
+      {
+        "t": "Não é split payment",
+        "k": "ATENÇÃO",
+        "x": "Fato gerador e antecipação tratam do momento tributário. Split payment é mecanismo de segregação e recolhimento na liquidação financeira."
+      }
+    ],
+    "qa": [
+      [
+        "Receber um sinal pode antecipar tributo?",
+        "Sim. No regime regular de IBS/CBS, pagamento anterior ao fornecimento pode gerar antecipação sobre a parcela paga."
+      ],
+      [
+        "Se o cliente só pagar depois do fornecimento, o pagamento vira o fato gerador?",
+        "Não como regra geral. Sem antecipação, o fornecimento continua sendo o evento central previsto no art. 10."
+      ],
+      [
+        "A nota de antecipação citada no RTAV é a mesma coisa que split payment?",
+        "Não. O documento registra a antecipação; split payment é outra camada, ligada à forma de recolhimento."
+      ]
+    ],
+    "legal": "LC 214/2025, art. 10, com redação atualizada pela LC 227/2026; RTAV; Material de Estudo, págs. 1–3."
+  },
+  {
+    "id": "03",
+    "title": "Base de cálculo: por dentro × por fora",
+    "subtitle": "O que entra, o que sai e como a base muda a formação do preço.",
+    "intro": "A maior armadilha da reprecificação é olhar apenas para a alíquota. A Reforma muda também a composição da base. A LC 214 parte do valor da operação e enumera valores que entram e que não entram na base de IBS/CBS.",
+    "before": "No método de precificação do RTAV, tributos atuais aparecem embutidos no preço e são retirados para chegar ao líquido econômico. O ICMS é o principal exemplo de tributo tratado “por dentro” no evento.",
+    "after": "IBS e CBS não integram a própria base. Durante a transição, a lei também exclui da base de IBS/CBS os montantes de ICMS, ISS, PIS/Cofins e outros itens expressamente previstos.",
+    "blocks": [
+      {
+        "t": "Ponto de partida",
+        "k": "REGRA OFICIAL",
+        "x": "A base geral de IBS e CBS é o valor da operação. Esse valor inclui o que o fornecedor cobra a qualquer título, como certos acréscimos, juros, encargos, transporte cobrado como parte da operação e outras importâncias previstas em lei."
+      },
+      {
+        "t": "O que não integra a base",
+        "k": "REGRA OFICIAL",
+        "x": "Entre as exclusões estão o próprio IBS/CBS, IPI, descontos incondicionais e, de 2026 a 2032, os montantes de ICMS, ISS, PIS/Pasep e Cofins incidentes na operação, além das demais exclusões legais."
+      },
+      {
+        "t": "Imposto Seletivo",
+        "k": "ATENÇÃO",
+        "x": "O Imposto Seletivo não aparece entre as exclusões gerais do §2º do art. 12; por isso não deve ser automaticamente retirado da base de IBS/CBS sem verificar a regra específica da operação."
+      },
+      {
+        "t": "Por fora",
+        "k": "FÓRMULA DIDÁTICA",
+        "x": "Quando o exercício contém somente tributo por fora: valor com tributo = base limpa × (1 + alíquota). Essa é a lógica usada no RTAV para explicar CBS/IBS."
+      },
+      {
+        "t": "Por dentro",
+        "k": "FÓRMULA DIDÁTICA",
+        "x": "Na formação de preço do evento: preço bruto = preço líquido ÷ (1 − alíquota embutida). É uma fórmula de precificação; a apuração fiscal real deve respeitar a legislação de cada tributo."
+      },
+      {
+        "t": "Transição 2027–2032",
+        "k": "NA PRÁTICA",
+        "x": "O preço pode conviver com CBS/IBS por fora e ICMS/ISS remanescentes no sistema antigo. Por isso o método do RTAV é: limpar → aplicar o novo → tratar o velho remanescente."
+      },
+      {
+        "t": "CBS/IBS na base de ICMS/ISS",
+        "k": "PONTO DE ATENÇÃO",
+        "x": "O material do RTAV registra debate e contencioso sobre a relação inversa durante a transição. Não trate uma tese judicial ou opinião do evento como regra pacificada para todos os clientes."
+      }
+    ],
+    "qa": [
+      [
+        "Posso somar CBS/IBS sobre o preço atual?",
+        "Não é um bom método de reprecificação. O preço atual já incorpora tributos e margens; o RTAV primeiro identifica o líquido-alvo."
+      ],
+      [
+        "IBS e CBS entram na própria base?",
+        "Não. A lei os exclui expressamente."
+      ],
+      [
+        "Todo tributo antigo fica fora da base para sempre?",
+        "Não. A exclusão de ICMS, ISS, PIS/Cofins prevista no art. 12 está vinculada ao período de transição indicado na lei."
+      ]
+    ],
+    "legal": "LC 214/2025, art. 12, texto atualizado; RTAV; Material de Estudo, págs. 3–4 e 8–9."
+  },
+  {
+    "id": "04",
+    "title": "Destino e alíquotas",
+    "subtitle": "Como identificar o local da operação e montar CBS + IBS sem usar uma alíquota fictícia como regra.",
+    "intro": "“Tributar no destino” é correto, mas insuficiente. Primeiro é preciso descobrir qual é o local da operação segundo o art. 11; depois aplicar as alíquotas do ente correspondente. O endereço do cliente resolve apenas algumas hipóteses.",
+    "before": "ICMS e ISS atuais possuem regras próprias de origem, destino, local do estabelecimento, local da prestação, DIFAL e inúmeras exceções.",
+    "after": "O IBS é formado pela alíquota do Estado de destino somada à alíquota do Município de destino. A CBS é definida pela União. Cada ente fixa sua alíquota por lei específica, e na falta dela aplica-se a alíquota de referência da esfera correspondente.",
+    "blocks": [
+      {
+        "t": "Bem móvel material",
+        "k": "REGRA OFICIAL",
+        "x": "Em regra, o local é o da entrega ou disponibilização ao destinatário. Nas operações não presenciais existem regras para identificar o destino final informado ao fornecedor ou ao transportador."
+      },
+      {
+        "t": "Imóveis e serviços ligados a imóveis",
+        "k": "REGRA OFICIAL",
+        "x": "O local é onde o imóvel está situado."
+      },
+      {
+        "t": "Serviço presencial sobre pessoa",
+        "k": "REGRA OFICIAL",
+        "x": "O local é o da prestação. Eventos, feiras, congressos e congêneres possuem regra do local do evento."
+      },
+      {
+        "t": "Transporte",
+        "k": "REGRA OFICIAL",
+        "x": "Transporte de passageiros usa o local de início; transporte de carga usa o local da entrega/disponibilização indicado no documento fiscal, conforme as regras atuais da LC 214."
+      },
+      {
+        "t": "Regra residual",
+        "k": "REGRA OFICIAL",
+        "x": "Para bens e serviços não abrangidos pelas regras específicas, nas operações onerosas, a lei utiliza o domicílio principal do adquirente no País; há regras próprias quando adquirente e destinatário são pessoas diferentes."
+      },
+      {
+        "t": "Como se forma o IBS",
+        "k": "REGRA OFICIAL",
+        "x": "A alíquota do IBS da operação é a soma da alíquota estadual e municipal do destino; no Distrito Federal aplica-se a alíquota correspondente às competências acumuladas."
+      },
+      {
+        "t": "Quem fixa as alíquotas",
+        "k": "REGRA OFICIAL",
+        "x": "União, Estados e Municípios fixam suas alíquotas por lei específica. A lei permite vincular a alíquota à referência ou defini-la sem essa vinculação; sem lei própria, aplica-se a referência."
+      },
+      {
+        "t": "26,5%, 27,91%, 28%, 9% e 9,21%",
+        "k": "ESTIMATIVAS RTAV",
+        "x": "Esses números aparecem no evento como referências ou estimativas para exercícios. Não são uma alíquota universal pronta para qualquer operação. As alíquotas de referência são fixadas por resolução do Senado nos períodos previstos em lei."
+      }
+    ],
+    "qa": [
+      [
+        "O endereço de cobrança sempre define o IBS?",
+        "Não. O art. 11 possui regras específicas por tipo de bem ou serviço."
+      ],
+      [
+        "A mesma atividade terá uma única alíquota no Brasil inteiro?",
+        "A CBS é federal; o IBS depende das alíquotas do Estado e Município de destino, além de reduções e regimes próprios."
+      ],
+      [
+        "Cada Município pode criar uma alíquota diferente por atividade?",
+        "A regra é uma alíquota do ente para todas as operações, ressalvadas as hipóteses previstas em lei, como regimes diferenciados e específicos."
+      ]
+    ],
+    "legal": "LC 214/2025, arts. 11 e 14 a 18, atualizados pela LC 227/2026; RTAV."
+  },
+  {
+    "id": "05",
+    "title": "Transição 2026–2033",
+    "subtitle": "O calendário oficial, sem confundir percentual de transição com alíquota nominal.",
+    "intro": "A transição é onde mais surgem confusões. Há três conceitos diferentes: alíquota-teste de 2026, alíquota simbólica de IBS em 2027–2028 e percentuais de redução de ICMS/ISS versus crescimento do IBS entre 2029 e 2032.",
+    "before": "Até o início da transição convivem PIS/Cofins, IPI, ICMS e ISS nas regras atuais.",
+    "after": "O novo sistema é introduzido por etapas, com CBS primeiro, IBS em fase inicial e substituição gradual de ICMS/ISS até 2033.",
+    "blocks": [
+      {
+        "t": "2026 — ano-teste",
+        "k": "REGRA OFICIAL",
+        "x": "A LC 214 prevê IBS estadual de 0,1% e CBS de 0,9%. O valor recolhido é compensável na forma legal; além disso, o recolhimento fica dispensado para sujeitos passivos que cumprirem as obrigações acessórias previstas. As alíquotas-teste não se aplicam às operações dos optantes do Simples Nacional."
+      },
+      {
+        "t": "2027 e 2028",
+        "k": "REGRA OFICIAL",
+        "x": "PIS/Pasep e Cofins são extintos; o IBS é 0,05% estadual + 0,05% municipal; a CBS corresponde à alíquota fixada para o período, reduzida em 0,1 ponto percentual. O Imposto Seletivo entra em vigor e o IPI é reduzido a zero em grande parte das hipóteses, preservadas exceções legais."
+      },
+      {
+        "t": "A CBS de 2027 não é “9% oficial” por definição",
+        "k": "ATENÇÃO",
+        "x": "A alíquota de referência da CBS para 2027 é fixada segundo o mecanismo legal por resolução do Senado. O 9% utilizado no RTAV é premissa de simulação do evento."
+      },
+      {
+        "t": "2029",
+        "k": "REGRA OFICIAL",
+        "x": "A transição do ICMS/ISS para o IBS entra na fase 90/10: ICMS e ISS são reduzidos para 90% e o IBS avança segundo a proporção prevista."
+      },
+      {
+        "t": "2030 a 2032",
+        "k": "REGRA OFICIAL",
+        "x": "2030: 80/20; 2031: 70/30; 2032: 60/40. Esses percentuais representam a transição entre sistemas, não alíquotas nominais de 20%, 30% ou 40%."
+      },
+      {
+        "t": "2033",
+        "k": "REGRA OFICIAL",
+        "x": "Entra em vigência integral o novo modelo e ICMS/ISS são extintos. Continuam CBS, IBS, Imposto Seletivo e o IPI apenas nas hipóteses residuais previstas."
+      },
+      {
+        "t": "Por que recalcular ano a ano",
+        "k": "NA PRÁTICA",
+        "x": "Preço, débito, crédito e efeito no caixa mudam conforme os tributos antigos recuam e o novo sistema avança. Uma projeção de 2027 não deve ser reaproveitada como se valesse até 2033."
+      }
+    ],
+    "qa": [
+      [
+        "10% de IBS em 2029 quer dizer alíquota nominal de 10%?",
+        "Não. É a proporção da transição do IBS naquele ano, aplicada segundo as alíquotas de referência e regras legais."
+      ],
+      [
+        "Optante do Simples precisa aplicar 0,9% + 0,1% em 2026?",
+        "A LC 214 exclui das alíquotas-teste de 2026 as operações dos contribuintes optantes pelo Simples Nacional."
+      ],
+      [
+        "O IPI desaparece totalmente em 2027?",
+        "Não. A regra geral é redução a zero para quase todos os produtos, com preservação de hipóteses relacionadas, entre outras, à Zona Franca de Manaus."
+      ]
+    ],
+    "legal": "LC 214/2025, arts. 342 a 349 e regras correlatas, texto atualizado; Receita Federal — Entenda a RTC."
+  },
+  {
+    "id": "06",
+    "title": "Créditos e custo efetivo",
+    "subtitle": "Quando nasce o crédito, quanto pode ser apropriado e por que o cliente olha custo, não só preço.",
+    "intro": "A não cumulatividade é um dos pilares econômicos do novo IVA, mas a frase “se destacou, tomou crédito” é incompleta. A legislação atual condiciona a apropriação a documento fiscal idôneo e, como regra, à extinção do débito da operação anterior, com exceções previstas em lei.",
+    "before": "Hoje, regras de crédito variam conforme ICMS, IPI e PIS/Cofins, regime tributário, tipo de aquisição e limitações específicas.",
+    "after": "No regime regular, IBS e CBS têm disciplina própria de crédito, separada entre os dois tributos. A cadeia passa a ligar documento fiscal, extinção do débito, crédito do adquirente e mecanismos de recolhimento.",
+    "blocks": [
+      {
+        "t": "Quem pode se creditar",
+        "k": "REGRA OFICIAL",
+        "x": "O contribuinte sujeito ao regime regular pode apropriar créditos de IBS e CBS nas aquisições, ressalvadas hipóteses de uso/consumo pessoal e outras vedações legais."
+      },
+      {
+        "t": "Dois requisitos centrais",
+        "k": "REGRA OFICIAL",
+        "x": "A operação precisa ser comprovada por documento fiscal eletrônico idôneo; como regra, a apropriação ocorre quando os débitos correspondentes da operação anterior forem extintos pelas formas previstas na lei."
+      },
+      {
+        "t": "IBS e CBS não se misturam",
+        "k": "REGRA OFICIAL",
+        "x": "Os créditos são apropriados de forma segregada: crédito de IBS não compensa CBS e crédito de CBS não compensa IBS."
+      },
+      {
+        "t": "Split e recolhimento pelo adquirente",
+        "k": "REGRA OFICIAL",
+        "x": "A própria lei prevê exceção temporária ao requisito de extinção quando ainda não tiver sido implementado nem split payment nem recolhimento pelo adquirente, nas condições do art. 48."
+      },
+      {
+        "t": "Fornecedor do Simples",
+        "k": "REGRA OFICIAL",
+        "x": "Se o fornecedor permanece com IBS/CBS dentro do Simples, ele próprio não apropria créditos desses tributos; o adquirente no regime regular pode se creditar em montante equivalente ao IBS/CBS devido por meio do Simples, observadas as regras aplicáveis."
+      },
+      {
+        "t": "Custo efetivo",
+        "k": "MÉTODO RTAV",
+        "x": "Custo efetivo = preço pago − créditos tributários aproveitáveis. É por isso que o mesmo aumento de preço pode ser bom para um comprador e ruim para outro."
+      },
+      {
+        "t": "Exemplo R$ 104,15",
+        "k": "EXEMPLO RTAV",
+        "x": "No material, R$ 104,15 menos R$ 7,05 de crédito resulta em R$ 97,10. O exercício isola CBS e ignora outros créditos para explicar o conceito; não deve ser generalizado para uma apuração real."
+      }
+    ],
+    "qa": [
+      [
+        "Imposto destacado na nota sempre vira crédito?",
+        "Não. É preciso verificar regime do adquirente, documento idôneo, extinção do débito, vedações e regras específicas."
+      ],
+      [
+        "Fornecedor do Simples nunca gera crédito?",
+        "Não. No Simples sem opção pelo regime regular, o adquirente do regime regular pode ter crédito equivalente ao IBS/CBS devido via Simples, conforme a lei."
+      ],
+      [
+        "Crédito é só uma questão fiscal?",
+        "Não. Ele altera custo efetivo, margem e poder de negociação na cadeia B2B."
+      ]
+    ],
+    "legal": "LC 214/2025, arts. 47 a 57, especialmente arts. 47 e 48, em texto atualizado pela LC 227/2026; RTAV."
+  },
+  {
+    "id": "07",
+    "title": "Reprecificação, custo e DRE",
+    "subtitle": "Como transformar a Reforma em preço, margem e decisão comercial sem confundir simulação com apuração fiscal.",
+    "intro": "O método do RTAV é uma ferramenta de planejamento: primeiro descobre-se o líquido econômico atual; depois aplica-se o novo sistema conforme o ano; por fim, reconstrói-se a DRE e mede-se o efeito na cadeia.",
+    "before": "É comum olhar apenas a guia tributária ou aplicar um percentual novo diretamente sobre o preço atual.",
+    "after": "A análise passa a separar preço bruto, líquido, CBS/IBS, tributos antigos remanescentes, créditos de compra, custo efetivo e margem.",
+    "blocks": [
+      {
+        "t": "Passo 1 — limpar o preço",
+        "k": "MÉTODO RTAV",
+        "x": "Preço líquido-alvo = preço atual menos os tributos considerados no cenário atual. O objetivo é descobrir qual valor econômico a empresa quer preservar."
+      },
+      {
+        "t": "Passo 2 — aplicar o novo",
+        "k": "MÉTODO RTAV",
+        "x": "Sobre o líquido, aplique CBS e IBS conforme o ano, destino, redução e regime da operação. Quando o evento usa 9% de CBS, trate como premissa do exercício."
+      },
+      {
+        "t": "Passo 3 — tratar o sistema antigo remanescente",
+        "k": "MÉTODO RTAV",
+        "x": "Na transição, ICMS/ISS ainda podem permanecer na formação do preço. O evento usa gross-up para reconstruir a parcela tratada por dentro."
+      },
+      {
+        "t": "Passo 4 — repetir nas compras",
+        "k": "MÉTODO RTAV",
+        "x": "Recalcule fornecedores e créditos. Preço de venda isolado não mostra o impacto sobre margem."
+      },
+      {
+        "t": "Passo 5 — reconstruir a DRE",
+        "k": "NA PRÁTICA",
+        "x": "Compare receita bruta, tributos sobre venda, receita líquida, custos, créditos, despesas e resultado. Faça cenários por ano da transição."
+      },
+      {
+        "t": "Três estratégias de preço",
+        "k": "MATERIAL DE ESTUDO",
+        "x": "Manter preço bruto; manter receita líquida; ou manter margem/resultado considerando custos e créditos. A escolha final é comercial, não automática."
+      },
+      {
+        "t": "Banda +1,27% a +3,61%",
+        "k": "EXEMPLO RTAV",
+        "x": "É um resultado específico de uma DRE apresentada no evento: +1,27% preservava margem considerando créditos e +3,61% preservava receita líquida. Não copie essa faixa para outro cliente."
+      },
+      {
+        "t": "Limite do simulador",
+        "k": "ATENÇÃO",
+        "x": "A calculadora do site ensina o método e permite cenários. Ela não substitui motor fiscal, classificação de item, regras de base, benefícios, destino e alíquotas oficiais aplicáveis."
+      }
+    ],
+    "qa": [
+      [
+        "A Reforma sempre aumenta preço?",
+        "Não. Um cenário pode exigir aumento, redução ou manutenção, dependendo da carga atual, créditos, regime e margem."
+      ],
+      [
+        "Qual é o preço correto?",
+        "Há preços que preservam objetivos diferentes. O contador deve mostrar cenários e o empresário decide a estratégia comercial."
+      ],
+      [
+        "Posso usar 9% de CBS em todos os clientes?",
+        "Não como alíquota oficial. No RTAV, 9% é uma premissa de simulação."
+      ]
+    ],
+    "legal": "RTAV; Material de Estudo, págs. 8–11; LC 214/2025 para regras reais de base, alíquota, crédito e transição."
+  },
+  {
+    "id": "08",
+    "title": "Simples Nacional em 2027",
+    "subtitle": "Simples puro, híbrido, crédito, regime de caixa, NFS-e e o que realmente muda na rotina.",
+    "intro": "O Simples Nacional continua existindo, mas 2027 muda sua relação com CBS/IBS, documentos e caixa. A empresa pode manter CBS/IBS dentro do regime único ou optar pelo regime regular desses dois tributos, permanecendo no Simples para os demais.",
+    "before": "Hoje a empresa recolhe os tributos do Simples no DAS e pode, em determinadas condições, usar regime de caixa para a apuração mensal. A NFS-e ainda não é uniformemente nacional para todos os optantes.",
+    "after": "CBS e IBS passam a integrar o Simples; existe a escolha entre modelo “puro” e “híbrido”; o regime de caixa deixa de ser utilizado para a base mensal a partir de 2027; e a NFS-e nacional se torna obrigatória para ME/EPP prestadoras de serviços a partir de 1º/11/2026.",
+    "blocks": [
+      {
+        "t": "Simples puro",
+        "k": "REGRA OFICIAL",
+        "x": "CBS e IBS permanecem dentro do recolhimento unificado. Se a empresa não fizer a opção específica pelo regime regular de IBS/CBS, essa é a sistemática aplicável no período correspondente."
+      },
+      {
+        "t": "Simples híbrido",
+        "k": "REGRA OFICIAL",
+        "x": "A empresa continua no Simples para os demais tributos, mas apura e recolhe IBS/CBS pelo regime regular, conforme a LC 214 e a regulamentação do CGSN."
+      },
+      {
+        "t": "Janela para o 1º semestre de 2027",
+        "k": "ATUALIZAÇÃO 2026",
+        "x": "A Receita abriu a escolha em setembro de 2026, com efeitos de janeiro a junho de 2027. Empresas já optantes do Simples não precisam renovar a permanência no regime, mas precisam avaliar o modelo de IBS/CBS."
+      },
+      {
+        "t": "Nova janela para o 2º semestre",
+        "k": "ATUALIZAÇÃO 2026",
+        "x": "Quem não escolheu o regime regular em setembro de 2026 pode fazer nova opção em março de 2027 para efeitos de julho a dezembro, conforme as regras publicadas pelo CGSN."
+      },
+      {
+        "t": "Fim do regime de caixa",
+        "k": "REGRA 2027",
+        "x": "A regulamentação do Simples extinguiu a opção pelo regime de caixa para a base mensal. A receita passa a seguir as novas regras de faturamento, em geral vinculadas à emissão do documento fiscal."
+      },
+      {
+        "t": "NFS-e nacional",
+        "k": "ATUALIZAÇÃO 2026",
+        "x": "Para ME e EPP do Simples sujeitas à NFS-e, o Emissor Nacional passa a ser obrigatório a partir de 1º de novembro de 2026. As regras de CBS/IBS no documento para optantes produzem efeitos a partir de 1º de janeiro de 2027."
+      },
+      {
+        "t": "DAS remanescente",
+        "k": "LINGUAGEM RTAV",
+        "x": "O palestrante usa “DAS remanescente” para explicar o que continua no Simples quando IBS/CBS são recolhidos por fora. É uma expressão didática do evento; o cálculo precisa seguir a regulamentação efetiva do PGDAS-D."
+      },
+      {
+        "t": "Crédito e competitividade B2B",
+        "k": "NA PRÁTICA",
+        "x": "A escolha do híbrido não deve ser feita apenas pela guia da empresa. É necessário medir o crédito gerado ao cliente, compras, margem, caixa, perfil B2B/B2C e custo de compliance."
+      },
+      {
+        "t": "Alíquota efetiva do DAS",
+        "k": "FÓRMULA",
+        "x": "[(RBT12 × alíquota nominal) − parcela a deduzir] ÷ RBT12. No exercício do RTAV com RBT12 de R$ 1 milhão, 16% e PD de R$ 35.640, o resultado é 12,436%."
+      }
+    ],
+    "qa": [
+      [
+        "O Simples acaba?",
+        "Não."
+      ],
+      [
+        "Escolher IBS/CBS por fora tira a empresa do Simples?",
+        "Não. A empresa permanece no Simples para os demais tributos, desde que continue atendendo aos requisitos do regime."
+      ],
+      [
+        "O regime híbrido é melhor para todo B2B?",
+        "Não. Ele pode melhorar a cadeia de créditos, mas também altera carga, fluxo de caixa, documentos e controles."
+      ],
+      [
+        "Regime de caixa continua em 2027?",
+        "Não para a base de cálculo mensal do Simples, segundo as regras publicadas em 2026."
+      ]
+    ],
+    "legal": "LC 214/2025, art. 41 e regras do Simples; Resoluções CGSN 190 e 191/2026; orientações RFB de agosto e setembro/2026; RTAV."
+  },
+  {
+    "id": "09",
+    "title": "Lucro Presumido × Lucro Real e LC 224",
+    "subtitle": "O Presumido não acaba; muda a lógica de comparação e aumenta a importância da DRE.",
+    "intro": "O RTAV chama atenção para uma mudança econômica: com o fim de PIS/Cofins e a entrada da CBS, desaparece uma diferença importante entre os regimes na tributação federal do consumo. Isso não significa que o Lucro Presumido perde validade nem que o Lucro Real será sempre melhor.",
+    "before": "No consumo, Presumido costuma conviver com PIS/Cofins cumulativo e Real com não cumulativo. Para IRPJ/CSLL, Presumido usa percentuais legais e Real parte do lucro contábil ajustado.",
+    "after": "Para empresas fora do Simples, CBS/IBS seguem a disciplina do regime regular independentemente de a empresa apurar IRPJ/CSLL pelo Presumido ou Real. A escolha passa a exigir DRE, margem real, adicional de IRPJ, adições/exclusões, benefícios e custo operacional.",
+    "blocks": [
+      {
+        "t": "Lucro Presumido continua existindo",
+        "k": "RESPOSTA DIRETA",
+        "x": "A Reforma do consumo não extinguiu o Lucro Presumido. O que muda são premissas econômicas usadas para compará-lo ao Lucro Real."
+      },
+      {
+        "t": "LC 224 — acréscimo de 10%",
+        "k": "REGRA OFICIAL",
+        "x": "Nos regimes de base presumida, a LC 224 prevê acréscimo de 10% nos percentuais de presunção. No Lucro Presumido, aplica-se sobre a parcela da receita bruta total que excede R$ 5 milhões no ano-calendário, com proporcionalidade por período e por atividade."
+      },
+      {
+        "t": "32% vira 35,2%, não 42%",
+        "k": "CÁLCULO",
+        "x": "32% × 1,10 = 35,2%. O acréscimo é de 10% sobre o percentual de presunção, não de 10 pontos percentuais."
+      },
+      {
+        "t": "Exemplo R$ 10 milhões",
+        "k": "EXEMPLO RTAV",
+        "x": "R$ 5 milhões × 32% = R$ 1,6 milhão; outros R$ 5 milhões × 35,2% = R$ 1,76 milhão; base simulada total de R$ 3,36 milhões antes do cálculo de IRPJ/CSLL e adicional."
+      },
+      {
+        "t": "Por que a DRE é indispensável",
+        "k": "MÉTODO",
+        "x": "Lucro efetivo abaixo da presunção é um sinal para estudar o Real, mas não encerra a decisão. É preciso calcular IRPJ, CSLL, adicional, adições/exclusões, compensações, benefícios e efeitos operacionais."
+      },
+      {
+        "t": "O que é opinião do palestrante",
+        "k": "RTAV",
+        "x": "A expectativa de migração forte do Presumido para o Real é uma análise estratégica do evento, não uma determinação legal."
+      }
+    ],
+    "qa": [
+      [
+        "O Lucro Presumido acaba em 2027?",
+        "Não."
+      ],
+      [
+        "Margem real de 20% e presunção de 32% garantem que o Real seja melhor?",
+        "Não automaticamente. A diferença de base é relevante, mas o regime precisa ser comparado por completo."
+      ],
+      [
+        "A LC 224 aumentou a alíquota de IRPJ em 10 pontos?",
+        "Não. A regra discutida aqui aumenta o percentual de presunção em 10% sobre a parcela excedente ao limite legal."
+      ]
+    ],
+    "legal": "LC 224/2025, art. 4º, §4º, VII, e §5º; RTAV; Material de Estudo, págs. 7–8."
+  },
+  {
+    "id": "10",
+    "title": "Reduções e regimes específicos",
+    "subtitle": "30%, 60%, alíquota zero, bares, restaurantes, hotelaria e por que CNAE sozinho não resolve.",
+    "intro": "A alíquota-padrão é apenas o começo. A LC 214 traz regimes diferenciados, que reduzem alíquotas para operações enquadradas, e regimes específicos, que podem alterar alíquota, base e crédito.",
+    "before": "Benefícios atuais estão espalhados entre diversos tributos, legislações e entes.",
+    "after": "A LC 214 organiza reduções e regimes próprios dentro da estrutura de IBS/CBS, com listas, anexos, requisitos profissionais e tratamentos de crédito específicos.",
+    "blocks": [
+      {
+        "t": "Redução de 30% — profissionais",
+        "k": "REGRA OFICIAL",
+        "x": "O art. 127 reduz em 30% as alíquotas para serviços de profissões listadas, entre elas contabilistas, desde que cumpridos os requisitos legais. Para pessoa jurídica há condições sobre sócios, atividade e prestação direta dos serviços."
+      },
+      {
+        "t": "Redução de 60%",
+        "k": "REGRA OFICIAL",
+        "x": "A lei prevê redução de 60% para grupos como educação, saúde, dispositivos médicos, medicamentos, alimentos, certos produtos de higiene, agro, cultura, comunicação institucional e atividades desportivas, sempre conforme definições, listas e anexos."
+      },
+      {
+        "t": "Alíquota zero",
+        "k": "REGRA OFICIAL",
+        "x": "Existem hipóteses específicas de redução a zero. Nunca aplique zero apenas porque o produto pertence genericamente a saúde, alimentos ou agro; confira a classificação e a hipótese legal."
+      },
+      {
+        "t": "Bares e restaurantes",
+        "k": "REGIME ESPECÍFICO",
+        "x": "Alimentação enquadrada no regime tem redução de 40% das alíquotas. A base possui exclusões próprias, como certas gorjetas e valores de intermediação. O adquirente não pode se creditar do IBS/CBS sobre alimentação e bebidas abrangidas pelo regime."
+      },
+      {
+        "t": "Hotelaria e parques",
+        "k": "REGIME ESPECÍFICO",
+        "x": "As alíquotas são reduzidas em 40%. O fornecedor pode apropriar créditos de suas aquisições conforme as regras gerais, mas o adquirente do serviço de hotelaria/parques não se credita do IBS/CBS da operação."
+      },
+      {
+        "t": "Redução não é alíquota final",
+        "k": "FÓRMULA",
+        "x": "Alíquota final = alíquota aplicável × (1 − percentual de redução). Se a premissa do exercício for 28% e a redução for 60%, o resultado didático é 11,2%."
+      },
+      {
+        "t": "CNAE não basta",
+        "k": "ATENÇÃO",
+        "x": "O enquadramento pode depender de NBS, NCM, Anexo, natureza da operação, habilitação profissional e requisitos societários. Classificar apenas pelo CNAE pode gerar conclusão errada."
+      }
+    ],
+    "qa": [
+      [
+        "Todo escritório contábil recebe 30% de redução?",
+        "Não automaticamente. A atividade de contabilista está listada, mas a prestação precisa atender aos requisitos do art. 127, inclusive os aplicáveis à pessoa jurídica."
+      ],
+      [
+        "Restaurante toma crédito das compras?",
+        "A vedação expressa do art. 276 é ao adquirente da alimentação/bebida. A análise dos créditos do próprio fornecedor deve seguir as regras do regime e das aquisições."
+      ],
+      [
+        "Hotel gera crédito para uma empresa cliente?",
+        "O art. 283 veda ao adquirente o crédito de IBS/CBS sobre os serviços de hotelaria, parques de diversão e parques temáticos abrangidos pelo regime."
+      ]
+    ],
+    "legal": "LC 214/2025, arts. 127 a 146 e arts. 273 a 283, texto atualizado pela LC 227/2026; RTAV."
+  },
+  {
+    "id": "11",
+    "title": "Recolhimento, documentos e apuração assistida",
+    "subtitle": "Split payment, recolhimento pelo adquirente, DF-e e por que a rotina fiscal muda.",
+    "intro": "Fato gerador, crédito, documento e recolhimento são peças diferentes que passam a conversar em tempo quase real. O contador precisa entender cada camada para não chamar tudo de split payment.",
+    "before": "A rotina atual muitas vezes reconstrói a apuração por escriturações e declarações depois da emissão e do pagamento.",
+    "after": "A arquitetura de IBS/CBS conecta documento fiscal eletrônico, extinção do débito, crédito, liquidação financeira e apuração assistida. A implantação tecnológica é gradual e possui cronogramas próprios.",
+    "blocks": [
+      {
+        "t": "Split payment",
+        "k": "REGRA OFICIAL",
+        "x": "Prestadores de serviços de pagamento e operadores de sistemas de pagamento deverão, nas condições legais, segregar e recolher IBS/CBS na liquidação financeira. A lei prevê procedimento padrão e simplificado."
+      },
+      {
+        "t": "Implementação gradual",
+        "k": "REGRA OFICIAL",
+        "x": "A LC 214 determina que ato conjunto do CGIBS e da RFB estabeleça implementação gradual e pode prever hipóteses facultativas. Portanto, não se deve afirmar que todo pagamento terá split desde o primeiro dia."
+      },
+      {
+        "t": "Recolhimento pelo adquirente",
+        "k": "REGRA OFICIAL",
+        "x": "É outra modalidade de extinção do débito prevista na lei e não deve ser confundida com split. Aplica-se nas hipóteses e condições próprias do art. 36."
+      },
+      {
+        "t": "Apuração assistida",
+        "k": "REGRA OFICIAL",
+        "x": "CGIBS e RFB podem apresentar ao contribuinte a apuração assistida. O contribuinte pode confirmar ou ajustar; a ausência de manifestação dentro do prazo possui efeitos legais relevantes, por isso conferência continua indispensável."
+      },
+      {
+        "t": "Documento fiscal eletrônico",
+        "k": "NA PRÁTICA",
+        "x": "O crédito é ligado a documento fiscal eletrônico idôneo. Cadastro, natureza da operação, destino, item, regime e campos de IBS/CBS passam a ser parte central da qualidade da apuração."
+      },
+      {
+        "t": "Cronograma oficial de DF-e",
+        "k": "ATUALIZAÇÃO 2026",
+        "x": "RFB e CGIBS publicaram cronograma de obrigatoriedade e leiautes dos documentos fiscais, com marcos em 2026 e 2027. O site deve ser revisado quando esses marcos forem atualizados."
+      },
+      {
+        "t": "NFS-e e NT 009",
+        "k": "ATUALIZAÇÃO 2026",
+        "x": "A Nota Técnica 009 consolidou adaptações do layout da NFS-e para a Reforma. Para optantes do Simples, a NFS-e nacional tornou-se obrigatória a partir de 1º/11/2026, e os efeitos de CBS/IBS no regime começam em 1º/1/2027."
+      },
+      {
+        "t": "Novo papel do contador",
+        "k": "RTAV",
+        "x": "A direção é menos reconstrução manual e mais parametrização, conferência, exceções, conciliação, análise de caixa e consultoria. Isso não significa fim das obrigações nem ausência de revisão humana."
+      }
+    ],
+    "qa": [
+      [
+        "Split payment é o fato gerador?",
+        "Não."
+      ],
+      [
+        "Apuração assistida elimina a conferência do escritório?",
+        "Não. A lei prevê confirmação, ajustes e consequências para falta de manifestação."
+      ],
+      [
+        "Todos os documentos mudam na mesma data?",
+        "Não. Há cronogramas e leiautes por documento/operação; é preciso acompanhar as orientações oficiais."
+      ]
+    ],
+    "legal": "LC 214/2025, arts. 27, 31 a 36, 45 a 48; Ato Conjunto RFB/CGIBS nº 4/2026; orientações RFB/CGIBS; NT 009 NFS-e."
+  },
+  {
+    "id": "12",
+    "title": "Planejamento e conversa com o cliente",
+    "subtitle": "Do diagnóstico técnico ao plano de ação 2026–2033.",
+    "intro": "O objetivo do treinamento não é transformar o contador em alguém que recita artigos. É transformar regra em decisão: preço, margem, regime, fornecedor, contrato, caixa e sistema. O material do RTAV chama isso de diagnóstico e prognóstico.",
+    "before": "Planejamento muitas vezes termina na comparação de percentuais ou no valor de uma guia.",
+    "after": "A transição exige cenário por cenário, com premissas explícitas e atualização contínua conforme alíquotas, regulamentos e dados reais do cliente.",
+    "blocks": [
+      {
+        "t": "1. Diagnóstico do negócio",
+        "k": "MÉTODO",
+        "x": "Mapeie faturamento, regime, margem, produtos/serviços, clientes, fornecedores, destinos, antecipações, contratos, benefícios, créditos, documentos e sistemas."
+      },
+      {
+        "t": "2. Separar regra de estimativa",
+        "k": "MÉTODO",
+        "x": "Em cada planilha ou apresentação, marque o que é REGRA OFICIAL, RTAV, ESTIMATIVA, AGUARDA REGULAMENTAÇÃO e PREMISSA DO CLIENTE. Isso evita que 9%, 27,91% ou 28% virem “verdades oficiais” por repetição."
+      },
+      {
+        "t": "3. Projetar por ano",
+        "k": "MÉTODO",
+        "x": "Faça cenários de 2027 a 2033, porque ICMS/ISS, IBS e alíquotas de referência mudam ao longo da transição."
+      },
+      {
+        "t": "4. Recalcular venda e compra",
+        "k": "MÉTODO",
+        "x": "Projete preço líquido, CBS/IBS, tributos remanescentes, crédito de compras e custo efetivo. Depois reconstrua a DRE."
+      },
+      {
+        "t": "5. Analisar regime",
+        "k": "MÉTODO",
+        "x": "Para Simples, compare puro x híbrido; para Presumido x Real, use DRE completa. Não decida regime por uma única alíquota."
+      },
+      {
+        "t": "6. Rever contratos",
+        "k": "NA PRÁTICA",
+        "x": "Mapeie cláusulas de preço, tributos, reajuste, repasse, antecipação, prazo, destino e reequilíbrio. A transição pode mudar custo mesmo sem mudança comercial aparente."
+      },
+      {
+        "t": "7. Preparar sistemas e cadastros",
+        "k": "NA PRÁTICA",
+        "x": "Revise ERP, emissor, cadastro de item/serviço, NCM/NBS, endereço de destino, regime do cliente, regras de crédito, integração financeira e documentos fiscais."
+      },
+      {
+        "t": "8. Preparar caixa",
+        "k": "NA PRÁTICA",
+        "x": "Antecipações, novos momentos de exigência, split/recolhimento pelo adquirente e mudança de crédito podem alterar capital de giro."
+      },
+      {
+        "t": "9. Entregar cenários, não um palpite",
+        "k": "RTAV",
+        "x": "Mostre DRE atual x projetada, preço que preserva receita líquida, preço que preserva margem, custo efetivo do cliente e plano de ação."
+      },
+      {
+        "t": "10. Revisar continuamente",
+        "k": "ATENÇÃO",
+        "x": "A legislação e os atos operacionais continuam evoluindo. Atualize o diagnóstico quando sair alíquota oficial, regulamentação, mudança de regime, mix, fornecedor, cliente ou contrato."
+      }
+    ],
+    "qa": [
+      [
+        "Posso prometer ao cliente hoje qual será a carga exata até 2033?",
+        "Não. Há alíquotas futuras e atos operacionais que ainda são fixados ao longo do processo. O correto é trabalhar com cenários identificados."
+      ],
+      [
+        "Qual é a primeira urgência para 2026?",
+        "Qualidade de cadastro e documento, decisão de Simples quando aplicável, entendimento do ano-teste, preparação de sistemas e projeção econômica para 2027."
+      ],
+      [
+        "O contador deve dizer qual preço o empresário é obrigado a usar?",
+        "Não. O contador calcula impactos e faixas; a decisão comercial pertence à empresa."
+      ]
+    ],
+    "legal": "RTAV; Material de Estudo; EC 132/2023; LC 214/2025 atualizada pela LC 227/2026; LC 224/2025; orientações RFB/CGIBS de 2026."
+  }
 ];
 
 const TIMELINE = {
- "2026":{label:"Teste",text:"CBS 0,9% + IBS 0,1% como alíquotas-teste, com compensação/dispensa conforme as regras legais. Não confundir com a carga futura plena."},
- "2027":{label:"CBS entra",text:"PIS/Cofins extintos; IBS 0,1%; CBS pela alíquota de referência a ser fixada, reduzida em 0,1 p.p.; início do Imposto Seletivo e redução do IPI nas hipóteses legais."},
- "2028":{label:"Fase inicial",text:"Mantém a estrutura de 2027; IBS 0,1% e CBS conforme a alíquota aplicável ao ano."},
- "2029":{label:"90 / 10",text:"ICMS/ISS passam a 90% das alíquotas; IBS avança na transição. As alíquotas de referência aplicáveis são fixadas segundo a legislação."},
- "2030":{label:"80 / 20",text:"ICMS/ISS a 80%."},
- "2031":{label:"70 / 30",text:"ICMS/ISS a 70%."},
- "2032":{label:"60 / 40",text:"ICMS/ISS a 60%."},
- "2033":{label:"Novo modelo",text:"Conclusão da transição principal, com extinção de ICMS e ISS e vigência integral do novo modelo."}
+  "2026": {
+    "label": "Ano-teste",
+    "text": "CBS 0,9% e IBS 0,1%. O recolhimento tem regras de compensação e pode ser dispensado quando cumpridas as obrigações acessórias; as alíquotas-teste não se aplicam às operações dos optantes do Simples Nacional."
+  },
+  "2027": {
+    "label": "CBS + IBS inicial",
+    "text": "PIS/Cofins são extintos; IBS de 0,1% (0,05% estadual + 0,05% municipal); CBS pela alíquota aplicável ao ano reduzida em 0,1 p.p.; Imposto Seletivo entra em vigor; IPI é reduzido a zero na maior parte das hipóteses."
+  },
+  "2028": {
+    "label": "Fase inicial",
+    "text": "Mantém a estrutura de IBS 0,1% e CBS conforme a alíquota aplicável. Não trate 9% como número oficial por definição."
+  },
+  "2029": {
+    "label": "90 / 10",
+    "text": "Começa a redução gradual de ICMS/ISS: 90% do sistema antigo e avanço do IBS na proporção de transição prevista."
+  },
+  "2030": {
+    "label": "80 / 20",
+    "text": "ICMS/ISS a 80%; IBS avança na transição."
+  },
+  "2031": {
+    "label": "70 / 30",
+    "text": "ICMS/ISS a 70%; IBS avança na transição."
+  },
+  "2032": {
+    "label": "60 / 40",
+    "text": "ICMS/ISS a 60%; último ano antes da vigência integral do novo modelo."
+  },
+  "2033": {
+    "label": "Novo modelo",
+    "text": "Vigência integral do novo modelo e extinção de ICMS/ISS. Permanecem CBS, IBS, Imposto Seletivo e IPI nas hipóteses residuais previstas."
+  }
 };
 
 const SOURCES = [
- ["LC 214/2025 — texto atualizado","https://www2.camara.leg.br/legin/fed/leicom/2025/leicomplementar-214-16-janeiro-2025-796905-normaatualizada-pl.html","Lei principal do IBS, CBS e Imposto Seletivo, já com alterações posteriores."],
- ["Receita Federal — Entenda a RTC","https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda","Resumo oficial da transição 2026–2033."],
- ["Receita — Simples e IBS/CBS em 2027","https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/setembro/receita-federal-alerta-comeca-hoje-o-prazo-para-opcao-pelo-simples-nacional-e-para-a-escolha-do-modelo-de-recolhimento-do-ibs-e-da-cbs-em-2027/","Orientação atual sobre Simples puro/híbrido e prazos."],
- ["LC 224/2025","https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp224.htm","Alterações relevantes para percentuais de presunção, inclusive limite anual de R$ 5 milhões."],
- ["Receita — Orientações da Reforma","https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/orientacoes-da-reforma-tributaria","Documentos fiscais, cronogramas e orientações operacionais."],
- ["RTAV + Material de Estudo 26/09/2026","#","Base didática do treinamento: exemplos, método de reprecificação, DRE e casos práticos. Exemplos e estimativas são identificados no conteúdo."]
+  [
+    "LC 214/2025 — texto atualizado",
+    "https://www2.camara.leg.br/legin/fed/leicom/2025/leicomplementar-214-16-janeiro-2025-796905-normaatualizada-pl.html",
+    "Lei principal de IBS, CBS e Imposto Seletivo, já incorporando alterações posteriores, inclusive da LC 227/2026."
+  ],
+  [
+    "LC 227/2026",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/legislacao/principais-marcos-regulatorios",
+    "Marco de 2026 que institui o CGIBS e altera pontos relevantes da implementação e da LC 214."
+  ],
+  [
+    "Receita Federal — Entenda a RTC",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda",
+    "Resumo oficial da transição 2026–2033 e dos tributos que entram e saem."
+  ],
+  [
+    "Receita — Simples puro e híbrido 2027",
+    "https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/setembro/receita-federal-alerta-comeca-hoje-o-prazo-para-opcao-pelo-simples-nacional-e-para-a-escolha-do-modelo-de-recolhimento-do-ibs-e-da-cbs-em-2027/",
+    "Prazos e escolha entre IBS/CBS dentro do Simples ou no regime regular."
+  ],
+  [
+    "Receita — fim do regime de caixa no Simples",
+    "https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/regime-de-caixa-deixa-de-ser-utilizado-na-apuracao-do-simples-nacional",
+    "Mudança da base mensal do Simples a partir de 2027."
+  ],
+  [
+    "Receita — NFS-e nacional para Simples",
+    "https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/simples-nacional-nfs-e-nacional-sera-obrigatoria-para-me-e-epp-a-partir-de-1o-de-novembro-de-2026",
+    "Obrigatoriedade da NFS-e nacional e marco de CBS/IBS para optantes."
+  ],
+  [
+    "Receita — Orientações da RTC",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/orientacoes-da-reforma-tributaria",
+    "Cronogramas oficiais de documentos fiscais e atos conjuntos RFB/CGIBS."
+  ],
+  [
+    "NFS-e — Nota Técnica 009/2026",
+    "https://www.gov.br/nfse/pt-br/noticias/publicada-a-nota-tecnica-009-da-nfs-e",
+    "Adequações do layout da NFS-e para IBS/CBS."
+  ],
+  [
+    "LC 224/2025",
+    "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp224.htm",
+    "Acréscimo de 10% nos percentuais de presunção e regra do limite anual de R$ 5 milhões no Lucro Presumido."
+  ],
+  [
+    "RTAV + Material de Estudo 26/09/2026",
+    "#",
+    "Base didática do treinamento. Exemplos, estimativas e opiniões do palestrante são identificados e não substituem a regra oficial."
+  ]
 ];
 
 const PRACTICES = [
