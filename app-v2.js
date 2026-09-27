@@ -231,7 +231,7 @@ function snShares(year,annex=snAnnex(),rbt12=num('snRbt12')){
  }
 
  // Regras especiais de teto de ISS na 5ª faixa dos Anexos III e IV.
- if(band===4&&annex==='III'&&eff>.1492537){
+ if(band===4&&annex==='III'&&eff>.1492537&&year<=2032){
   if(year===2027||year===2028){
    const residual=Math.max(0,eff-.05);
    return {band,eff,cbsEff:residual*.2320,ibsEff:residual*.0026,oldEff:.05,otherEff:Math.max(0,eff-(residual*.2320)-(residual*.0026)-.05),special:true};
@@ -242,7 +242,7 @@ function snShares(year,annex=snAnnex(),rbt12=num('snRbt12')){
   const cbsEff=residual*.2346;
   return {band,eff,cbsEff,ibsEff:ibsFixed,oldEff:oldFixed,otherEff:Math.max(0,eff-cbsEff-ibsFixed-oldFixed),special:true};
  }
- if(band===4&&annex==='IV'&&eff>.125){
+ if(band===4&&annex==='IV'&&eff>.125&&year<=2032){
   if(year===2027||year===2028){
    const residual=Math.max(0,eff-.05);
    return {band,eff,cbsEff:residual*.3627,ibsEff:residual*.0040,oldEff:.05,otherEff:Math.max(0,eff-(residual*.3627)-(residual*.0040)-.05),special:true};
