@@ -102,6 +102,47 @@ close(futureWithoutTick.buyerCredit,0,1e-8,'Sem tique não há crédito CBS/IBS'
 const futureWithTick=engine.futurePriceScenario({...presumido,purchases:{enabled:true}},2027);
 close(futureWithTick.buyerCredit,futureWithTick.cbs+futureWithTick.ibs,1e-8,'Com tique, CBS e IBS reduzem o custo efetivo');
 
+// Comparador: regime da empresa x três regimes de fornecedor.
+const compareInput={
+ companyRegime:'presumido',
+ amount:1000,
+ currentRates:{icms:18,iss:0,ipi:0},
+ simple:{annex:'I',rbt12:1000000},
+ future:{mode:'rtav',reduction:0},
+ purchaseGeneratesCredit:true
+};
+const supplierCompare=engine.supplierPurchaseComparison(compareInput,2027);
+assert.equal(supplierCompare.companyRegime,'presumido');
+assert.equal(supplierCompare.creditEnabled,true);
+for(const key of ['presumido','real','simples']){
+ const x=supplierCompare.suppliers[key];
+ assert.ok(x.price>0,`Preço projetado deve existir para fornecedor ${key}`);
+ assert.ok(x.effectiveCost>0,`Custo efetivo deve existir para fornecedor ${key}`);
+ assert.ok(x.credit>0,`Empresa regular deve aproveitar crédito do fornecedor ${key}`);
+ close(x.effectiveCost,x.price-x.credit,1e-8,`Custo efetivo deve descontar crédito em ${key}`);
+}
+assert.notEqual(
+ supplierCompare.suppliers.presumido.price,
+ supplierCompare.suppliers.real.price,
+ 'LP e LR devem refletir formações atuais diferentes'
+);
+assert.ok(
+ supplierCompare.suppliers.simples.credit>0,
+ 'Empresa no regime regular deve receber crédito correspondente ao CBS/IBS do fornecedor do Simples'
+);
+
+const simpleBuyerCompare=engine.supplierPurchaseComparison({...compareInput,companyRegime:'simples'},2027);
+assert.equal(simpleBuyerCompare.creditEnabled,false);
+for(const key of ['presumido','real','simples']){
+ const x=simpleBuyerCompare.suppliers[key];
+ close(x.credit,0,1e-10,`Compradora do Simples não apropria crédito em ${key}`);
+ close(x.effectiveCost,x.price,1e-8,`Sem crédito, custo deve ser o preço em ${key}`);
+}
+
+const nonCreditableCompare=engine.supplierPurchaseComparison({...compareInput,purchaseGeneratesCredit:false},2027);
+assert.equal(nonCreditableCompare.creditEnabled,false);
+for(const key of ['presumido','real','simples']) close(nonCreditableCompare.suppliers[key].credit,0,1e-10);
+
 // Faturamento com créditos estimados das aquisições.
 const revenue={
  regime:'presumido',

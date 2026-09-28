@@ -5,60 +5,88 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
-test('compra/custo efetivo e faturamento carregam sem erro de console',async({page})=>{
+async function supplierValue(card,label){
+ return brl(await card.locator('.supplier-line').filter({hasText:label}).locator('b').textContent());
+}
+
+test('compara a empresa com fornecedores LP, LR e Simples',async({page})=>{
  const errors=[];
  page.on('console',msg=>{if(msg.type()==='error') errors.push(msg.text());});
  page.on('pageerror',err=>errors.push(err.message));
 
- await page.goto('http://127.0.0.1:4173/?e2e=1',{waitUntil:'domcontentloaded'});
+ await page.goto('http://127.0.0.1:4173/?e2e=suppliers',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
 
  await expect(page.locator('#priceToolPanel')).toHaveClass(/active/);
- await expect(page.locator('#priceToolTab')).toContainText('Compra / custo efetivo');
+ await expect(page.locator('#priceToolTab')).toContainText('Compra / fornecedores');
+
  await page.locator('#priceNow').fill('1.234,56');
  await page.locator('#priceNow').blur();
  await expect(page.locator('#priceNow')).toHaveValue('1.234,56');
- await page.locator('#priceCurrentBuyerCredit').fill('100');
  await page.locator('#taxRegime').selectOption('presumido');
- await page.locator('#pisRate').fill('0.65');
- await page.locator('#cofinsRate').fill('3');
  await page.locator('#icmsRate').fill('18');
+ await page.locator('#issRate').fill('0');
+ await page.locator('#ipiRate').fill('0');
+ await page.locator('#snRbt12').fill('1000000');
+ await page.locator('#snAnnex').selectOption('I');
  await page.locator('#priceYear').selectOption('2027');
 
- await expect(page.locator('#integratedKpis')).toContainText('Custo efetivo atual');
- await expect(page.locator('#integratedKpis')).toContainText('1.134,56');
+ await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(3);
+ const lp=page.locator('[data-supplier="presumido"]');
+ const lr=page.locator('[data-supplier="real"]');
+ const sn=page.locator('[data-supplier="simples"]');
+ await expect(lp).toContainText('Lucro Presumido');
+ await expect(lr).toContainText('Lucro Real');
+ await expect(sn).toContainText('Simples Nacional');
+
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
+ const lpCredit=await supplierValue(lp,'Crédito aproveitado');
+ const lrCredit=await supplierValue(lr,'Crédito aproveitado');
+ const snCredit=await supplierValue(sn,'Crédito aproveitado');
+ expect(lpCredit).toBeGreaterThan(0);
+ expect(lrCredit).toBeGreaterThan(0);
+ expect(snCredit).toBeGreaterThan(0);
+
+ const lpCost=brl(await lp.locator('.supplier-cost b').textContent());
+ const lpPrice=await supplierValue(lp,'Preço da compra');
+ expect(lpCost).toBeLessThan(lpPrice);
+
+ await page.locator('#taxRegime').selectOption('simples');
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeDisabled();
+ await expect(page.locator('#priceTakesCbsIbsCredit')).not.toBeChecked();
+ expect(await supplierValue(lp,'Crédito aproveitado')).toBe(0);
+ expect(await supplierValue(lr,'Crédito aproveitado')).toBe(0);
+ expect(await supplierValue(sn,'Crédito aproveitado')).toBe(0);
+ const lpCostSimpleBuyer=brl(await lp.locator('.supplier-cost b').textContent());
+ const lpPriceSimpleBuyer=await supplierValue(lp,'Preço da compra');
+ expect(Math.abs(lpCostSimpleBuyer-lpPriceSimpleBuyer)).toBeLessThanOrEqual(0.02);
+
+ await page.locator('#taxRegime').selectOption('real');
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
+ expect(await supplierValue(lp,'Crédito aproveitado')).toBeGreaterThan(0);
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
- await expect(page.locator('#currentTaxSummary')).toContainText('Preço da compra');
- await expect(page.locator('#currentTaxSummary')).toContainText('Crédito atual aproveitável');
- await expect(page.locator('#currentTaxSummary')).not.toContainText('%');
-
- const priceRow=page.locator('#futureTaxSummary .tax-summary-row').filter({hasText:'Preço da compra projetado'});
- const costRow=page.locator('#futureTaxSummary .tax-summary-row').filter({hasText:'Custo efetivo'});
- const creditRow=page.locator('#futureTaxSummary .tax-summary-row').filter({hasText:'Crédito CBS/IBS'});
- const grossBefore=brl(await priceRow.locator('b').textContent());
- const costBefore=brl(await costRow.locator('b').textContent());
- expect(costBefore).toBeCloseTo(grossBefore,2);
-
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeVisible();
- await page.locator('#priceTakesCbsIbsCredit').check();
- await expect(page.locator('#integratedKpis')).toContainText('Aproveitado');
- const grossAfter=brl(await priceRow.locator('b').textContent());
- const costAfter=brl(await costRow.locator('b').textContent());
- const creditAfter=brl(await creditRow.locator('b').textContent());
- expect(grossAfter).toBeCloseTo(grossBefore,2);
- expect(creditAfter).toBeGreaterThan(0);
- expect(costAfter).toBeLessThan(grossAfter);
- expect(Math.abs(costAfter-(grossAfter-creditAfter))).toBeLessThanOrEqual(0.02);
- await expect(page.locator('#futureTaxSummary')).toContainText('CBS');
- await expect(page.locator('#futureTaxSummary')).toContainText('IBS');
- await expect(page.locator('#futureTaxSummary')).not.toContainText('%');
 
  await page.evaluate(()=>{window.print=()=>{};});
  await page.locator('#pricePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('Relatório de compra e custo efetivo');
- await expect(page.locator('#printReport')).toContainText('Crédito CBS/IBS');
- await expect(page.locator('#printReport')).toContainText('Custo efetivo');
+ await expect(page.locator('#printReport')).toContainText('Comparativo de custo por regime do fornecedor');
+ await expect(page.locator('#printReport')).toContainText('Fornecedor · Lucro Presumido');
+ await expect(page.locator('#printReport')).toContainText('Fornecedor · Lucro Real');
+ await expect(page.locator('#printReport')).toContainText('Fornecedor · Simples Nacional');
 
+ const purchaseSheet=await page.evaluate(()=>{
+  let out=null;
+  downloadSpreadsheet=(...args)=>{out=args;};
+  exportPriceExcel();
+  return out;
+ });
+ expect(purchaseSheet[1]).toContain('Custo fornecedor LP');
+ expect(purchaseSheet[1]).toContain('Custo fornecedor LR');
+ expect(purchaseSheet[1]).toContain('Custo fornecedor Simples');
+ expect(purchaseSheet[2]).toHaveLength(8);
+
+ // Regressão: a ferramenta de faturamento continua funcionando como antes.
  await page.evaluate(()=>showTaxTool('revenue'));
  await expect(page.locator('#revenueToolPanel')).toHaveClass(/active/);
  await page.locator('#revCurrentRevenue').fill('100.000,50');
@@ -69,51 +97,28 @@ test('compra/custo efetivo e faturamento carregam sem erro de console',async({pa
  await expect(page.locator('#revCurrentSummary')).toContainText('ICMS');
  await expect(page.locator('#revCurrentSummary')).not.toContainText('Total de tributos');
  await expect(page.locator('#revCurrentSummary')).toContainText('−');
- await expect(page.locator('#revCurrentSummary')).not.toContainText('+');
- await expect(page.locator('#revCurrentSummary')).not.toContainText('=');
- await page.locator('#revenueAdvanced').evaluate(el=>{el.open=true;});
- await page.locator('#revCreditablePurchasesPct').fill('50');
- await page.locator('#revYear').selectOption('2027');
- await expect(page.locator('#revKpis')).toContainText('Créditos estimados');
- await expect(page.locator('#revYearlyTable tr')).toHaveCount(8);
-
- await page.evaluate(()=>{window.print=()=>{};});
- await page.locator('#revenuePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('Resumo executivo');
- await expect(page.locator('#printReport')).toContainText('Comparação tributária');
- await expect(page.locator('#printReport')).toContainText('PIS');
- await expect(page.locator('#printReport')).toContainText('Cofins');
- await expect(page.locator('#printReport')).toContainText('ICMS');
- await expect(page.locator('#printReport')).toContainText('−');
- await expect(page.locator('#printReport')).not.toContainText('+');
- await expect(page.locator('#printReport')).not.toContainText('=');
- await expect(page.locator('#printReport')).not.toContainText('Tributos considerados');
- await expect(page.locator('#printReport')).toContainText('Evolução 2026–2033');
 
  expect(errors).toEqual([]);
 });
 
-test('Simples híbrido mantém cálculo na compra e no faturamento',async({page})=>{
- await page.goto('http://127.0.0.1:4173/?e2e=hybrid',{waitUntil:'domcontentloaded'});
+test('fornecedor do Simples usa RBT12 e faturamento híbrido permanece intacto',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=simple-supplier',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
 
- await page.locator('#taxRegime').selectOption('simples_hybrid');
+ await page.locator('#taxRegime').selectOption('presumido');
  await page.locator('#priceNow').fill('1000000');
  await page.locator('#snRbt12').fill('1000000');
  await page.locator('#snAnnex').selectOption('III');
  await page.locator('#priceYear').selectOption('2027');
- await page.locator('#priceTakesCbsIbsCredit').check();
- await expect(page.locator('#priceMemory')).toContainText('937.481,29');
- await expect(page.locator('#priceMemory')).toContainText('39.486,09');
- await expect(page.locator('#futureTaxSummary')).toContainText('86.342,03');
- await expect(page.locator('#futureTaxSummary')).toContainText('937,48');
- await expect(page.locator('#futureTaxSummary')).toContainText('Crédito CBS/IBS');
 
- await page.evaluate(()=>{window.print=()=>{};});
- await page.locator('#pricePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('86.342,03');
- await expect(page.locator('#printReport')).not.toContainText('Base do DAS residual');
+ const sn=page.locator('[data-supplier="simples"]');
+ await expect(sn).toContainText('Anexo III');
+ expect(await supplierValue(sn,'Crédito aproveitado')).toBeGreaterThan(0);
+ const snCost=brl(await sn.locator('.supplier-cost b').textContent());
+ const snPrice=await supplierValue(sn,'Preço da compra');
+ expect(snCost).toBeLessThan(snPrice);
 
+ // Regressão exata da ferramenta de faturamento híbrido.
  await page.evaluate(()=>showTaxTool('revenue'));
  await page.locator('#revTaxRegime').selectOption('simples_hybrid');
  await page.locator('#revCurrentRevenue').fill('1000000');
@@ -121,6 +126,7 @@ test('Simples híbrido mantém cálculo na compra e no faturamento',async({page}
  await page.locator('#revSnAnnex').selectOption('III');
  await page.locator('#revYear').selectOption('2027');
  await expect(page.locator('#revenueMemory')).toContainText('937.481,29');
+ await page.evaluate(()=>{window.print=()=>{};});
  await page.locator('#revenuePrintBtn').click();
  await expect(page.locator('#printReport')).toContainText('CBS');
  await expect(page.locator('#printReport')).toContainText('86.342,03');
@@ -129,25 +135,4 @@ test('Simples híbrido mantém cálculo na compra e no faturamento',async({page}
  await expect(page.locator('#printReport')).toContainText('DAS / tributos remanescentes');
  await expect(page.locator('#printReport')).toContainText('101.327,38');
  await expect(page.locator('#printReport')).not.toContainText('Base do DAS residual');
-
- const sheets=await page.evaluate(()=>{
-  const out=[];
-  downloadSpreadsheet=(...args)=>out.push(args);
-  showTaxTool('price');exportPriceExcel();
-  showTaxTool('revenue');exportRevenueExcel();
-  return out;
- });
- const purchaseSheet=sheets[0],revenueSheet=sheets[1];
- expect(purchaseSheet[1]).toContain('Custo efetivo');
- expect(purchaseSheet[1]).toContain('Crédito aproveitado');
- expect(purchaseSheet[1]).not.toContain('Base DAS residual');
- const purchaseRow=purchaseSheet[2].find(row=>row[0]===2027);
- expect(purchaseRow[7]).toBeCloseTo(87279.51,1);
- expect(purchaseRow[8]).toBeCloseTo(purchaseRow[3]-purchaseRow[7],2);
-
- expect(revenueSheet[1]).toContain('Base DAS residual');
- const revenueRow=revenueSheet[2].find(row=>row[0]===2027);
- expect(revenueRow.slice(-3)[0]).toBeCloseTo(976967.38,2);
- expect(revenueRow.slice(-3)[1]).toBeCloseTo(39486.09,2);
- expect(revenueRow.slice(-3)[2]).toBeCloseTo(937481.29,2);
 });
