@@ -9,7 +9,7 @@ async function supplierValue(card,label){
  return brl(await card.locator('.supplier-line').filter({hasText:label}).locator('b').textContent());
 }
 
-test('compara a empresa com fornecedores LP, LR e Simples',async({page})=>{
+test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page})=>{
  const errors=[];
  page.on('console',msg=>{if(msg.type()==='error') errors.push(msg.text());});
  page.on('pageerror',err=>errors.push(err.message));
@@ -31,22 +31,26 @@ test('compara a empresa com fornecedores LP, LR e Simples',async({page})=>{
  await page.locator('#snAnnex').selectOption('I');
  await page.locator('#priceYear').selectOption('2027');
 
- await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(3);
+ await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(4);
  const lp=page.locator('[data-supplier="presumido"]');
  const lr=page.locator('[data-supplier="real"]');
  const sn=page.locator('[data-supplier="simples"]');
+ const hybrid=page.locator('[data-supplier="simples_hybrid"]');
  await expect(lp).toContainText('Lucro Presumido');
  await expect(lr).toContainText('Lucro Real');
  await expect(sn).toContainText('Simples Nacional');
+ await expect(hybrid).toContainText('Simples Nacional híbrido');
 
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
  const lpCredit=await supplierValue(lp,'Crédito aproveitado');
  const lrCredit=await supplierValue(lr,'Crédito aproveitado');
  const snCredit=await supplierValue(sn,'Crédito aproveitado');
+ const hybridCredit=await supplierValue(hybrid,'Crédito aproveitado');
  expect(lpCredit).toBeGreaterThan(0);
  expect(lrCredit).toBeGreaterThan(0);
  expect(snCredit).toBeGreaterThan(0);
+ expect(hybridCredit).toBeGreaterThan(0);
 
  const lpCost=brl(await lp.locator('.supplier-cost b').textContent());
  const lpPrice=await supplierValue(lp,'Preço da compra');
@@ -58,6 +62,7 @@ test('compara a empresa com fornecedores LP, LR e Simples',async({page})=>{
  expect(await supplierValue(lp,'Crédito aproveitado')).toBe(0);
  expect(await supplierValue(lr,'Crédito aproveitado')).toBe(0);
  expect(await supplierValue(sn,'Crédito aproveitado')).toBe(0);
+ expect(await supplierValue(hybrid,'Crédito aproveitado')).toBe(0);
  const lpCostSimpleBuyer=brl(await lp.locator('.supplier-cost b').textContent());
  const lpPriceSimpleBuyer=await supplierValue(lp,'Preço da compra');
  expect(Math.abs(lpCostSimpleBuyer-lpPriceSimpleBuyer)).toBeLessThanOrEqual(0.02);
@@ -68,12 +73,19 @@ test('compara a empresa com fornecedores LP, LR e Simples',async({page})=>{
  expect(await supplierValue(lp,'Crédito aproveitado')).toBeGreaterThan(0);
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
 
+ await page.locator('#taxRegime').selectOption('simples_hybrid');
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
+ await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
+ expect(await supplierValue(hybrid,'Crédito aproveitado')).toBeGreaterThan(0);
+ await page.locator('#taxRegime').selectOption('real');
+
  await page.evaluate(()=>{window.print=()=>{};});
  await page.locator('#pricePrintBtn').click();
  await expect(page.locator('#printReport')).toContainText('Comparativo de custo por regime do fornecedor');
  await expect(page.locator('#printReport')).toContainText('Fornecedor · Lucro Presumido');
  await expect(page.locator('#printReport')).toContainText('Fornecedor · Lucro Real');
  await expect(page.locator('#printReport')).toContainText('Fornecedor · Simples Nacional');
+ await expect(page.locator('#printReport')).toContainText('Fornecedor · Simples Nacional híbrido');
 
  const purchaseSheet=await page.evaluate(()=>{
   let out=null;
@@ -84,6 +96,7 @@ test('compara a empresa com fornecedores LP, LR e Simples',async({page})=>{
  expect(purchaseSheet[1]).toContain('Custo fornecedor LP');
  expect(purchaseSheet[1]).toContain('Custo fornecedor LR');
  expect(purchaseSheet[1]).toContain('Custo fornecedor Simples');
+ expect(purchaseSheet[1]).toContain('Custo fornecedor Simples híbrido');
  expect(purchaseSheet[2]).toHaveLength(8);
 
  // Regressão: a ferramenta de faturamento continua funcionando como antes.
@@ -117,6 +130,11 @@ test('fornecedor do Simples usa RBT12 e faturamento híbrido permanece intacto',
  const snCost=brl(await sn.locator('.supplier-cost b').textContent());
  const snPrice=await supplierValue(sn,'Preço da compra');
  expect(snCost).toBeLessThan(snPrice);
+
+ const hybrid=page.locator('[data-supplier="simples_hybrid"]');
+ await expect(hybrid).toContainText('híbrido');
+ expect(await supplierValue(hybrid,'Crédito aproveitado')).toBeGreaterThan(0);
+ expect(await supplierValue(hybrid,'Tributos remanescentes')).toBeGreaterThan(0);
 
  // Regressão exata da ferramenta de faturamento híbrido.
  await page.evaluate(()=>showTaxTool('revenue'));

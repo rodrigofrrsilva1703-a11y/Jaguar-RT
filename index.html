@@ -314,13 +314,13 @@
 #tools .tax-method>div>b{width:22px;height:22px;border-radius:7px;background:#111;color:#fff;display:grid;place-items:center;font-size:8px}
 #tools .tax-method p{margin:0;font-size:9px;line-height:1.5;color:#6d6d68}
 #tools .tax-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
-#tools .supplier-comparison-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+#tools .supplier-comparison-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
 .supplier-card{border:1px solid #deddd7;border-radius:14px;background:#fff;padding:14px;display:grid;gap:10px}
 .supplier-card h4{font-size:12px;margin:0}.supplier-card .supplier-sub{font-size:8px;color:#777}
 .supplier-card .supplier-cost{padding:10px 0;border-top:1px solid #ecebe6;border-bottom:1px solid #ecebe6}
 .supplier-card .supplier-cost small{display:block;font-size:7px;color:#777;text-transform:uppercase;letter-spacing:.08em}.supplier-card .supplier-cost b{font-size:18px}
 .supplier-card .supplier-lines{display:grid;gap:6px}.supplier-card .supplier-line{display:flex;justify-content:space-between;gap:10px;font-size:8px}.supplier-card .supplier-line b{font-size:8px}
-@media(max-width:760px){.supplier-comparison-grid{grid-template-columns:1fr}}
+@media(max-width:1080px) and (min-width:761px){.supplier-comparison-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.supplier-comparison-grid{grid-template-columns:1fr}}
 .tax-compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 #tools .tax-summary-card{background:#fff;border:1px solid #ddddd7;border-radius:17px;padding:16px}
 #tools .tax-summary-card.reform{background:#111;color:#fff;border-color:#111}
@@ -499,7 +499,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  .pdf-kpi small{display:block;font-size:7px;color:#777;text-transform:uppercase;letter-spacing:.05em}
  .pdf-kpi b{display:block;font-size:15px;margin-top:5px}
  .pdf-kpi span{display:block;font-size:7px;color:#666;margin-top:3px}
- .supplier-pdf-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .supplier-pdf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
  .pdf-card{border:1px solid #d9d9d3;border-radius:8px;padding:9px}
  .pdf-card h3{font-size:9px;margin:0 0 7px}
@@ -653,7 +653,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
   <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
-   <span>01</span><div><b>Compra / fornecedores</b><small>Compare LP · LR · Simples</small></div>
+   <span>01</span><div><b>Compra / fornecedores</b><small>Compare LP · LR · Simples · Híbrido</small></div>
   </button>
   <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
@@ -666,10 +666,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div>
      <span class="tag">COMPARADOR DE CUSTO DE COMPRA</span>
      <h3>Como o regime do fornecedor muda o custo efetivo da sua empresa?</h3>
-     <p>Escolha o regime da empresa compradora. A mesma compra será comparada entre fornecedor no Lucro Presumido, Lucro Real e Simples Nacional.</p>
+     <p>Escolha o regime da empresa compradora. A mesma compra será comparada entre fornecedor no Lucro Presumido, Lucro Real, Simples Nacional padrão e Simples Nacional híbrido.</p>
     </div>
     <div class="tool-head-actions">
-     <div class="integration-badge"><b>3 fornecedores</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
+     <div class="integration-badge"><b>4 cenários</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
      <button id="pricePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
      <button id="pricePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
     </div>
@@ -678,7 +678,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <div class="scenario-strip">
     <div><small>REGIME DA SUA EMPRESA</small><b id="activeRegimeBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
-    <div><small>FORNECEDORES</small><b>LP · LR · Simples</b></div>
+    <div><small>FORNECEDORES</small><b>LP · LR · Simples · Híbrido</b></div>
     <div class="scenario-strip-note"><small>RESULTADO</small><b>Custo efetivo por fornecedor</b></div>
    </div>
 
@@ -691,6 +691,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
         <option value="presumido" selected>Lucro Presumido</option>
         <option value="real">Lucro Real</option>
         <option value="simples">Simples Nacional — padrão</option>
+        <option value="simples_hybrid">Simples Nacional — híbrido</option>
        </select>
       </div>
       <div class="field wide"><label>Valor atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
@@ -772,7 +773,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
     <div id="integratedExplanation" class="integrated-explanation" aria-live="polite"></div>
     <details class="calc-memory">
-     <summary><span>Memória de cálculo</span><small>Premissas e valores dos três fornecedores</small></summary>
+     <summary><span>Memória de cálculo</span><small>Premissas e valores dos quatro cenários de fornecedor</small></summary>
      <div id="priceMemory" class="memory-grid"></div>
     </details>
 
@@ -784,7 +785,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
      <div id="yearlyPriceStrip" class="year-price-strip"></div>
      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
       <table class="comparison-table yearly-table compact-yearly-table price-year-table">
-       <thead><tr><th>Ano</th><th>Fornecedor LP</th><th>Fornecedor LR</th><th>Fornecedor Simples</th></tr></thead>
+       <thead><tr><th>Ano</th><th>Fornecedor LP</th><th>Fornecedor LR</th><th>Fornecedor Simples</th><th>Fornecedor Simples híbrido</th></tr></thead>
        <tbody id="yearlyProjectionTable"></tbody>
       </table>
      </div>
@@ -1013,10 +1014,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260928-46"></script>
-<script src="tax-rules.js?v=20260928-46"></script>
-<script src="tax-engine.js?v=20260928-46"></script>
+<script src="content-v2.js?v=20260928-47"></script>
+<script src="tax-rules.js?v=20260928-47"></script>
+<script src="tax-engine.js?v=20260928-47"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260928-46" defer></script>
+<script src="app-v2.js?v=20260928-47" defer></script>
 </body>
 </html>

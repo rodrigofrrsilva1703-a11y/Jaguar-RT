@@ -281,7 +281,7 @@ function applyYearPreset(){
  if($('rateNote')){
   const company=regime();
   if(company==='simples'){
-   $('rateNote').textContent='Empresa compradora no Simples padrão: esta comparação não apropria créditos de CBS/IBS. Os três fornecedores continuam sendo comparados pelo custo bruto da aquisição.';
+   $('rateNote').textContent='Empresa compradora no Simples padrão: esta comparação não apropria créditos de CBS/IBS. Os quatro cenários de fornecedor continuam sendo comparados pelo custo bruto da aquisição.';
   }else{
    $('rateNote').textContent=($('rateMode')?.value==='manual')
     ? 'Regime regular da empresa compradora. CBS e IBS foram informados manualmente; a compra só gera crédito quando o tique estiver marcado.'
@@ -308,8 +308,8 @@ function purchaseComparison(year=Number($('priceYear')?.value||2027),input=price
 
 function regimeExplanation(){
  const r=regime();
- if(r==='simples') return 'Sua empresa está no Simples Nacional padrão: a comparação mostra os três fornecedores sem apropriação de créditos de CBS/IBS pela compradora.';
- return 'Sua empresa está no regime regular: a mesma compra é comparada entre fornecedor no Lucro Presumido, Lucro Real e Simples Nacional, com crédito quando a aquisição estiver marcada como creditável.';
+ if(r==='simples') return 'Sua empresa está no Simples Nacional padrão: a comparação mostra os quatro cenários de fornecedor sem apropriação de créditos de CBS/IBS pela compradora.';
+ return 'Sua empresa está no regime regular: a mesma compra é comparada entre fornecedor no Lucro Presumido, Lucro Real, Simples Nacional padrão e Simples Nacional híbrido, com crédito quando a aquisição estiver marcada como creditável.';
 }
 
 function updateScenarioStrip(){
@@ -326,7 +326,8 @@ function summaryRows(rows){
 const SUPPLIER_LABELS={
  presumido:'Fornecedor · Lucro Presumido',
  real:'Fornecedor · Lucro Real',
- simples:'Fornecedor · Simples Nacional'
+ simples:'Fornecedor · Simples Nacional',
+ simples_hybrid:'Fornecedor · Simples Nacional híbrido'
 };
 
 function supplierCardHtml(key,item){
@@ -335,7 +336,9 @@ function supplierCardHtml(key,item){
   ?'PIS 0,65% · Cofins 3%'
   :key==='real'
    ?'PIS 1,65% · Cofins 7,6%'
-   :SN_LABELS[snAnnex()]+' · RBT12 '+money(num('snRbt12'));
+   :key==='simples_hybrid'
+    ?SN_LABELS[snAnnex()]+' · híbrido · RBT12 '+money(num('snRbt12'))
+    :SN_LABELS[snAnnex()]+' · padrão · RBT12 '+money(num('snRbt12'));
  return '<article class="supplier-card" data-supplier="'+key+'">'+
   '<div><h4>'+SUPPLIER_LABELS[key]+'</h4><div class="supplier-sub">'+sub+'</div></div>'+
   '<div class="supplier-cost"><small>Custo efetivo</small><b>'+money(item.effectiveCost)+'</b></div>'+
@@ -355,7 +358,7 @@ function comparisonMemoryRows(comparison){
   ['Valor-base da compra',comparison.amount],
   ['Compra gera crédito',comparison.creditEnabled?'Sim':'Não']
  ];
- ['presumido','real','simples'].forEach(function(key){
+ ['presumido','real','simples','simples_hybrid'].forEach(function(key){
   const x=comparison.suppliers[key];
   rows.push(
    [SUPPLIER_LABELS[key]+' · preço',x.price],
@@ -434,28 +437,28 @@ function calcIntegrated(){
  if(input.simple.rbt12<=0) messages.push({level:'error',message:'Informe o RBT12 do fornecedor do Simples.'});
  if(input.simple.rbt12>3600000) messages.push({level:'warning',message:'RBT12 do fornecedor do Simples acima de R$ 3,6 milhões exige validação específica do sublimite.'});
  if(input.companyRegime==='simples') messages.push({level:'info',message:'Empresa compradora no Simples padrão: não há apropriação de créditos de CBS/IBS nesta comparação.'});
- else if(!input.purchaseGeneratesCredit) messages.push({level:'info',message:'Compra marcada como não creditável: os três fornecedores serão comparados sem crédito de CBS/IBS.'});
+ else if(!input.purchaseGeneratesCredit) messages.push({level:'info',message:'Compra marcada como não creditável: os quatro cenários de fornecedor serão comparados sem crédito de CBS/IBS.'});
  renderValidation('priceValidation',messages);
  renderMemory('priceMemory',comparisonMemoryRows(comparison));
 
- $('resultSignal').textContent='3 FORNECEDORES';
+ $('resultSignal').textContent='4 CENÁRIOS';
  $('regimeResultNote').textContent=(REGIME_LABELS[regime()]||regime())+' · '+regimeExplanation();
 
  $('integratedKpis').innerHTML=
   '<div class="integrated-kpi dark"><small>Sua empresa</small><b>'+(REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime)+'</b><span>Regime comprador</span></div>'+
-  '<div class="integrated-kpi"><small>Compra-base</small><b>'+money(comparison.amount)+'</b><span>Mesmo valor para os 3 fornecedores</span></div>'+
+  '<div class="integrated-kpi"><small>Compra-base</small><b>'+money(comparison.amount)+'</b><span>Mesmo valor para os 4 cenários</span></div>'+
   '<div class="integrated-kpi dark"><small>Ano analisado</small><b>'+y+'</b><span>Reforma</span></div>'+
   '<div class="integrated-kpi"><small>Crédito CBS/IBS</small><b>'+(comparison.creditEnabled?'Sim':'Não')+'</b><span>'+(comparison.regularBuyer?(input.purchaseGeneratesCredit?'Compra creditável':'Compra não creditável'):'Simples padrão')+'</span></div>';
 
- $('supplierComparisonGrid').innerHTML=['presumido','real','simples'].map(function(key){
+ $('supplierComparisonGrid').innerHTML=['presumido','real','simples','simples_hybrid'].map(function(key){
   return supplierCardHtml(key,comparison.suppliers[key]);
  }).join('');
 
  $('integratedExplanation').innerHTML=
-  '<b>Comparação da mesma compra entre três regimes de fornecedor.</b><p>'+
+  '<b>Comparação da mesma compra entre quatro cenários de fornecedor.</b><p>'+
   'A empresa compradora está no regime <strong>'+(REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime)+'</strong>. '+
   'O valor-base informado é '+money(comparison.amount)+'. Para fornecedor no Lucro Presumido e Lucro Real, PIS/Cofins atuais são aplicados conforme cada regime; ICMS/ISS/IPI usam as premissas informadas. '+
-  'O fornecedor do Simples usa '+SN_LABELS[snAnnex()]+' e o RBT12 informado. '+
+  'Os fornecedores do Simples usam '+SN_LABELS[snAnnex()]+' e o RBT12 informado; o cenário híbrido calcula CBS/IBS fora do DAS remanescente. '+
   (comparison.creditEnabled
    ?'Como a empresa está no regime regular e a compra foi marcada como creditável, o custo efetivo desconta os créditos de CBS/IBS permitidos em cada cenário.'
    :'Nesta configuração, nenhum crédito de CBS/IBS é abatido do custo efetivo.')+
@@ -485,7 +488,7 @@ function baseSupplierComparisonRow(){
    regularBuyer:regime()!=='simples',
    creditEnabled:false,
    amount,
-   suppliers:{presumido:{...item},real:{...item},simples:{...item}}
+   suppliers:{presumido:{...item},real:{...item},simples:{...item},simples_hybrid:{...item}}
   }
  };
 }
@@ -502,7 +505,7 @@ function renderYearDetail(year){
    '<div class="year-detail-price"><small>COMPRA-BASE</small><b>'+money(c.amount)+'</b></div>'+
   '</div>'+
   '<div class="year-detail-grid tax-detail">'+
-   ['presumido','real','simples'].map(function(key){
+   ['presumido','real','simples','simples_hybrid'].map(function(key){
     const x=c.suppliers[key];
     return '<div class="year-detail-item"><small>'+SUPPLIER_LABELS[key]+'</small><b>'+money(x.effectiveCost)+'</b><span>Crédito '+money(x.credit||0)+'</span></div>';
    }).join('')+
@@ -510,7 +513,7 @@ function renderYearDetail(year){
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+
    (row.year===2026
     ?'2026 é a base comum informada para a compra. A comparação tributária projetada começa em 2027.'
-    :'Os três valores acima mostram o custo efetivo da mesma compra para sua empresa, alterando apenas o regime tributário do fornecedor e as regras correspondentes.')+
+    :'Os quatro valores acima mostram o custo efetivo da mesma compra para sua empresa, alterando apenas o regime tributário do fornecedor e as regras correspondentes.')+
   '</p></div>';
 }
 
@@ -528,7 +531,7 @@ function renderYearlyProjection(){
  $('yearlyPriceStrip').innerHTML=rows.map(function(row){
   const c=row.comparison.suppliers;
   return '<button type="button" class="year-price-card '+(row.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+row.year+')">'+
-   '<small>'+row.year+'</small><b>LP '+money(c.presumido.effectiveCost)+'</b><span>LR '+money(c.real.effectiveCost)+' · SN '+money(c.simples.effectiveCost)+'</span>'+
+   '<small>'+row.year+'</small><b>LP '+money(c.presumido.effectiveCost)+'</b><span>LR '+money(c.real.effectiveCost)+' · SN '+money(c.simples.effectiveCost)+' · Híb. '+money(c.simples_hybrid.effectiveCost)+'</span>'+
   '</button>';
  }).join('');
 
@@ -540,12 +543,13 @@ function renderYearlyProjection(){
    '<td><strong>'+money(c.presumido.effectiveCost)+'</strong></td>'+
    '<td><strong>'+money(c.real.effectiveCost)+'</strong></td>'+
    '<td><strong>'+money(c.simples.effectiveCost)+'</strong></td>'+
+   '<td><strong>'+money(c.simples_hybrid.effectiveCost)+'</strong></td>'+
   '</tr>';
  }).join('');
 
  renderYearDetail(yearDetailSelected);
 
- let note='A tabela compara o custo efetivo da mesma compra entre os três regimes de fornecedor.';
+ let note='A tabela compara o custo efetivo da mesma compra entre quatro cenários de fornecedor: Lucro Presumido, Lucro Real, Simples padrão e Simples híbrido.';
  if(regime()==='simples') note+=' Como a empresa compradora está no Simples padrão, os créditos de CBS/IBS não são apropriados nesta simulação.';
  else if($('priceTakesCbsIbsCredit')?.checked) note+=' Para a empresa no regime regular, a compra foi considerada creditável.';
  else note+=' A compra foi marcada como não creditável.';
@@ -913,10 +917,10 @@ function exportPriceExcel(){
  const selected=purchaseComparison(selectedYear);
  downloadSpreadsheet(
   'comparacao-custo-fornecedores-'+regime()+'-2026-2033.xlsx',
-  ['Ano','Custo fornecedor LP','Crédito LP','Custo fornecedor LR','Crédito LR','Custo fornecedor Simples','Crédito Simples'],
+  ['Ano','Custo fornecedor LP','Crédito LP','Custo fornecedor LR','Crédito LR','Custo fornecedor Simples','Crédito Simples','Custo fornecedor Simples híbrido','Crédito Simples híbrido'],
   yearlyRows.map(function(row){
    const x=row.comparison.suppliers;
-   return [row.year,x.presumido.effectiveCost,x.presumido.credit||0,x.real.effectiveCost,x.real.credit||0,x.simples.effectiveCost,x.simples.credit||0];
+   return [row.year,x.presumido.effectiveCost,x.presumido.credit||0,x.real.effectiveCost,x.real.credit||0,x.simples.effectiveCost,x.simples.credit||0,x.simples_hybrid.effectiveCost,x.simples_hybrid.credit||0];
   }),
   [
    ['Regime da empresa',REGIME_LABELS[regime()]||regime()],
@@ -1006,7 +1010,7 @@ function buildPricePdf(client,year){
  const comparison=RTAV_ENGINE.supplierPurchaseComparison(input,year);
  const companyLabel=REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime;
 
- const supplierCards=['presumido','real','simples'].map(function(key){
+ const supplierCards=['presumido','real','simples','simples_hybrid'].map(function(key){
   const x=comparison.suppliers[key];
   return {
    title:SUPPLIER_LABELS[key],
@@ -1029,7 +1033,8 @@ function buildPricePdf(client,year){
    row.year,
    money(x.presumido.effectiveCost),
    money(x.real.effectiveCost),
-   money(x.simples.effectiveCost)
+   money(x.simples.effectiveCost),
+   money(x.simples_hybrid.effectiveCost)
   ];
  });
 
@@ -1038,14 +1043,14 @@ function buildPricePdf(client,year){
   subtitle:'Sua empresa: '+companyLabel+' · análise de '+year,
   kpis:[
    ['Regime da empresa',companyLabel,'Compradora'],
-   ['Compra-base',money(comparison.amount),'Mesmo valor para os 3 fornecedores'],
+   ['Compra-base',money(comparison.amount),'Mesmo valor para os 4 fornecedores'],
    ['Ano analisado',String(year),'Reforma'],
    ['Crédito CBS/IBS',comparison.creditEnabled?'Sim':'Não',comparison.regularBuyer?(comparison.purchaseGeneratesCredit?'Compra creditável':'Compra não creditável'):'Simples padrão']
   ],
   currentRows:[['Compra-base',money(comparison.amount)],['Regime da empresa',companyLabel]],
   futureRows:[],
   supplierCards,
-  tableHeaders:['Ano','Fornecedor LP','Fornecedor LR','Fornecedor Simples'],
+  tableHeaders:['Ano','Fornecedor LP','Fornecedor LR','Fornecedor Simples','Fornecedor Simples híbrido'],
   tableRows,
   note:comparison.creditEnabled
    ?'A empresa compradora está no regime regular e a compra foi tratada como creditável. O custo efetivo desconta os créditos de CBS/IBS correspondentes em cada cenário de fornecedor.'
@@ -1325,6 +1330,7 @@ function compareNamedScenario(kind){
    compareItem('Custo · fornecedor LP',other.suppliers.presumido.effectiveCost,current.suppliers.presumido.effectiveCost)+
    compareItem('Custo · fornecedor LR',other.suppliers.real.effectiveCost,current.suppliers.real.effectiveCost)+
    compareItem('Custo · fornecedor Simples',other.suppliers.simples.effectiveCost,current.suppliers.simples.effectiveCost)+
+   compareItem('Custo · fornecedor Simples híbrido',other.suppliers.simples_hybrid.effectiveCost,current.suppliers.simples_hybrid.effectiveCost)+
   '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'. Regime atual da empresa: '+xmlEsc(REGIME_LABELS[current.companyRegime]||current.companyRegime)+'.</div>';
  }else{
   const year=Number($('revYear')?.value||2027);

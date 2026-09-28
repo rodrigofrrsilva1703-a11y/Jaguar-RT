@@ -114,7 +114,7 @@ const compareInput={
 const supplierCompare=engine.supplierPurchaseComparison(compareInput,2027);
 assert.equal(supplierCompare.companyRegime,'presumido');
 assert.equal(supplierCompare.creditEnabled,true);
-for(const key of ['presumido','real','simples']){
+for(const key of ['presumido','real','simples','simples_hybrid']){
  const x=supplierCompare.suppliers[key];
  assert.ok(x.price>0,`Preço projetado deve existir para fornecedor ${key}`);
  assert.ok(x.effectiveCost>0,`Custo efetivo deve existir para fornecedor ${key}`);
@@ -131,9 +131,30 @@ assert.ok(
  'Empresa no regime regular deve receber crédito correspondente ao CBS/IBS do fornecedor do Simples'
 );
 
+assert.ok(
+ supplierCompare.suppliers.simples_hybrid.credit>0,
+ 'Empresa no regime regular deve receber crédito de CBS/IBS do fornecedor do Simples híbrido'
+);
+assert.ok(
+ supplierCompare.suppliers.simples_hybrid.remnant>0,
+ 'Fornecedor Simples híbrido deve manter DAS/tributos remanescentes na transição'
+);
+assert.notEqual(
+ supplierCompare.suppliers.simples.effectiveCost,
+ supplierCompare.suppliers.simples_hybrid.effectiveCost,
+ 'Simples padrão e híbrido devem ser cenários distintos'
+);
+
+const hybridBuyerCompare=engine.supplierPurchaseComparison({...compareInput,companyRegime:'simples_hybrid'},2027);
+assert.equal(hybridBuyerCompare.regularBuyer,true);
+assert.equal(hybridBuyerCompare.creditEnabled,true);
+for(const key of ['presumido','real','simples','simples_hybrid']){
+ assert.ok(hybridBuyerCompare.suppliers[key].credit>0,`Compradora híbrida deve aproveitar crédito em ${key}`);
+}
+
 const simpleBuyerCompare=engine.supplierPurchaseComparison({...compareInput,companyRegime:'simples'},2027);
 assert.equal(simpleBuyerCompare.creditEnabled,false);
-for(const key of ['presumido','real','simples']){
+for(const key of ['presumido','real','simples','simples_hybrid']){
  const x=simpleBuyerCompare.suppliers[key];
  close(x.credit,0,1e-10,`Compradora do Simples não apropria crédito em ${key}`);
  close(x.effectiveCost,x.price,1e-8,`Sem crédito, custo deve ser o preço em ${key}`);
@@ -141,7 +162,7 @@ for(const key of ['presumido','real','simples']){
 
 const nonCreditableCompare=engine.supplierPurchaseComparison({...compareInput,purchaseGeneratesCredit:false},2027);
 assert.equal(nonCreditableCompare.creditEnabled,false);
-for(const key of ['presumido','real','simples']) close(nonCreditableCompare.suppliers[key].credit,0,1e-10);
+for(const key of ['presumido','real','simples','simples_hybrid']) close(nonCreditableCompare.suppliers[key].credit,0,1e-10);
 
 // Faturamento com créditos estimados das aquisições.
 const revenue={
