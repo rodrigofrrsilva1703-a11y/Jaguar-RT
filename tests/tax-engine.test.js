@@ -167,6 +167,24 @@ for(const icms of [0,12,18]){
  close(other.suppliers.presumido.effectiveCost,supplierCompare.suppliers.presumido.effectiveCost,1e-8,'ICMS do fornecedor não altera cotação fixa');
 }
 
+// Exemplo do evento: um fornecedor LP, preço único para três compradores,
+// com o quarto cenário do Simples híbrido. Créditos são os da operação.
+const event=engine.buyerPurchaseComparison({
+ amount:100,futurePrice:104.15,supplierRegime:'presumido',
+ currentRealCredit:9.25,currentPresumedCredit:0,futureCredit:7.05,
+ simple:{annex:'I',rbt12:1000000},future:{mode:'rtav'}
+},2027);
+close(event.buyers.simples.currentCost,100);
+close(event.buyers.simples.effectiveCost,104.15);
+close(event.buyers.simples.changePct,4.15);
+close(event.buyers.presumido.effectiveCost,97.10);
+close(event.buyers.presumido.changePct,-2.90);
+close(event.buyers.real.currentCost,90.75);
+close(event.buyers.real.changePct,(97.10/90.75-1)*100);
+close(event.buyers.simples_hybrid.effectiveCost,97.10);
+const eventAutomatic=engine.buyerPurchaseComparison({amount:100,futurePrice:104.15,supplierRegime:'presumido',future:{mode:'rtav'}},2027);
+close(eventAutomatic.futureCredit,104.15*(.0931/1.0931),1e-8,'Crédito automático calculado por fora');
+
 // Faturamento com créditos estimados das aquisições.
 const revenue={
  regime:'presumido',

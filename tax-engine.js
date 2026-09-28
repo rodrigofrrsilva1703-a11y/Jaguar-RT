@@ -401,6 +401,30 @@
   return messages;
  }
 
+ // Um fornecedor e uma cotação para todos os regimes de comprador.
+ function buyerPurchaseComparison(input={},year=2027){
+  const currentPrice=Math.max(0,Number(input.amount)||0);
+  const futurePrice=Math.max(0,Number(input.futurePrice)||0)||currentPrice;
+  const supplierRegime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
+  const supplier=supplierPurchaseComparison({...input,companyRegime:'real',amount:futurePrice,purchaseGeneratesCredit:true},year).suppliers[supplierRegime];
+  const estimatedCredit=supplier.cbs+supplier.ibs;
+  const futureCredit=input.futureCredit===undefined||input.futureCredit===null||input.futureCredit===''
+   ?estimatedCredit:clamp(input.futureCredit,0,futurePrice);
+  const currentRealCredit=clamp(input.currentRealCredit,0,currentPrice);
+  const currentPresumedCredit=clamp(input.currentPresumedCredit,0,currentPrice);
+  const buyers={};
+  for(const regime of ['simples','presumido','real','simples_hybrid']){
+   const currentCredit=regime==='real'?currentRealCredit:regime==='presumido'?currentPresumedCredit:0;
+   const credit=regime==='simples'?0:futureCredit;
+   const currentCost=currentPrice-currentCredit;
+   const effectiveCost=futurePrice-credit;
+   buyers[regime]={currentPrice,currentCredit,currentCost,futurePrice,credit,effectiveCost,
+    changePct:effectPct(currentCost,effectiveCost)};
+  }
+  return {year:Number(year),supplierRegime,currentPrice,futurePrice,estimatedCredit,futureCredit,
+   creditOverridden:input.futureCredit!==undefined&&input.futureCredit!==null&&input.futureCredit!=='',buyers};
+ }
+
  function priceMemory(input,year){
   const cfg=normalizeInput(input);
   const base=currentPriceScenario(cfg);
@@ -458,6 +482,7 @@
   rulesVersion:RULES.version,
   clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
   currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,supplierPurchaseComparison,
+  buyerPurchaseComparison,
   currentRevenueScenario,revenueScenarioAtRevenue,futureRevenueScenario,
   validatePriceInput:input=>validateInput(input,'price'),
   validateRevenueInput:input=>validateInput(input,'revenue'),
