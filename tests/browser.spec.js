@@ -12,6 +12,8 @@ test('teste por módulo corrige, refaz e troca perguntas; teste geral mistura m�
  await page.locator('#quiz .quiz-primary').click();
  await expect(page.locator('#quizPage .quiz-question')).toHaveCount(10);
  await expect(page.locator('#quizPage .quiz-context')).toHaveCount(10);
+ await expect(page.locator('#quizPage .quiz-question legend small').filter({hasText:'CASO PRÁTICO'})).toHaveCount(5);
+ await expect(page.locator('#quizPage .quiz-question legend small').filter({hasText:'INTERPRETAÇÃO'})).toHaveCount(5);
  expect((await page.locator('#quizPage .quiz-context').first().textContent()).length).toBeGreaterThan(45);
  const initialIds=await page.evaluate(()=>quizSession.questions.map(q=>q.id));
  await page.locator('#quizPage .quiz-option').first().click();

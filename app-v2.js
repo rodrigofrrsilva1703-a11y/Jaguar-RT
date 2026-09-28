@@ -63,7 +63,7 @@ function renderHome(){
 }
 
 const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v1';
-const QUIZ_SESSION_KEY='jaguar-rtav-quiz-session-v1';
+const QUIZ_SESSION_KEY='jaguar-rtav-quiz-session-v2';
 let quizSession=null;
 function quizRead(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
 function quizSave(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch(e){}}
@@ -135,7 +135,7 @@ function renderQuiz(){
   <p class="page-lead">Responda as 10 questões. O resultado e as explicações aparecem após a entrega.</p>
   <div class="quiz-progress"><span id="quizProgress">${answered} de 10 respondidas</span><div><i id="quizProgressBar" style="width:${answered*10}%"></i></div></div>
   <form id="quizForm" onsubmit="event.preventDefault();finishQuiz()">${s.questions.map((q,i)=>`
-   <fieldset class="quiz-question" id="quiz-question-${i}"><legend><small>QUESTÃO ${String(i+1).padStart(2,'0')} · MÓDULO ${q.module} · ${courseEscape(STUDY_MODULES.find(m=>m.id===q.module)?.title||'')}</small><span class="quiz-context">${courseEscape(q.context||'')}</span><strong>${courseEscape(q.prompt)}</strong></legend>
+   <fieldset class="quiz-question" id="quiz-question-${i}"><legend><small>QUESTÃO ${String(i+1).padStart(2,'0')} · ${q.kind==='concept'?'INTERPRETAÇÃO':'CASO PRÁTICO'} · MÓDULO ${q.module} — ${courseEscape(STUDY_MODULES.find(m=>m.id===q.module)?.title||'')}</small><span class="quiz-context">${courseEscape(q.context||'')}</span><strong>${courseEscape(q.prompt)}</strong></legend>
    ${q.options.map((option,j)=>`<label class="quiz-option"><input type="radio" name="question-${i}" value="${j}" ${s.answers[i]===j?'checked':''} onchange="quizAnswer(${i},${j})"><span>${courseEscape(option)}</span></label>`).join('')}</fieldset>`).join('')}
    <p id="quizError" class="quiz-error" role="alert"></p><button class="quiz-primary quiz-submit" type="submit">Conferir respostas →</button></form>`;
 }
