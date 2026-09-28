@@ -62,8 +62,8 @@ function renderHome(){
  pickYear('2027');
 }
 
-const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v1';
-const QUIZ_SESSION_KEY='jaguar-rtav-quiz-session-v2';
+const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v2';
+const QUIZ_SESSION_KEY='jaguar-rtav-quiz-session-v3';
 let quizSession=null;
 function quizRead(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
 function quizSave(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch(e){}}

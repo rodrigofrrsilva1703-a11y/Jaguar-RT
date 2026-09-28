@@ -3,6 +3,8 @@ const bank=require('../quiz-bank.js');
 const quiz=require('../quiz-engine.js');
 
 const pool=quiz.pool(bank);
+assert.match(pool.find(q=>q.id==='01-m0').context,/indústria química estabelecida em Paulínia/);
+assert.match(pool.find(q=>q.id==='06-m0').prompt,/serviços educacionais/);
 assert.equal(Object.keys(bank).length,13);
 assert.equal(pool.length,260);
 assert.equal(new Set(pool.map(q=>q.id)).size,260);
