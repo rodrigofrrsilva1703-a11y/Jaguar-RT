@@ -909,21 +909,27 @@ function hybridBaseRows(x){
 
 function exportPriceExcel(){
  if(!yearlyRows.length) renderYearlyProjection();
+ const selectedYear=Number($('priceYear')?.value||2027);
+ const selected=purchaseComparison(selectedYear);
  downloadSpreadsheet(
-  'analise-custo-compra-'+regime()+'-2026-2033.xlsx',
-  ['Ano','Regime do fornecedor','Sistema','Preço da compra','CBS','IBS','Tributos remanescentes','Crédito aproveitado','Custo efetivo'],
-  yearlyRows.map(function(x){
-   return [x.year,REGIME_LABELS[x.regime],x.system,x.price,x.cbs??0,x.ibs??0,x.remnant??0,x.buyerCredit??0,x.buyerCost??x.price];
+  'comparacao-custo-fornecedores-'+regime()+'-2026-2033.xlsx',
+  ['Ano','Custo fornecedor LP','Crédito LP','Custo fornecedor LR','Crédito LR','Custo fornecedor Simples','Crédito Simples'],
+  yearlyRows.map(function(row){
+   const x=row.comparison.suppliers;
+   return [row.year,x.presumido.effectiveCost,x.presumido.credit||0,x.real.effectiveCost,x.real.credit||0,x.simples.effectiveCost,x.simples.credit||0];
   }),
   [
-   ['Regime do fornecedor',REGIME_LABELS[regime()]],
-   ['Preço da compra em 2026',num('priceNow')],
-   ['Crédito atual aproveitável',num('priceCurrentBuyerCredit')],
-   ['Aproveita crédito CBS/IBS',$('priceTakesCbsIbsCredit')?.checked?'Sim':'Não'],
-   ['PIS %',num('pisRate')],['Cofins %',num('cofinsRate')],['ICMS %',num('icmsRate')],
-   ['ISS %',num('issRate')],['IPI %',num('ipiRate')]
+   ['Regime da empresa',REGIME_LABELS[regime()]||regime()],
+   ['Valor-base da compra',num('priceNow')],
+   ['Compra gera crédito CBS/IBS',$('priceTakesCbsIbsCredit')?.checked?'Sim':'Não'],
+   ['ICMS fornecedor regular %',num('icmsRate')],
+   ['ISS fornecedor regular %',num('issRate')],
+   ['IPI fornecedor regular %',num('ipiRate')],
+   ['RBT12 fornecedor Simples',num('snRbt12')],
+   ['Anexo fornecedor Simples',SN_LABELS[snAnnex()]||snAnnex()],
+   ['Ano destacado',selectedYear]
   ],
-  RTAV_ENGINE.priceMemory(priceEngineInput(),Number($('priceYear')?.value||2027))
+  comparisonMemoryRows(selected)
  );
 }
 
@@ -997,43 +1003,53 @@ function pdfAnnualTable(headers,rows){
 
 function buildPricePdf(client,year){
  const input=priceEngineInput();
- const base=RTAV_ENGINE.currentPriceScenario(input);
- const future=RTAV_ENGINE.futurePriceScenario(input,year);
- const regimeLabel=REGIME_LABELS[input.regime]||input.regime;
+ const comparison=RTAV_ENGINE.supplierPurchaseComparison(input,year);
+ const companyLabel=REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime;
 
- const currentRows=currentTaxRows(base);
- const futureRows=futureTaxRows(future);
+ const supplierCards=['presumido','real','simples'].map(function(key){
+  const x=comparison.suppliers[key];
+  return {
+   title:SUPPLIER_LABELS[key],
+   rows:[
+    ['Preço da compra',money(x.price)],
+    ['CBS',money(x.cbs||0)],
+    ['IBS',money(x.ibs||0)],
+    ['Crédito CBS/IBS',money(x.credit||0)],
+    ['Tributos remanescentes',money(x.remnant||0)],
+    ['Custo efetivo',money(x.effectiveCost)]
+   ]
+  };
+ });
 
- const annual=[{year:2026,...base}];
- for(let y=2027;y<=2033;y++) annual.push(RTAV_ENGINE.futurePriceScenario(input,y));
- const tableRows=annual.map(function(x){
+ const annual=[baseSupplierComparisonRow()];
+ for(let y=2027;y<=2033;y++) annual.push({year:y,comparison:RTAV_ENGINE.supplierPurchaseComparison(input,y)});
+ const tableRows=annual.map(function(row){
+  const x=row.comparison.suppliers;
   return [
-   x.year,
-   money(x.price),
-   x.year===2026?'—':money(x.cbs||0),
-   x.year===2026?'—':money(x.ibs||0),
-   money(x.buyerCredit||0),
-   money(x.buyerCost??x.price)
+   row.year,
+   money(x.presumido.effectiveCost),
+   money(x.real.effectiveCost),
+   money(x.simples.effectiveCost)
   ];
  });
 
  return {
-  title:'Relatório de compra e custo efetivo',
-  subtitle:regimeLabel+' · fornecedor · análise de '+year,
+  title:'Comparativo de custo por regime do fornecedor',
+  subtitle:'Sua empresa: '+companyLabel+' · análise de '+year,
   kpis:[
-   ['Compra atual',money(base.price),'2026'],
-   ['Custo efetivo atual',money(base.buyerCost??base.price),'Crédito atual: '+money(base.buyerCredit||0)],
-   ['Compra projetada',money(future.price),String(year)],
-   ['Crédito CBS/IBS',money(future.buyerCredit||0),input.purchases.enabled?'Aproveitado':'Não aproveitado'],
-   ['Custo efetivo',money(future.buyerCost??future.price),String(year)]
+   ['Regime da empresa',companyLabel,'Compradora'],
+   ['Compra-base',money(comparison.amount),'Mesmo valor para os 3 fornecedores'],
+   ['Ano analisado',String(year),'Reforma'],
+   ['Crédito CBS/IBS',comparison.creditEnabled?'Sim':'Não',comparison.regularBuyer?(comparison.purchaseGeneratesCredit?'Compra creditável':'Compra não creditável'):'Simples padrão']
   ],
-  currentRows,
-  futureRows,
-  tableHeaders:['Ano','Preço da compra','CBS','IBS','Crédito','Custo efetivo'],
+  currentRows:[['Compra-base',money(comparison.amount)],['Regime da empresa',companyLabel]],
+  futureRows:[],
+  supplierCards,
+  tableHeaders:['Ano','Fornecedor LP','Fornecedor LR','Fornecedor Simples'],
   tableRows,
-  note:input.purchases.enabled
-   ?'O custo efetivo desconta o CBS e o IBS calculados na aquisição. O aproveitamento real do crédito depende do regime do adquirente e dos requisitos legais e documentais aplicáveis.'
-   :'Sem aproveitamento de crédito de CBS/IBS, o custo efetivo corresponde ao preço projetado da compra.'
+  note:comparison.creditEnabled
+   ?'A empresa compradora está no regime regular e a compra foi tratada como creditável. O custo efetivo desconta os créditos de CBS/IBS correspondentes em cada cenário de fornecedor.'
+   :'Nesta configuração, não há apropriação de créditos de CBS/IBS pela empresa compradora. Os custos efetivos correspondem aos valores projetados das aquisições.'
  };
 }
 
@@ -1111,9 +1127,10 @@ function printTaxReport(kind){
   '<section class="pdf-section"><div class="pdf-section-title"><h2>Resumo executivo</h2><span>Principais números</span></div>'+
    '<div class="pdf-kpis">'+data.kpis.map(function(k){return '<div class="pdf-kpi"><small>'+xmlEsc(k[0])+'</small><b>'+xmlEsc(k[1])+'</b><span>'+xmlEsc(k[2])+'</span></div>';}).join('')+'</div>'+
   '</section>'+
-  '<section class="pdf-section"><div class="pdf-section-title"><h2>Comparação tributária</h2><span>2026 × '+year+'</span></div>'+
-   '<div class="pdf-grid"><div class="pdf-card"><h3>2026 · Atual</h3>'+pdfRows(data.currentRows)+'</div>'+
-   '<div class="pdf-card"><h3>'+year+' · Reforma</h3>'+pdfRows(data.futureRows)+'</div></div>'+
+  '<section class="pdf-section"><div class="pdf-section-title"><h2>Comparação tributária</h2><span>'+year+'</span></div>'+
+   (data.supplierCards
+    ?'<div class="pdf-grid supplier-pdf-grid">'+data.supplierCards.map(function(card){return '<div class="pdf-card"><h3>'+xmlEsc(card.title)+'</h3>'+pdfRows(card.rows)+'</div>';}).join('')+'</div>'
+    :'<div class="pdf-grid"><div class="pdf-card"><h3>2026 · Atual</h3>'+pdfRows(data.currentRows)+'</div><div class="pdf-card"><h3>'+year+' · Reforma</h3>'+pdfRows(data.futureRows)+'</div></div>')+
   '</section>'+
   '<section class="pdf-section"><div class="pdf-section-title"><h2>Evolução 2026–2033</h2><span>Resumo anual</span></div>'+
    pdfAnnualTable(data.tableHeaders,data.tableRows)+'</section>'+
