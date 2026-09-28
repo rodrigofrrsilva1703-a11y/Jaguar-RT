@@ -659,7 +659,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
   <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
-   <span>01</span><div><b>Compra / fornecedores</b><small>Compare LP · LR · Simples · Híbrido</small></div>
+   <span>01</span><div><b>Compra / custo efetivo</b><small>Hoje × Transição por regime</small></div>
   </button>
   <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
@@ -784,7 +784,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
-    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO DO COMPRADOR</span><h3>Hoje × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal"></div></div>
+    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO DO COMPRADOR</span><h3>Hoje × <span id="resultYearLabel">2027</span></h3></div><div class="yearly-actions"><div id="resultSignal" class="result-signal"></div><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div></div>
     <div id="priceEquationMemory" class="rate-note" aria-live="polite"></div>
     <div id="buyerExample" class="buyer-example" aria-live="polite"></div>
 
@@ -802,7 +802,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
      <section class="yearly-analysis">
       <div class="yearly-head">
        <div><span class="eyebrow">COMPARAÇÃO ADICIONAL</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Projeção automática por regime do fornecedor.</p></div>
-       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
+
       </div>
       <div id="yearlyPriceStrip" class="year-price-strip"></div>
       <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
