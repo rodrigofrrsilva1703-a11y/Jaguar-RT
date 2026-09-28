@@ -329,7 +329,7 @@
    ibs:clamp(input.future?.ibs,0,100)
   };
 
-  const regularBuyer=companyRegime==='presumido'||companyRegime==='real';
+  const regularBuyer=companyRegime==='presumido'||companyRegime==='real'||companyRegime==='simples_hybrid';
   const purchaseGeneratesCredit=input.purchaseGeneratesCredit!==false;
   const creditEnabled=regularBuyer&&purchaseGeneratesCredit;
 
