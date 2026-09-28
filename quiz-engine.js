@@ -11,8 +11,8 @@
 
  function pool(bank){
   return Object.entries(bank).flatMap(([module,group])=>[
-   ...group.m.map((row,i)=>({id:`${module}-m${i}`,module,prompt:row[0],choices:row[1],answer:row[2],explanation:row[3]})),
-   ...group.v.map((row,i)=>({id:`${module}-v${i}`,module,prompt:`Verdadeiro ou falso: ${row[0]}`,choices:['Verdadeiro','Falso'],answer:row[1]?0:1,explanation:row[2]}))
+   ...group.m.map((row,i)=>({id:`${module}-m${i}`,module,context:group.contexts?.m[i],prompt:row[0],choices:row[1],answer:row[2],explanation:row[3]})),
+   ...group.v.map((row,i)=>({id:`${module}-v${i}`,module,context:group.contexts?.v[i],prompt:`Verdadeiro ou falso: ${row[0]}`,choices:['Verdadeiro','Falso'],answer:row[1]?0:1,explanation:row[2]}))
   ]);
  }
 
@@ -32,7 +32,7 @@
   }
   return shuffle(picked,random).map(q=>{
    const options=shuffle(q.choices.map((text,index)=>({text,index})),random);
-   return {id:q.id,module:q.module,prompt:q.prompt,options:options.map(x=>x.text),correct:options.findIndex(x=>x.index===q.answer),explanation:q.explanation};
+   return {id:q.id,module:q.module,context:q.context,prompt:q.prompt,options:options.map(x=>x.text),correct:options.findIndex(x=>x.index===q.answer),explanation:q.explanation};
   });
  }
 

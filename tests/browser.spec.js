@@ -11,6 +11,8 @@ test('teste por mÃ³dulo corrige, refaz e troca perguntas; teste geral mistura mÃ
  await page.locator('#quizModule').selectOption('05');
  await page.locator('#quiz .quiz-primary').click();
  await expect(page.locator('#quizPage .quiz-question')).toHaveCount(10);
+ await expect(page.locator('#quizPage .quiz-context')).toHaveCount(10);
+ expect((await page.locator('#quizPage .quiz-context').first().textContent()).length).toBeGreaterThan(45);
  const initialIds=await page.evaluate(()=>quizSession.questions.map(q=>q.id));
  await page.locator('#quizPage .quiz-option').first().click();
  await expect(page.locator('#quizProgress')).toContainText('1 de 10');

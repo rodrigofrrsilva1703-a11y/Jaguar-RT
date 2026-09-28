@@ -85,6 +85,8 @@ function initQuiz(){
  select.innerHTML='<option value="all">Todos os módulos · 10 perguntas mistas</option>'+STUDY_MODULES.map(m=>`<option value="${m.id}">Módulo ${m.id} · ${courseEscape(m.title)}</option>`).join('');
  const saved=quizRead(QUIZ_SESSION_KEY,null);
  if(saved?.questions?.length===10&&saved.questions.every(q=>QUIZ_BANK[q.module])){
+  const contexts=new Map(RTAV_QUIZ.pool(QUIZ_BANK).map(q=>[q.id,q.context]));
+  saved.questions.forEach(q=>{q.context=contexts.get(q.id)||q.context;});
   quizSession=saved;
   select.value=saved.scope;
   updateQuizResume();
@@ -133,7 +135,7 @@ function renderQuiz(){
   <p class="page-lead">Responda as 10 questões. O resultado e as explicações aparecem após a entrega.</p>
   <div class="quiz-progress"><span id="quizProgress">${answered} de 10 respondidas</span><div><i id="quizProgressBar" style="width:${answered*10}%"></i></div></div>
   <form id="quizForm" onsubmit="event.preventDefault();finishQuiz()">${s.questions.map((q,i)=>`
-   <fieldset class="quiz-question" id="quiz-question-${i}"><legend><small>QUESTÃO ${String(i+1).padStart(2,'0')} · MÓDULO ${q.module}</small><strong>${courseEscape(q.prompt)}</strong></legend>
+   <fieldset class="quiz-question" id="quiz-question-${i}"><legend><small>QUESTÃO ${String(i+1).padStart(2,'0')} · MÓDULO ${q.module} · ${courseEscape(STUDY_MODULES.find(m=>m.id===q.module)?.title||'')}</small><span class="quiz-context">${courseEscape(q.context||'')}</span><strong>${courseEscape(q.prompt)}</strong></legend>
    ${q.options.map((option,j)=>`<label class="quiz-option"><input type="radio" name="question-${i}" value="${j}" ${s.answers[i]===j?'checked':''} onchange="quizAnswer(${i},${j})"><span>${courseEscape(option)}</span></label>`).join('')}</fieldset>`).join('')}
    <p id="quizError" class="quiz-error" role="alert"></p><button class="quiz-primary quiz-submit" type="submit">Conferir respostas →</button></form>`;
 }
@@ -167,7 +169,7 @@ function renderQuizResult(){
   <div class="quiz-result"><small>RESULTADO DO TESTE</small><h1>${result.score} de ${result.total}</h1><p>${result.score===10?'Você acertou todas. Gere uma nova seleção para avançar.':'Veja as explicações abaixo e revise os módulos em que teve dúvida.'}</p></div>
   <div class="quiz-actions"><button class="quiz-primary" onclick="startQuiz(true)">Refazer este teste</button><button onclick="startQuiz(false,'${s.scope}')">Novo teste · ${s.scope==='all'?'todos os módulos':'módulo '+s.scope}</button></div>
   <div class="quiz-review">${s.questions.map((q,i)=>`<article class="quiz-review-item ${result.details[i].ok?'is-correct':'is-wrong'}">
-   <small>QUESTÃO ${i+1} · MÓDULO ${q.module} · ${result.details[i].ok?'ACERTOU':'REVISAR'}</small><h2>${courseEscape(q.prompt)}</h2>
+   <small>QUESTÃO ${i+1} · MÓDULO ${q.module} · ${result.details[i].ok?'ACERTOU':'REVISAR'}</small><p class="quiz-review-context">${courseEscape(q.context||'')}</p><h2>${courseEscape(q.prompt)}</h2>
    <p>Sua resposta: <b>${courseEscape(q.options[s.answers[i]])}</b></p>
    ${result.details[i].ok?'':`<p>Resposta correta: <b>${courseEscape(q.options[q.correct])}</b></p>`}
    <div class="quiz-explanation">${courseEscape(q.explanation)}</div><button onclick="openModule('${q.module}')">Revisar módulo ${q.module} →</button>

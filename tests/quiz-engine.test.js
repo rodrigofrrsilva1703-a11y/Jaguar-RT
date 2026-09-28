@@ -8,8 +8,11 @@ assert.equal(pool.length,195);
 assert.equal(new Set(pool.map(q=>q.id)).size,195);
 for(const [module,group] of Object.entries(bank)){
  assert.equal(group.m.length+group.v.length,15,`Módulo ${module}`);
+ assert.equal(group.contexts.m.length,group.m.length,`Contextos de múltipla escolha ${module}`);
+ assert.equal(group.contexts.v.length,group.v.length,`Contextos de verdadeiro/falso ${module}`);
  for(const q of pool.filter(x=>x.module===module)){
-  assert.ok(q.prompt&&q.explanation);
+  assert.ok(q.prompt&&q.explanation&&q.context?.length>45,`Contexto específico em ${q.id}`);
+  assert.notEqual(q.context,q.prompt);
   assert.ok(q.choices.length>=2&&q.choices.every(Boolean));
   assert.ok(q.answer>=0&&q.answer<q.choices.length);
   assert.equal(new Set(q.choices).size,q.choices.length);
