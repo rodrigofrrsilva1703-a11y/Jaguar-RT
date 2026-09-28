@@ -353,11 +353,12 @@
   const supplierInputs={
    presumido:makeInput('presumido',0.65,3),
    real:makeInput('real',1.65,7.6),
-   simples:makeInput('simples',0,0)
+   simples:makeInput('simples',0,0),
+   simples_hybrid:makeInput('simples_hybrid',0,0)
   };
 
   const suppliers={};
-  for(const key of ['presumido','real','simples']){
+  for(const key of ['presumido','real','simples','simples_hybrid']){
    const cfg=supplierInputs[key];
    const current=currentPriceScenario(cfg);
    const futureScenario=futurePriceScenario(cfg,Number(year));
