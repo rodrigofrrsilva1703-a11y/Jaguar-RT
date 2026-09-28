@@ -65,7 +65,7 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#exampleSupplier').selectOption('presumido');
 
  await page.locator('#priceNow').fill('100,00');
- await expect(page.locator('#priceEquationMemory')).toContainText('Equação do evento');
+ await expect(page.locator('#priceEquationMemory')).toContainText('Equação do preço novo');
  await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
  await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(4);
  await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 94,72');
