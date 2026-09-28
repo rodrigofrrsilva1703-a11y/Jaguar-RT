@@ -405,6 +405,7 @@ function renderBuyerExample(year){
  const labels={simples:'Simples Nacional',presumido:'Lucro Presumido',real:'Lucro Real',simples_hybrid:'Simples híbrido'};
  const regimeLabel=labels[model.buyerRegime]||model.buyerRegime;
  const sign=model.changePct>0?'+':'';
+ const changeText=sign+Number(model.changePct||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
 
  let todayRule='Crédito atual: '+money(model.currentCredit)+'.';
  let futureRule='Crédito na transição: '+money(model.futureCredit)+'.';
@@ -423,7 +424,7 @@ function renderBuyerExample(year){
   '<b>'+regimeLabel+'</b> · '+todayRule+' '+futureRule+
   '<br><b>Hoje:</b> '+money(model.currentPrice)+' − '+money(model.currentCredit)+' = <b>'+money(model.currentCost)+'</b>.'+
   '<br><b>'+year+':</b> '+money(model.transitionPrice)+' − '+money(model.futureCredit)+' = <b>'+money(model.futureCost)+'</b>.'+
-  '<br><b>Variação:</b> [('+money(model.futureCost)+' ÷ '+money(model.currentCost)+') − 1] × 100 = <b>'+sign+pct(model.changePct)+'</b>.';
+  '<br><b>Variação:</b> [('+money(model.futureCost)+' ÷ '+money(model.currentCost)+') − 1] × 100 = <b>'+changeText+'</b>.';
 
  $('buyerExample').innerHTML=
   '<div class="buyer-example-head"><b>'+regimeLabel+'</b><span>Hoje × '+year+'</span></div>'+
@@ -437,7 +438,7 @@ function renderBuyerExample(year){
     '<div>Preço da nota <b>'+money(model.transitionPrice)+'</b></div>'+
     '<div>(−) Crédito fiscal <b>'+money(model.futureCredit)+'</b></div>'+
     '<div class="buyer-total">Custo efetivo '+year+' <b>'+money(model.futureCost)+'</b></div>'+
-    '<footer>Variação do custo <b class="'+(model.changePct>0?'up':'down')+'">'+sign+pct(model.changePct)+'</b></footer>'+
+    '<footer>Variação do custo <b class="'+(model.changePct>0?'up':'down')+'">'+changeText+'</b></footer>'+
    '</article>'+
   '</div>'+
   '<p class="buyer-example-note">'+
@@ -446,7 +447,7 @@ function renderBuyerExample(year){
     :'O cálculo segue diretamente a matriz de preço, crédito e custo efetivo do regime selecionado.')+
   '</p>';
 
- $('resultSignal').textContent=sign+pct(model.changePct);
+ $('resultSignal').textContent=changeText;
 }
 
 function regimeExplanation(){
@@ -1193,7 +1194,7 @@ function buildPricePdf(client,year){
  const model=purchaseCostLogic();
  const labels={simples:'Simples Nacional',presumido:'Lucro Presumido',real:'Lucro Real',simples_hybrid:'Simples híbrido'};
  const regimeLabel=labels[model.buyerRegime]||model.buyerRegime;
- const variation=(model.changePct>0?'+':'')+pct(model.changePct);
+ const variation=(model.changePct>0?'+':'')+Number(model.changePct||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
 
  return {
   title:'Relatório de custo efetivo da compra',
