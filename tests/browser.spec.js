@@ -43,10 +43,10 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
 
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
- const lpCredit=await supplierValue(lp,'Crédito aproveitado');
- const lrCredit=await supplierValue(lr,'Crédito aproveitado');
- const snCredit=await supplierValue(sn,'Crédito aproveitado');
- const hybridCredit=await supplierValue(hybrid,'Crédito aproveitado');
+ const lpCredit=await supplierValue(lp,'Crédito para sua empresa');
+ const lrCredit=await supplierValue(lr,'Crédito para sua empresa');
+ const snCredit=await supplierValue(sn,'Crédito para sua empresa');
+ const hybridCredit=await supplierValue(hybrid,'Crédito para sua empresa');
  expect(lpCredit).toBeGreaterThan(0);
  expect(lrCredit).toBeGreaterThan(0);
  expect(snCredit).toBeGreaterThan(0);
@@ -59,10 +59,12 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#taxRegime').selectOption('simples');
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeDisabled();
  await expect(page.locator('#priceTakesCbsIbsCredit')).not.toBeChecked();
- expect(await supplierValue(lp,'Crédito aproveitado')).toBe(0);
- expect(await supplierValue(lr,'Crédito aproveitado')).toBe(0);
- expect(await supplierValue(sn,'Crédito aproveitado')).toBe(0);
- expect(await supplierValue(hybrid,'Crédito aproveitado')).toBe(0);
+ await expect(page.locator('#regimeResultNote')).toContainText('não se apropria de créditos');
+
+ expect(await supplierValue(lp,'Crédito para sua empresa')).toBe(0);
+ expect(await supplierValue(lr,'Crédito para sua empresa')).toBe(0);
+ expect(await supplierValue(sn,'Crédito para sua empresa')).toBe(0);
+ expect(await supplierValue(hybrid,'Crédito para sua empresa')).toBe(0);
  const lpCostSimpleBuyer=brl(await lp.locator('.supplier-cost b').textContent());
  const lpPriceSimpleBuyer=await supplierValue(lp,'Preço da compra');
  expect(Math.abs(lpCostSimpleBuyer-lpPriceSimpleBuyer)).toBeLessThanOrEqual(0.02);
@@ -70,13 +72,15 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#taxRegime').selectOption('real');
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
- expect(await supplierValue(lp,'Crédito aproveitado')).toBeGreaterThan(0);
+ expect(await supplierValue(lp,'Crédito para sua empresa')).toBeGreaterThan(0);
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
 
  await page.locator('#taxRegime').selectOption('simples_hybrid');
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
- expect(await supplierValue(hybrid,'Crédito aproveitado')).toBeGreaterThan(0);
+ await expect(page.locator('#regimeResultNote')).toContainText('podem gerar crédito');
+
+ expect(await supplierValue(hybrid,'Crédito para sua empresa')).toBeGreaterThan(0);
  await page.locator('#taxRegime').selectOption('real');
 
  await page.evaluate(()=>{window.print=()=>{};});
@@ -126,14 +130,14 @@ test('fornecedor do Simples usa RBT12 e faturamento híbrido permanece intacto',
 
  const sn=page.locator('[data-supplier="simples"]');
  await expect(sn).toContainText('Anexo III');
- expect(await supplierValue(sn,'Crédito aproveitado')).toBeGreaterThan(0);
+ expect(await supplierValue(sn,'Crédito para sua empresa')).toBeGreaterThan(0);
  const snCost=brl(await sn.locator('.supplier-cost b').textContent());
  const snPrice=await supplierValue(sn,'Preço da compra');
  expect(snCost).toBeLessThan(snPrice);
 
  const hybrid=page.locator('[data-supplier="simples_hybrid"]');
  await expect(hybrid).toContainText('híbrido');
- expect(await supplierValue(hybrid,'Crédito aproveitado')).toBeGreaterThan(0);
+ expect(await supplierValue(hybrid,'Crédito para sua empresa')).toBeGreaterThan(0);
  expect(await supplierValue(hybrid,'Tributos remanescentes')).toBeGreaterThan(0);
 
  // Regressão exata da ferramenta de faturamento híbrido.

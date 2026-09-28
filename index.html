@@ -690,14 +690,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
        <select id="taxRegime">
         <option value="presumido" selected>Lucro Presumido</option>
         <option value="real">Lucro Real</option>
-        <option value="simples">Simples Nacional — padrão</option>
-        <option value="simples_hybrid">Simples Nacional — híbrido</option>
+        <option value="simples">Simples Nacional — padrão · não toma crédito</option>
+        <option value="simples_hybrid">Simples Nacional — híbrido · toma crédito IBS/CBS</option>
        </select>
       </div>
       <div class="field wide"><label>Valor atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <label class="main-credit-check" for="priceTakesCbsIbsCredit">
        <input id="priceTakesCbsIbsCredit" type="checkbox" checked>
-       <span><b>Esta compra gera crédito de CBS/IBS</b><small>No regime regular, desconta o crédito permitido para chegar ao custo efetivo.</small></span>
+       <span><b>Esta compra gera crédito de CBS/IBS</b><small>Disponível para Lucro Real, Lucro Presumido e Simples híbrido. No Simples padrão, o crédito da compradora fica zerado.</small></span>
       </label>
      </div>
 
