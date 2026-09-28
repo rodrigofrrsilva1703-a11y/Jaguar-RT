@@ -134,11 +134,11 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
 
  await page.evaluate(()=>{window.print=()=>{};});
  await page.locator('#pricePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('Comparativo de custo por regime do fornecedor');
- await expect(page.locator('#printReport')).toContainText('Fornecedor · Lucro Presumido');
- await expect(page.locator('#printReport')).toContainText('Fornecedor · Lucro Real');
- await expect(page.locator('#printReport')).toContainText('Fornecedor · Simples Nacional');
- await expect(page.locator('#printReport')).toContainText('Fornecedor · Simples Nacional híbrido');
+ await expect(page.locator('#printReport')).toContainText('Custo efetivo por regime do comprador');
+ await expect(page.locator('#printReport')).toContainText('Cliente Lucro Presumido');
+ await expect(page.locator('#printReport')).toContainText('Cliente Lucro Real');
+ await expect(page.locator('#printReport')).toContainText('Cliente Simples Nacional');
+ await expect(page.locator('#printReport')).toContainText('Cliente Simples híbrido');
 
  const purchaseSheet=await page.evaluate(()=>{
   let out=null;
