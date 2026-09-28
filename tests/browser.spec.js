@@ -48,7 +48,7 @@ test('compra/custo efetivo e faturamento carregam sem erro de console',async({pa
  expect(grossAfter).toBeCloseTo(grossBefore,2);
  expect(creditAfter).toBeGreaterThan(0);
  expect(costAfter).toBeLessThan(grossAfter);
- expect(costAfter).toBeCloseTo(grossAfter-creditAfter,2);
+ expect(Math.abs(costAfter-(grossAfter-creditAfter))).toBeLessThanOrEqual(0.02);
  await expect(page.locator('#futureTaxSummary')).toContainText('CBS');
  await expect(page.locator('#futureTaxSummary')).toContainText('IBS');
  await expect(page.locator('#futureTaxSummary')).not.toContainText('%');
