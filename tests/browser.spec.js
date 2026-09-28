@@ -60,19 +60,13 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#priceYear').selectOption('2027');
 
  await page.locator('#priceNow').fill('100,00');
- await page.locator('#priceFutureQuote').fill('');
  await expect(page.locator('#priceEquationMemory')).toContainText('Equação do evento');
  await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
- await page.locator('#priceFutureQuote').fill('104,15');
- await page.locator('#priceCurrentRealCredit').fill('9,25');
- await page.locator('#priceFutureCredit').fill('7,05');
  await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(4);
- await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 97,10');
+ await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 95,55');
  await expect(page.locator('[data-buyer="real"]')).toContainText('R$ 90,75');
- await expect(page.locator('[data-buyer="simples"]')).toContainText('+4,15%');
+ await expect(page.locator('[data-buyer="simples"]')).toContainText('+4,4444%');
  await page.locator('#priceNow').fill('1.234,56');
- await page.locator('#priceFutureQuote').fill('1.234,56');
- await page.locator('#priceFutureCredit').fill('');
 
  await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(4);
  const lp=page.locator('[data-supplier="presumido"]');
@@ -97,9 +91,9 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
 
  const lpCost=brl(await lp.locator('.supplier-cost b').textContent());
  const lpPrice=await supplierValue(lp,'Preço da compra');
- expect(lpPrice).toBe(1234.56);
- expect(await supplierValue(lr,'Preço da compra')).toBe(1234.56);
- expect(await supplierValue(sn,'Preço da compra')).toBe(1234.56);
+ expect(lpPrice).toBeGreaterThan(1234.56);
+ expect(await supplierValue(lr,'Preço da compra')).not.toBe(lpPrice);
+ expect(await supplierValue(sn,'Preço da compra')).not.toBe(lpPrice);
  expect(lpCost).toBeLessThan(lpPrice);
 
  await page.locator('#taxRegime').selectOption('simples');

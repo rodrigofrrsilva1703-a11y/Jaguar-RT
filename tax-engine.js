@@ -330,27 +330,28 @@
 
   const suppliers={};
   for(const key of ['presumido','real','simples','simples_hybrid']){
-   const cfg={regime:key,amount,simple,future,hybridFuture:future};
+   const price=input.projectFromCurrent?supplierPriceProjection({...input,supplierRegime:key},year).projectedPrice:amount;
+   const cfg={regime:key,amount:price,simple,future,hybridFuture:future};
    const p=paramsForYear(cfg,Number(year));
    let cbs=0,ibs=0,remnant=0;
    if(p.type==='simple'){
     // O adquirente regular recebe somente a parcela de IBS/CBS cobrada no DAS.
-    cbs=amount*p.cbsInside;
-    ibs=amount*p.ibsInside;
-    remnant=amount*Math.max(0,p.dasRate-p.cbsInside-p.ibsInside);
+    cbs=price*p.cbsInside;
+    ibs=price*p.ibsInside;
+    remnant=price*Math.max(0,p.dasRate-p.cbsInside-p.ibsInside);
    }else if(p.type==='hybrid'){
-    ({cbs,ibs,remnant}=hybridAtGross(p,amount));
+    ({cbs,ibs,remnant}=hybridAtGross(p,price));
    }else{
     // O valor informado é o total da aquisição, já com IBS/CBS por fora.
     // Tributos antigos do fornecedor não são um crédito novo do comprador.
-    const base=amount/(1+p.cbsRate+p.ibsRate);
+    const base=price/(1+p.cbsRate+p.ibsRate);
     cbs=base*p.cbsRate;
     ibs=base*p.ibsRate;
    }
    const credit=creditEnabled?cbs+ibs:0;
    suppliers[key]={
     supplierRegime:key,
-    price:amount,cbs,ibs,remnant,credit,effectiveCost:Math.max(0,amount-credit)
+    price,cbs,ibs,remnant,credit,effectiveCost:Math.max(0,price-credit)
    };
   }
 
@@ -427,14 +428,12 @@
   const currentPrice=Math.max(0,Number(input.amount)||0);
   const supplierRegime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
   const projection=supplierPriceProjection({...input,supplierRegime},year);
-  const quoteProvided=input.futurePrice!==undefined&&input.futurePrice!==null&&input.futurePrice!=='';
-  const futurePrice=quoteProvided?Math.max(0,Number(input.futurePrice)||0):projection.projectedPrice;
+  const futurePrice=projection.projectedPrice;
   const supplier=supplierPurchaseComparison({...input,companyRegime:'real',amount:futurePrice,purchaseGeneratesCredit:true},year).suppliers[supplierRegime];
   const estimatedCredit=supplier.cbs+supplier.ibs;
-  const futureCredit=input.futureCredit===undefined||input.futureCredit===null||input.futureCredit===''
-   ?estimatedCredit:clamp(input.futureCredit,0,futurePrice);
-  const currentRealCredit=clamp(input.currentRealCredit,0,currentPrice);
-  const currentPresumedCredit=clamp(input.currentPresumedCredit,0,currentPrice);
+  const futureCredit=estimatedCredit;
+  const currentRealCredit=currentPrice*clamp(input.currentRealCreditPct,0,100)/100;
+  const currentPresumedCredit=currentPrice*clamp(input.currentPresumedCreditPct,0,100)/100;
   const buyers={};
   for(const regime of ['simples','presumido','real','simples_hybrid']){
    const currentCredit=regime==='real'?currentRealCredit:regime==='presumido'?currentPresumedCredit:0;
@@ -444,8 +443,7 @@
    buyers[regime]={currentPrice,currentCredit,currentCost,futurePrice,credit,effectiveCost,
     changePct:effectPct(currentCost,effectiveCost)};
   }
-  return {year:Number(year),supplierRegime,currentPrice,futurePrice,projection,quoteProvided,estimatedCredit,futureCredit,
-   creditOverridden:input.futureCredit!==undefined&&input.futureCredit!==null&&input.futureCredit!=='',buyers};
+  return {year:Number(year),supplierRegime,currentPrice,futurePrice,projection,estimatedCredit,futureCredit,buyers};
  }
 
  function priceMemory(input,year){

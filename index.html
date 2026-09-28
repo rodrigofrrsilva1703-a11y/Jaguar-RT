@@ -672,7 +672,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div>
      <span class="tag">COMPARADOR DE CUSTO DE COMPRA</span>
      <h3>Quanto custa a mesma compra para cada regime de comprador?</h3>
-     <p>O preço futuro é calculado pela equação do evento a partir dos tributos atuais e novos. Compare o custo efetivo para quatro regimes de comprador ou informe uma cotação real.</p>
+     <p>O preço futuro é calculado pela equação do evento a partir do preço líquido atual, dos tributos que permanecem e de CBS/IBS. Compare o custo efetivo para quatro regimes de comprador.</p>
     </div>
     <div class="tool-head-actions">
      <div class="integration-badge"><b>4 cenários</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
@@ -702,14 +702,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       </div>
       <div class="field wide"><label>Valor total da compra, com tributos, R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <div class="field"><label>Regime do fornecedor</label><select id="exampleSupplier"><option value="presumido">Lucro Presumido</option><option value="real">Lucro Real</option><option value="simples">Simples Nacional</option><option value="simples_hybrid">Simples híbrido</option></select></div>
-      <div class="field"><label>Preço cotado no ano escolhido R$ <small>(opcional; vazio = equação)</small></label><input id="priceFutureQuote" class="money-input" type="text" inputmode="decimal" autocomplete="off" placeholder="Calcular automaticamente"></div>
       <div class="field"><label>ICMS atual do fornecedor %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
       <div class="field"><label>ISS atual do fornecedor %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="0"></div>
       <div class="field"><label>IPI atual do fornecedor %</label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
-      <div class="field"><label>Crédito atual do comprador no Lucro Real R$</label><input id="priceCurrentRealCredit" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="9,25"></div>
-      <div class="field"><label>Crédito atual do comprador no Presumido R$</label><input id="priceCurrentPresumedCredit" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="0,00"></div>
-      <div class="field wide"><label>Crédito CBS/IBS destacado na compra R$ <small>(opcional; vazio = cálculo pelas alíquotas)</small></label><input id="priceFutureCredit" class="money-input" type="text" inputmode="decimal" autocomplete="off" placeholder="Usar crédito estimado"></div>
-      <button id="applyEventExample" class="scenario-action" type="button">Usar exemplo da imagem: R$ 100 → R$ 104,15</button>
+      <div class="field"><label>Crédito atual do comprador no Lucro Real %</label><input id="priceCurrentRealCreditPct" type="number" min="0" max="100" step=".01" value="9.25"></div>
+      <div class="field"><label>Crédito atual do comprador no Presumido %</label><input id="priceCurrentPresumedCreditPct" type="number" min="0" max="100" step=".01" value="0"></div>
       <label class="main-credit-check" for="priceTakesCbsIbsCredit">
        <input id="priceTakesCbsIbsCredit" type="checkbox" checked>
        <span><b>Compra gera crédito na comparação adicional</b><small>Os cartões principais mostram cada regime de comprador. Nesta comparação, o Simples padrão não apropria crédito.</small></span>
@@ -997,7 +994,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   </article>
  </div>
 
- <div class="legal-box tool-legal"><b>Importante</b><p>A compra compara o custo efetivo com os preços cotados e créditos informados; o faturamento projeta a receita total. As alíquotas futuras são premissas do exercício e o crédito real depende do documento fiscal e das regras aplicáveis.</p></div>
+ <div class="legal-box tool-legal"><b>Importante</b><p>A compra projeta preços pela equação do evento e compara o custo após créditos estimados; o faturamento projeta a receita total. As alíquotas futuras são premissas do exercício e o crédito real depende do documento fiscal e das regras aplicáveis.</p></div>
 </section>
 
 <section id="sources" class="view">
@@ -1028,8 +1025,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260928-50"></script>
+<script src="tax-engine.js?v=20260928-51"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260928-50" defer></script>
+<script src="app-v2.js?v=20260928-51" defer></script>
 </body>
 </html>

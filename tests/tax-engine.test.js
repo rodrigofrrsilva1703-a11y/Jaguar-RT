@@ -167,23 +167,20 @@ for(const icms of [0,12,18]){
  close(other.suppliers.presumido.effectiveCost,supplierCompare.suppliers.presumido.effectiveCost,1e-8,'ICMS do fornecedor não altera cotação fixa');
 }
 
-// Exemplo do evento: um fornecedor LP, preço único para três compradores,
-// com o quarto cenário do Simples híbrido. Créditos são os da operação.
+// Um fornecedor LP, preço novo calculado pela equação; quatro compradores.
 const event=engine.buyerPurchaseComparison({
- amount:100,futurePrice:104.15,supplierRegime:'presumido',
- currentRealCredit:9.25,currentPresumedCredit:0,futureCredit:7.05,
+ amount:100,supplierRegime:'presumido',currentRates:{icms:18},
+ currentRealCreditPct:9.25,currentPresumedCreditPct:0,
  simple:{annex:'I',rbt12:1000000},future:{mode:'rtav'}
 },2027);
 close(event.buyers.simples.currentCost,100);
-close(event.buyers.simples.effectiveCost,104.15);
-close(event.buyers.simples.changePct,4.15);
-close(event.buyers.presumido.effectiveCost,97.10);
-close(event.buyers.presumido.changePct,-2.90);
+close(event.futurePrice,78.35*1.0931/.82);
+close(event.buyers.simples.effectiveCost,event.futurePrice);
+close(event.buyers.presumido.effectiveCost,event.futurePrice-event.futureCredit);
 close(event.buyers.real.currentCost,90.75);
-close(event.buyers.real.changePct,(97.10/90.75-1)*100);
-close(event.buyers.simples_hybrid.effectiveCost,97.10);
-const eventAutomatic=engine.buyerPurchaseComparison({amount:100,futurePrice:104.15,supplierRegime:'presumido',future:{mode:'rtav'}},2027);
-close(eventAutomatic.futureCredit,104.15*(.0931/1.0931),1e-8,'Crédito automático calculado por fora');
+close(event.buyers.real.changePct,(event.buyers.real.effectiveCost/90.75-1)*100);
+close(event.buyers.simples_hybrid.effectiveCost,event.buyers.presumido.effectiveCost);
+close(event.futureCredit,event.futurePrice*(.0931/1.0931),1e-8,'Crédito automático calculado por fora');
 
 // Equação do evento: líquido atual × (1 + tributos novos) / (1 − antigos remanescentes).
 const equationInput={amount:100,supplierRegime:'presumido',currentRates:{icms:18,iss:0,ipi:0},future:{mode:'rtav'}};
@@ -195,7 +192,9 @@ for(const year of [2027,2029,2033]){
  close(projected.projectedPrice,78.35*(1+newRate)/(1-remaining),1e-8,`Equação ${year}`);
  const automatic=engine.buyerPurchaseComparison(equationInput,year);
  close(automatic.futurePrice,projected.projectedPrice,1e-8,`Preço automático ${year}`);
- assert.equal(automatic.quoteProvided,false);
+ const supplierProjection=engine.supplierPurchaseComparison({companyRegime:'real',...equationInput,projectFromCurrent:true},year);
+ close(supplierProjection.suppliers.presumido.price,projected.projectedPrice,1e-8,'Preço LP próprio na comparação de fornecedores');
+ if(year===2027) assert.notEqual(supplierProjection.suppliers.real.price,supplierProjection.suppliers.presumido.price);
 }
 
 // Faturamento com créditos estimados das aquisições.
