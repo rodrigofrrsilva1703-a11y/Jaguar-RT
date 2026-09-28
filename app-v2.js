@@ -281,7 +281,7 @@ function applyYearPreset(){
  if($('rateNote')){
   const company=regime();
   if(company==='simples'){
-   $('rateNote').textContent='Empresa compradora no Simples padrão: esta comparação não apropria créditos de CBS/IBS. Os três fornecedores continuam sendo comparados pelo custo bruto da aquisição.';
+   $('rateNote').textContent='Empresa compradora no Simples padrão: esta comparação não apropria créditos de CBS/IBS. Os quatro cenários de fornecedor continuam sendo comparados pelo custo bruto da aquisição.';
   }else{
    $('rateNote').textContent=($('rateMode')?.value==='manual')
     ? 'Regime regular da empresa compradora. CBS e IBS foram informados manualmente; a compra só gera crédito quando o tique estiver marcado.'
@@ -308,8 +308,8 @@ function purchaseComparison(year=Number($('priceYear')?.value||2027),input=price
 
 function regimeExplanation(){
  const r=regime();
- if(r==='simples') return 'Sua empresa está no Simples Nacional padrão: a comparação mostra os três fornecedores sem apropriação de créditos de CBS/IBS pela compradora.';
- return 'Sua empresa está no regime regular: a mesma compra é comparada entre fornecedor no Lucro Presumido, Lucro Real e Simples Nacional, com crédito quando a aquisição estiver marcada como creditável.';
+ if(r==='simples') return 'Sua empresa está no Simples Nacional padrão: a comparação mostra os quatro cenários de fornecedor sem apropriação de créditos de CBS/IBS pela compradora.';
+ return 'Sua empresa está no regime regular: a mesma compra é comparada entre fornecedor no Lucro Presumido, Lucro Real, Simples Nacional padrão e Simples Nacional híbrido, com crédito quando a aquisição estiver marcada como creditável.';
 }
 
 function updateScenarioStrip(){
@@ -437,16 +437,16 @@ function calcIntegrated(){
  if(input.simple.rbt12<=0) messages.push({level:'error',message:'Informe o RBT12 do fornecedor do Simples.'});
  if(input.simple.rbt12>3600000) messages.push({level:'warning',message:'RBT12 do fornecedor do Simples acima de R$ 3,6 milhões exige validação específica do sublimite.'});
  if(input.companyRegime==='simples') messages.push({level:'info',message:'Empresa compradora no Simples padrão: não há apropriação de créditos de CBS/IBS nesta comparação.'});
- else if(!input.purchaseGeneratesCredit) messages.push({level:'info',message:'Compra marcada como não creditável: os três fornecedores serão comparados sem crédito de CBS/IBS.'});
+ else if(!input.purchaseGeneratesCredit) messages.push({level:'info',message:'Compra marcada como não creditável: os quatro cenários de fornecedor serão comparados sem crédito de CBS/IBS.'});
  renderValidation('priceValidation',messages);
  renderMemory('priceMemory',comparisonMemoryRows(comparison));
 
- $('resultSignal').textContent='3 FORNECEDORES';
+ $('resultSignal').textContent='4 CENÁRIOS';
  $('regimeResultNote').textContent=(REGIME_LABELS[regime()]||regime())+' · '+regimeExplanation();
 
  $('integratedKpis').innerHTML=
   '<div class="integrated-kpi dark"><small>Sua empresa</small><b>'+(REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime)+'</b><span>Regime comprador</span></div>'+
-  '<div class="integrated-kpi"><small>Compra-base</small><b>'+money(comparison.amount)+'</b><span>Mesmo valor para os 3 fornecedores</span></div>'+
+  '<div class="integrated-kpi"><small>Compra-base</small><b>'+money(comparison.amount)+'</b><span>Mesmo valor para os 4 cenários</span></div>'+
   '<div class="integrated-kpi dark"><small>Ano analisado</small><b>'+y+'</b><span>Reforma</span></div>'+
   '<div class="integrated-kpi"><small>Crédito CBS/IBS</small><b>'+(comparison.creditEnabled?'Sim':'Não')+'</b><span>'+(comparison.regularBuyer?(input.purchaseGeneratesCredit?'Compra creditável':'Compra não creditável'):'Simples padrão')+'</span></div>';
 
@@ -513,7 +513,7 @@ function renderYearDetail(year){
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+
    (row.year===2026
     ?'2026 é a base comum informada para a compra. A comparação tributária projetada começa em 2027.'
-    :'Os três valores acima mostram o custo efetivo da mesma compra para sua empresa, alterando apenas o regime tributário do fornecedor e as regras correspondentes.')+
+    :'Os quatro valores acima mostram o custo efetivo da mesma compra para sua empresa, alterando apenas o regime tributário do fornecedor e as regras correspondentes.')+
   '</p></div>';
 }
 
