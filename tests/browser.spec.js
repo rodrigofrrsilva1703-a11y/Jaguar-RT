@@ -63,7 +63,14 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await expect(page.locator('#priceEquationMemory')).toContainText('Equação do evento');
  await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
  await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(4);
- await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 95,55');
+ await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 94,72');
+ await expect(page.locator('[data-buyer="presumido"]')).toContainText('CBS 9,21%');
+ await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 9,62');
+ await expect(page.locator('[data-buyer="presumido"]')).toContainText('IBS 0,10%');
+ await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 0,10');
+ await page.locator('#buyerPurchaseCredit').uncheck();
+ await expect(page.locator('[data-buyer="presumido"] div').filter({hasText:'Crédito aproveitado'}).locator('b')).toHaveText('R$ 0,00');
+ await page.locator('#buyerPurchaseCredit').check();
  await expect(page.locator('[data-buyer="real"]')).toContainText('R$ 90,75');
  await expect(page.locator('[data-buyer="simples"]')).toContainText('+4,4444%');
  await page.locator('#priceNow').fill('1.234,56');
@@ -136,6 +143,8 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await expect(page.locator('#printReport')).toContainText('Cliente Lucro Real');
  await expect(page.locator('#printReport')).toContainText('Cliente Simples Nacional');
  await expect(page.locator('#printReport')).toContainText('Cliente Simples híbrido');
+ await expect(page.locator('#printReport')).toContainText('CBS sobre preço novo');
+ await expect(page.locator('#printReport')).toContainText('IBS sobre preço novo');
 
  const purchaseSheet=await page.evaluate(()=>{
   let out=null;

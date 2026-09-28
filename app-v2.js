@@ -384,6 +384,7 @@ function priceEngineInput(){
 
 function buyerModelInput(input=priceEngineInput()){
  return {...input,supplierRegime:$('exampleSupplier')?.value,
+  buyerPurchaseCredit:!!$('buyerPurchaseCredit')?.checked,
   currentRealCreditPct:num('priceCurrentRealCreditPct'),
   currentPresumedCreditPct:num('priceCurrentPresumedCreditPct')};
 }
@@ -395,19 +396,22 @@ function purchaseComparison(year=Number($('priceYear')?.value||2027),input=price
 function renderBuyerExample(year,input){
  const model=RTAV_ENGINE.buyerPurchaseComparison(buyerModelInput(input),year);
  const p=model.projection;
- $('priceEquationMemory').innerHTML=p.method==='formula_evento'
-   ?'<b>Equação do evento:</b> ('+money(p.currentPrice)+' − '+money(p.currentTaxes)+') × (1 + '+pct(p.newRate*100)+')'+(year<2033?' ÷ (1 − '+pct(p.remainingRate*100)+')':'')+' = <b>'+money(p.projectedPrice)+'</b>. Tributos antigos remanescentes do ano no denominador.'
-   :'<b>Projeção do fornecedor no '+(p.method==='simples_hibrido'?'Simples híbrido':'Simples padrão')+':</b> '+money(p.projectedPrice)+'. O cálculo segue o DAS e as parcelas de IBS/CBS desse regime.';
+ const currentTaxes=Object.entries(p.currentComponents||{}).filter(([,value])=>value>0)
+  .map(([key,value])=>key.toUpperCase()+' '+money(value)).join(' · ');
+ const formula=p.method==='formula_evento'
+  ?'<b>Preço atual:</b> '+money(p.currentPrice)+' · <b>Tributos atuais:</b> '+currentTaxes+'.<br><b>Equação do preço novo:</b> ('+money(p.currentPrice)+' − '+money(p.currentTaxes)+') × (1 + '+pct(p.newRate*100)+')'+(year<2033?' ÷ (1 − '+pct(p.remainingRate*100)+')':'')+' = <b>'+money(p.projectedPrice)+'</b>.'
+  :'<b>Projeção do fornecedor no '+(p.method==='simples_hibrido'?'Simples híbrido':'Simples padrão')+':</b> '+money(p.projectedPrice)+'. O cálculo segue o DAS e as parcelas de IBS/CBS desse regime.';
+ $('priceEquationMemory').innerHTML=formula+'<br><b>Tributos sobre o preço novo:</b> CBS '+pct(model.cbsPct)+' = '+money(model.cbs)+' · IBS '+pct(model.ibsPct)+' = '+money(model.ibs)+'.';
  const labels={simples:'Simples Nacional',presumido:'Lucro Presumido',real:'Lucro Real',simples_hybrid:'Simples híbrido'};
  $('buyerExample').innerHTML='<div class="buyer-example-head"><b>Fornecedor '+labels[model.supplierRegime]+'</b><span>Hoje '+money(model.currentPrice)+' · '+year+' '+money(model.futurePrice)+'</span></div>'+
   '<div class="buyer-example-grid">'+Object.entries(model.buyers).map(function([key,x]){
    const delta=x.changePct;
    return '<article class="buyer-example-card" data-buyer="'+key+'"><h4>Cliente '+labels[key]+'</h4>'+
     '<strong>Hoje</strong><div>Preço <b>'+money(x.currentPrice)+'</b></div><div>(−) Crédito <b>'+money(x.currentCredit)+'</b></div><div class="buyer-total">Custo efetivo <b>'+money(x.currentCost)+'</b></div>'+
-    '<strong>'+year+'</strong><div>Preço <b>'+money(x.futurePrice)+'</b></div><div>(−) Crédito <b>'+money(x.credit)+'</b></div><div class="buyer-total">Custo efetivo <b>'+money(x.effectiveCost)+'</b></div>'+
+    '<strong>'+year+'</strong><div>Preço novo <b>'+money(x.futurePrice)+'</b></div><div>CBS '+pct(model.cbsPct)+' <b>'+money(model.cbs)+'</b></div><div>IBS '+pct(model.ibsPct)+' <b>'+money(model.ibs)+'</b></div><div>(−) Crédito aproveitado <b>'+money(x.credit)+'</b></div><div class="buyer-total">Custo efetivo <b>'+money(x.effectiveCost)+'</b></div>'+
     '<footer>Variação do custo <b class="'+(delta>0?'up':'down')+'">'+(delta>0?'+':'')+pct(delta)+'</b></footer></article>';
   }).join('')+'</div><p class="buyer-example-note">'+
-  'Crédito futuro estimado pelas alíquotas e pelo regime do fornecedor.'+
+  'CBS e IBS são apresentados separadamente sobre o preço novo; o crédito aproveitado depende do regime do comprador e da operação.'+
   ' O crédito atual do Lucro Real e do Presumido é uma premissa ajustável; confirme os créditos efetivos da operação. O Simples padrão não apropria crédito de CBS/IBS.</p>';
 }
 
@@ -1140,7 +1144,8 @@ function buildPricePdf(client,year){
    rows:[
     ['Preço hoje',money(x.currentPrice)],['Crédito hoje',money(x.currentCredit)],
     ['Custo efetivo hoje',money(x.currentCost)],
-    ['Preço '+year,money(x.futurePrice)],['Crédito '+year,money(x.credit)],
+    ['Preço novo '+year,money(x.futurePrice)],['CBS sobre preço novo',money(model.cbs)],
+    ['IBS sobre preço novo',money(model.ibs)],['Crédito aproveitado '+year,money(x.credit)],
     ['Custo efetivo '+year,money(x.effectiveCost)],
     ['Variação do custo',(x.changePct>0?'+':'')+pct(x.changePct)]
    ]
@@ -1158,7 +1163,8 @@ function buildPricePdf(client,year){
    ['Fornecedor',labels[model.supplierRegime],'Regime da venda'],
    ['Preço hoje',money(model.currentPrice),'Cotação atual'],
    ['Preço '+year,money(model.futurePrice),'Equação do evento'],
-   ['Crédito '+year,money(model.futureCredit),'Estimado']
+   ['CBS '+year,money(model.cbs),'Sobre o preço novo'],
+   ['IBS '+year,money(model.ibs),'Sobre o preço novo']
   ],
   currentRows:[],
   futureRows:[],
@@ -1261,7 +1267,7 @@ function printTaxReport(kind){
 }
 
 const PRICE_STATE_IDS=[
- 'taxRegime','priceNow','exampleSupplier','icmsRate','issRate','ipiRate','priceCurrentRealCreditPct','priceCurrentPresumedCreditPct','snRbt12','snAnnex',
+ 'taxRegime','priceNow','exampleSupplier','icmsRate','issRate','ipiRate','priceCurrentRealCreditPct','priceCurrentPresumedCreditPct','buyerPurchaseCredit','snRbt12','snAnnex',
  'priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceTakesCbsIbsCredit','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
@@ -1270,7 +1276,7 @@ const REVENUE_STATE_IDS=[
  'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset','revenueClientName'
 ];
 
-function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v3':'v1');}
+function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v4':'v1');}
 
 function saveSimulation(kind){
  const ids=kind==='price'?PRICE_STATE_IDS:REVENUE_STATE_IDS;
@@ -1486,7 +1492,7 @@ $('hybridRateMode')?.addEventListener('change',function(){
  const manual=$('hybridRateMode').value==='manual';
  $('hybridCbsRate').readOnly=!manual;$('hybridIbsRate').readOnly=!manual;applyYearPreset();
 });
-['priceNow','priceCurrentRealCreditPct','priceCurrentPresumedCreditPct','exampleSupplier','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate'].forEach(function(id){
+['priceNow','priceCurrentRealCreditPct','priceCurrentPresumedCreditPct','buyerPurchaseCredit','exampleSupplier','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate'].forEach(function(id){
  $(id)?.addEventListener('input',calcIntegrated);
 });
 $('priceNow')?.addEventListener('blur',function(){formatMoneyInput(this);calcIntegrated();});

@@ -339,6 +339,12 @@
     cbs=price*p.cbsInside;
     ibs=price*p.ibsInside;
     remnant=price*Math.max(0,p.dasRate-p.cbsInside-p.ibsInside);
+   }else if(input.projectFromCurrent||input.taxOnProjectedPrice){
+    // Nesta comparação didática, o preço novo sai primeiro da equação;
+    // CBS e IBS são calculados separadamente sobre esse preço projetado.
+    cbs=price*p.cbsRate;
+    ibs=price*p.ibsRate;
+    remnant=price*(p.remRate||0);
    }else if(p.type==='hybrid'){
     ({cbs,ibs,remnant}=hybridAtGross(p,price));
    }else{
@@ -381,7 +387,7 @@
   const current=currentPriceScenario(cfg);
   const projected=futurePriceScenario(cfg,Number(year));
   const p=projected.params;
-  return {regime,year:Number(year),currentPrice:current.price,currentTaxes:current.taxes,
+  return {regime,year:Number(year),currentPrice:current.price,currentTaxes:current.taxes,currentComponents:current.components,
    netPrice:current.net,remainingRate:p.type==='regular'?p.remRate:p.type==='hybrid'?p.remRate:p.dasRate,
    newRate:(p.cbsRate||0)+(p.ibsRate||0),projectedPrice:projected.price,
    method:p.type==='regular'?'formula_evento':p.type==='hybrid'?'simples_hibrido':'simples_das'};
@@ -429,7 +435,8 @@
   const supplierRegime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
   const projection=supplierPriceProjection({...input,supplierRegime},year);
   const futurePrice=projection.projectedPrice;
-  const supplier=supplierPurchaseComparison({...input,companyRegime:'real',amount:futurePrice,purchaseGeneratesCredit:true},year).suppliers[supplierRegime];
+  const supplier=supplierPurchaseComparison({...input,companyRegime:'real',amount:futurePrice,
+   projectFromCurrent:false,taxOnProjectedPrice:true,purchaseGeneratesCredit:true},year).suppliers[supplierRegime];
   const estimatedCredit=supplier.cbs+supplier.ibs;
   const futureCredit=estimatedCredit;
   const currentRealCredit=currentPrice*clamp(input.currentRealCreditPct,0,100)/100;
@@ -437,13 +444,16 @@
   const buyers={};
   for(const regime of ['simples','presumido','real','simples_hybrid']){
    const currentCredit=regime==='real'?currentRealCredit:regime==='presumido'?currentPresumedCredit:0;
-   const credit=regime==='simples'?0:futureCredit;
+   const credit=regime==='simples'||input.buyerPurchaseCredit===false?0:futureCredit;
    const currentCost=currentPrice-currentCredit;
    const effectiveCost=futurePrice-credit;
    buyers[regime]={currentPrice,currentCredit,currentCost,futurePrice,credit,effectiveCost,
     changePct:effectPct(currentCost,effectiveCost)};
   }
-  return {year:Number(year),supplierRegime,currentPrice,futurePrice,projection,estimatedCredit,futureCredit,buyers};
+  return {year:Number(year),supplierRegime,currentPrice,futurePrice,projection,
+   cbs:supplier.cbs,ibs:supplier.ibs,cbsPct:futurePrice?supplier.cbs/futurePrice*100:0,
+   ibsPct:futurePrice?supplier.ibs/futurePrice*100:0,
+   remnant:supplier.remnant,estimatedCredit,futureCredit,buyers};
  }
 
  function priceMemory(input,year){

@@ -180,7 +180,13 @@ close(event.buyers.presumido.effectiveCost,event.futurePrice-event.futureCredit)
 close(event.buyers.real.currentCost,90.75);
 close(event.buyers.real.changePct,(event.buyers.real.effectiveCost/90.75-1)*100);
 close(event.buyers.simples_hybrid.effectiveCost,event.buyers.presumido.effectiveCost);
-close(event.futureCredit,event.futurePrice*(.0931/1.0931),1e-8,'Crédito automático calculado por fora');
+close(event.cbs,event.futurePrice*.0921,1e-8,'CBS calculada sobre preço novo');
+close(event.ibs,event.futurePrice*.001,1e-8,'IBS calculado sobre preço novo');
+close(event.futureCredit,event.cbs+event.ibs,1e-8,'Crédito separado em CBS e IBS');
+const noBuyerCredit=engine.buyerPurchaseComparison({amount:100,supplierRegime:'presumido',currentRates:{icms:18},future:{mode:'rtav'},buyerPurchaseCredit:false},2027);
+close(noBuyerCredit.buyers.presumido.credit,0);
+close(noBuyerCredit.buyers.real.effectiveCost,noBuyerCredit.futurePrice);
+close(noBuyerCredit.cbs,event.cbs);
 
 // Equação do evento: líquido atual × (1 + tributos novos) / (1 − antigos remanescentes).
 const equationInput={amount:100,supplierRegime:'presumido',currentRates:{icms:18,iss:0,ipi:0},future:{mode:'rtav'}};

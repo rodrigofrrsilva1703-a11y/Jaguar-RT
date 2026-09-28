@@ -692,14 +692,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <section class="sim-block">
      <div class="sim-title"><span>01</span><div><b>Sua empresa e a compra</b><small>Regime do comprador e valor-base da aquisição.</small></div></div>
      <div class="fields three">
-      <div class="field wide"><label>Regime da sua empresa na comparação adicional entre fornecedores</label>
-       <select id="taxRegime">
-        <option value="presumido" selected>Lucro Presumido</option>
-        <option value="real">Lucro Real</option>
-        <option value="simples">Simples Nacional — padrão · não toma crédito</option>
-        <option value="simples_hybrid">Simples Nacional — híbrido · toma crédito IBS/CBS</option>
-       </select>
-      </div>
       <div class="field wide"><label>Valor total da compra, com tributos, R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <div class="field"><label>Regime do fornecedor</label><select id="exampleSupplier"><option value="presumido">Lucro Presumido</option><option value="real">Lucro Real</option><option value="simples">Simples Nacional</option><option value="simples_hybrid">Simples híbrido</option></select></div>
       <div class="field"><label>ICMS atual do fornecedor %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
@@ -707,11 +699,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div class="field"><label>IPI atual do fornecedor %</label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
       <div class="field"><label>Crédito atual do comprador no Lucro Real %</label><input id="priceCurrentRealCreditPct" type="number" min="0" max="100" step=".01" value="9.25"></div>
       <div class="field"><label>Crédito atual do comprador no Presumido %</label><input id="priceCurrentPresumedCreditPct" type="number" min="0" max="100" step=".01" value="0"></div>
+      <label class="main-credit-check" for="buyerPurchaseCredit"><input id="buyerPurchaseCredit" type="checkbox" checked><span><b>A compra nova permite aproveitar CBS/IBS</b><small>Marque para compras creditáveis dos clientes no regime regular ou no Simples híbrido.</small></span></label>
+     </div>
+
+     <details class="additional-options"><summary>Opções da comparação adicional entre fornecedores</summary>
+      <div class="field"><label>Regime da sua empresa</label>
+       <select id="taxRegime">
+        <option value="presumido" selected>Lucro Presumido</option>
+        <option value="real">Lucro Real</option>
+        <option value="simples">Simples Nacional — padrão · não toma crédito</option>
+        <option value="simples_hybrid">Simples Nacional — híbrido · toma crédito IBS/CBS</option>
+       </select>
+      </div>
       <label class="main-credit-check" for="priceTakesCbsIbsCredit">
        <input id="priceTakesCbsIbsCredit" type="checkbox" checked>
-       <span><b>Compra gera crédito na comparação adicional</b><small>Os cartões principais mostram cada regime de comprador. Nesta comparação, o Simples padrão não apropria crédito.</small></span>
+       <span><b>Compra gera crédito</b><small>O Simples padrão não aproveita crédito de CBS/IBS.</small></span>
       </label>
-     </div>
+     </details>
 
      <div id="simplesCurrentFields" class="regime-panel">
       <div class="subpanel-title"><b>Fornecedor do Simples Nacional</b><small>Use o RBT12 e o Anexo do fornecedor que deseja comparar.</small></div>
@@ -1025,8 +1029,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260928-51"></script>
+<script src="tax-engine.js?v=20260928-52"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260928-51" defer></script>
+<script src="app-v2.js?v=20260928-52" defer></script>
 </body>
 </html>
