@@ -659,7 +659,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
   <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
-   <span>01</span><div><b>Compra / custo efetivo</b><small>Hoje × Transição por regime</small></div>
+   <span>01</span><div><b>Compra / fornecedores</b><small>Compare LP · LR · Simples · Híbrido</small></div>
   </button>
   <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
@@ -670,110 +670,98 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <article class="integrated-tool tax-calculator">
    <div class="integrated-head">
     <div>
-     <span class="tag">CUSTO EFETIVO DA COMPRA</span>
-     <h3>Quanto a mesma compra custa para o regime da sua empresa?</h3>
-     <p>Informe o preço atual, o preço nominal na transição, o regime do comprador e os créditos aplicáveis. A ferramenta calcula o custo efetivo hoje, o custo efetivo no ano selecionado e a variação percentual.</p>
+     <span class="tag">COMPARADOR DE CUSTO DE COMPRA</span>
+     <h3>Quanto custa a mesma compra para cada regime de comprador?</h3>
+     <p>O preço futuro é calculado pela equação do evento a partir do preço líquido atual, dos tributos que permanecem e de CBS/IBS. Compare o custo efetivo para quatro regimes de comprador.</p>
     </div>
     <div class="tool-head-actions">
-     <div class="integration-badge"><b>Hoje × Transição</b><small>Preço · crédito · custo efetivo</small></div>
+     <div class="integration-badge"><b>4 cenários</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
      <button id="pricePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
      <button id="pricePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
     </div>
    </div>
 
    <div class="scenario-strip">
-    <div><small>REGIME DO COMPRADOR</small><b id="activeBuyerRegimeBadge">Lucro Presumido</b></div>
+    <div><small>FORNECEDOR ANALISADO</small><b id="activeSupplierBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
-    <div><small>COMPARAÇÃO</small><b>Hoje × Transição</b></div>
-    <div class="scenario-strip-note"><small>RESULTADO</small><b>Custo efetivo · variação</b></div>
+    <div><small>REGIMES DO COMPRADOR</small><b>Simples · LP · LR · Híbrido</b></div>
+    <div class="scenario-strip-note"><small>RESULTADO</small><b>Preço novo · crédito · custo efetivo</b></div>
    </div>
 
    <div class="tax-input-grid">
     <section class="sim-block">
-     <div class="sim-title"><span>01</span><div><b>Dados da compra</b><small>Entradas usadas diretamente no cálculo.</small></div></div>
+     <div class="sim-title"><span>01</span><div><b>Sua empresa e a compra</b><small>Regime do comprador e valor-base da aquisição.</small></div></div>
      <div class="fields three">
-      <div class="field wide"><label>Preço atual da nota R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
-      <div class="field wide"><label>Preço nominal na transição R$</label><input id="priceTransition" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="104,15" placeholder="0,00"></div>
-      <div class="field"><label>Regime do comprador</label>
-       <select id="purchaseBuyerRegime">
-        <option value="simples">Simples Nacional</option>
+      <div class="field wide"><label>Valor total da compra, com tributos, R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
+      <div class="field"><label>Regime do fornecedor</label><select id="exampleSupplier"><option value="presumido">Lucro Presumido</option><option value="real">Lucro Real</option><option value="simples">Simples Nacional</option><option value="simples_hybrid">Simples híbrido</option></select></div>
+      <div class="field"><label>ICMS atual do fornecedor %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
+      <div class="field"><label>ISS atual do fornecedor %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="0"></div>
+      <div class="field"><label>IPI atual do fornecedor %</label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
+      <div class="field"><label>Crédito atual do comprador no Lucro Real %</label><input id="priceCurrentRealCreditPct" type="number" min="0" max="100" step=".01" value="9.25"></div>
+      <div class="field"><label>Crédito atual do comprador no Presumido %</label><input id="priceCurrentPresumedCreditPct" type="number" min="0" max="100" step=".01" value="0"></div>
+      <label class="main-credit-check" for="buyerPurchaseCredit"><input id="buyerPurchaseCredit" type="checkbox" checked><span><b>A compra nova permite aproveitar CBS/IBS</b><small>Marque para compras creditáveis dos clientes no regime regular ou no Simples híbrido.</small></span></label>
+     </div>
+
+     <details class="additional-options"><summary>Opções da comparação adicional entre fornecedores</summary>
+      <div class="field"><label>Regime da sua empresa</label>
+       <select id="taxRegime">
         <option value="presumido" selected>Lucro Presumido</option>
         <option value="real">Lucro Real</option>
-        <option value="simples_hybrid">Simples híbrido</option>
+        <option value="simples">Simples Nacional — padrão · não toma crédito</option>
+        <option value="simples_hybrid">Simples Nacional — híbrido · toma crédito IBS/CBS</option>
        </select>
       </div>
-      <div class="field"><label>Ano da transição</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
-      <div class="field"><label>Crédito novo da reforma R$</label><input id="priceReformCredit" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="7,05" placeholder="0,00"></div>
-      <div class="field"><label>Crédito atual do Lucro Real %</label><input id="priceCurrentRealCreditPct" type="number" min="0" max="100" step=".01" value="9.25"></div>
+      <label class="main-credit-check" for="priceTakesCbsIbsCredit">
+       <input id="priceTakesCbsIbsCredit" type="checkbox" checked>
+       <span><b>Compra gera crédito</b><small>O Simples padrão não aproveita crédito de CBS/IBS.</small></span>
+      </label>
+     </details>
+
+     <div id="simplesCurrentFields" class="regime-panel">
+      <div class="subpanel-title"><b>Fornecedor do Simples Nacional</b><small>Use o RBT12 e o Anexo do fornecedor que deseja comparar.</small></div>
+      <div class="fields three">
+       <div class="field"><label>RBT12 do fornecedor R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
+       <div class="field"><label>Anexo do fornecedor</label>
+        <select id="snAnnex">
+         <option value="I" selected>Anexo I · Comércio</option>
+         <option value="II">Anexo II · Indústria</option>
+         <option value="III">Anexo III · Serviços</option>
+         <option value="IV">Anexo IV · Serviços</option>
+         <option value="V">Anexo V · Serviços</option>
+        </select>
+       </div>
+       <div class="field"><label>Faixa</label><input id="snBandLabel" type="text" readonly></div>
+       <div class="field wide"><label>Alíquota efetiva do DAS em 2026</label><input id="snCurrentEffective" type="text" readonly></div>
+      </div>
+      <div id="snAutoSummary" class="sn-auto-summary"></div>
      </div>
-     <div class="rate-note">Regras do cálculo principal: Simples Nacional sem crédito; Lucro Presumido com crédito atual zero e crédito novo na transição; Lucro Real com crédito atual de 9,25% por padrão e crédito novo na transição.</div>
     </section>
 
-    <details id="supplierAdditionalOptions" class="additional-options">
-     <summary>Comparação adicional automática por regime do fornecedor</summary>
-     <div class="tax-input-grid">
-      <section class="sim-block">
-       <div class="sim-title"><span>A</span><div><b>Empresa compradora</b><small>Usado apenas na comparação adicional.</small></div></div>
-       <div class="fields three">
-        <div class="field"><label>Regime da empresa</label>
-         <select id="taxRegime">
-          <option value="presumido" selected>Lucro Presumido</option>
-          <option value="real">Lucro Real</option>
-          <option value="simples">Simples Nacional — padrão</option>
-          <option value="simples_hybrid">Simples Nacional — híbrido</option>
-         </select>
-        </div>
-        <label class="main-credit-check" for="priceTakesCbsIbsCredit">
-         <input id="priceTakesCbsIbsCredit" type="checkbox" checked>
-         <span><b>Compra adicional gera crédito</b><small>O Simples padrão não aproveita crédito de CBS/IBS.</small></span>
-        </label>
-        <div class="field"><label>ICMS atual do fornecedor %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
-        <div class="field"><label>ISS atual do fornecedor %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="0"></div>
-        <div class="field"><label>IPI atual do fornecedor %</label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
-       </div>
-      </section>
-
-      <section id="simplesCurrentFields" class="sim-block">
-       <div class="sim-title"><span>B</span><div><b>Fornecedor do Simples</b><small>RBT12 e Anexo usados na comparação adicional.</small></div></div>
-       <div class="fields three">
-        <div class="field"><label>RBT12 do fornecedor R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
-        <div class="field"><label>Anexo do fornecedor</label>
-         <select id="snAnnex">
-          <option value="I" selected>Anexo I · Comércio</option>
-          <option value="II">Anexo II · Indústria</option>
-          <option value="III">Anexo III · Serviços</option>
-          <option value="IV">Anexo IV · Serviços</option>
-          <option value="V">Anexo V · Serviços</option>
-         </select>
-        </div>
-        <div class="field"><label>Faixa</label><input id="snBandLabel" type="text" readonly></div>
-        <div class="field wide"><label>Alíquota efetiva do DAS em 2026</label><input id="snCurrentEffective" type="text" readonly></div>
-       </div>
-       <div id="snAutoSummary" class="sn-auto-summary"></div>
-      </section>
-
-      <section id="regularFutureFields" class="sim-block">
-       <div class="sim-title"><span>C</span><div><b>Premissas futuras automáticas</b><small>Usadas apenas na comparação adicional por fornecedor.</small></div></div>
+    <section class="sim-block">
+     <div class="sim-title"><span>02</span><div><b>Reforma</b><small>Ano e premissas de CBS/IBS para os fornecedores regulares.</small></div></div>
+     <div class="fields three">
+      <div class="field"><label>Ano destacado</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
+      <div id="regularFutureFields" class="regime-panel wide">
        <div class="fields three">
         <div class="field"><label>Alíquotas futuras</label><select id="rateMode"><option value="rtav">CBS 9,21% · premissa</option><option value="manual">Manual / aplicável</option></select></div>
         <div class="field"><label>Redução %</label><input id="rateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
         <div class="field"><label>CBS %</label><input id="cbsRate" type="number" step=".001" value="9.21" readonly></div>
         <div class="field"><label>IBS %</label><input id="ibsRate" type="number" step=".001" value=".1" readonly></div>
        </div>
-       <div id="rateNote" class="rate-note"></div>
-      </section>
+      </div>
      </div>
-    </details>
+     <div id="rateNote" class="rate-note"></div>
+    </section>
    </div>
 
    <div id="priceValidation" class="validation-panel" aria-live="polite"></div>
    <div class="autosave-row"><span id="priceSaveStatus">Simulação salva neste navegador</span><button id="resetPriceSimulation" type="button">Restaurar padrão</button></div>
 
    <details class="scenario-manager">
-    <summary><span>Cenários salvos</span><small>Salve e compare configurações de compra</small></summary>
+    <summary><span>Cenários salvos</span><small>Salve e compare configurações da empresa compradora</small></summary>
     <div class="scenario-manager-grid">
      <div class="field"><label for="priceClientName">Cliente / empresa</label><input id="priceClientName" type="text" placeholder="Ex.: Cliente A"></div>
-     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Compra 2027"></div>
+     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Compra de mercadoria 2027"></div>
      <button id="savePriceScenario" class="scenario-action primary" type="button">Salvar cenário atual</button>
      <div class="field scenario-select"><label for="priceScenarioSelect">Cenário salvo</label><select id="priceScenarioSelect"><option value="">Nenhum cenário salvo</option></select></div>
      <button id="loadPriceScenario" class="scenario-action" type="button">Carregar</button>
@@ -784,36 +772,36 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
-    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO DO COMPRADOR</span><h3>Hoje × <span id="resultYearLabel">2027</span></h3></div><div class="yearly-actions"><div id="resultSignal" class="result-signal"></div><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div></div>
+    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO DO COMPRADOR</span><h3><span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">4 REGIMES</div></div>
     <div id="priceEquationMemory" class="rate-note" aria-live="polite"></div>
     <div id="buyerExample" class="buyer-example" aria-live="polite"></div>
+    <details><summary>Comparar também os quatro regimes de fornecedor</summary>
+    <div id="regimeResultNote" class="regime-result-note"></div>
+    <div id="integratedKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
 
-    <details>
-     <summary>Comparação adicional entre quatro regimes de fornecedor</summary>
-     <div id="regimeResultNote" class="regime-result-note"></div>
-     <div id="integratedKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
-     <div id="supplierComparisonGrid" class="supplier-comparison-grid" aria-live="polite"></div>
-     <div id="integratedExplanation" class="integrated-explanation" aria-live="polite"></div>
-     <details class="calc-memory">
-      <summary><span>Memória da comparação adicional</span><small>Premissas e valores dos quatro cenários de fornecedor</small></summary>
-      <div id="priceMemory" class="memory-grid"></div>
-     </details>
+    <div id="supplierComparisonGrid" class="supplier-comparison-grid" aria-live="polite"></div>
 
-     <section class="yearly-analysis">
-      <div class="yearly-head">
-       <div><span class="eyebrow">COMPARAÇÃO ADICIONAL</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Projeção automática por regime do fornecedor.</p></div>
+    <div id="integratedExplanation" class="integrated-explanation" aria-live="polite"></div>
+    <details class="calc-memory">
+     <summary><span>Memória de cálculo</span><small>Premissas e valores dos quatro cenários de fornecedor</small></summary>
+     <div id="priceMemory" class="memory-grid"></div>
+    </details>
 
-      </div>
-      <div id="yearlyPriceStrip" class="year-price-strip"></div>
-      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
-       <table class="comparison-table yearly-table compact-yearly-table price-year-table">
-        <thead><tr><th>Ano</th><th>Fornecedor LP</th><th>Fornecedor LR</th><th>Fornecedor Simples</th><th>Fornecedor Simples híbrido</th></tr></thead>
-        <tbody id="yearlyProjectionTable"></tbody>
-       </table>
-      </div>
-      <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
-      <div id="yearlyProjectionNote" class="rate-note yearly-note"></div>
-     </section>
+    <section class="yearly-analysis">
+     <div class="yearly-head">
+      <div><span class="eyebrow">CUSTO POR FORNECEDOR</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Custo efetivo da mesma compra conforme o regime do fornecedor.</p></div>
+      <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
+     </div>
+     <div id="yearlyPriceStrip" class="year-price-strip"></div>
+     <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
+      <table class="comparison-table yearly-table compact-yearly-table price-year-table">
+       <thead><tr><th>Ano</th><th>Fornecedor LP</th><th>Fornecedor LR</th><th>Fornecedor Simples</th><th>Fornecedor Simples híbrido</th></tr></thead>
+       <tbody id="yearlyProjectionTable"></tbody>
+      </table>
+     </div>
+     <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
+     <div id="yearlyProjectionNote" class="rate-note yearly-note"></div>
+    </section>
     </details>
    </section>
   </article>
@@ -1041,8 +1029,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260928-53"></script>
+<script src="tax-engine.js?v=20260928-52"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260928-53" defer></script>
+<script src="app-v2.js?v=20260928-52" defer></script>
 </body>
 </html>
