@@ -499,7 +499,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  .pdf-kpi small{display:block;font-size:7px;color:#777;text-transform:uppercase;letter-spacing:.05em}
  .pdf-kpi b{display:block;font-size:15px;margin-top:5px}
  .pdf-kpi span{display:block;font-size:7px;color:#666;margin-top:3px}
- .pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .supplier-pdf-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
  .pdf-card{border:1px solid #d9d9d3;border-radius:8px;padding:9px}
  .pdf-card h3{font-size:9px;margin:0 0 7px}
  .pdf-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #ededE8;padding:5px 0;font-size:8px}
@@ -652,7 +653,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
   <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
-   <span>01</span><div><b>Compra / custo efetivo</b><small>Aquisição de produto ou serviço</small></div>
+   <span>01</span><div><b>Compra / fornecedores</b><small>Compare LP · LR · Simples</small></div>
   </button>
   <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
