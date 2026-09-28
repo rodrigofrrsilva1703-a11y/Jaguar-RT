@@ -193,6 +193,12 @@ assert.ok(errors.some(x=>x.level==='error'),'Deve alertar valor zerado');
 assert.equal(rules.transition[2027].sourceType,'premissa');
 close(rules.transition[2027].cbs,9.21,1e-10,'CBS padrão 2027 deve ser 9,21%');
 close(rules.transition[2033].cbs,9.21,1e-10,'CBS padrão 2033 deve ser 9,21%');
+close(rules.transition[2029].ibs,1.87,1e-10,'IBS 2029 deve representar 10% de 18,70%');
+close(rules.transition[2030].ibs,3.74,1e-10,'IBS 2030 deve representar 20% de 18,70%');
+close(rules.transition[2031].ibs,5.61,1e-10,'IBS 2031 deve representar 30% de 18,70%');
+close(rules.transition[2032].ibs,7.48,1e-10,'IBS 2032 deve representar 40% de 18,70%');
+close(rules.transition[2033].ibs,18.70,1e-10,'IBS cheio 2033 deve ser 18,70%');
+close(rules.transition[2033].cbs+rules.transition[2033].ibs,27.91,1e-10,'CBS + IBS 2033 deve totalizar 27,91%');
 assert.ok(rules.metadata.warning.includes('Premissas'));
 
 console.log('✓ tax-engine: todos os testes passaram');
