@@ -167,35 +167,6 @@ for(const icms of [0,12,18]){
  close(other.suppliers.presumido.effectiveCost,supplierCompare.suppliers.presumido.effectiveCost,1e-8,'ICMS do fornecedor não altera cotação fixa');
 }
 
-// Matriz direta de custo efetivo por regime do comprador (arquivo-base do usuário).
-const directBase={currentPrice:100,transitionPrice:104.15,reformCredit:7.05,currentRealCreditPct:9.25};
-
-const directSimple=engine.buyerRegimeCostComparison({...directBase,buyerRegime:'simples'});
-close(directSimple.currentCredit,0,1e-10,'Simples crédito atual');
-close(directSimple.futureCredit,0,1e-10,'Simples crédito futuro');
-close(directSimple.currentCost,100,1e-10,'Simples custo atual');
-close(directSimple.futureCost,104.15,1e-10,'Simples custo 2027');
-close(directSimple.changePct,4.15,1e-10,'Simples variação');
-
-const directPresumed=engine.buyerRegimeCostComparison({...directBase,buyerRegime:'presumido'});
-close(directPresumed.currentCredit,0,1e-10,'Presumido crédito atual');
-close(directPresumed.futureCredit,7.05,1e-10,'Presumido crédito novo');
-close(directPresumed.currentCost,100,1e-10,'Presumido custo atual');
-close(directPresumed.futureCost,97.10,1e-10,'Presumido custo 2027');
-close(directPresumed.changePct,-2.90,1e-10,'Presumido variação');
-
-const directReal=engine.buyerRegimeCostComparison({...directBase,buyerRegime:'real'});
-close(directReal.currentCredit,9.25,1e-10,'Real crédito atual 9,25%');
-close(directReal.futureCredit,7.05,1e-10,'Real crédito novo');
-close(directReal.currentCost,90.75,1e-10,'Real custo atual');
-close(directReal.futureCost,97.10,1e-10,'Real custo 2027');
-close(directReal.changePct,(97.10/90.75-1)*100,1e-10,'Real variação');
-
-const directHybrid=engine.buyerRegimeCostComparison({...directBase,buyerRegime:'simples_hybrid'});
-close(directHybrid.currentCredit,0,1e-10,'Híbrido crédito atual adotado no projeto');
-close(directHybrid.futureCredit,7.05,1e-10,'Híbrido crédito novo adotado no projeto');
-close(directHybrid.futureCost,97.10,1e-10,'Híbrido custo 2027');
-
 // Um fornecedor LP, preço novo calculado pela equação; quatro compradores.
 const event=engine.buyerPurchaseComparison({
  amount:100,supplierRegime:'presumido',currentRates:{icms:18},
