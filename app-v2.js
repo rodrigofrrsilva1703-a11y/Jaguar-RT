@@ -281,7 +281,9 @@ function applyYearPreset(){
  if($('rateNote')){
   const company=regime();
   if(company==='simples'){
-   $('rateNote').textContent='Empresa compradora no Simples padrão: esta comparação não apropria créditos de CBS/IBS. Os quatro cenários de fornecedor continuam sendo comparados pelo custo bruto da aquisição.';
+   $('rateNote').textContent='Simples Nacional padrão: a empresa compradora não toma crédito de IBS/CBS. Os quatro cenários de fornecedor são comparados sem abatimento de crédito.';
+  }else if(company==='simples_hybrid'){
+   $('rateNote').textContent='Simples Nacional híbrido: IBS/CBS são apurados fora do DAS pelo regime regular; em compras creditáveis, a empresa pode aproveitar os créditos correspondentes.';
   }else{
    $('rateNote').textContent=($('rateMode')?.value==='manual')
     ? 'Regime regular da empresa compradora. CBS e IBS foram informados manualmente; a compra só gera crédito quando o tique estiver marcado.'
@@ -308,7 +310,8 @@ function purchaseComparison(year=Number($('priceYear')?.value||2027),input=price
 
 function regimeExplanation(){
  const r=regime();
- if(r==='simples') return 'Sua empresa está no Simples Nacional padrão: a comparação mostra os quatro cenários de fornecedor sem apropriação de créditos de CBS/IBS pela compradora.';
+ if(r==='simples') return 'Sua empresa está no Simples Nacional padrão: ela não se apropria de créditos de CBS/IBS. Por isso, o crédito da compradora fica zerado em todos os fornecedores.';
+ if(r==='simples_hybrid') return 'Sua empresa está no Simples Nacional híbrido: o Simples continua para os demais tributos, mas IBS/CBS são apurados pelo regime regular e podem gerar crédito nas aquisições creditáveis.';
  return 'Sua empresa está no regime regular: a mesma compra é comparada entre fornecedor no Lucro Presumido, Lucro Real, Simples Nacional padrão e Simples Nacional híbrido, com crédito quando a aquisição estiver marcada como creditável.';
 }
 
@@ -346,7 +349,7 @@ function supplierCardHtml(key,item){
    '<div class="supplier-line"><span>Preço da compra</span><b>'+money(item.price)+'</b></div>'+
    '<div class="supplier-line"><span>CBS</span><b>'+money(item.cbs||0)+'</b></div>'+
    '<div class="supplier-line"><span>IBS</span><b>'+money(item.ibs||0)+'</b></div>'+
-   '<div class="supplier-line"><span>Crédito aproveitado</span><b>'+money(item.credit||0)+'</b></div>'+
+   '<div class="supplier-line"><span>Crédito para sua empresa</span><b>'+money(item.credit||0)+'</b></div>'+
    '<div class="supplier-line"><span>Tributos remanescentes</span><b>'+money(item.remnant||0)+'</b></div>'+
   '</div>'+
  '</article>';
@@ -458,7 +461,7 @@ function calcIntegrated(){
   '<b>Comparação da mesma compra entre quatro cenários de fornecedor.</b><p>'+
   'A empresa compradora está no regime <strong>'+(REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime)+'</strong>. '+
   'O valor-base informado é '+money(comparison.amount)+'. Para fornecedor no Lucro Presumido e Lucro Real, PIS/Cofins atuais são aplicados conforme cada regime; ICMS/ISS/IPI usam as premissas informadas. '+
-  'Os fornecedores do Simples usam '+SN_LABELS[snAnnex()]+' e o RBT12 informado; o cenário híbrido calcula CBS/IBS fora do DAS remanescente. '+
+  'Os fornecedores do Simples usam '+SN_LABELS[snAnnex()]+' e o RBT12 informado. No Simples padrão, o fornecedor não toma crédito; porém, se a sua empresa estiver no regime regular, ela pode receber o crédito limitado ao IBS/CBS devido pelo fornecedor no Simples. No híbrido, IBS/CBS ficam fora do DAS e seguem o regime regular. '+
   (comparison.creditEnabled
    ?'Como a empresa está no regime regular e a compra foi marcada como creditável, o custo efetivo desconta os créditos de CBS/IBS permitidos em cada cenário.'
    :'Nesta configuração, nenhum crédito de CBS/IBS é abatido do custo efetivo.')+
