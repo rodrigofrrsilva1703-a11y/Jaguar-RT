@@ -5,7 +5,7 @@ Plataforma estática da Jaguar Assessoria Contábil para estudo, simulação e a
 ## O que existe hoje
 
 - 13 módulos de estudo técnico e didático
-- casos práticos com filtros por regime e setor
+- testes de 10 perguntas por módulo ou mistos, com correção e revisão
 - linha do tempo 2026–2033
 - calculadora de preço de venda
 - calculadora de faturamento
@@ -22,7 +22,8 @@ Plataforma estática da Jaguar Assessoria Contábil para estudo, simulação e a
 ## Arquitetura
 
 - `index.html` — interface e estilos
-- `content-v2.js` — módulos, casos, FAQ, linha do tempo e fontes
+- `content-v2.js` — módulos, linha do tempo e fontes
+- `quiz-bank.js` e `quiz-engine.js` — banco de questões e seleção/correção dos testes
 - `tax-rules.js` — base versionada de regras e premissas
 - `tax-engine.js` — motor puro de cálculo, sem dependência do DOM
 - `app-v2.js` — integração da interface com o motor, armazenamento e relatórios

@@ -4,7 +4,7 @@
   "private": true,
   "description": "Plataforma Jaguar × RTAV — estudos e simuladores da Reforma Tributária",
   "scripts": {
-    "test": "node tests/tax-engine.test.js",
+    "test": "node tests/tax-engine.test.js && node tests/quiz-engine.test.js",
     "test:e2e": "playwright test"
   },
   "devDependencies": {

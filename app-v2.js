@@ -52,44 +52,9 @@ function courseText(value){
  }).join('');
 }
 
-function renderPracticeGrid(){
- const q=($('practiceSearch')?.value||'').trim().toLowerCase();
- const regime=$('practiceRegimeFilter')?.value||'';
- const sector=$('practiceSectorFilter')?.value||'';
-
- const filtered=PRACTICES.filter(p=>{
-  const text=JSON.stringify(p).toLowerCase();
-  const matchQ=!q||text.includes(q);
-  const matchRegime=!regime||(p.regimes||[]).includes(regime);
-  const matchSector=!sector||p.sector===sector;
-  return matchQ&&matchRegime&&matchSector;
- });
-
- if(!$('practiceGrid')) return;
- $('practiceGrid').innerHTML=filtered.length?filtered.map(p=>{
-  const i=PRACTICES.indexOf(p);
-  return `<article class="practice-card">
-   <div><span class="tag">${p.tag}</span><span class="practice-code">${p.id}</span></div>
-   <h3>${p.title}</h3>
-   <p>${p.subtitle}</p>
-   <div class="practice-meta"><span>${p.steps.length} etapas</span><span>resolução completa</span></div>
-   <button class="practice-open" onclick="openPractice(${i})">Abrir caso completo →</button>
-  </article>`;
- }).join(''):'<div class="empty">Nenhum caso encontrado com esses filtros.</div>';
-}
-
-function renderClientFaq(){
- if(!$('clientFaqGrid')||typeof CLIENT_FAQ==='undefined') return;
- $('clientFaqGrid').innerHTML=CLIENT_FAQ.map(item=>`
-  <details><summary>${item.q}</summary><p>${item.a}</p></details>
- `).join('');
-}
-
 function renderHome(){
  if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
  if($('moduleGrid')) $('moduleGrid').innerHTML=STUDY_MODULES.map(moduleCard).join('');
- renderPracticeGrid();
- renderClientFaq();
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
@@ -97,37 +62,117 @@ function renderHome(){
  pickYear('2027');
 }
 
-function openPractice(i){
- const p=PRACTICES[i];
- if(!p)return;
- const premises=p.premises.map(x=>`<li>${x}</li>`).join('');
- const steps=p.steps.map((s,j)=>`<article class="case-step">
-   <div class="case-step-top"><span>ETAPA ${String(j+1).padStart(2,'0')}</span></div>
-   <h3>${s.t}</h3>
-   <div class="case-calc">${s.calc}</div>
-   <p>${s.x}</p>
- </article>`).join('');
- $('practicePage').innerHTML=`
-   <button class="back" onclick="go('practice')">← Voltar para práticas</button>
-   <div class="case-hero">
-     <div><span class="tag">${p.tag}</span><span class="practice-code">${p.id}</span>
-     <h1 class="page-title">${p.title}</h1><p class="page-lead">${p.subtitle}</p></div>
-   </div>
-   <section class="case-context">
-     <div><span class="eyebrow">CENÁRIO</span><h2>O que está acontecendo?</h2><p>${p.scenario}</p></div>
-     <div><span class="eyebrow">OBJETIVO</span><h2>O que você precisa aprender?</h2><p>${p.objective}</p></div>
-   </section>
-   <section class="case-premises"><span class="eyebrow">ANTES DE CALCULAR</span><h2>Premissas do caso</h2><ul>${premises}</ul></section>
-   <section class="case-resolution"><span class="eyebrow">RESOLUÇÃO GUIADA</span><h2>Passo a passo</h2>${steps}</section>
-   <section class="case-result"><span class="eyebrow">RESULTADO</span><h2>${p.result}</h2><p>${p.interpretation}</p></section>
-   <section class="case-two">
-     <div class="case-note warning"><span class="eyebrow">ERRO COMUM</span><h3>O que evitar</h3><p>${p.error}</p></div>
-     <div class="case-note client"><span class="eyebrow">COMO EXPLICAR AO CLIENTE</span><h3>Tradução consultiva</h3><p>${p.client}</p></div>
-   </section>
-   <details class="case-challenge"><summary>Teste de compreensão</summary><div><b>${p.challenge}</b><p>${p.challengeAnswer}</p></div></details>
-   <div class="legal-box"><b>Base deste caso</b><p>${p.source}</p></div>
- `;
- go('practicePage');
+const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v1';
+const QUIZ_SESSION_KEY='jaguar-rtav-quiz-session-v1';
+let quizSession=null;
+function quizRead(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
+function quizSave(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch(e){}}
+function quizTitle(id){return id==='all'?'Todos os módulos':`Módulo ${id} · ${STUDY_MODULES.find(m=>m.id===id)?.title||''}`;}
+function updateQuizStats(){
+ const el=$('quizStats');if(!el)return;
+ const key=$('quizModule')?.value||'all';
+ const stats=quizRead(QUIZ_HISTORY_KEY,{results:{}}).results?.[key];
+ el.textContent=stats?`${stats.attempts} tentativa${stats.attempts===1?'':'s'} · última nota ${stats.last}/10 · melhor nota ${stats.best}/10`:'Primeiro teste deste conteúdo · seu desempenho aparecerá aqui.';
+}
+function updateQuizResume(){
+ if(!quizSession||!$('quizResume'))return;
+ $('quizResume').innerHTML=`<button type="button" onclick="resumeQuiz()">${quizSession.finished?'Rever resultado':'Continuar teste'} · ${courseEscape(quizTitle(quizSession.scope))} →</button>`;
+}
+
+function initQuiz(){
+ const select=$('quizModule');
+ if(!select)return;
+ select.innerHTML='<option value="all">Todos os módulos · 10 perguntas mistas</option>'+STUDY_MODULES.map(m=>`<option value="${m.id}">Módulo ${m.id} · ${courseEscape(m.title)}</option>`).join('');
+ const saved=quizRead(QUIZ_SESSION_KEY,null);
+ if(saved?.questions?.length===10&&saved.questions.every(q=>QUIZ_BANK[q.module])){
+  quizSession=saved;
+  select.value=saved.scope;
+  updateQuizResume();
+ }
+ select.addEventListener('change',updateQuizStats);
+ updateQuizStats();
+}
+
+function startQuiz(same=false,scope){
+ if(same&&(!quizSession||quizSession.questions.length!==10))return;
+ if(same){quizSession={...quizSession,answers:Array(10).fill(null),finished:false};}
+ else{
+  const selected=scope||$('quizModule').value;
+  const history=quizRead(QUIZ_HISTORY_KEY,{seen:[],moduleCounts:{}});
+  const previous=quizSession?.scope===selected?quizSession.questions.map(q=>q.id):[];
+  const questions=RTAV_QUIZ.build(selected,QUIZ_BANK,history.seen||[],history.moduleCounts||{},previous);
+  quizSession={scope:selected,questions,answers:Array(10).fill(null),finished:false};
+  $('quizModule').value=selected;
+ }
+ quizSave(QUIZ_SESSION_KEY,quizSession);
+ updateQuizResume();
+ renderQuiz();
+ go('quizPage');
+}
+
+function startModuleQuiz(id){startQuiz(false,id);}
+
+function resumeQuiz(){if(quizSession){renderQuiz();go('quizPage');}}
+
+function quizAnswer(index,option){
+ if(!quizSession||quizSession.finished)return;
+ quizSession.answers[index]=option;
+ quizSave(QUIZ_SESSION_KEY,quizSession);
+ const answered=quizSession.answers.filter(x=>x!==null).length;
+ $('quizProgress').textContent=`${answered} de 10 respondidas`;
+ $('quizProgressBar').style.width=`${answered*10}%`;
+ $('quizError').textContent='';
+}
+
+function renderQuiz(){
+ const s=quizSession;if(!s)return;
+ if(s.finished){renderQuizResult();return;}
+ const answered=s.answers.filter(x=>x!==null).length;
+ $('quizPage').innerHTML=`<button class="back" onclick="go('quiz')">← Escolher teste</button>
+  <span class="module-no">${courseEscape(quizTitle(s.scope))}</span><h1 class="page-title">Teste de conhecimento</h1>
+  <p class="page-lead">Responda as 10 questões. O resultado e as explicações aparecem após a entrega.</p>
+  <div class="quiz-progress"><span id="quizProgress">${answered} de 10 respondidas</span><div><i id="quizProgressBar" style="width:${answered*10}%"></i></div></div>
+  <form id="quizForm" onsubmit="event.preventDefault();finishQuiz()">${s.questions.map((q,i)=>`
+   <fieldset class="quiz-question" id="quiz-question-${i}"><legend><small>QUESTÃO ${String(i+1).padStart(2,'0')} · MÓDULO ${q.module}</small><strong>${courseEscape(q.prompt)}</strong></legend>
+   ${q.options.map((option,j)=>`<label class="quiz-option"><input type="radio" name="question-${i}" value="${j}" ${s.answers[i]===j?'checked':''} onchange="quizAnswer(${i},${j})"><span>${courseEscape(option)}</span></label>`).join('')}</fieldset>`).join('')}
+   <p id="quizError" class="quiz-error" role="alert"></p><button class="quiz-primary quiz-submit" type="submit">Conferir respostas →</button></form>`;
+}
+
+function finishQuiz(){
+ const s=quizSession;if(!s||s.finished)return;
+ const missing=s.answers.findIndex(x=>x===null);
+ if(missing!==-1){$('quizError').textContent=`Responda a questão ${missing+1} antes de conferir.`;$(`quiz-question-${missing}`).scrollIntoView({behavior:'smooth',block:'center'});return;}
+ const history=quizRead(QUIZ_HISTORY_KEY,{seen:[],moduleCounts:{}});
+ history.seen=[...new Set([...(history.seen||[]),...s.questions.map(q=>q.id)])];
+ history.moduleCounts=history.moduleCounts||{};
+ s.questions.forEach(q=>{history.moduleCounts[q.module]=(history.moduleCounts[q.module]||0)+1;});
+ history.results=history.results||{};
+ const prev=history.results[s.scope]||{attempts:0,best:0};
+ const score=RTAV_QUIZ.grade(s.questions,s.answers).score;
+ history.results[s.scope]={attempts:prev.attempts+1,last:score,best:Math.max(prev.best,score)};
+ quizSave(QUIZ_HISTORY_KEY,history);
+ updateQuizStats();
+ s.finished=true;
+ quizSave(QUIZ_SESSION_KEY,s);
+ updateQuizResume();
+ renderQuizResult();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderQuizResult(){
+ const s=quizSession;if(!s)return;
+ const result=RTAV_QUIZ.grade(s.questions,s.answers);
+ $('quizPage').innerHTML=`<button class="back" onclick="go('quiz')">← Escolher teste</button>
+  <span class="module-no">${courseEscape(quizTitle(s.scope))}</span>
+  <div class="quiz-result"><small>RESULTADO DO TESTE</small><h1>${result.score} de ${result.total}</h1><p>${result.score===10?'Você acertou todas. Gere uma nova seleção para avançar.':'Veja as explicações abaixo e revise os módulos em que teve dúvida.'}</p></div>
+  <div class="quiz-actions"><button class="quiz-primary" onclick="startQuiz(true)">Refazer este teste</button><button onclick="startQuiz(false,'${s.scope}')">Novo teste · ${s.scope==='all'?'todos os módulos':'módulo '+s.scope}</button></div>
+  <div class="quiz-review">${s.questions.map((q,i)=>`<article class="quiz-review-item ${result.details[i].ok?'is-correct':'is-wrong'}">
+   <small>QUESTÃO ${i+1} · MÓDULO ${q.module} · ${result.details[i].ok?'ACERTOU':'REVISAR'}</small><h2>${courseEscape(q.prompt)}</h2>
+   <p>Sua resposta: <b>${courseEscape(q.options[s.answers[i]])}</b></p>
+   ${result.details[i].ok?'':`<p>Resposta correta: <b>${courseEscape(q.options[q.correct])}</b></p>`}
+   <div class="quiz-explanation">${courseEscape(q.explanation)}</div><button onclick="openModule('${q.module}')">Revisar módulo ${q.module} →</button>
+  </article>`).join('')}</div>
+  <div class="quiz-actions"><button class="quiz-primary" onclick="startQuiz(true)">Refazer as mesmas perguntas</button><button onclick="startQuiz(false,'${s.scope}')">Gerar perguntas novas →</button></div>`;
 }
 
 function openModule(id){
@@ -147,6 +192,7 @@ function openModule(id){
    <div class="course-note"><b>Premissas dos exemplos</b><p>Os valores de CBS 9,21% e IBS 18,70% são parâmetros didáticos deste curso. A alíquota efetiva e os créditos dependem do ano, do destino, do regime, da operação e dos requisitos legais. Confira as regras vigentes antes de aplicar um exemplo a uma empresa.</p></div>
    <nav class="course-toc" aria-label="Nesta aula">${m.blocks.map((b,i)=>`<a href="#course-${m.id}-${i+1}">${courseEscape(b.t)}</a>`).join('')}</nav>
    <div class="lesson-stack">${blocks}</div>
+   <div class="course-quiz-callout"><div><b>Concluiu a leitura?</b><span>Confira o que aprendeu em 10 perguntas deste módulo.</span></div><button class="quiz-primary" onclick="startModuleQuiz('${m.id}')">Fazer teste do módulo ${m.id} →</button></div>
    <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
   go('modulePage');
   return;
@@ -1458,9 +1504,6 @@ $('revHybridRateMode')?.addEventListener('change',function(){
 $('revCurrentRevenue')?.addEventListener('blur',function(){formatMoneyInput(this);revCalcIntegrated();});
 
 
-$('practiceSearch')?.addEventListener('input',renderPracticeGrid);
-$('practiceRegimeFilter')?.addEventListener('change',renderPracticeGrid);
-$('practiceSectorFilter')?.addEventListener('change',renderPracticeGrid);
 ['lpRevenue','lpPresumption'].forEach(function(id){$(id)?.addEventListener('input',calcLP);});
 function calcLP(){
  if(!$('lpResult')) return;
@@ -1473,6 +1516,7 @@ function calcLP(){
 }
 
 renderHome();
+initQuiz();
 searchModules('');
 
 updateSnSummary();

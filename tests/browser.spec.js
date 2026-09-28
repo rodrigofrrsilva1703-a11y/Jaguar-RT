@@ -5,6 +5,33 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
+test('teste por módulo corrige, refaz e troca perguntas; teste geral mistura módulos',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=quiz',{waitUntil:'domcontentloaded'});
+ await page.locator('nav [data-go="quiz"]').click();
+ await page.locator('#quizModule').selectOption('05');
+ await page.locator('#quiz .quiz-primary').click();
+ await expect(page.locator('#quizPage .quiz-question')).toHaveCount(10);
+ const initialIds=await page.evaluate(()=>quizSession.questions.map(q=>q.id));
+ await page.locator('#quizPage .quiz-option').first().click();
+ await expect(page.locator('#quizProgress')).toContainText('1 de 10');
+ await page.locator('.quiz-submit').click();
+ await expect(page.locator('#quizError')).toContainText('questão 2');
+ for(let i=1;i<10;i++)await page.locator(`#quiz-question-${i} .quiz-option`).first().click();
+ await page.locator('.quiz-submit').click();
+ await expect(page.locator('.quiz-review-item')).toHaveCount(10);
+ await page.locator('.quiz-actions').first().getByText('Refazer este teste').click();
+ expect(await page.evaluate(()=>quizSession.questions.map(q=>q.id))).toEqual(initialIds);
+ for(let i=0;i<10;i++)await page.locator(`#quiz-question-${i} .quiz-option`).first().click();
+ await page.locator('.quiz-submit').click();
+ await page.locator('.quiz-actions').first().getByText('Novo teste').click();
+ const renewed=await page.evaluate(()=>quizSession.questions.map(q=>q.id));
+ expect(renewed.some(id=>!initialIds.includes(id))).toBe(true);
+ await page.locator('#quizPage .back').click();
+ await page.locator('#quizModule').selectOption('all');
+ await page.locator('#quiz .quiz-primary').click();
+ expect(await page.evaluate(()=>new Set(quizSession.questions.map(q=>q.module)).size)).toBe(10);
+});
+
 async function supplierValue(card,label){
  return brl(await card.locator('.supplier-line').filter({hasText:label}).locator('b').textContent());
 }
