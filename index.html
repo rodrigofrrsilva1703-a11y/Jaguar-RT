@@ -640,12 +640,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <section id="tools" class="view">
  <div class="section-head">
   <div><span class="eyebrow">FERRAMENTAS</span><h2>Análise tributária 2026 → 2033</h2></div>
-  <p>Escolha se quer analisar o preço de uma venda ou o faturamento da empresa.</p>
+  <p>Escolha se quer analisar o custo efetivo de uma compra ou o faturamento da empresa.</p>
  </div>
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
   <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
-   <span>01</span><div><b>Preço de venda</b><small>Produto ou serviço individual</small></div>
+   <span>01</span><div><b>Compra / custo efetivo</b><small>Aquisição de produto ou serviço</small></div>
   </button>
   <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
@@ -656,29 +656,29 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <article class="integrated-tool tax-calculator">
    <div class="integrated-head">
     <div>
-     <span class="tag">CALCULADORA DE PREÇO</span>
-     <h3>Quanto do preço é tributo e como ele muda até 2033?</h3>
-     <p>Informe o preço atual e os tributos aplicáveis. A ferramenta encontra o líquido de 2026 e reconstrói o preço ano a ano.</p>
+     <span class="tag">CALCULADORA DE CUSTO EFETIVO</span>
+     <h3>Quanto uma compra realmente custa depois dos créditos tributários?</h3>
+     <p>Informe o preço atual da compra e a tributação do fornecedor. A ferramenta projeta a aquisição na reforma e mostra o custo efetivo após os créditos aproveitáveis.</p>
     </div>
     <div class="tool-head-actions">
-     <div class="integration-badge"><b>Venda unitária</b><small>Preço · tributos · líquido</small></div>
+     <div class="integration-badge"><b>Aquisição unitária</b><small>Preço de compra · crédito · custo efetivo</small></div>
      <button id="pricePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
      <button id="pricePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
     </div>
    </div>
 
    <div class="scenario-strip">
-    <div><small>REGIME</small><b id="activeRegimeBadge">Lucro Presumido</b></div>
+    <div><small>REGIME DO FORNECEDOR</small><b id="activeRegimeBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
-    <div><small>MÉTODO</small><b>Primeiro o novo, depois o velho</b></div>
-    <div class="scenario-strip-note"><small>BASE</small><b>Valor líquido de 2026</b></div>
+    <div><small>MÉTODO</small><b>Preserva o líquido do fornecedor</b></div>
+    <div class="scenario-strip-note"><small>RESULTADO</small><b>Custo efetivo da aquisição</b></div>
    </div>
 
    <div class="tax-input-grid">
     <section class="sim-block">
-     <div class="sim-title"><span>01</span><div><b>Venda atual</b><small>Regime, preço e tributos atuais.</small></div></div>
+     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Preço da aquisição, fornecedor e crédito atual.</small></div></div>
      <div class="fields three">
-      <div class="field wide"><label>Regime tributário</label>
+      <div class="field wide"><label>Regime tributário do fornecedor</label>
        <select id="taxRegime">
         <option value="presumido" selected>Lucro Presumido</option>
         <option value="real">Lucro Real</option>
@@ -687,17 +687,18 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
         <option value="manual">Outro / manual</option>
        </select>
       </div>
-      <div class="field wide"><label>Preço atual do produto/serviço R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
+      <div class="field wide"><label>Preço atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
+      <div class="field wide"><label>Crédito atual aproveitável R$</label><input id="priceCurrentBuyerCredit" type="number" min="0" step=".01" value="0"></div>
       <label class="main-credit-check" for="priceTakesCbsIbsCredit">
        <input id="priceTakesCbsIbsCredit" type="checkbox">
-       <span><b>Aproveita crédito de CBS/IBS</b><small>Indica o direito ao crédito; o valor depende das aquisições da empresa.</small></span>
+       <span><b>Aproveita crédito de CBS/IBS nesta compra</b><small>Quando marcado, o custo efetivo desconta o CBS + IBS calculado na aquisição.</small></span>
       </label>
      </div>
 
      <div id="regularCurrentFields" class="regime-panel">
-      <div class="subpanel-title"><b>Tributos atuais da venda</b><small>Informe as alíquotas aplicáveis ao cenário do cliente.</small></div>
+      <div class="subpanel-title"><b>Tributos atuais na formação do preço</b><small>Informe as alíquotas aplicáveis ao fornecedor para reconstruir a compra na reforma.</small></div>
       <div class="preset-row">
-       <label for="priceQuickPreset">Exemplo editável</label>
+       <label for="priceQuickPreset">Exemplo do fornecedor</label>
        <select id="priceQuickPreset">
         <option value="">Preenchimento manual</option>
         <option value="commerce_lp">Comércio · LP · ICMS 18%</option>
@@ -735,7 +736,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     </section>
 
     <section class="sim-block">
-     <div class="sim-title"><span>02</span><div><b>Reforma</b><small>Premissas da projeção de preço.</small></div></div>
+     <div class="sim-title"><span>02</span><div><b>Compra na reforma</b><small>Premissas para projetar o preço da aquisição e o custo efetivo.</small></div></div>
      <div class="fields three">
       <div class="field"><label>Ano destacado</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
 
@@ -769,18 +770,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     </section>
    </div>
 
-   <details id="priceAdvanced" class="advanced-analysis">
-    <summary><span>Análise avançada</span><small>B2B/B2C e crédito econômico do comprador</small></summary>
-    <div class="advanced-grid">
-     <div class="field"><label for="priceBuyerProfile">Perfil da venda</label>
-      <select id="priceBuyerProfile"><option value="b2c" selected>Consumidor final / sem crédito</option><option value="b2b">PJ no regime regular / com crédito</option></select>
-     </div>
-     <div class="field"><label for="priceCurrentBuyerCredit">Crédito atual aproveitável por venda R$</label><input id="priceCurrentBuyerCredit" type="number" min="0" step=".01" value="0"></div>
-     <div class="field"><label for="priceBuyerCreditPct">Aproveitamento do CBS/IBS destacado pelo comprador %</label><input id="priceBuyerCreditPct" type="number" min="0" max="100" step=".01" value="100"></div>
-    </div>
-    <div class="rate-note">O crédito do comprador é uma análise econômica separada do crédito de CBS/IBS considerado na formação do preço.</div>
-   </details>
-
    <div id="priceValidation" class="validation-panel" aria-live="polite"></div>
    <div class="autosave-row"><span id="priceSaveStatus">Simulação salva neste navegador</span><button id="resetPriceSimulation" type="button">Restaurar padrão</button></div>
 
@@ -788,7 +777,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <summary><span>Cenários salvos</span><small>Salve e compare simulações deste navegador</small></summary>
     <div class="scenario-manager-grid">
      <div class="field"><label for="priceClientName">Cliente / empresa</label><input id="priceClientName" type="text" placeholder="Ex.: Cliente A"></div>
-     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Venda B2B 2027"></div>
+     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Compra de insumo 2027"></div>
      <button id="savePriceScenario" class="scenario-action primary" type="button">Salvar cenário atual</button>
      <div class="field scenario-select"><label for="priceScenarioSelect">Cenário salvo</label><select id="priceScenarioSelect"><option value="">Nenhum cenário salvo</option></select></div>
      <button id="loadPriceScenario" class="scenario-action" type="button">Carregar</button>
@@ -799,7 +788,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
-    <div class="result-head"><div><span class="eyebrow">RESULTADO DO PREÇO</span><h3>2026 × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal"></div></div>
+    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO DA COMPRA</span><h3>2026 × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal"></div></div>
     <div id="regimeResultNote" class="regime-result-note"></div>
     <div id="integratedKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
 
@@ -816,17 +805,17 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
     <section class="yearly-analysis">
      <div class="yearly-head">
-      <div><span class="eyebrow">PREÇO ANO A ANO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Preço, tributos e valor líquido por venda.</p></div>
+      <div><span class="eyebrow">COMPRA ANO A ANO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Preço da compra, créditos de CBS/IBS e custo efetivo.</p></div>
       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
      <div id="yearlyPriceStrip" class="year-price-strip"></div>
      <div class="chart-card">
-      <div class="chart-head"><div><span class="eyebrow">VISUAL DA TRANSIÇÃO</span><h4>Composição tributária por ano</h4></div><small>CBS · IBS · tributos remanescentes</small></div>
+      <div class="chart-head"><div><span class="eyebrow">VISUAL DA TRANSIÇÃO</span><h4>Tributos da aquisição por ano</h4></div><small>CBS · IBS · tributos remanescentes</small></div>
       <div id="priceTaxChart" class="tax-chart" role="img" aria-label="Gráfico da composição tributária de 2026 a 2033"></div>
      </div>
      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
       <table class="comparison-table yearly-table compact-yearly-table price-year-table">
-       <thead><tr><th>Ano</th><th>Preço</th><th>Tributos</th><th id="priceYearlyLoadHeader">Carga</th><th id="priceYearlyNetHeader">Valor líquido</th></tr></thead>
+       <thead><tr><th>Ano</th><th>Preço da compra</th><th>CBS</th><th>IBS</th><th>Crédito</th><th>Custo efetivo</th></tr></thead>
        <tbody id="yearlyProjectionTable"></tbody>
       </table>
      </div>
@@ -1055,10 +1044,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  <button data-go="search">Buscar</button>
 </div>
 
-<script src="content-v2.js?v=20260927-44"></script>
-<script src="tax-rules.js?v=20260927-44"></script>
-<script src="tax-engine.js?v=20260927-44"></script>
+<script src="content-v2.js?v=20260928-45"></script>
+<script src="tax-rules.js?v=20260928-45"></script>
+<script src="tax-engine.js?v=20260928-45"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260927-44" defer></script>
+<script src="app-v2.js?v=20260928-45" defer></script>
 </body>
 </html>
