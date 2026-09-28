@@ -671,8 +671,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <div class="integrated-head">
     <div>
      <span class="tag">COMPARADOR DE CUSTO DE COMPRA</span>
-     <h3>Quanto custa a mesma compra para cada regime de comprador?</h3>
-     <p>O preço futuro é calculado pela equação do evento a partir do preço líquido atual, dos tributos que permanecem e de CBS/IBS. Compare o custo efetivo para quatro regimes de comprador.</p>
+     <h3>Como o regime do fornecedor muda o custo efetivo da sua empresa?</h3>
+     <p>Escolha o regime da empresa compradora. A mesma compra será comparada entre fornecedor no Lucro Presumido, Lucro Real, Simples Nacional padrão e Simples Nacional híbrido.</p>
     </div>
     <div class="tool-head-actions">
      <div class="integration-badge"><b>4 cenários</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
@@ -682,40 +682,39 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    </div>
 
    <div class="scenario-strip">
-    <div><small>FORNECEDOR ANALISADO</small><b id="activeSupplierBadge">Lucro Presumido</b></div>
+    <div><small>REGIME DA SUA EMPRESA</small><b id="activeRegimeBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
-    <div><small>REGIMES DO COMPRADOR</small><b>Simples · LP · LR · Híbrido</b></div>
-    <div class="scenario-strip-note"><small>RESULTADO</small><b>Preço novo · crédito · custo efetivo</b></div>
+    <div><small>FORNECEDORES</small><b>LP · LR · Simples · Híbrido</b></div>
+    <div class="scenario-strip-note"><small>RESULTADO</small><b>Custo efetivo por fornecedor</b></div>
    </div>
 
    <div class="tax-input-grid">
     <section class="sim-block">
      <div class="sim-title"><span>01</span><div><b>Sua empresa e a compra</b><small>Regime do comprador e valor-base da aquisição.</small></div></div>
      <div class="fields three">
-      <div class="field wide"><label>Valor total da compra, com tributos, R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
-      <div class="field"><label>Regime do fornecedor</label><select id="exampleSupplier"><option value="presumido">Lucro Presumido</option><option value="real">Lucro Real</option><option value="simples">Simples Nacional</option><option value="simples_hybrid">Simples híbrido</option></select></div>
-      <div class="field"><label>ICMS atual do fornecedor %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
-      <div class="field"><label>ISS atual do fornecedor %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="0"></div>
-      <div class="field"><label>IPI atual do fornecedor %</label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
-      <div class="field"><label>Crédito atual do comprador no Lucro Real %</label><input id="priceCurrentRealCreditPct" type="number" min="0" max="100" step=".01" value="9.25"></div>
-      <div class="field"><label>Crédito atual do comprador no Presumido %</label><input id="priceCurrentPresumedCreditPct" type="number" min="0" max="100" step=".01" value="0"></div>
-      <label class="main-credit-check" for="buyerPurchaseCredit"><input id="buyerPurchaseCredit" type="checkbox" checked><span><b>A compra nova permite aproveitar CBS/IBS</b><small>Marque para compras creditáveis dos clientes no regime regular ou no Simples híbrido.</small></span></label>
-     </div>
-
-     <details class="additional-options"><summary>Opções da comparação adicional entre fornecedores</summary>
-      <div class="field"><label>Regime da sua empresa</label>
+      <div class="field wide"><label>Regime tributário da sua empresa</label>
        <select id="taxRegime">
         <option value="presumido" selected>Lucro Presumido</option>
         <option value="real">Lucro Real</option>
-        <option value="simples">Simples Nacional — padrão · não toma crédito</option>
-        <option value="simples_hybrid">Simples Nacional — híbrido · toma crédito IBS/CBS</option>
+        <option value="simples">Simples Nacional — padrão</option>
+        <option value="simples_hybrid">Simples Nacional — híbrido</option>
        </select>
       </div>
+      <div class="field wide"><label>Valor atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <label class="main-credit-check" for="priceTakesCbsIbsCredit">
        <input id="priceTakesCbsIbsCredit" type="checkbox" checked>
-       <span><b>Compra gera crédito</b><small>O Simples padrão não aproveita crédito de CBS/IBS.</small></span>
+       <span><b>Esta compra gera crédito de CBS/IBS</b><small>No regime regular, desconta o crédito permitido para chegar ao custo efetivo.</small></span>
       </label>
-     </details>
+     </div>
+
+     <div id="regularCurrentFields" class="regime-panel">
+      <div class="subpanel-title"><b>Tributos comuns dos fornecedores regulares</b><small>PIS/Cofins são definidos automaticamente: LP 0,65%/3% e LR 1,65%/7,6%.</small></div>
+      <div class="fields three">
+       <div class="field"><label>ICMS %</label><input id="icmsRate" type="number" step=".01" value="18"></div>
+       <div class="field"><label>ISS %</label><input id="issRate" type="number" step=".01" value="0"></div>
+       <div class="field"><label>IPI %</label><input id="ipiRate" type="number" step=".01" value="0"></div>
+      </div>
+     </div>
 
      <div id="simplesCurrentFields" class="regime-panel">
       <div class="subpanel-title"><b>Fornecedor do Simples Nacional</b><small>Use o RBT12 e o Anexo do fornecedor que deseja comparar.</small></div>
@@ -772,10 +771,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
-    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO DO COMPRADOR</span><h3><span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">4 REGIMES</div></div>
-    <div id="priceEquationMemory" class="rate-note" aria-live="polite"></div>
-    <div id="buyerExample" class="buyer-example" aria-live="polite"></div>
-    <details><summary>Comparar também os quatro regimes de fornecedor</summary>
+    <div class="result-head"><div><span class="eyebrow">EMPRESA × REGIME DO FORNECEDOR</span><h3><span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">3 FORNECEDORES</div></div>
     <div id="regimeResultNote" class="regime-result-note"></div>
     <div id="integratedKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
 
@@ -802,7 +798,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
      <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <div id="yearlyProjectionNote" class="rate-note yearly-note"></div>
     </section>
-    </details>
    </section>
   </article>
  </div>
@@ -1029,8 +1024,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260928-52"></script>
+<script src="tax-engine.js?v=20260928-54"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260928-52" defer></script>
+<script src="app-v2.js?v=20260928-54" defer></script>
 </body>
 </html>

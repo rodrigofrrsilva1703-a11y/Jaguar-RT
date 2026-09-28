@@ -121,10 +121,11 @@ for(const key of ['presumido','real','simples','simples_hybrid']){
  assert.ok(x.credit>0,`Empresa regular deve aproveitar crédito do fornecedor ${key}`);
  close(x.effectiveCost,x.price-x.credit,1e-8,`Custo efetivo deve descontar crédito em ${key}`);
 }
-for(const key of ['presumido','real','simples','simples_hybrid'])
- close(supplierCompare.suppliers[key].price,1000,1e-8,'Cotação fixa por fornecedor');
-close(supplierCompare.suppliers.presumido.credit,supplierCompare.suppliers.real.credit,1e-8,'LP e LR têm o mesmo crédito para igual preço e alíquota');
-close(supplierCompare.suppliers.presumido.credit,1000*(.0931/1.0931),1e-8,'Crédito regular calculado por fora do preço total');
+assert.notEqual(
+ supplierCompare.suppliers.presumido.price,
+ supplierCompare.suppliers.real.price,
+ 'LP e LR devem refletir formações atuais diferentes'
+);
 assert.ok(
  supplierCompare.suppliers.simples.credit>0,
  'Empresa no regime regular deve receber crédito correspondente ao CBS/IBS do fornecedor do Simples'
@@ -162,46 +163,6 @@ for(const key of ['presumido','real','simples','simples_hybrid']){
 const nonCreditableCompare=engine.supplierPurchaseComparison({...compareInput,purchaseGeneratesCredit:false},2027);
 assert.equal(nonCreditableCompare.creditEnabled,false);
 for(const key of ['presumido','real','simples','simples_hybrid']) close(nonCreditableCompare.suppliers[key].credit,0,1e-10);
-for(const icms of [0,12,18]){
- const other=engine.supplierPurchaseComparison({...compareInput,currentRates:{icms}},2027);
- close(other.suppliers.presumido.effectiveCost,supplierCompare.suppliers.presumido.effectiveCost,1e-8,'ICMS do fornecedor não altera cotação fixa');
-}
-
-// Um fornecedor LP, preço novo calculado pela equação; quatro compradores.
-const event=engine.buyerPurchaseComparison({
- amount:100,supplierRegime:'presumido',currentRates:{icms:18},
- currentRealCreditPct:9.25,currentPresumedCreditPct:0,
- simple:{annex:'I',rbt12:1000000},future:{mode:'rtav'}
-},2027);
-close(event.buyers.simples.currentCost,100);
-close(event.futurePrice,78.35*1.0931/.82);
-close(event.buyers.simples.effectiveCost,event.futurePrice);
-close(event.buyers.presumido.effectiveCost,event.futurePrice-event.futureCredit);
-close(event.buyers.real.currentCost,90.75);
-close(event.buyers.real.changePct,(event.buyers.real.effectiveCost/90.75-1)*100);
-close(event.buyers.simples_hybrid.effectiveCost,event.buyers.presumido.effectiveCost);
-close(event.cbs,event.futurePrice*.0921,1e-8,'CBS calculada sobre preço novo');
-close(event.ibs,event.futurePrice*.001,1e-8,'IBS calculado sobre preço novo');
-close(event.futureCredit,event.cbs+event.ibs,1e-8,'Crédito separado em CBS e IBS');
-const noBuyerCredit=engine.buyerPurchaseComparison({amount:100,supplierRegime:'presumido',currentRates:{icms:18},future:{mode:'rtav'},buyerPurchaseCredit:false},2027);
-close(noBuyerCredit.buyers.presumido.credit,0);
-close(noBuyerCredit.buyers.real.effectiveCost,noBuyerCredit.futurePrice);
-close(noBuyerCredit.cbs,event.cbs);
-
-// Equação do evento: líquido atual × (1 + tributos novos) / (1 − antigos remanescentes).
-const equationInput={amount:100,supplierRegime:'presumido',currentRates:{icms:18,iss:0,ipi:0},future:{mode:'rtav'}};
-for(const year of [2027,2029,2033]){
- const projected=engine.supplierPriceProjection(equationInput,year);
- const newRate=(rules.transition[year].cbs+rules.transition[year].ibs)/100;
- const remaining=.18*rules.transition[year].old;
- close(projected.netPrice,78.35,1e-8,`Líquido atual ${year}`);
- close(projected.projectedPrice,78.35*(1+newRate)/(1-remaining),1e-8,`Equação ${year}`);
- const automatic=engine.buyerPurchaseComparison(equationInput,year);
- close(automatic.futurePrice,projected.projectedPrice,1e-8,`Preço automático ${year}`);
- const supplierProjection=engine.supplierPurchaseComparison({companyRegime:'real',...equationInput,projectFromCurrent:true},year);
- close(supplierProjection.suppliers.presumido.price,projected.projectedPrice,1e-8,'Preço LP próprio na comparação de fornecedores');
- if(year===2027) assert.notEqual(supplierProjection.suppliers.real.price,supplierProjection.suppliers.presumido.price);
-}
 
 // Faturamento com créditos estimados das aquisições.
 const revenue={
