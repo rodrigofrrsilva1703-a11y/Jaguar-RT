@@ -427,38 +427,39 @@ function calcIntegrated(){
  updateScenarioStrip();
 
  const input=priceEngineInput();
- renderValidation('priceValidation',RTAV_ENGINE.validatePriceInput(input));
- const base=currentScenario();
  const y=Number($('priceYear')?.value||2027);
- const future=futureScenario(y);
- renderMemory('priceMemory',RTAV_ENGINE.priceMemory(input,y));
+ const comparison=purchaseComparison(y,input);
+ const messages=[];
+ if(input.amount<=0) messages.push({level:'error',message:'Informe um valor de compra maior que zero.'});
+ if(input.simple.rbt12<=0) messages.push({level:'error',message:'Informe o RBT12 do fornecedor do Simples.'});
+ if(input.simple.rbt12>3600000) messages.push({level:'warning',message:'RBT12 do fornecedor do Simples acima de R$ 3,6 milhões exige validação específica do sublimite.'});
+ if(input.companyRegime==='simples') messages.push({level:'info',message:'Empresa compradora no Simples padrão: não há apropriação de créditos de CBS/IBS nesta comparação.'});
+ else if(!input.purchaseGeneratesCredit) messages.push({level:'info',message:'Compra marcada como não creditável: os três fornecedores serão comparados sem crédito de CBS/IBS.'});
+ renderValidation('priceValidation',messages);
+ renderMemory('priceMemory',comparisonMemoryRows(comparison));
 
- const grossDelta=effectPct(base.price,future.price);
- const costDelta=effectPct(base.buyerCost??base.price,future.buyerCost??future.price);
-
- let signal='CUSTO ESTÁVEL',headline='O custo efetivo projetado ficou próximo ao custo atual.';
- if(costDelta>.05){signal='CUSTO MAIOR';headline='A projeção indica aumento do custo efetivo da aquisição.';}
- else if(costDelta<-.05){signal='CUSTO MENOR';headline='A projeção indica redução do custo efetivo da aquisição.';}
-
- $('resultSignal').textContent=signal;
- $('regimeResultNote').textContent=REGIME_LABELS[regime()]+' · '+regimeExplanation();
+ $('resultSignal').textContent='3 FORNECEDORES';
+ $('regimeResultNote').textContent=(REGIME_LABELS[regime()]||regime())+' · '+regimeExplanation();
 
  $('integratedKpis').innerHTML=
-  '<div class="integrated-kpi dark"><small>Compra atual</small><b>'+money(base.price)+'</b><span>2026</span></div>'+
-  '<div class="integrated-kpi"><small>Crédito atual</small><b>'+money(base.buyerCredit||0)+'</b><span>Informado</span></div>'+
-  '<div class="integrated-kpi dark"><small>Custo efetivo atual</small><b>'+money(base.buyerCost??base.price)+'</b><span>2026</span></div>'+
-  '<div class="integrated-kpi"><small>Compra em '+y+'</small><b>'+money(future.price)+'</b><span>'+effectText(grossDelta)+' vs. 2026</span></div>'+
-  '<div class="integrated-kpi dark"><small>Crédito CBS/IBS</small><b>'+money(future.buyerCredit||0)+'</b><span>'+($('priceTakesCbsIbsCredit')?.checked?'Aproveitado':'Não aproveitado')+'</span></div>'+
-  '<div class="integrated-kpi"><small>Custo efetivo em '+y+'</small><b>'+money(future.buyerCost??future.price)+'</b><span>'+effectText(costDelta)+' vs. 2026</span></div>';
+  '<div class="integrated-kpi dark"><small>Sua empresa</small><b>'+(REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime)+'</b><span>Regime comprador</span></div>'+
+  '<div class="integrated-kpi"><small>Compra-base</small><b>'+money(comparison.amount)+'</b><span>Mesmo valor para os 3 fornecedores</span></div>'+
+  '<div class="integrated-kpi dark"><small>Ano analisado</small><b>'+y+'</b><span>Reforma</span></div>'+
+  '<div class="integrated-kpi"><small>Crédito CBS/IBS</small><b>'+(comparison.creditEnabled?'Sim':'Não')+'</b><span>'+(comparison.regularBuyer?(input.purchaseGeneratesCredit?'Compra creditável':'Compra não creditável'):'Simples padrão')+'</span></div>';
 
- $('currentTaxSummary').innerHTML=summaryRows(currentTaxRows(base));
- $('futureTaxSummary').innerHTML=summaryRows(futureTaxRows(future));
+ $('supplierComparisonGrid').innerHTML=['presumido','real','simples'].map(function(key){
+  return supplierCardHtml(key,comparison.suppliers[key]);
+ }).join('');
 
  $('integratedExplanation').innerHTML=
-  '<b>'+headline+'</b><p>Em 2026, a compra custa '+money(base.price)+', com crédito atual de '+money(base.buyerCredit||0)+
-  ', resultando em custo efetivo de '+money(base.buyerCost??base.price)+'. Em '+y+', o preço projetado da compra é '+money(future.price)+
-  '. O CBS e o IBS calculados somam '+money((future.cbs||0)+(future.ibs||0))+'. Com o tique de crédito '+($('priceTakesCbsIbsCredit')?.checked?'marcado':'desmarcado')+
-  ', o crédito considerado é '+money(future.buyerCredit||0)+' e o custo efetivo fica em <strong>'+money(future.buyerCost??future.price)+'</strong>.</p>';
+  '<b>Comparação da mesma compra entre três regimes de fornecedor.</b><p>'+
+  'A empresa compradora está no regime <strong>'+(REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime)+'</strong>. '+
+  'O valor-base informado é '+money(comparison.amount)+'. Para fornecedor no Lucro Presumido e Lucro Real, PIS/Cofins atuais são aplicados conforme cada regime; ICMS/ISS/IPI usam as premissas informadas. '+
+  'O fornecedor do Simples usa '+SN_LABELS[snAnnex()]+' e o RBT12 informado. '+
+  (comparison.creditEnabled
+   ?'Como a empresa está no regime regular e a compra foi marcada como creditável, o custo efetivo desconta os créditos de CBS/IBS permitidos em cada cenário.'
+   :'Nesta configuração, nenhum crédito de CBS/IBS é abatido do custo efetivo.')+
+  '</p>';
 
  renderYearlyProjection();
 }
@@ -473,75 +474,81 @@ function selectYearDetail(year){
  }else renderYearlyProjection();
 }
 
+function baseSupplierComparisonRow(){
+ const amount=Math.max(0,num('priceNow'));
+ const item={price:amount,cbs:0,ibs:0,remnant:0,credit:0,effectiveCost:amount};
+ return {
+  year:2026,
+  comparison:{
+   year:2026,
+   companyRegime:regime(),
+   regularBuyer:regime()!=='simples',
+   creditEnabled:false,
+   amount,
+   suppliers:{presumido:{...item},real:{...item},simples:{...item}}
+  }
+ };
+}
+
 function renderYearDetail(year){
  if(!$('yearDetailPanel')||!yearlyRows.length) return;
- const x=yearlyRows.find(r=>r.year===Number(year))||yearlyRows[0];
- const isBase=x.year===2026;
- const credit=x.buyerCredit||0;
- const cost=x.buyerCost??x.price;
+ const row=yearlyRows.find(r=>r.year===Number(year))||yearlyRows[0];
+ const c=row.comparison;
 
  $('yearDetailPanel').classList.add('visible');
  $('yearDetailPanel').innerHTML=
   '<div class="year-detail-top">'+
-   '<div><span>ANÁLISE DA COMPRA · '+REGIME_LABELS[x.regime]+'</span><h4>'+x.year+' · '+x.system+'</h4></div>'+
-   '<div class="year-detail-price"><small>CUSTO EFETIVO</small><b>'+money(cost)+'</b></div>'+
+   '<div><span>EMPRESA '+(REGIME_LABELS[c.companyRegime]||c.companyRegime).toUpperCase()+'</span><h4>'+row.year+' · custo por fornecedor</h4></div>'+
+   '<div class="year-detail-price"><small>COMPRA-BASE</small><b>'+money(c.amount)+'</b></div>'+
   '</div>'+
   '<div class="year-detail-grid tax-detail">'+
-   '<div class="year-detail-item"><small>Preço da compra</small><b>'+money(x.price)+'</b></div>'+
-   '<div class="year-detail-item"><small>CBS</small><b>'+(isBase?'—':money(x.cbs||0))+'</b></div>'+
-   '<div class="year-detail-item"><small>IBS</small><b>'+(isBase?'—':money(x.ibs||0))+'</b></div>'+
-   '<div class="year-detail-item"><small>Tributos remanescentes</small><b>'+money(x.remnant||0)+'</b></div>'+
-   '<div class="year-detail-item"><small>Crédito aproveitado</small><b>'+money(credit)+'</b></div>'+
-   '<div class="year-detail-item"><small>Custo efetivo</small><b>'+money(cost)+'</b></div>'+
+   ['presumido','real','simples'].map(function(key){
+    const x=c.suppliers[key];
+    return '<div class="year-detail-item"><small>'+SUPPLIER_LABELS[key]+'</small><b>'+money(x.effectiveCost)+'</b><span>Crédito '+money(x.credit||0)+'</span></div>';
+   }).join('')+
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+
-   (isBase
-    ?'O custo efetivo atual é o preço da compra menos o crédito atual informado.'
-    :'O custo efetivo é o preço projetado da aquisição menos o crédito de CBS/IBS aproveitado nesta compra.')+
+   (row.year===2026
+    ?'2026 é a base comum informada para a compra. A comparação tributária projetada começa em 2027.'
+    :'Os três valores acima mostram o custo efetivo da mesma compra para sua empresa, alterando apenas o regime tributário do fornecedor e as regras correspondentes.')+
   '</p></div>';
 }
 
 function renderYearlyProjection(){
  if(!$('yearlyProjectionTable')) return;
- const base=currentScenario();
  const selectedYear=Number($('priceYear')?.value||2027);
- const r=regime();
- const rows=[Object.assign({},base,{system:'Atual',delta:0,annualDelta:0})];
-
+ const rows=[baseSupplierComparisonRow()];
  for(let year=2027;year<=2033;year++){
-  const x=futureScenario(year);
-  rows.push(Object.assign({},x,{
-   system:r==='simples'?'SN padrão':r==='simples_hybrid'?'SN híbrido':'Reforma',
-   delta:effectPct(base.buyerCost??base.price,x.buyerCost??x.price)
-  }));
+  rows.push({year,comparison:purchaseComparison(year)});
  }
  yearlyRows=rows;
- renderTaxChart('priceTaxChart',rows,'price');
 
  if(yearDetailSelected===null||!rows.some(x=>x.year===yearDetailSelected)) yearDetailSelected=selectedYear;
 
- $('yearlyPriceStrip').innerHTML=rows.map(x=>
-  '<button type="button" class="year-price-card '+(x.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+x.year+')">'+
-   '<small>'+x.year+'</small><b>'+money(x.buyerCost??x.price)+'</b><span>'+(x.year===2026?'Custo atual':effectText(x.delta)+' vs. 2026')+'</span>'+
-  '</button>'
- ).join('');
+ $('yearlyPriceStrip').innerHTML=rows.map(function(row){
+  const c=row.comparison.suppliers;
+  return '<button type="button" class="year-price-card '+(row.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+row.year+')">'+
+   '<small>'+row.year+'</small><b>LP '+money(c.presumido.effectiveCost)+'</b><span>LR '+money(c.real.effectiveCost)+' · SN '+money(c.simples.effectiveCost)+'</span>'+
+  '</button>';
+ }).join('');
 
- $('yearlyProjectionTable').innerHTML=rows.map(x=>{
-  const cls=x.year===2026?'current-year':(x.year===yearDetailSelected?'selected-year':'');
-  return '<tr class="'+cls+'" onclick="selectYearDetail('+x.year+')">'+
-   '<td>'+x.year+'</td>'+
-   '<td><strong>'+money(x.price)+'</strong></td>'+
-   '<td>'+(x.year===2026?'—':money(x.cbs||0))+'</td>'+
-   '<td>'+(x.year===2026?'—':money(x.ibs||0))+'</td>'+
-   '<td>'+money(x.buyerCredit||0)+'</td>'+
-   '<td><strong>'+money(x.buyerCost??x.price)+'</strong></td>'+
+ $('yearlyProjectionTable').innerHTML=rows.map(function(row){
+  const c=row.comparison.suppliers;
+  const cls=row.year===2026?'current-year':(row.year===yearDetailSelected?'selected-year':'');
+  return '<tr class="'+cls+'" onclick="selectYearDetail('+row.year+')">'+
+   '<td>'+row.year+'</td>'+
+   '<td><strong>'+money(c.presumido.effectiveCost)+'</strong></td>'+
+   '<td><strong>'+money(c.real.effectiveCost)+'</strong></td>'+
+   '<td><strong>'+money(c.simples.effectiveCost)+'</strong></td>'+
   '</tr>';
  }).join('');
 
  renderYearDetail(yearDetailSelected);
 
- let note='O preço de compra projetado preserva o líquido do fornecedor; o custo efetivo desconta os créditos aproveitados pelo adquirente.';
- if($('priceTakesCbsIbsCredit')?.checked) note+=' Na reforma, o crédito considerado corresponde ao CBS + IBS calculado na aquisição.';
+ let note='A tabela compara o custo efetivo da mesma compra entre os três regimes de fornecedor.';
+ if(regime()==='simples') note+=' Como a empresa compradora está no Simples padrão, os créditos de CBS/IBS não são apropriados nesta simulação.';
+ else if($('priceTakesCbsIbsCredit')?.checked) note+=' Para a empresa no regime regular, a compra foi considerada creditável.';
+ else note+=' A compra foi marcada como não creditável.';
  $('yearlyProjectionNote').textContent=note;
 }
 
