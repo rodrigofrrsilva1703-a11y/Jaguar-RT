@@ -170,8 +170,9 @@
   const net=Math.max(0,value-taxes);
 
   if(kind==='price'){
-   const buyerCredit=cfg.buyer.profile==='b2b'?Math.min(value,cfg.buyer.currentCredit):0;
-   return {year:2026,regime:cfg.regime,price:value,taxes,net,components,cbs:null,ibs:null,remnant:taxes,buyerCredit,buyerCost:Math.max(0,value-buyerCredit)};
+   const buyerCredit=Math.min(value,cfg.buyer.currentCredit);
+   const buyerCost=Math.max(0,value-buyerCredit);
+   return {year:2026,regime:cfg.regime,price:value,taxes,net,components,cbs:null,ibs:null,remnant:taxes,buyerCredit,buyerCost,effectiveCost:buyerCost};
   }
 
   return {year:2026,regime:cfg.regime,revenue:value,taxes,net,components,cbs:null,ibs:null,remnant:taxes,purchaseCredit:0,netTax:taxes,economicNet:net};
@@ -232,14 +233,10 @@
    net=Math.max(0,price-taxes);
   }
 
-  const creditEligible=cfg.purchases.enabled&&p.type!=='simple';
-  // O checkbox informa que a empresa pode aproveitar créditos. Sem uma base de
-  // aquisições, a ferramenta de preço não inventa um valor monetário de crédito.
-  const purchaseCredit=0;
-  const netTax=taxes;
-  const economicNet=net;
-  const buyerCredit=cfg.buyer.profile==='b2b'?(cbs+ibs)*(cfg.buyer.usePct/100):0;
-  return {year,regime:cfg.regime,price,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,creditEligible,purchaseCredit,netTax,economicNet,buyerCredit,buyerCost:Math.max(0,price-buyerCredit),params:p};
+  const creditEligible=!!cfg.purchases.enabled;
+  const buyerCredit=creditEligible?(cbs+ibs):0;
+  const buyerCost=Math.max(0,price-buyerCredit);
+  return {year,regime:cfg.regime,price,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,creditEligible,purchaseCredit:buyerCredit,netTax:Math.max(0,taxes-buyerCredit),economicNet:buyerCost,buyerCredit,buyerCost,effectiveCost:buyerCost,params:p};
  }
 
  function futurePriceScenario(input,year,keepGross=false){
@@ -333,9 +330,7 @@
   }
 
   if(kind==='price'&&cfg.purchases.enabled){
-   messages.push({level:'info',code:'price_credit_basis',message:cfg.regime==='simples'
-    ?'No Simples padrão, a marcação de crédito CBS/IBS não altera o preço nesta simulação.'
-    :'Crédito CBS/IBS marcado: o direito ao crédito é indicado no resultado, mas o valor não é abatido do preço sem uma base de aquisições.'});
+   messages.push({level:'info',code:'purchase_credit',message:'Crédito CBS/IBS ativado: o custo efetivo desconta os valores de CBS e IBS calculados nesta aquisição. O aproveitamento real depende do regime do adquirente e dos requisitos legais/documentais.'});
   }
 
   if(kind==='revenue'&&cfg.regime==='simples'&&cfg.purchases.creditablePct>0){
@@ -356,30 +351,25 @@
   const base=currentPriceScenario(cfg);
   if(Number(year)===2026){
    return [
-    ['Preço bruto 2026',base.price],
-    ['Tributos atuais considerados',base.taxes],
-    ['Valor líquido 2026',base.net]
+    ['Preço da compra em 2026',base.price],
+    ['Crédito atual aproveitável',base.buyerCredit],
+    ['Custo efetivo atual',base.buyerCost]
    ];
   }
   const x=futurePriceScenario(cfg,Number(year));
   const p=x.params;
   const rows=[
-   ['Valor líquido preservado de 2026',base.net],
+   ['Preço da compra projetado',x.price],
    ...hybridBaseMemory(x),
    [x.params?.type==='hybrid'?'Base da CBS/IBS após excluir '+x.params.excludedLabel:'Base limpa usada no novo sistema',x.cleanBase],
-   ['CBS calculada',x.cbs],
-   ['IBS calculado',x.ibs],
+   ['CBS da aquisição',x.cbs],
+   ['IBS da aquisição',x.ibs],
    ['Tributos/DAS remanescentes',x.remnant],
-   ['Total de tributos',x.taxes]
+   ['Crédito CBS/IBS aproveitado',x.buyerCredit],
+   ['Custo efetivo da compra',x.buyerCost],
+   ['Líquido preservado do fornecedor',x.net],
+   ['Tipo do cenário',p.type]
   ];
-  if(x.creditEligible){
-   rows.push(['Crédito CBS/IBS','Aplicável sobre aquisições; valor não quantificado nesta ferramenta']);
-  }
-  rows.push(['Preço projetado',x.price]);
-  if(cfg.buyer.profile==='b2b'){
-   rows.push(['Crédito potencial do comprador',x.buyerCredit],['Custo efetivo do comprador',x.buyerCost]);
-  }
-  rows.push(['Tipo do cenário',p.type]);
   return rows;
  }
 

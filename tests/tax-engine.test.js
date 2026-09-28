@@ -27,18 +27,24 @@ const p2027=engine.futurePriceScenario(presumido,2027);
 close(p2027.price,104.4443719512195,0.001,'Preço projetado comércio 2027 com CBS 9,21%');
 close(p2027.net,pBase.net,1e-8,'Líquido preservado comércio');
 
-// O checkbox de crédito sinaliza elegibilidade, mas não inventa um valor sem base de aquisições.
-const ownCredit={...presumido,purchases:{enabled:true}};
-const own2027=engine.futurePriceScenario(ownCredit,2027);
-assert.equal(own2027.creditEligible,true,'Checkbox deve marcar elegibilidade ao crédito');
-close(own2027.purchaseCredit,0,1e-12,'Ferramenta de preço não deve inventar crédito monetário sem aquisições');
-close(own2027.price,p2027.price,1e-8,'Elegibilidade ao crédito, sozinha, não deve alterar o preço');
-close(own2027.net,pBase.net,1e-8,'Valor líquido continua preservado');
+// Compra / custo efetivo: o preço bruto não muda por causa do crédito do adquirente.
+const purchaseWithCredit={...presumido,purchases:{enabled:true}};
+const purchase2027=engine.futurePriceScenario(purchaseWithCredit,2027);
+assert.equal(purchase2027.creditEligible,true,'Checkbox deve ativar crédito na aquisição');
+close(purchase2027.price,p2027.price,1e-8,'Crédito do adquirente não altera o preço bruto do fornecedor');
+close(purchase2027.buyerCredit,purchase2027.cbs+purchase2027.ibs,1e-8,'Crédito deve corresponder a CBS + IBS da aquisição');
+close(purchase2027.buyerCost,purchase2027.price-purchase2027.buyerCredit,1e-8,'Custo efetivo deve descontar o crédito');
+assert.ok(purchase2027.buyerCost<purchase2027.price,'Crédito deve reduzir o custo efetivo');
 
-const ownCreditDisabled={...presumido,purchases:{enabled:false}};
-const ownDisabled2027=engine.futurePriceScenario(ownCreditDisabled,2027);
-assert.equal(ownDisabled2027.creditEligible,false);
-close(ownDisabled2027.price,p2027.price,1e-8,'Checkbox desligado mantém o cálculo normal');
+const purchaseNoCredit={...presumido,purchases:{enabled:false}};
+const purchaseNoCredit2027=engine.futurePriceScenario(purchaseNoCredit,2027);
+close(purchaseNoCredit2027.buyerCredit,0,1e-12,'Checkbox desligado não aproveita crédito');
+close(purchaseNoCredit2027.buyerCost,purchaseNoCredit2027.price,1e-8,'Sem crédito, custo efetivo é o preço da compra');
+
+const currentPurchaseCredit={...presumido,buyer:{profile:'b2b',currentCredit:10,usePct:100}};
+const currentPurchase=engine.currentPriceScenario(currentPurchaseCredit);
+close(currentPurchase.buyerCredit,10,1e-8,'Crédito atual informado');
+close(currentPurchase.buyerCost,90,1e-8,'Custo efetivo atual');
 
 // Lucro Real: exemplo de serviço R$ 100.
 const realServico={
@@ -90,11 +96,11 @@ const s2027=engine.futurePriceScenario(simple,2027);
 close(s2027.net,sBase.net,1e-8,'Líquido preservado no Simples');
 close(s2027.price,100,0.0001,'Preço estável no exemplo do Simples');
 
-// B2B: crédito potencial reduz custo efetivo do comprador.
-const b2b={...presumido,buyer:{profile:'b2b',currentCredit:0,usePct:100}};
-const b2027=engine.futurePriceScenario(b2b,2027);
-close(b2027.buyerCredit,b2027.cbs+b2027.ibs,1e-8,'Crédito B2B potencial');
-close(b2027.buyerCost,b2027.price-b2027.buyerCredit,1e-8,'Custo efetivo B2B');
+// O crédito futuro depende do tique da aquisição, não de um perfil B2B separado.
+const futureWithoutTick=engine.futurePriceScenario({...presumido,buyer:{profile:'b2b',currentCredit:0,usePct:100},purchases:{enabled:false}},2027);
+close(futureWithoutTick.buyerCredit,0,1e-8,'Sem tique não há crédito CBS/IBS');
+const futureWithTick=engine.futurePriceScenario({...presumido,purchases:{enabled:true}},2027);
+close(futureWithTick.buyerCredit,futureWithTick.cbs+futureWithTick.ibs,1e-8,'Com tique, CBS e IBS reduzem o custo efetivo');
 
 // Faturamento com créditos estimados das aquisições.
 const revenue={
@@ -164,8 +170,9 @@ for(const annex of ['I','II','III','IV','V']){
   }
  }
 }
-const hybridB2B=engine.futurePriceScenario({...hybrid,buyer:{profile:'b2b',usePct:100}},2027);
-close(hybridB2B.buyerCredit,hybridB2B.cbs+hybridB2B.ibs,1e-7);
+const hybridPurchase=engine.futurePriceScenario({...hybrid,purchases:{enabled:true}},2027);
+close(hybridPurchase.buyerCredit,hybridPurchase.cbs+hybridPurchase.ibs,1e-7);
+close(hybridPurchase.buyerCost,hybridPurchase.price-hybridPurchase.buyerCredit,1e-7);
 for(const memory of [engine.priceMemory,engine.revenueMemory]){
  const rows=memory(hybrid,2027);
  assert.ok(rows.some(row=>row[0].includes('ISS no DAS')));
