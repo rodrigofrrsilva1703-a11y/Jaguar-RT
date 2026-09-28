@@ -1128,9 +1128,8 @@ function printTaxReport(kind){
 }
 
 const PRICE_STATE_IDS=[
- 'taxRegime','priceNow','pisRate','cofinsRate','icmsRate','issRate','ipiRate','snRbt12','snAnnex',
- 'priceYear','rateMode','rateReduction','cbsRate','ibsRate','hybridRateMode','hybridReduction','hybridCbsRate','hybridIbsRate',
- 'priceTakesCbsIbsCredit','priceCurrentBuyerCredit','priceQuickPreset','priceClientName'
+ 'taxRegime','priceNow','icmsRate','issRate','ipiRate','snRbt12','snAnnex',
+ 'priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceTakesCbsIbsCredit','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
  'revTaxRegime','revCurrentRevenue','revRevenuePeriod','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate',
@@ -1268,17 +1267,16 @@ function numberFromState(data,id,fallback=0){
 
 function priceInputFromState(data){
  return {
-  regime:data?.taxRegime||'presumido',
+  companyRegime:data?.taxRegime||'presumido',
   amount:numberFromState(data,'priceNow'),
   currentRates:{
-   pis:numberFromState(data,'pisRate'),cofins:numberFromState(data,'cofinsRate'),
-   icms:numberFromState(data,'icmsRate'),iss:numberFromState(data,'issRate'),ipi:numberFromState(data,'ipiRate')
+   icms:numberFromState(data,'icmsRate'),
+   iss:numberFromState(data,'issRate'),
+   ipi:numberFromState(data,'ipiRate')
   },
-  simple:{annex:data?.snAnnex||'III',rbt12:numberFromState(data,'snRbt12')},
+  simple:{annex:data?.snAnnex||'I',rbt12:numberFromState(data,'snRbt12')},
   future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate')},
-  hybridFuture:{mode:data?.hybridRateMode||'rtav',reduction:numberFromState(data,'hybridReduction'),cbs:numberFromState(data,'hybridCbsRate'),ibs:numberFromState(data,'hybridIbsRate')},
-  purchases:{enabled:!!data?.priceTakesCbsIbsCredit,creditablePct:100,usePct:100},
-  buyer:{profile:'b2b',currentCredit:numberFromState(data,'priceCurrentBuyerCredit'),usePct:100}
+  purchaseGeneratesCredit:!!data?.priceTakesCbsIbsCredit
  };
 }
 
@@ -1304,13 +1302,13 @@ function compareNamedScenario(kind){
 
  if(kind==='price'){
   const year=Number($('priceYear')?.value||2027);
-  const current=RTAV_ENGINE.futurePriceScenario(priceEngineInput(),year);
-  const other=RTAV_ENGINE.futurePriceScenario(priceInputFromState(saved.data),year);
+  const current=RTAV_ENGINE.supplierPurchaseComparison(priceEngineInput(),year);
+  const other=RTAV_ENGINE.supplierPurchaseComparison(priceInputFromState(saved.data),year);
   panel.innerHTML='<div class="scenario-compare-grid">'+
-   compareItem('Preço da compra',other.price,current.price)+
-   compareItem('Crédito CBS/IBS',other.buyerCredit??0,current.buyerCredit??0)+
-   compareItem('Custo efetivo',other.buyerCost??other.price,current.buyerCost??current.price)+
-  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'.</div>';
+   compareItem('Custo · fornecedor LP',other.suppliers.presumido.effectiveCost,current.suppliers.presumido.effectiveCost)+
+   compareItem('Custo · fornecedor LR',other.suppliers.real.effectiveCost,current.suppliers.real.effectiveCost)+
+   compareItem('Custo · fornecedor Simples',other.suppliers.simples.effectiveCost,current.suppliers.simples.effectiveCost)+
+  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'. Regime atual da empresa: '+xmlEsc(REGIME_LABELS[current.companyRegime]||current.companyRegime)+'.</div>';
  }else{
   const year=Number($('revYear')?.value||2027);
   const current=RTAV_ENGINE.futureRevenueScenario(revenueEngineInput(),year);
