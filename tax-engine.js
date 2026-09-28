@@ -456,53 +456,6 @@
    remnant:supplier.remnant,estimatedCredit,futureCredit,buyers};
  }
 
- function buyerRegimeCostComparison(input={}){
-  const currentPrice=Math.max(0,Number(input.currentPrice)||0);
-  const transitionPrice=Math.max(0,Number(input.transitionPrice)||0);
-  const regime=['simples','presumido','real','simples_hybrid'].includes(input.buyerRegime)?input.buyerRegime:'presumido';
-  const reformCredit=Math.max(0,Number(input.reformCredit)||0);
-  const currentRealCreditPct=clamp(input.currentRealCreditPct??9.25,0,100);
-
-  let currentCredit=0;
-  let futureCredit=0;
-
-  if(regime==='real'){
-   currentCredit=currentPrice*currentRealCreditPct/100;
-   futureCredit=reformCredit;
-  }else if(regime==='presumido'){
-   currentCredit=0;
-   futureCredit=reformCredit;
-  }else if(regime==='simples'){
-   currentCredit=0;
-   futureCredit=0;
-  }else if(regime==='simples_hybrid'){
-   // Extensão do projeto: o arquivo-base não descreve o híbrido.
-   // Mantém-se o tratamento já adotado no sistema: crédito novo de IBS/CBS na transição.
-   currentCredit=0;
-   futureCredit=reformCredit;
-  }
-
-  currentCredit=Math.min(currentPrice,currentCredit);
-  futureCredit=Math.min(transitionPrice,futureCredit);
-
-  const currentCost=Math.max(0,currentPrice-currentCredit);
-  const futureCost=Math.max(0,transitionPrice-futureCredit);
-  const changePct=effectPct(currentCost,futureCost);
-
-  return {
-   buyerRegime:regime,
-   currentPrice,
-   transitionPrice,
-   currentCredit,
-   futureCredit,
-   currentCost,
-   futureCost,
-   changePct,
-   currentRealCreditPct,
-   reformCredit
-  };
- }
-
  function priceMemory(input,year){
   const cfg=normalizeInput(input);
   const base=currentPriceScenario(cfg);
@@ -560,7 +513,7 @@
   rulesVersion:RULES.version,
   clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
   currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,supplierPurchaseComparison,supplierPriceProjection,
-  buyerPurchaseComparison,buyerRegimeCostComparison,
+  buyerPurchaseComparison,
   currentRevenueScenario,revenueScenarioAtRevenue,futureRevenueScenario,
   validatePriceInput:input=>validateInput(input,'price'),
   validateRevenueInput:input=>validateInput(input,'revenue'),
