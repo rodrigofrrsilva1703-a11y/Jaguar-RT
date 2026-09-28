@@ -27,17 +27,18 @@ const p2027=engine.futurePriceScenario(presumido,2027);
 close(p2027.price,104.4443719512195,0.001,'Preço projetado comércio 2027 com CBS 9,21%');
 close(p2027.net,pBase.net,1e-8,'Líquido preservado comércio');
 
-// Preço com checkbox simples de crédito CBS/IBS.
+// O checkbox de crédito sinaliza elegibilidade, mas não inventa um valor sem base de aquisições.
 const ownCredit={...presumido,purchases:{enabled:true}};
 const own2027=engine.futurePriceScenario(ownCredit,2027);
-close(own2027.purchaseCredit,own2027.cbs+own2027.ibs,1e-8,'Checkbox deve considerar CBS + IBS calculados como crédito');
-close(own2027.netTax,own2027.taxes-own2027.purchaseCredit,1e-8,'Tributos líquidos do preço após crédito');
-close(own2027.economicNet,pBase.net,1e-8,'Valor líquido preservado com crédito');
-assert.ok(own2027.price<p2027.price,'Crédito deve reduzir o preço necessário quando as demais premissas são iguais');
+assert.equal(own2027.creditEligible,true,'Checkbox deve marcar elegibilidade ao crédito');
+close(own2027.purchaseCredit,0,1e-12,'Ferramenta de preço não deve inventar crédito monetário sem aquisições');
+close(own2027.price,p2027.price,1e-8,'Elegibilidade ao crédito, sozinha, não deve alterar o preço');
+close(own2027.net,pBase.net,1e-8,'Valor líquido continua preservado');
 
 const ownCreditDisabled={...presumido,purchases:{enabled:false}};
 const ownDisabled2027=engine.futurePriceScenario(ownCreditDisabled,2027);
-close(ownDisabled2027.price,p2027.price,1e-8,'Checkbox desligado não deve alterar o preço');
+assert.equal(ownDisabled2027.creditEligible,false);
+close(ownDisabled2027.price,p2027.price,1e-8,'Checkbox desligado mantém o cálculo normal');
 
 // Lucro Real: exemplo de serviço R$ 100.
 const realServico={
@@ -58,6 +59,20 @@ close(r2027.net,rBase.net,1e-8,'Líquido preservado serviço');
 for(let year=2027;year<=2033;year++){
  const x=engine.futurePriceScenario(presumido,year);
  close(x.net,pBase.net,1e-7,`Líquido deve permanecer estável em ${year}`);
+}
+
+// Auditoria de paridade preço x faturamento sem créditos: mesmos tributos e mesmo bruto projetado.
+for(const input of [presumido,realServico]){
+ for(let year=2027;year<=2033;year++){
+  const price=engine.futurePriceScenario(input,year);
+  const revenueInput={...input,purchases:{creditablePct:0,usePct:100}};
+  const revenue=engine.futureRevenueScenario(revenueInput,year);
+  close(price.price,revenue.revenue,1e-7,`Preço/faturamento devem usar a mesma formação tributária em ${input.regime} ${year}`);
+  close(price.taxes,revenue.taxes,1e-7,`Tributos devem coincidir em ${input.regime} ${year}`);
+  close(price.cbs,revenue.cbs,1e-7,`CBS deve coincidir em ${input.regime} ${year}`);
+  close(price.ibs,revenue.ibs,1e-7,`IBS deve coincidir em ${input.regime} ${year}`);
+  close(price.remnant,revenue.remnant,1e-7,`Remanescentes devem coincidir em ${input.regime} ${year}`);
+ }
 }
 
 // Simples padrão: mesma alíquota efetiva total pode manter o preço.
