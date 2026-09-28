@@ -313,11 +313,6 @@
  function supplierPurchaseComparison(input={},year=2027){
   const companyRegime=input.companyRegime||'presumido';
   const amount=Math.max(0,Number(input.amount)||0);
-  const commonCurrent={
-   icms:clamp(input.currentRates?.icms,0,100),
-   iss:clamp(input.currentRates?.iss,0,100),
-   ipi:clamp(input.currentRates?.ipi,0,100)
-  };
   const simple={
    annex:input.simple?.annex||'III',
    rbt12:Math.max(0,Number(input.simple?.rbt12)||0)
@@ -333,45 +328,36 @@
   const purchaseGeneratesCredit=input.purchaseGeneratesCredit!==false;
   const creditEnabled=regularBuyer&&purchaseGeneratesCredit;
 
-  const makeInput=(supplierRegime,pis,cofins)=>({
-   regime:supplierRegime,
-   amount,
-   currentRates:{
-    pis:pis||0,
-    cofins:cofins||0,
-    icms:commonCurrent.icms,
-    iss:commonCurrent.iss,
-    ipi:commonCurrent.ipi
-   },
-   simple,
-   future,
-   hybridFuture:future,
-   purchases:{enabled:creditEnabled,creditablePct:100,usePct:100},
-   buyer:{profile:'b2b',currentCredit:0,usePct:100}
-  });
-
-  const supplierInputs={
-   presumido:makeInput('presumido',0.65,3),
-   real:makeInput('real',1.65,7.6),
-   simples:makeInput('simples',0,0),
-   simples_hybrid:makeInput('simples_hybrid',0,0)
-  };
-
   const suppliers={};
   for(const key of ['presumido','real','simples','simples_hybrid']){
-   const cfg=supplierInputs[key];
-   const current=currentPriceScenario(cfg);
-   const futureScenario=futurePriceScenario(cfg,Number(year));
+   const price=input.projectFromCurrent?supplierPriceProjection({...input,supplierRegime:key},year).projectedPrice:amount;
+   const cfg={regime:key,amount:price,simple,future,hybridFuture:future};
+   const p=paramsForYear(cfg,Number(year));
+   let cbs=0,ibs=0,remnant=0;
+   if(p.type==='simple'){
+    // O adquirente regular recebe somente a parcela de IBS/CBS cobrada no DAS.
+    cbs=price*p.cbsInside;
+    ibs=price*p.ibsInside;
+    remnant=price*Math.max(0,p.dasRate-p.cbsInside-p.ibsInside);
+   }else if(input.projectFromCurrent||input.taxOnProjectedPrice){
+    // Nesta comparação didática, o preço novo sai primeiro da equação;
+    // CBS e IBS são calculados separadamente sobre esse preço projetado.
+    cbs=price*p.cbsRate;
+    ibs=price*p.ibsRate;
+    remnant=price*(p.remRate||0);
+   }else if(p.type==='hybrid'){
+    ({cbs,ibs,remnant}=hybridAtGross(p,price));
+   }else{
+    // O valor informado é o total da aquisição, já com IBS/CBS por fora.
+    // Tributos antigos do fornecedor não são um crédito novo do comprador.
+    const base=price/(1+p.cbsRate+p.ibsRate);
+    cbs=base*p.cbsRate;
+    ibs=base*p.ibsRate;
+   }
+   const credit=creditEnabled?cbs+ibs:0;
    suppliers[key]={
     supplierRegime:key,
-    current,
-    future:futureScenario,
-    price:futureScenario.price,
-    cbs:futureScenario.cbs,
-    ibs:futureScenario.ibs,
-    remnant:futureScenario.remnant,
-    credit:futureScenario.buyerCredit||0,
-    effectiveCost:futureScenario.buyerCost??futureScenario.price
+    price,cbs,ibs,remnant,credit,effectiveCost:Math.max(0,price-credit)
    };
   }
 
@@ -384,6 +370,27 @@
    amount,
    suppliers
   };
+ }
+
+ function supplierPriceProjection(input={},year=2027){
+  const regime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
+  const rates=input.currentRates||{};
+  const cfg={
+   regime,amount:Math.max(0,Number(input.amount)||0),
+   currentRates:{
+    pis:regime==='presumido'?.65:regime==='real'?1.65:0,
+    cofins:regime==='presumido'?3:regime==='real'?7.6:0,
+    icms:rates.icms||0,iss:rates.iss||0,ipi:rates.ipi||0
+   },
+   simple:input.simple,future:input.future,hybridFuture:input.future
+  };
+  const current=currentPriceScenario(cfg);
+  const projected=futurePriceScenario(cfg,Number(year));
+  const p=projected.params;
+  return {regime,year:Number(year),currentPrice:current.price,currentTaxes:current.taxes,currentComponents:current.components,
+   netPrice:current.net,remainingRate:p.type==='regular'?p.remRate:p.type==='hybrid'?p.remRate:p.dasRate,
+   newRate:(p.cbsRate||0)+(p.ibsRate||0),projectedPrice:projected.price,
+   method:p.type==='regular'?'formula_evento':p.type==='hybrid'?'simples_hibrido':'simples_das'};
  }
 
  function validateInput(input,kind='price'){
@@ -420,6 +427,33 @@
   }
 
   return messages;
+ }
+
+ // Um fornecedor e uma cotação para todos os regimes de comprador.
+ function buyerPurchaseComparison(input={},year=2027){
+  const currentPrice=Math.max(0,Number(input.amount)||0);
+  const supplierRegime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
+  const projection=supplierPriceProjection({...input,supplierRegime},year);
+  const futurePrice=projection.projectedPrice;
+  const supplier=supplierPurchaseComparison({...input,companyRegime:'real',amount:futurePrice,
+   projectFromCurrent:false,taxOnProjectedPrice:true,purchaseGeneratesCredit:true},year).suppliers[supplierRegime];
+  const estimatedCredit=supplier.cbs+supplier.ibs;
+  const futureCredit=estimatedCredit;
+  const currentRealCredit=currentPrice*clamp(input.currentRealCreditPct,0,100)/100;
+  const currentPresumedCredit=currentPrice*clamp(input.currentPresumedCreditPct,0,100)/100;
+  const buyers={};
+  for(const regime of ['simples','presumido','real','simples_hybrid']){
+   const currentCredit=regime==='real'?currentRealCredit:regime==='presumido'?currentPresumedCredit:0;
+   const credit=regime==='simples'||input.buyerPurchaseCredit===false?0:futureCredit;
+   const currentCost=currentPrice-currentCredit;
+   const effectiveCost=futurePrice-credit;
+   buyers[regime]={currentPrice,currentCredit,currentCost,futurePrice,credit,effectiveCost,
+    changePct:effectPct(currentCost,effectiveCost)};
+  }
+  return {year:Number(year),supplierRegime,currentPrice,futurePrice,projection,
+   cbs:supplier.cbs,ibs:supplier.ibs,cbsPct:futurePrice?supplier.cbs/futurePrice*100:0,
+   ibsPct:futurePrice?supplier.ibs/futurePrice*100:0,
+   remnant:supplier.remnant,estimatedCredit,futureCredit,buyers};
  }
 
  function priceMemory(input,year){
@@ -478,7 +512,8 @@
   version:'1.1.0',
   rulesVersion:RULES.version,
   clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
-  currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,supplierPurchaseComparison,
+  currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,supplierPurchaseComparison,supplierPriceProjection,
+  buyerPurchaseComparison,
   currentRevenueScenario,revenueScenarioAtRevenue,futureRevenueScenario,
   validatePriceInput:input=>validateInput(input,'price'),
   validateRevenueInput:input=>validateInput(input,'revenue'),
