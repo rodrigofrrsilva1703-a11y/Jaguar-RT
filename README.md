@@ -4,7 +4,7 @@ Plataforma estática da Jaguar Assessoria Contábil para estudo, simulação e a
 
 ## O que existe hoje
 
-- 12 módulos de estudo técnico e didático
+- 13 módulos de estudo técnico e didático
 - casos práticos com filtros por regime e setor
 - linha do tempo 2026–2033
 - calculadora de preço de venda

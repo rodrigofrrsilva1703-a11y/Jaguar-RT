@@ -75,6 +75,12 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  expect(await supplierValue(lp,'Crédito para sua empresa')).toBeGreaterThan(0);
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
 
+ await page.locator('#snRbt12').fill('4800001');
+ await expect(page.locator('#priceValidation')).toContainText('R$ 4,8 milhões');
+ await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(0);
+ await page.locator('#snRbt12').fill('1000000');
+ await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(4);
+
  await page.locator('#taxRegime').selectOption('simples_hybrid');
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
  await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();

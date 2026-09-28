@@ -41,6 +41,17 @@ function moduleCard(m){
  </button>`;
 }
 
+const courseEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function courseText(value){
+ return String(value||'').split('\n').map(line=>{
+  const safe=courseEscape(line);
+  if(/^(COMO ERA ANTES|COMO É AGORA)/.test(line))return '<h3 class="course-subhead">'+safe+'</h3>';
+  if(/^[-*•]\s/.test(line))return '<p class="course-bullet">'+safe.replace(/^[-*•]\s*/,'')+'</p>';
+  return '<p>'+safe+'</p>';
+ }).join('');
+}
+
 function renderPracticeGrid(){
  const q=($('practiceSearch')?.value||'').trim().toLowerCase();
  const regime=$('practiceRegimeFilter')?.value||'';
@@ -122,6 +133,24 @@ function openPractice(i){
 function openModule(id){
  const m=STUDY_MODULES.find(x=>x.id===id);
  if(!m)return;
+ if(m.fullCourse){
+  const index=STUDY_MODULES.indexOf(m);
+  const blocks=m.blocks.map((b,i)=>`<section class="lesson-block course-block" id="course-${m.id}-${i+1}">
+   <div class="lesson-top"><span class="step-no">${String(i+1).padStart(2,'0')}</span><span class="tag">${courseEscape(b.k)}</span></div>
+   <h2>${courseEscape(b.t)}</h2><div class="course-text">${courseText(b.x)}</div>
+  </section>`).join('');
+  $('modulePage').innerHTML=`
+   <button class="back" onclick="go('modules')">← Todos os estudos</button>
+   <span class="module-no">MÓDULO ${m.id} DE ${STUDY_MODULES.length}</span>
+   <h1 class="page-title">${courseEscape(m.title)}</h1>
+   <p class="page-lead">${courseEscape(m.subtitle)}</p>
+   <div class="course-note"><b>Premissas dos exemplos</b><p>Os valores de CBS 9,21% e IBS 18,70% são parâmetros didáticos deste curso. A alíquota efetiva e os créditos dependem do ano, do destino, do regime, da operação e dos requisitos legais. Confira as regras vigentes antes de aplicar um exemplo a uma empresa.</p></div>
+   <nav class="course-toc" aria-label="Nesta aula">${m.blocks.map((b,i)=>`<a href="#course-${m.id}-${i+1}">${courseEscape(b.t)}</a>`).join('')}</nav>
+   <div class="lesson-stack">${blocks}</div>
+   <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
+  go('modulePage');
+  return;
+ }
  const blocks=m.blocks.map((b,i)=>`<section class="lesson-block">
    <div class="lesson-top"><span class="step-no">${String(i+1).padStart(2,'0')}</span><span class="tag">${b.k}</span></div>
    <h2>${b.t}</h2><p>${b.x}</p>
@@ -439,9 +468,22 @@ function calcIntegrated(){
  if(input.amount<=0) messages.push({level:'error',message:'Informe um valor de compra maior que zero.'});
  if(input.simple.rbt12<=0) messages.push({level:'error',message:'Informe o RBT12 do fornecedor do Simples.'});
  if(input.simple.rbt12>3600000) messages.push({level:'warning',message:'RBT12 do fornecedor do Simples acima de R$ 3,6 milhões exige validação específica do sublimite.'});
+ if(input.simple.rbt12>4800000) messages.push({level:'error',message:'RBT12 acima de R$ 4,8 milhões: as tabelas automáticas do Simples desta ferramenta não se aplicam. Corrija o valor antes de comparar os fornecedores.'});
  if(input.companyRegime==='simples') messages.push({level:'info',message:'Empresa compradora no Simples padrão: não há apropriação de créditos de CBS/IBS nesta comparação.'});
  else if(!input.purchaseGeneratesCredit) messages.push({level:'info',message:'Compra marcada como não creditável: os quatro cenários de fornecedor serão comparados sem crédito de CBS/IBS.'});
  renderValidation('priceValidation',messages);
+ if(messages.some(m=>m.level==='error')){
+  $('integratedKpis').innerHTML='';
+  $('supplierComparisonGrid').innerHTML='';
+  $('integratedExplanation').innerHTML='';
+  renderMemory('priceMemory',[]);
+  $('yearlyPriceStrip').innerHTML='';
+  $('yearlyProjectionTable').innerHTML='';
+  $('yearDetailPanel').innerHTML='';
+  $('yearlyProjectionNote').textContent='Corrija os dados indicados acima para calcular a comparação.';
+  yearlyRows=[];
+  return;
+ }
  renderMemory('priceMemory',comparisonMemoryRows(comparison));
 
  $('resultSignal').textContent='4 CENÁRIOS';
@@ -515,7 +557,7 @@ function renderYearDetail(year){
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+
    (row.year===2026
-    ?'2026 é a base comum informada para a compra. A comparação tributária projetada começa em 2027.'
+   ?'2026 é o preço bruto de referência informado, sem estimativa de créditos tributários atuais. A comparação tributária projetada começa em 2027.'
     :'Os quatro valores acima mostram o custo efetivo da mesma compra para sua empresa, alterando apenas o regime tributário do fornecedor e as regras correspondentes.')+
   '</p></div>';
 }
