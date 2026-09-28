@@ -667,7 +667,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div>
      <span class="tag">COMPARADOR DE CUSTO DE COMPRA</span>
      <h3>Como o regime do fornecedor muda o custo efetivo da sua empresa?</h3>
-     <p>Escolha o regime da empresa compradora. A mesma compra será comparada entre fornecedor no Lucro Presumido, Lucro Real, Simples Nacional padrão e Simples Nacional híbrido.</p>
+     <p>Informe o valor total da compra e o regime da sua empresa. Compare o crédito possível e o custo efetivo para quatro regimes de fornecedor, mantendo o mesmo preço informado.</p>
     </div>
     <div class="tool-head-actions">
      <div class="integration-badge"><b>4 cenários</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
@@ -695,20 +695,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
         <option value="simples_hybrid">Simples Nacional — híbrido · toma crédito IBS/CBS</option>
        </select>
       </div>
-      <div class="field wide"><label>Valor atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
+      <div class="field wide"><label>Valor total da compra, com tributos, R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <label class="main-credit-check" for="priceTakesCbsIbsCredit">
        <input id="priceTakesCbsIbsCredit" type="checkbox" checked>
        <span><b>Esta compra gera crédito de CBS/IBS</b><small>Disponível para Lucro Real, Lucro Presumido e Simples híbrido. No Simples padrão, o crédito da compradora fica zerado.</small></span>
       </label>
-     </div>
-
-     <div id="regularCurrentFields" class="regime-panel">
-      <div class="subpanel-title"><b>Tributos comuns dos fornecedores regulares</b><small>PIS/Cofins são definidos automaticamente: LP 0,65%/3% e LR 1,65%/7,6%.</small></div>
-      <div class="fields three">
-       <div class="field"><label>ICMS %</label><input id="icmsRate" type="number" step=".01" value="18"></div>
-       <div class="field"><label>ISS %</label><input id="issRate" type="number" step=".01" value="0"></div>
-       <div class="field"><label>IPI %</label><input id="ipiRate" type="number" step=".01" value="0"></div>
-      </div>
      </div>
 
      <div id="simplesCurrentFields" class="regime-panel">
@@ -1019,8 +1010,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260928-41"></script>
+<script src="tax-engine.js?v=20260928-48"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260928-47" defer></script>
+<script src="app-v2.js?v=20260928-48" defer></script>
 </body>
 </html>

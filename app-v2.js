@@ -328,7 +328,6 @@ function updateSnSummary(){
 
 function applyRegimeUI({preset=true}={}){
  const company=regime();
- if($('regularCurrentFields')) $('regularCurrentFields').style.display='block';
  if($('simplesCurrentFields')) $('simplesCurrentFields').style.display='block';
  if($('regularFutureFields')) $('regularFutureFields').style.display='block';
 
@@ -374,7 +373,6 @@ function priceEngineInput(){
  return {
   companyRegime:regime(),
   amount:Math.max(0,num('priceNow')),
-  currentRates:{icms:num('icmsRate'),iss:num('issRate'),ipi:num('ipiRate')},
   simple:{annex:snAnnex(),rbt12:num('snRbt12')},
   future:{mode:$('rateMode')?.value||'rtav',reduction:num('rateReduction'),cbs:num('cbsRate'),ibs:num('ibsRate')},
   purchaseGeneratesCredit:!!$('priceTakesCbsIbsCredit')?.checked
@@ -412,10 +410,8 @@ const SUPPLIER_LABELS={
 
 function supplierCardHtml(key,item){
  const f=item.future||item;
- const sub=key==='presumido'
-  ?'PIS 0,65% · Cofins 3%'
-  :key==='real'
-   ?'PIS 1,65% · Cofins 7,6%'
+ const sub=key==='presumido'||key==='real'
+  ?'IBS/CBS no regime regular'
    :key==='simples_hybrid'
     ?SN_LABELS[snAnnex()]+' · híbrido · RBT12 '+money(num('snRbt12'))
     :SN_LABELS[snAnnex()]+' · padrão · RBT12 '+money(num('snRbt12'));
@@ -550,8 +546,8 @@ function calcIntegrated(){
  $('integratedExplanation').innerHTML=
   '<b>Comparação da mesma compra entre quatro cenários de fornecedor.</b><p>'+
   'A empresa compradora está no regime <strong>'+(REGIME_LABELS[comparison.companyRegime]||comparison.companyRegime)+'</strong>. '+
-  'O valor-base informado é '+money(comparison.amount)+'. Para fornecedor no Lucro Presumido e Lucro Real, PIS/Cofins atuais são aplicados conforme cada regime; ICMS/ISS/IPI usam as premissas informadas. '+
-  'Os fornecedores do Simples usam '+SN_LABELS[snAnnex()]+' e o RBT12 informado. No Simples padrão, o fornecedor não toma crédito; porém, se a sua empresa estiver no regime regular, ela pode receber o crédito limitado ao IBS/CBS devido pelo fornecedor no Simples. No híbrido, IBS/CBS ficam fora do DAS e seguem o regime regular. '+
+  'O valor total informado é '+money(comparison.amount)+' em todos os cenários e anos: esta ferramenta não prevê o preço que cada fornecedor cobrará no futuro. No Lucro Presumido e no Lucro Real, o crédito estimado é igual para a mesma compra e alíquota. '+
+  'Os fornecedores do Simples usam '+SN_LABELS[snAnnex()]+' e o RBT12 informado. No Simples padrão, o crédito do comprador regular é limitado à parcela de IBS/CBS cobrada no DAS. No híbrido, IBS/CBS são apurados fora do DAS pelo regime regular. '+
   (comparison.creditEnabled
    ?'Como a empresa está no regime regular e a compra foi marcada como creditável, o custo efetivo desconta os créditos de CBS/IBS permitidos em cada cenário.'
    :'Nesta configuração, nenhum crédito de CBS/IBS é abatido do custo efetivo.')+
@@ -605,8 +601,8 @@ function renderYearDetail(year){
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+
    (row.year===2026
-   ?'2026 é o preço bruto de referência informado, sem estimativa de créditos tributários atuais. A comparação tributária projetada começa em 2027.'
-    :'Os quatro valores acima mostram o custo efetivo da mesma compra para sua empresa, alterando apenas o regime tributário do fornecedor e as regras correspondentes.')+
+   ?'2026 mostra o valor total informado, sem estimativa dos créditos tributários atuais. A comparação de CBS/IBS começa em 2027.'
+    :'Os quatro valores acima mantêm o preço da compra fixo e descontam apenas o crédito de CBS/IBS permitido para sua empresa em cada regime de fornecedor.')+
   '</p></div>';
 }
 
@@ -642,7 +638,7 @@ function renderYearlyProjection(){
 
  renderYearDetail(yearDetailSelected);
 
- let note='A tabela compara o custo efetivo da mesma compra entre quatro cenários de fornecedor: Lucro Presumido, Lucro Real, Simples padrão e Simples híbrido.';
+ let note='A tabela mantém o preço da compra informado em todos os anos e compara somente os créditos de CBS/IBS por regime do fornecedor. Os preços reais de cada fornecedor precisam ser informados por cotação.';
  if(regime()==='simples') note+=' Como a empresa compradora está no Simples padrão, os créditos de CBS/IBS não são apropriados nesta simulação.';
  else if($('priceTakesCbsIbsCredit')?.checked) note+=' Para a empresa no regime regular, a compra foi considerada creditável.';
  else note+=' A compra foi marcada como não creditável.';
@@ -1019,9 +1015,6 @@ function exportPriceExcel(){
    ['Regime da empresa',REGIME_LABELS[regime()]||regime()],
    ['Valor-base da compra',num('priceNow')],
    ['Compra gera crédito CBS/IBS',$('priceTakesCbsIbsCredit')?.checked?'Sim':'Não'],
-   ['ICMS fornecedor regular %',num('icmsRate')],
-   ['ISS fornecedor regular %',num('issRate')],
-   ['IPI fornecedor regular %',num('ipiRate')],
    ['RBT12 fornecedor Simples',num('snRbt12')],
    ['Anexo fornecedor Simples',SN_LABELS[snAnnex()]||snAnnex()],
    ['Ano destacado',selectedYear]
@@ -1069,7 +1062,9 @@ function applyQuickPreset(kind){
   : {pis:'revPisRate',cofins:'revCofinsRate',icms:'revIcmsRate',iss:'revIssRate',ipi:'revIpiRate'};
 
  $(regimeId).value=p.regime;
- $(ids.pis).value=p.pis;$(ids.cofins).value=p.cofins;$(ids.icms).value=p.icms;$(ids.iss).value=p.iss;$(ids.ipi).value=p.ipi;
+ for(const [tax,value] of Object.entries({pis:p.pis,cofins:p.cofins,icms:p.icms,iss:p.iss,ipi:p.ipi})){
+  if($(ids[tax])) $(ids[tax]).value=value;
+ }
 
  if(price){applyRegimeUI({preset:false});calcIntegrated();saveSimulation('price');}
  else{revApplyUI({preset:false});revCalcIntegrated();saveSimulation('revenue');}
@@ -1147,7 +1142,7 @@ function buildPricePdf(client,year){
   tableRows,
   note:comparison.creditEnabled
    ?'A empresa compradora está no regime regular e a compra foi tratada como creditável. O custo efetivo desconta os créditos de CBS/IBS correspondentes em cada cenário de fornecedor.'
-   :'Nesta configuração, não há apropriação de créditos de CBS/IBS pela empresa compradora. Os custos efetivos correspondem aos valores projetados das aquisições.'
+   :'Nesta configuração, não há apropriação de créditos de CBS/IBS pela empresa compradora. Os custos efetivos correspondem ao valor total informado para a compra.'
  };
 }
 
@@ -1243,7 +1238,7 @@ function printTaxReport(kind){
 }
 
 const PRICE_STATE_IDS=[
- 'taxRegime','priceNow','icmsRate','issRate','ipiRate','snRbt12','snAnnex',
+ 'taxRegime','priceNow','snRbt12','snAnnex',
  'priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceTakesCbsIbsCredit','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
@@ -1384,11 +1379,6 @@ function priceInputFromState(data){
  return {
   companyRegime:data?.taxRegime||'presumido',
   amount:numberFromState(data,'priceNow'),
-  currentRates:{
-   icms:numberFromState(data,'icmsRate'),
-   iss:numberFromState(data,'issRate'),
-   ipi:numberFromState(data,'ipiRate')
-  },
   simple:{annex:data?.snAnnex||'I',rbt12:numberFromState(data,'snRbt12')},
   future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate')},
   purchaseGeneratesCredit:!!data?.priceTakesCbsIbsCredit

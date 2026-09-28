@@ -313,11 +313,6 @@
  function supplierPurchaseComparison(input={},year=2027){
   const companyRegime=input.companyRegime||'presumido';
   const amount=Math.max(0,Number(input.amount)||0);
-  const commonCurrent={
-   icms:clamp(input.currentRates?.icms,0,100),
-   iss:clamp(input.currentRates?.iss,0,100),
-   ipi:clamp(input.currentRates?.ipi,0,100)
-  };
   const simple={
    annex:input.simple?.annex||'III',
    rbt12:Math.max(0,Number(input.simple?.rbt12)||0)
@@ -333,45 +328,29 @@
   const purchaseGeneratesCredit=input.purchaseGeneratesCredit!==false;
   const creditEnabled=regularBuyer&&purchaseGeneratesCredit;
 
-  const makeInput=(supplierRegime,pis,cofins)=>({
-   regime:supplierRegime,
-   amount,
-   currentRates:{
-    pis:pis||0,
-    cofins:cofins||0,
-    icms:commonCurrent.icms,
-    iss:commonCurrent.iss,
-    ipi:commonCurrent.ipi
-   },
-   simple,
-   future,
-   hybridFuture:future,
-   purchases:{enabled:creditEnabled,creditablePct:100,usePct:100},
-   buyer:{profile:'b2b',currentCredit:0,usePct:100}
-  });
-
-  const supplierInputs={
-   presumido:makeInput('presumido',0.65,3),
-   real:makeInput('real',1.65,7.6),
-   simples:makeInput('simples',0,0),
-   simples_hybrid:makeInput('simples_hybrid',0,0)
-  };
-
   const suppliers={};
   for(const key of ['presumido','real','simples','simples_hybrid']){
-   const cfg=supplierInputs[key];
-   const current=currentPriceScenario(cfg);
-   const futureScenario=futurePriceScenario(cfg,Number(year));
+   const cfg={regime:key,amount,simple,future,hybridFuture:future};
+   const p=paramsForYear(cfg,Number(year));
+   let cbs=0,ibs=0,remnant=0;
+   if(p.type==='simple'){
+    // O adquirente regular recebe somente a parcela de IBS/CBS cobrada no DAS.
+    cbs=amount*p.cbsInside;
+    ibs=amount*p.ibsInside;
+    remnant=amount*Math.max(0,p.dasRate-p.cbsInside-p.ibsInside);
+   }else if(p.type==='hybrid'){
+    ({cbs,ibs,remnant}=hybridAtGross(p,amount));
+   }else{
+    // O valor informado é o total da aquisição, já com IBS/CBS por fora.
+    // Tributos antigos do fornecedor não são um crédito novo do comprador.
+    const base=amount/(1+p.cbsRate+p.ibsRate);
+    cbs=base*p.cbsRate;
+    ibs=base*p.ibsRate;
+   }
+   const credit=creditEnabled?cbs+ibs:0;
    suppliers[key]={
     supplierRegime:key,
-    current,
-    future:futureScenario,
-    price:futureScenario.price,
-    cbs:futureScenario.cbs,
-    ibs:futureScenario.ibs,
-    remnant:futureScenario.remnant,
-    credit:futureScenario.buyerCredit||0,
-    effectiveCost:futureScenario.buyerCost??futureScenario.price
+    price:amount,cbs,ibs,remnant,credit,effectiveCost:Math.max(0,amount-credit)
    };
   }
 

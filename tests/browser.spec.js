@@ -55,9 +55,6 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#priceNow').blur();
  await expect(page.locator('#priceNow')).toHaveValue('1.234,56');
  await page.locator('#taxRegime').selectOption('presumido');
- await page.locator('#icmsRate').fill('18');
- await page.locator('#issRate').fill('0');
- await page.locator('#ipiRate').fill('0');
  await page.locator('#snRbt12').fill('1000000');
  await page.locator('#snAnnex').selectOption('I');
  await page.locator('#priceYear').selectOption('2027');
@@ -85,6 +82,9 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
 
  const lpCost=brl(await lp.locator('.supplier-cost b').textContent());
  const lpPrice=await supplierValue(lp,'Preço da compra');
+ expect(lpPrice).toBe(1234.56);
+ expect(await supplierValue(lr,'Preço da compra')).toBe(1234.56);
+ expect(await supplierValue(sn,'Preço da compra')).toBe(1234.56);
  expect(lpCost).toBeLessThan(lpPrice);
 
  await page.locator('#taxRegime').selectOption('simples');

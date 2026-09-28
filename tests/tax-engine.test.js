@@ -121,11 +121,10 @@ for(const key of ['presumido','real','simples','simples_hybrid']){
  assert.ok(x.credit>0,`Empresa regular deve aproveitar crédito do fornecedor ${key}`);
  close(x.effectiveCost,x.price-x.credit,1e-8,`Custo efetivo deve descontar crédito em ${key}`);
 }
-assert.notEqual(
- supplierCompare.suppliers.presumido.price,
- supplierCompare.suppliers.real.price,
- 'LP e LR devem refletir formações atuais diferentes'
-);
+for(const key of ['presumido','real','simples','simples_hybrid'])
+ close(supplierCompare.suppliers[key].price,1000,1e-8,'Cotação fixa por fornecedor');
+close(supplierCompare.suppliers.presumido.credit,supplierCompare.suppliers.real.credit,1e-8,'LP e LR têm o mesmo crédito para igual preço e alíquota');
+close(supplierCompare.suppliers.presumido.credit,1000*(.0931/1.0931),1e-8,'Crédito regular calculado por fora do preço total');
 assert.ok(
  supplierCompare.suppliers.simples.credit>0,
  'Empresa no regime regular deve receber crédito correspondente ao CBS/IBS do fornecedor do Simples'
@@ -163,6 +162,10 @@ for(const key of ['presumido','real','simples','simples_hybrid']){
 const nonCreditableCompare=engine.supplierPurchaseComparison({...compareInput,purchaseGeneratesCredit:false},2027);
 assert.equal(nonCreditableCompare.creditEnabled,false);
 for(const key of ['presumido','real','simples','simples_hybrid']) close(nonCreditableCompare.suppliers[key].credit,0,1e-10);
+for(const icms of [0,12,18]){
+ const other=engine.supplierPurchaseComparison({...compareInput,currentRates:{icms}},2027);
+ close(other.suppliers.presumido.effectiveCost,supplierCompare.suppliers.presumido.effectiveCost,1e-8,'ICMS do fornecedor não altera cotação fixa');
+}
 
 // Faturamento com créditos estimados das aquisições.
 const revenue={
