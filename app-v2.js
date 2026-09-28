@@ -423,8 +423,15 @@ function regimeExplanation(){
 }
 
 function updateScenarioStrip(){
- const r=regime(),year=$('priceYear')?.value||'2027';
- if($('activeRegimeBadge')) $('activeRegimeBadge').textContent=REGIME_LABELS[r]||r;
+ const year=$('priceYear')?.value||'2027';
+ const supplier=$('exampleSupplier')?.value||'presumido';
+ const supplierLabels={
+  presumido:'Lucro Presumido',
+  real:'Lucro Real',
+  simples:'Simples Nacional',
+  simples_hybrid:'Simples híbrido'
+ };
+ if($('activeSupplierBadge')) $('activeSupplierBadge').textContent=supplierLabels[supplier]||supplier;
  if($('activeYearBadge')) $('activeYearBadge').textContent=year;
  if($('resultYearLabel')) $('resultYearLabel').textContent=year;
 }

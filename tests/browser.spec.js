@@ -59,9 +59,13 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#snRbt12').fill('1000000');
  await page.locator('#snAnnex').selectOption('I');
  await page.locator('#priceYear').selectOption('2027');
+ await expect(page.locator('#activeSupplierBadge')).toHaveText('Lucro Presumido');
+ await page.locator('#exampleSupplier').selectOption('real');
+ await expect(page.locator('#activeSupplierBadge')).toHaveText('Lucro Real');
+ await page.locator('#exampleSupplier').selectOption('presumido');
 
  await page.locator('#priceNow').fill('100,00');
- await expect(page.locator('#priceEquationMemory')).toContainText('Equação do evento');
+ await expect(page.locator('#priceEquationMemory')).toContainText('Equação do preço novo');
  await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
  await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(4);
  await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 94,72');
