@@ -54,6 +54,7 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#priceNow').fill('1.234,56');
  await page.locator('#priceNow').blur();
  await expect(page.locator('#priceNow')).toHaveValue('1.234,56');
+ await page.locator('#priceToolPanel .additional-options summary').click();
  await page.locator('#taxRegime').selectOption('presumido');
  await page.locator('#snRbt12').fill('1000000');
  await page.locator('#snAnnex').selectOption('I');
@@ -177,6 +178,7 @@ test('fornecedor do Simples usa RBT12 e faturamento híbrido permanece intacto',
  await page.goto('http://127.0.0.1:4173/?e2e=simple-supplier',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
 
+ await page.locator('#priceToolPanel .additional-options summary').click();
  await page.locator('#taxRegime').selectOption('presumido');
  await page.locator('#priceNow').fill('1000000');
  await page.locator('#snRbt12').fill('1000000');
