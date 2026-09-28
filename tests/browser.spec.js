@@ -60,6 +60,9 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await page.locator('#priceYear').selectOption('2027');
 
  await page.locator('#priceNow').fill('100,00');
+ await page.locator('#priceFutureQuote').fill('');
+ await expect(page.locator('#priceEquationMemory')).toContainText('Equação do evento');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
  await page.locator('#priceFutureQuote').fill('104,15');
  await page.locator('#priceCurrentRealCredit').fill('9,25');
  await page.locator('#priceFutureCredit').fill('7,05');

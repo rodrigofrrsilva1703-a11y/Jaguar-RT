@@ -672,7 +672,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div>
      <span class="tag">COMPARADOR DE CUSTO DE COMPRA</span>
      <h3>Quanto custa a mesma compra para cada regime de comprador?</h3>
-     <p>Compare o preço e os créditos de hoje com o ano escolhido: um fornecedor, um preço por período e quatro regimes de comprador.</p>
+     <p>O preço futuro é calculado pela equação do evento a partir dos tributos atuais e novos. Compare o custo efetivo para quatro regimes de comprador ou informe uma cotação real.</p>
     </div>
     <div class="tool-head-actions">
      <div class="integration-badge"><b>4 cenários</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
@@ -702,7 +702,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       </div>
       <div class="field wide"><label>Valor total da compra, com tributos, R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <div class="field"><label>Regime do fornecedor</label><select id="exampleSupplier"><option value="presumido">Lucro Presumido</option><option value="real">Lucro Real</option><option value="simples">Simples Nacional</option><option value="simples_hybrid">Simples híbrido</option></select></div>
-      <div class="field"><label>Preço cotado no ano escolhido R$</label><input id="priceFutureQuote" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00"></div>
+      <div class="field"><label>Preço cotado no ano escolhido R$ <small>(opcional; vazio = equação)</small></label><input id="priceFutureQuote" class="money-input" type="text" inputmode="decimal" autocomplete="off" placeholder="Calcular automaticamente"></div>
+      <div class="field"><label>ICMS atual do fornecedor %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
+      <div class="field"><label>ISS atual do fornecedor %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="0"></div>
+      <div class="field"><label>IPI atual do fornecedor %</label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
       <div class="field"><label>Crédito atual do comprador no Lucro Real R$</label><input id="priceCurrentRealCredit" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="9,25"></div>
       <div class="field"><label>Crédito atual do comprador no Presumido R$</label><input id="priceCurrentPresumedCredit" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="0,00"></div>
       <div class="field wide"><label>Crédito CBS/IBS destacado na compra R$ <small>(opcional; vazio = cálculo pelas alíquotas)</small></label><input id="priceFutureCredit" class="money-input" type="text" inputmode="decimal" autocomplete="off" placeholder="Usar crédito estimado"></div>
@@ -769,6 +772,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
     <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO DO COMPRADOR</span><h3><span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">4 REGIMES</div></div>
+    <div id="priceEquationMemory" class="rate-note" aria-live="polite"></div>
     <div id="buyerExample" class="buyer-example" aria-live="polite"></div>
     <details><summary>Comparar também os quatro regimes de fornecedor</summary>
     <div id="regimeResultNote" class="regime-result-note"></div>
@@ -1024,8 +1028,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260928-49"></script>
+<script src="tax-engine.js?v=20260928-50"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260928-49" defer></script>
+<script src="app-v2.js?v=20260928-50" defer></script>
 </body>
 </html>
