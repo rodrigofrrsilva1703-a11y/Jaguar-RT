@@ -456,6 +456,129 @@
    remnant:supplier.remnant,estimatedCredit,futureCredit,buyers};
  }
 
+
+ // Compra comercial: preserva a base econômica do fornecedor e compara
+ // o custo efetivo para quatro regimes de comprador.
+ // Premissas didáticas do projeto:
+ // - operação comercial de mercadoria;
+ // - ICMS atual informado pelo usuário;
+ // - fornecedor LP: PIS/Cofins atuais de 3,65%;
+ // - fornecedor LR: PIS/Cofins atuais de 9,25%;
+ // - Simples padrão do comprador não toma créditos;
+ // - LP/LR compradores tomam ICMS + CBS/IBS quando a operação é creditável;
+ // - Simples com IBS/CBS no regime regular toma CBS/IBS, mas não o ICMS residual.
+ function commercialPurchaseComparison(input={},year=2027){
+  const currentPrice=Math.max(0,Number(input.amount)||0);
+  const supplierRegime=['presumido','real','simples'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
+  const icmsPct=clamp(input.icmsRate ?? input.currentRates?.icms ?? 18,0,100);
+  const creditable=input.purchaseGeneratesCredit!==false;
+  const simple={
+   annex:input.simple?.annex||'I',
+   rbt12:Math.max(0,Number(input.simple?.rbt12)||0)
+  };
+  const future={
+   mode:input.future?.mode||'rtav',
+   reduction:clamp(input.future?.reduction,0,100),
+   cbs:clamp(input.future?.cbs,0,100),
+   ibs:clamp(input.future?.ibs,0,100)
+  };
+
+  let currentPisCofinsPct=0;
+  let currentPisCofins=0;
+  let currentIcms=0;
+  let currentSupplierTaxes=0;
+  let economicBase=0;
+  let currentDas=0;
+
+  if(supplierRegime==='simples'){
+   const eff=snEffective(2026,simple.annex,simple.rbt12).eff;
+   currentDas=currentPrice*eff;
+   currentSupplierTaxes=currentDas;
+   economicBase=Math.max(0,currentPrice-currentDas);
+  }else{
+   currentPisCofinsPct=supplierRegime==='real'?9.25:3.65;
+   currentPisCofins=currentPrice*currentPisCofinsPct/100;
+   currentIcms=currentPrice*icmsPct/100;
+   currentSupplierTaxes=currentPisCofins+currentIcms;
+   economicBase=Math.max(0,currentPrice-currentSupplierTaxes);
+  }
+
+  const currentCredits={
+   simples:{icms:0,pisCofins:0,total:0},
+   presumido:{
+    icms:creditable&&supplierRegime!=='simples'?currentIcms:0,
+    pisCofins:0,
+    total:creditable&&supplierRegime!=='simples'?currentIcms:0
+   },
+   real:{
+    icms:creditable&&supplierRegime!=='simples'?currentIcms:0,
+    pisCofins:creditable&&supplierRegime!=='simples'?currentPrice*.0925:0,
+    total:0
+   },
+   // Antes da reforma, esta empresa continua no Simples: sem crédito nesta comparação.
+   simples_hybrid:{icms:0,pisCofins:0,total:0}
+  };
+  currentCredits.real.total=currentCredits.real.icms+currentCredits.real.pisCofins;
+
+  const transition=RULES.transition[Number(year)]||RULES.transition[2027];
+  const rates=resolveRegularRates(Number(year),future);
+
+  let futurePrice=0,cbs=0,ibs=0,icmsRemnant=0,dasRemnant=0;
+  let futureIcmsPct=0;
+  let simpleShares=null;
+
+  if(supplierRegime==='simples'){
+   simpleShares=snShares(Number(year),simple.annex,simple.rbt12);
+   futurePrice=(1-simpleShares.eff)>0?economicBase/(1-simpleShares.eff):0;
+   cbs=futurePrice*simpleShares.cbsEff;
+   ibs=futurePrice*simpleShares.ibsEff;
+   dasRemnant=futurePrice*Math.max(0,simpleShares.eff-simpleShares.cbsEff-simpleShares.ibsEff);
+  }else{
+   futureIcmsPct=icmsPct*(transition.old??1);
+   cbs=economicBase*rates.cbs/100;
+   ibs=economicBase*rates.ibs/100;
+   const beforeIcms=economicBase+cbs+ibs;
+   futurePrice=(1-futureIcmsPct/100)>0?beforeIcms/(1-futureIcmsPct/100):0;
+   icmsRemnant=futurePrice*futureIcmsPct/100;
+  }
+
+  const reformCredit=creditable?(cbs+ibs):0;
+  const regularIcmsCredit=creditable&&supplierRegime!=='simples'?icmsRemnant:0;
+  const futureCredits={
+   simples:{icms:0,cbs:0,ibs:0,total:0},
+   presumido:{icms:regularIcmsCredit,cbs:creditable?cbs:0,ibs:creditable?ibs:0,total:0},
+   real:{icms:regularIcmsCredit,cbs:creditable?cbs:0,ibs:creditable?ibs:0,total:0},
+   simples_hybrid:{icms:0,cbs:creditable?cbs:0,ibs:creditable?ibs:0,total:0}
+  };
+  for(const key of Object.keys(futureCredits)){
+   const x=futureCredits[key];
+   x.total=(x.icms||0)+(x.cbs||0)+(x.ibs||0);
+  }
+
+  const labels=['simples','presumido','real','simples_hybrid'];
+  const buyers={};
+  for(const key of labels){
+   const currentCredit=currentCredits[key].total;
+   const futureCredit=futureCredits[key].total;
+   const currentCost=Math.max(0,currentPrice-currentCredit);
+   const futureCost=Math.max(0,futurePrice-futureCredit);
+   buyers[key]={
+    currentPrice,currentCredits:currentCredits[key],currentCredit,currentCost,
+    futurePrice,futureCredits:futureCredits[key],futureCredit,futureCost,
+    changePct:effectPct(currentCost,futureCost)
+   };
+  }
+
+  return {
+   year:Number(year),supplierRegime,currentPrice,icmsPct,currentPisCofinsPct,
+   currentPisCofins,currentIcms,currentDas,currentSupplierTaxes,economicBase,
+   cbsPct:supplierRegime==='simples'?(futurePrice?cbs/futurePrice*100:0):rates.cbs,
+   ibsPct:supplierRegime==='simples'?(futurePrice?ibs/futurePrice*100:0):rates.ibs,
+   cbs,ibs,futureIcmsPct,icmsRemnant,dasRemnant,futurePrice,
+   transitionOldFactor:transition.old??1,creditable,simpleShares,buyers
+  };
+ }
+
  function priceMemory(input,year){
   const cfg=normalizeInput(input);
   const base=currentPriceScenario(cfg);
@@ -509,11 +632,11 @@
  }
 
  return Object.freeze({
-  version:'1.1.0',
+  version:'1.2.0',
   rulesVersion:RULES.version,
   clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
   currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,supplierPurchaseComparison,supplierPriceProjection,
-  buyerPurchaseComparison,
+  buyerPurchaseComparison,commercialPurchaseComparison,
   currentRevenueScenario,revenueScenarioAtRevenue,futureRevenueScenario,
   validatePriceInput:input=>validateInput(input,'price'),
   validateRevenueInput:input=>validateInput(input,'revenue'),
