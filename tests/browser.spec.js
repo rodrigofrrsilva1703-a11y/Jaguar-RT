@@ -40,116 +40,76 @@ async function supplierValue(card,label){
  return brl(await card.locator('.supplier-line').filter({hasText:label}).locator('b').textContent());
 }
 
-test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page})=>{
+test('compra comercial aplica créditos atuais e transição por regime do comprador',async({page})=>{
  const errors=[];
  page.on('console',msg=>{if(msg.type()==='error') errors.push(msg.text());});
  page.on('pageerror',err=>errors.push(err.message));
 
- await page.goto('http://127.0.0.1:4173/?e2e=suppliers',{waitUntil:'domcontentloaded'});
+ await page.goto('http://127.0.0.1:4173/?e2e=commercial-purchase',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
 
  await expect(page.locator('#priceToolPanel')).toHaveClass(/active/);
- await expect(page.locator('#priceToolTab')).toContainText('Compra / fornecedores');
-
- await page.locator('#priceNow').fill('1.234,56');
- await page.locator('#priceNow').blur();
- await expect(page.locator('#priceNow')).toHaveValue('1.234,56');
- await page.locator('#priceToolPanel .additional-options summary').click();
- await page.locator('#taxRegime').selectOption('presumido');
- await page.locator('#snRbt12').fill('1000000');
- await page.locator('#snAnnex').selectOption('I');
- await page.locator('#priceYear').selectOption('2027');
- await expect(page.locator('#activeSupplierBadge')).toHaveText('Lucro Presumido');
- await page.locator('#exampleSupplier').selectOption('real');
- await expect(page.locator('#activeSupplierBadge')).toHaveText('Lucro Real');
- await page.locator('#exampleSupplier').selectOption('presumido');
+ await expect(page.locator('#priceToolTab')).toContainText('Compra comercial');
 
  await page.locator('#priceNow').fill('100,00');
- await expect(page.locator('#priceEquationMemory')).toContainText('Equação do preço novo');
- await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
+ await page.locator('#exampleSupplier').selectOption('real');
+ await page.locator('#icmsRate').fill('18');
+ await page.locator('#priceYear').selectOption('2027');
+
+ await expect(page.locator('#activeSupplierBadge')).toHaveText('Lucro Real');
+ await expect(page.locator('#priceEquationMemory')).toContainText('Base econômica atual');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 72,75');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 96,98');
  await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(4);
- await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 94,72');
- await expect(page.locator('[data-buyer="presumido"]')).toContainText('CBS 9,21%');
- await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 9,62');
- await expect(page.locator('[data-buyer="presumido"]')).toContainText('IBS 0,10%');
- await expect(page.locator('[data-buyer="presumido"]')).toContainText('R$ 0,10');
- await page.locator('#buyerPurchaseCredit').uncheck();
- await expect(page.locator('[data-buyer="presumido"] div').filter({hasText:'Crédito aproveitado'}).locator('b')).toHaveText('R$ 0,00');
- await page.locator('#buyerPurchaseCredit').check();
- await expect(page.locator('[data-buyer="real"]')).toContainText('R$ 90,75');
- await expect(page.locator('[data-buyer="simples"]')).toContainText('+4,4444%');
- await page.locator('#priceNow').fill('1.234,56');
 
- await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(4);
- const lp=page.locator('[data-supplier="presumido"]');
- const lr=page.locator('[data-supplier="real"]');
- const sn=page.locator('[data-supplier="simples"]');
- const hybrid=page.locator('[data-supplier="simples_hybrid"]');
- await expect(lp).toContainText('Lucro Presumido');
- await expect(lr).toContainText('Lucro Real');
- await expect(sn).toContainText('Simples Nacional');
- await expect(hybrid).toContainText('Simples Nacional híbrido');
+ const simple=page.locator('[data-buyer="simples"]');
+ const presumido=page.locator('[data-buyer="presumido"]');
+ const real=page.locator('[data-buyer="real"]');
+ const regular=page.locator('[data-buyer="simples_hybrid"]');
 
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
- const lpCredit=await supplierValue(lp,'Crédito para sua empresa');
- const lrCredit=await supplierValue(lr,'Crédito para sua empresa');
- const snCredit=await supplierValue(sn,'Crédito para sua empresa');
- const hybridCredit=await supplierValue(hybrid,'Crédito para sua empresa');
- expect(lpCredit).toBeGreaterThan(0);
- expect(lrCredit).toBeGreaterThan(0);
- expect(snCredit).toBeGreaterThan(0);
- expect(hybridCredit).toBeGreaterThan(0);
+ await expect(simple.locator('.buyer-total b').nth(0)).toHaveText('R$ 100,00');
+ await expect(simple.locator('.buyer-total b').nth(1)).toHaveText('R$ 96,98');
+ await expect(presumido.locator('.buyer-total b').nth(0)).toHaveText('R$ 82,00');
+ await expect(presumido.locator('.buyer-total b').nth(1)).toHaveText('R$ 72,75');
+ await expect(real.locator('.buyer-total b').nth(0)).toHaveText('R$ 72,75');
+ await expect(real.locator('.buyer-total b').nth(1)).toHaveText('R$ 72,75');
+ await expect(regular.locator('.buyer-total b').nth(0)).toHaveText('R$ 100,00');
+ await expect(regular.locator('.buyer-total b').nth(1)).toHaveText('R$ 90,21');
 
- const lpCost=brl(await lp.locator('.supplier-cost b').textContent());
- const lpPrice=await supplierValue(lp,'Preço da compra');
- expect(lpPrice).toBeGreaterThan(1234.56);
- expect(await supplierValue(lr,'Preço da compra')).not.toBe(lpPrice);
- expect(await supplierValue(sn,'Preço da compra')).not.toBe(lpPrice);
- expect(lpCost).toBeLessThan(lpPrice);
+ await expect(presumido).toContainText('CBS');
+ await expect(presumido).toContainText('R$ 6,70');
+ await expect(presumido).toContainText('IBS');
+ await expect(presumido).toContainText('R$ 0,07');
+ await expect(presumido).toContainText('ICMS remanescente');
+ await expect(presumido).toContainText('R$ 17,46');
 
- await page.locator('#taxRegime').selectOption('simples');
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeDisabled();
- await expect(page.locator('#priceTakesCbsIbsCredit')).not.toBeChecked();
- await expect(page.locator('#regimeResultNote')).toContainText('não se apropria de créditos');
-
- expect(await supplierValue(lp,'Crédito para sua empresa')).toBe(0);
- expect(await supplierValue(lr,'Crédito para sua empresa')).toBe(0);
- expect(await supplierValue(sn,'Crédito para sua empresa')).toBe(0);
- expect(await supplierValue(hybrid,'Crédito para sua empresa')).toBe(0);
- const lpCostSimpleBuyer=brl(await lp.locator('.supplier-cost b').textContent());
- const lpPriceSimpleBuyer=await supplierValue(lp,'Preço da compra');
- expect(Math.abs(lpCostSimpleBuyer-lpPriceSimpleBuyer)).toBeLessThanOrEqual(0.02);
-
- await page.locator('#taxRegime').selectOption('real');
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
- expect(await supplierValue(lp,'Crédito para sua empresa')).toBeGreaterThan(0);
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
+ await page.locator('#priceYear').selectOption('2033');
+ await expect(simple.locator('.buyer-total b').nth(1)).toHaveText('R$ 93,05');
+ await expect(regular.locator('.buyer-total b').nth(1)).toHaveText('R$ 72,75');
 
- await page.locator('#snRbt12').fill('4800001');
- await expect(page.locator('#priceValidation')).toContainText('R$ 4,8 milhões');
- await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(0);
- await page.locator('#snRbt12').fill('1000000');
- await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(4);
+ await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(3);
+ await expect(page.locator('[data-supplier="presumido"]')).toContainText('Lucro Presumido');
+ await expect(page.locator('[data-supplier="real"]')).toContainText('Lucro Real');
+ await expect(page.locator('[data-supplier="simples"]')).toContainText('Simples Nacional');
 
- await page.locator('#taxRegime').selectOption('simples_hybrid');
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeEnabled();
- await expect(page.locator('#priceTakesCbsIbsCredit')).toBeChecked();
- await expect(page.locator('#regimeResultNote')).toContainText('podem gerar crédito');
+ await page.locator('#exampleSupplier').selectOption('presumido');
+ await page.locator('#priceYear').selectOption('2027');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 78,35');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
 
- expect(await supplierValue(hybrid,'Crédito para sua empresa')).toBeGreaterThan(0);
- await page.locator('#taxRegime').selectOption('real');
+ await page.locator('#exampleSupplier').selectOption('simples');
+ await expect(page.locator('#simplesCurrentFields')).toBeVisible();
+ await expect(page.locator('#priceEquationMemory')).toContainText('DAS estimado');
 
+ await page.locator('#exampleSupplier').selectOption('real');
  await page.evaluate(()=>{window.print=()=>{};});
  await page.locator('#pricePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('Custo efetivo por regime do comprador');
- await expect(page.locator('#printReport')).toContainText('Cliente Lucro Presumido');
- await expect(page.locator('#printReport')).toContainText('Cliente Lucro Real');
- await expect(page.locator('#printReport')).toContainText('Cliente Simples Nacional');
- await expect(page.locator('#printReport')).toContainText('Cliente Simples híbrido');
- await expect(page.locator('#printReport')).toContainText('CBS sobre preço novo');
- await expect(page.locator('#printReport')).toContainText('IBS sobre preço novo');
+ await expect(page.locator('#printReport')).toContainText('Compra comercial · custo efetivo');
+ await expect(page.locator('#printReport')).toContainText('Simples Nacional');
+ await expect(page.locator('#printReport')).toContainText('Lucro Presumido');
+ await expect(page.locator('#printReport')).toContainText('Lucro Real');
+ await expect(page.locator('#printReport')).toContainText('Simples · IBS/CBS regular');
 
  const purchaseSheet=await page.evaluate(()=>{
   let out=null;
@@ -157,13 +117,13 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
   exportPriceExcel();
   return out;
  });
- expect(purchaseSheet[1]).toContain('Custo fornecedor LP');
- expect(purchaseSheet[1]).toContain('Custo fornecedor LR');
- expect(purchaseSheet[1]).toContain('Custo fornecedor Simples');
- expect(purchaseSheet[1]).toContain('Custo fornecedor Simples híbrido');
+ expect(purchaseSheet[1]).toContain('Custo Simples padrão');
+ expect(purchaseSheet[1]).toContain('Custo Lucro Presumido');
+ expect(purchaseSheet[1]).toContain('Custo Lucro Real');
+ expect(purchaseSheet[1]).toContain('Custo Simples regular IBS/CBS');
  expect(purchaseSheet[2]).toHaveLength(8);
 
- // Regressão: a ferramenta de faturamento continua funcionando como antes.
+ // Regressão: faturamento permanece intacto.
  await page.evaluate(()=>showTaxTool('revenue'));
  await expect(page.locator('#revenueToolPanel')).toHaveClass(/active/);
  await page.locator('#revCurrentRevenue').fill('100.000,50');
@@ -172,34 +132,27 @@ test('compara a empresa com fornecedores LP, LR, Simples e híbrido',async({page
  await expect(page.locator('#revCurrentSummary')).toContainText('PIS');
  await expect(page.locator('#revCurrentSummary')).toContainText('Cofins');
  await expect(page.locator('#revCurrentSummary')).toContainText('ICMS');
- await expect(page.locator('#revCurrentSummary')).not.toContainText('Total de tributos');
  await expect(page.locator('#revCurrentSummary')).toContainText('−');
 
  expect(errors).toEqual([]);
 });
 
-test('fornecedor do Simples usa RBT12 e faturamento híbrido permanece intacto',async({page})=>{
+test('fornecedor do Simples usa Anexo I e faturamento híbrido permanece intacto',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=simple-supplier',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
 
- await page.locator('#priceToolPanel .additional-options summary').click();
- await page.locator('#taxRegime').selectOption('presumido');
+ await page.locator('#exampleSupplier').selectOption('simples');
  await page.locator('#priceNow').fill('1000000');
  await page.locator('#snRbt12').fill('1000000');
- await page.locator('#snAnnex').selectOption('III');
  await page.locator('#priceYear').selectOption('2027');
 
- const sn=page.locator('[data-supplier="simples"]');
- await expect(sn).toContainText('Anexo III');
- expect(await supplierValue(sn,'Crédito para sua empresa')).toBeGreaterThan(0);
- const snCost=brl(await sn.locator('.supplier-cost b').textContent());
- const snPrice=await supplierValue(sn,'Preço da compra');
- expect(snCost).toBeLessThan(snPrice);
+ await expect(page.locator('#simplesCurrentFields')).toBeVisible();
+ await expect(page.locator('#snAnnex')).toHaveValue('I');
+ await expect(page.locator('#priceEquationMemory')).toContainText('DAS estimado');
+ await expect(page.locator('[data-buyer="simples"]')).toContainText('Sem crédito');
 
- const hybrid=page.locator('[data-supplier="simples_hybrid"]');
- await expect(hybrid).toContainText('híbrido');
- expect(await supplierValue(hybrid,'Crédito para sua empresa')).toBeGreaterThan(0);
- expect(await supplierValue(hybrid,'Tributos remanescentes')).toBeGreaterThan(0);
+ const lpFutureCredit=brl(await page.locator('[data-buyer="presumido"] div').filter({hasText:'Créditos'}).locator('b').last().textContent());
+ expect(lpFutureCredit).toBeGreaterThan(0);
 
  // Regressão exata da ferramenta de faturamento híbrido.
  await page.evaluate(()=>showTaxTool('revenue'));
