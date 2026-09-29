@@ -105,10 +105,16 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
 
  // Evolução anual agora também usa fornecedor nas colunas.
  await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
- await expect(page.locator('.price-year-table thead')).toContainText('Fornecedor Simples');
- await expect(page.locator('.price-year-table thead')).toContainText('Fornecedor LP');
- await expect(page.locator('.price-year-table thead')).toContainText('Fornecedor LR');
- await expect(page.locator('.price-year-table thead')).toContainText('Fornecedor Simples regular');
+ await expect(page.locator('.price-year-table thead')).toContainText('Ano / fase');
+ await expect(page.locator('.price-year-table thead')).toContainText('Simples');
+ await expect(page.locator('.price-year-table thead')).toContainText('Lucro Presumido');
+ await expect(page.locator('.price-year-table thead')).toContainText('Lucro Real');
+ await expect(page.locator('.price-year-table thead')).toContainText('Simples IBS/CBS');
+ await expect(page.locator('#yearlyPriceStrip .year-price-card')).toHaveCount(8);
+ await expect(page.locator('#yearlyPriceStrip .year-card-highlight').first()).toContainText('Menor custo efetivo');
+ await expect(page.locator('#yearlyPriceStrip .year-card-spread').first()).toContainText('Diferença entre fornecedores');
+ await expect(page.locator('#yearlyPriceStrip .year-supplier-row').first()).toBeVisible();
+ await expect(page.locator('#yearlyProjectionTable .best-pill').first()).toHaveText('menor');
 
  // Segmentos continuam funcionando.
  await page.locator('#priceSegment').selectOption('comercio');
