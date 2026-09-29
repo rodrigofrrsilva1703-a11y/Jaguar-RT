@@ -290,6 +290,16 @@ const mixedGoods=engine.segmentedPurchaseComparison({
 assert.equal(mixedGoods.oldTaxName,'ICMS');
 close(mixedGoods.futureIcmsPct,16.2,1e-10,'Misto mercadoria: ICMS cai a 90% em 2029');
 
+// Quarto tipo de fornecedor: Simples com IBS/CBS no regime regular.
+const commerceSNRegular=engine.segmentedPurchaseComparison({...commerceLRInput,segment:'comercio',supplierRegime:'simples_hybrid'},2027);
+assert.equal(commerceSNRegular.supplierRegime,'simples_hybrid');
+close(commerceSNRegular.currentDas,commerceSN.currentDas,1e-8,'Simples regular parte do mesmo DAS atual');
+close(commerceSNRegular.economicBase,commerceSN.economicBase,1e-8,'Simples regular preserva a mesma base atual');
+close(commerceSNRegular.buyers.presumido.currentCost,100,1e-8,'Comprador LP não toma crédito atual do fornecedor Simples regular');
+assert.ok(commerceSNRegular.cbs+commerceSNRegular.ibs>0,'Simples regular destaca CBS/IBS na reforma');
+assert.ok(commerceSNRegular.buyers.presumido.futureCredit>0,'Comprador regular toma crédito do Simples regular');
+assert.notEqual(commerceSNRegular.futurePrice,commerceSN.futurePrice,'Simples padrão e Simples regular geram preços futuros diferentes');
+
 // Faturamento com créditos estimados das aquisições.
 const revenue={
  regime:'presumido',
