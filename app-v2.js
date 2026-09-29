@@ -1066,32 +1066,35 @@ function hybridBaseRows(x){
 function exportPriceExcel(){
  if(!yearlyRows.length) renderYearlyProjection();
  const selectedYear=Number($('priceYear')?.value||2027);
- const selected=purchaseComparison(selectedYear);
- const keys=['simples','presumido','real','simples_hybrid'];
+ const input=priceEngineInput();
+ const buyer=input.buyerRegime;
+ const models=purchaseSupplierModels(selectedYear,input);
  downloadSpreadsheet(
-  'compra-'+selected.segment+'-'+selected.supplierRegime+'-2026-2033.xlsx',
-  ['Ano','Preço da compra','Custo Simples padrão','Crédito Simples padrão','Custo Lucro Presumido','Crédito Lucro Presumido','Custo Lucro Real','Crédito Lucro Real','Custo Simples regular IBS/CBS','Crédito Simples regular IBS/CBS'],
+  'compra-comprador-'+buyer+'-fornecedores-2026-2033.xlsx',
+  ['Ano','Custo fornecedor Simples','Crédito fornecedor Simples','Custo fornecedor LP','Crédito fornecedor LP','Custo fornecedor LR','Crédito fornecedor LR','Custo fornecedor Simples regular','Crédito fornecedor Simples regular'],
   yearlyRows.map(function(row){
-   const price=row.year===2026?row.model.currentPrice:row.model.futurePrice;
-   const values=[row.year,price];
-   keys.forEach(function(key){values.push(costForRow(row,key),creditForRow(row,key));});
+   const values=[row.year];
+   PURCHASE_SUPPLIERS.forEach(function(key){
+    const r=supplierResultForRow(row,key);
+    values.push(r.cost,r.credit);
+   });
    return values;
   }),
   [
-   ['Segmento',segmentDisplay(selected)],
-   ['Regime do fornecedor',SUPPLIER_LABELS[selected.supplierRegime]],
-   ['Preço atual',num('priceNow')],
-   ['Tributo atual principal',selected.oldTaxName],
-   ['Alíquota atual principal %',selected.currentOldTaxPct],
-   ['IPI atual %',selected.ipiPct||0],
+   ['Segmento',segmentDisplay(models[0])],
+   ['Regime do comprador',PURCHASE_BUYER_LABELS[buyer]],
+   ['Preço atual da compra',input.amount],
+   ['ICMS atual %',input.icmsRate],
+   ['ISS atual %',input.issRate],
+   ['IPI atual %',input.ipiRate],
    ['Operação creditável',$('buyerPurchaseCredit')?.checked?'Sim':'Não'],
-   ['RBT12 fornecedor Simples',num('snRbt12')],
-   ['Anexo fornecedor Simples',snAnnex()],
+   ['RBT12 fornecedores Simples',input.simple.rbt12],
+   ['Anexo fornecedores Simples',input.simple.annex],
    ['Ano destacado',selectedYear],
-   ['CBS %',num('cbsRate')],
-   ['IBS %',num('ibsRate')]
+   ['CBS %',input.future.cbs],
+   ['IBS %',input.future.ibs]
   ],
-  comparisonMemoryRows(selected)
+  comparisonMemoryRows(models,buyer)
  );
 }
 
@@ -1166,13 +1169,13 @@ function pdfAnnualTable(headers,rows){
 }
 
 function buildPricePdf(client,year){
- const model=purchaseComparison(year);
- const supplierName=SUPPLIER_LABELS[model.supplierRegime].replace('Fornecedor · ','');
- const buyerKeys=['simples','presumido','real','simples_hybrid'];
- const supplierCards=buyerKeys.map(function(key){
-  const x=model.buyers[key];
+ const input=priceEngineInput();
+ const buyerRegime=input.buyerRegime;
+ const models=purchaseSupplierModels(year,input);
+ const supplierCards=models.map(function(model){
+  const x=model.buyers[buyerRegime];
   return {
-   title:PURCHASE_BUYER_LABELS[key],
+   title:'Fornecedor · '+SUPPLIER_LABELS[model.supplierRegime],
    rows:[
     ['Preço atual',money(x.currentPrice)],
     ['Crédito atual',money(x.currentCredit)],
@@ -1181,6 +1184,7 @@ function buildPricePdf(client,year){
     ['CBS',money(model.cbs)],
     ['IBS',money(model.ibs)],
     ...(model.oldTaxRemnant>0?[[model.oldTaxName+' remanescente',money(model.oldTaxRemnant)]]:[]),
+    ...(model.dasRemnant>0?[['DAS remanescente',money(model.dasRemnant)]]:[]),
     ['Créditos '+year,money(x.futureCredit)],
     ['Custo efetivo '+year,money(x.futureCost)],
     ['Variação',(x.changePct>0?'+':'')+pct(x.changePct)]
@@ -1188,34 +1192,30 @@ function buildPricePdf(client,year){
   };
  });
 
- const annual=[{year:2026,model:purchaseComparison(2027)}];
- for(let y=2027;y<=2033;y++) annual.push({year:y,model:purchaseComparison(y)});
+ const annual=[{year:2026,buyerRegime,models:purchaseSupplierModels(2027,input)}];
+ for(let y=2027;y<=2033;y++) annual.push({year:y,buyerRegime,models:purchaseSupplierModels(y,input)});
  const tableRows=annual.map(function(row){
   return [
    row.year,
-   money(row.year===2026?row.model.currentPrice:row.model.futurePrice),
-   ...buyerKeys.map(function(key){
-    return money(row.year===2026?row.model.buyers[key].currentCost:row.model.buyers[key].futureCost);
-   })
+   ...PURCHASE_SUPPLIERS.map(function(key){return money(supplierResultForRow(row,key).cost);})
   ];
  });
 
  return {
-  title:'Compra por segmento · custo efetivo',
-  subtitle:segmentDisplay(model)+' · fornecedor '+supplierName+' · atual × '+year,
+  title:'Comprador × fornecedores · custo efetivo',
+  subtitle:segmentDisplay(models[0])+' · comprador '+PURCHASE_BUYER_LABELS[buyerRegime]+' · análise de '+year,
   kpis:[
-   ['Segmento',segmentDisplay(model),'Operação analisada'],
-   ['Fornecedor',supplierName,'Regime da compra'],
-   ['Preço atual',money(model.currentPrice),'Valor informado'],
-   ['Base econômica',money(model.economicBase),'Após tributos atuais'],
-   ['Preço '+year,money(model.futurePrice),'CBS/IBS + '+model.oldTaxName+' remanescente']
+   ['Segmento',segmentDisplay(models[0]),'Operação analisada'],
+   ['Comprador',PURCHASE_BUYER_LABELS[buyerRegime],'Regime da empresa'],
+   ['Compra atual',money(input.amount),'Mesmo valor-base nos fornecedores'],
+   ['Ano analisado',String(year),'Comparação entre quatro fornecedores']
   ],
   currentRows:[],
   futureRows:[],
   supplierCards,
-  tableHeaders:['Ano','Preço da compra','Simples padrão','Lucro Presumido','Lucro Real','Simples regular IBS/CBS'],
+  tableHeaders:['Ano','Fornecedor Simples','Fornecedor LP','Fornecedor LR','Fornecedor Simples regular'],
   tableRows,
-  note:'A projeção adapta os tributos atuais ao segmento. Mercadorias e indústria usam ICMS; serviços usam ISS; indústria pode incluir IPI atual quando aplicável. Na transição, CBS/IBS entram na projeção e ICMS/ISS são reduzidos gradualmente até 2033. Os créditos variam conforme o regime do comprador e a operação.'
+  note:'A empresa compradora permanece a mesma em toda a comparação. Cada card representa um tipo de fornecedor e mostra como preço, créditos e custo efetivo mudam conforme o regime desse fornecedor.'
  };
 }
 
@@ -1311,7 +1311,7 @@ function printTaxReport(kind){
 }
 
 const PRICE_STATE_IDS=[
- 'priceSegment','priceOperationType','priceNow','exampleSupplier','icmsRate','issRate','ipiRate','buyerPurchaseCredit',
+ 'priceSegment','priceOperationType','priceBuyerRegime','priceNow','icmsRate','issRate','ipiRate','buyerPurchaseCredit',
  'snRbt12','snAnnex','priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
@@ -1320,7 +1320,7 @@ const REVENUE_STATE_IDS=[
  'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset','revenueClientName'
 ];
 
-function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v6':'v1');}
+function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v7':'v1');}
 
 function saveSimulation(kind){
  const ids=kind==='price'?PRICE_STATE_IDS:REVENUE_STATE_IDS;
@@ -1455,7 +1455,7 @@ function priceInputFromState(data){
   amount:numberFromState(data,'priceNow'),
   segment,
   operationType,
-  supplierRegime:data?.exampleSupplier||'presumido',
+  buyerRegime:data?.priceBuyerRegime||'presumido',
   icmsRate:numberFromState(data,'icmsRate',18),
   issRate:numberFromState(data,'issRate',5),
   ipiRate:numberFromState(data,'ipiRate',0),
@@ -1487,14 +1487,17 @@ function compareNamedScenario(kind){
 
  if(kind==='price'){
   const year=Number($('priceYear')?.value||2027);
-  const current=purchaseComparison(year);
-  const other=RTAV_ENGINE.segmentedPurchaseComparison(priceInputFromState(saved.data),year);
-  panel.innerHTML='<div class="scenario-compare-grid">'+
-   compareItem('Simples padrão',other.buyers.simples.futureCost,current.buyers.simples.futureCost)+
-   compareItem('Lucro Presumido',other.buyers.presumido.futureCost,current.buyers.presumido.futureCost)+
-   compareItem('Lucro Real',other.buyers.real.futureCost,current.buyers.real.futureCost)+
-   compareItem('Simples regular IBS/CBS',other.buyers.simples_hybrid.futureCost,current.buyers.simples_hybrid.futureCost)+
-  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+' · '+segmentDisplay(other)+'.</div>';
+  const currentInput=priceEngineInput();
+  const savedInput=priceInputFromState(saved.data);
+  const currentBuyer=currentInput.buyerRegime;
+  const savedBuyer=savedInput.buyerRegime;
+  const currentModels=purchaseSupplierModels(year,currentInput);
+  const savedModels=PURCHASE_SUPPLIERS.map(key=>RTAV_ENGINE.segmentedPurchaseComparison({...savedInput,supplierRegime:key},year));
+  panel.innerHTML='<div class="scenario-compare-grid">'+PURCHASE_SUPPLIERS.map(function(key){
+   const current=currentModels.find(x=>x.supplierRegime===key).buyers[currentBuyer].futureCost;
+   const old=savedModels.find(x=>x.supplierRegime===key).buyers[savedBuyer].futureCost;
+   return compareItem('Fornecedor '+SUPPLIER_LABELS[key],old,current);
+  }).join('')+'</div><div class="rate-note">Comparação em '+year+' · atual: comprador '+PURCHASE_BUYER_LABELS[currentBuyer]+' · salvo: comprador '+PURCHASE_BUYER_LABELS[savedBuyer]+'.</div>';
  }else{
   const year=Number($('revYear')?.value||2027);
   const current=RTAV_ENGINE.futureRevenueScenario(revenueEngineInput(),year);
@@ -1520,7 +1523,7 @@ function resetSimulation(kind){
 
 $('priceSegment')?.addEventListener('change',function(){syncSegmentFields();applyRegimeUI({preset:false});});
 $('priceOperationType')?.addEventListener('change',function(){syncSegmentFields();applyRegimeUI({preset:false});});
-$('exampleSupplier')?.addEventListener('change',function(){applyRegimeUI({preset:false});});
+$('priceBuyerRegime')?.addEventListener('change',calcIntegrated);
 $('snAnnex')?.addEventListener('change',function(){updateSnSummary();calcIntegrated();});
 $('snRbt12')?.addEventListener('input',function(){updateSnSummary();calcIntegrated();});
 $('priceYear')?.addEventListener('change',applyYearPreset);
