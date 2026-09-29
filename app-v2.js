@@ -653,23 +653,56 @@ function supplierResultForRow(row,supplierRegime){
   :{cost:x.futureCost,credit:x.futureCredit,price:x.futurePrice};
 }
 
+function shortSupplierLabel(key){
+ return {
+  simples:'Simples',
+  presumido:'Lucro Presumido',
+  real:'Lucro Real',
+  simples_hybrid:'Simples IBS/CBS'
+ }[key]||key;
+}
+
+function supplierCostStats(row){
+ const items=PURCHASE_SUPPLIERS.map(function(key){
+  const result=supplierResultForRow(row,key);
+  return {key,label:shortSupplierLabel(key),cost:result.cost,credit:result.credit,price:result.price};
+ });
+ const min=Math.min(...items.map(x=>x.cost));
+ const max=Math.max(...items.map(x=>x.cost));
+ const epsilon=.005;
+ const best=items.filter(x=>Math.abs(x.cost-min)<=epsilon);
+ return {items,min,max,spread:max-min,best};
+}
+
+function bestSupplierText(stats){
+ if(stats.best.length===1) return stats.best[0].label;
+ if(stats.best.length===2) return stats.best.map(x=>x.label).join(' + ');
+ return stats.best.length+' fornecedores empatados';
+}
+
 function renderYearDetail(year){
  if(!$('yearDetailPanel')||!yearlyRows.length) return;
  const row=yearlyRows.find(r=>r.year===Number(year))||yearlyRows[0];
  const first=row.models[0];
+ const stats=supplierCostStats(row);
  $('yearDetailPanel').classList.add('visible');
  $('yearDetailPanel').innerHTML=
   '<div class="year-detail-top">'+
    '<div><span>'+segmentDisplay(first).toUpperCase()+' · COMPRADOR '+PURCHASE_BUYER_LABELS[row.buyerRegime].toUpperCase()+'</span><h4>'+row.year+' · custo por fornecedor</h4></div>'+
-   '<div class="year-detail-price"><small>MESMA COMPRA ATUAL</small><b>'+money(num('priceNow'))+'</b></div>'+
+   '<div class="year-detail-price"><small>DIFERENÇA ENTRE FORNECEDORES</small><b>'+money(stats.spread)+'</b></div>'+
   '</div>'+
   '<div class="year-detail-grid tax-detail">'+
    PURCHASE_SUPPLIERS.map(function(key){
     const r=supplierResultForRow(row,key);
-    return '<div class="year-detail-item"><small>'+SUPPLIER_LABELS[key]+'</small><b>'+money(r.cost)+'</b><span>Crédito '+money(r.credit)+' · preço '+money(r.price)+'</span></div>';
+    const best=Math.abs(r.cost-stats.min)<=.005;
+    return '<div class="year-detail-item '+(best?'is-best':'')+'">'+
+     '<small>'+SUPPLIER_LABELS[key]+(best?' · menor custo':'')+'</small>'+
+     '<b>'+money(r.cost)+'</b>'+
+     '<span>Preço '+money(r.price)+' · crédito '+money(r.credit)+'</span>'+
+    '</div>';
    }).join('')+
   '</div>'+
-  '<div class="tax-analysis-text"><b>Leitura do ano</b><p>Todos os valores representam a mesma empresa compradora. O que muda entre as colunas é o regime do fornecedor e, por consequência, o preço projetado e os créditos disponíveis.</p></div>';
+  '<div class="tax-analysis-text"><b>Leitura do ano</b><p>Comprador '+PURCHASE_BUYER_LABELS[row.buyerRegime]+'. O menor custo deste ano é '+money(stats.min)+' em '+bestSupplierText(stats)+'. A diferença entre o menor e o maior custo é '+money(stats.spread)+'.</p></div>';
 }
 
 function renderYearlyProjection(){
@@ -686,26 +719,44 @@ function renderYearlyProjection(){
  if(yearDetailSelected===null||!rows.some(x=>x.year===yearDetailSelected)) yearDetailSelected=selectedYear;
 
  $('yearlyPriceStrip').innerHTML=rows.map(function(row){
-  return '<button type="button" class="year-price-card '+(row.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+row.year+')">'+
-   '<small>'+row.year+'</small>'+
-   '<b>SN '+money(supplierResultForRow(row,'simples').cost)+'</b>'+
-   '<span>LP '+money(supplierResultForRow(row,'presumido').cost)+' · LR '+money(supplierResultForRow(row,'real').cost)+' · SR '+money(supplierResultForRow(row,'simples_hybrid').cost)+'</span>'+
+  const stats=supplierCostStats(row);
+  const phase=row.year===2026?'Atual':'Reforma';
+  return '<button type="button" class="year-price-card '+(row.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+row.year+')" aria-label="Ver detalhes de '+row.year+'">'+
+   '<div class="year-card-top">'+
+    '<div class="year-card-year">'+row.year+'</div>'+
+    '<span class="year-card-phase">'+phase+'</span>'+
+   '</div>'+
+   '<div class="year-card-highlight">'+
+    '<small>Menor custo efetivo</small>'+
+    '<strong>'+money(stats.min)+'</strong>'+
+    '<span>'+bestSupplierText(stats)+'</span>'+
+   '</div>'+
+   '<div class="year-card-spread"><span>Diferença entre fornecedores</span><b>'+money(stats.spread)+'</b></div>'+
+   '<div class="year-supplier-list">'+
+    stats.items.map(function(item){
+     const best=Math.abs(item.cost-stats.min)<=.005;
+     return '<div class="year-supplier-row '+(best?'is-best':'')+'"><span>'+item.label+'</span><b>'+money(item.cost)+'</b></div>';
+    }).join('')+
+   '</div>'+
   '</button>';
  }).join('');
 
  $('yearlyProjectionTable').innerHTML=rows.map(function(row){
+  const stats=supplierCostStats(row);
   const cls=row.year===2026?'current-year':(row.year===yearDetailSelected?'selected-year':'');
+  const phase=row.year===2026?'Atual':'Reforma';
   return '<tr class="'+cls+'" onclick="selectYearDetail('+row.year+')">'+
-   '<td>'+row.year+'</td>'+
-   '<td><strong>'+money(supplierResultForRow(row,'simples').cost)+'</strong></td>'+
-   '<td><strong>'+money(supplierResultForRow(row,'presumido').cost)+'</strong></td>'+
-   '<td><strong>'+money(supplierResultForRow(row,'real').cost)+'</strong></td>'+
-   '<td><strong>'+money(supplierResultForRow(row,'simples_hybrid').cost)+'</strong></td>'+
+   '<td><div class="table-year"><span class="table-year-badge">'+row.year+'</span><small>'+phase+'</small></div></td>'+
+   PURCHASE_SUPPLIERS.map(function(key){
+    const r=supplierResultForRow(row,key);
+    const best=Math.abs(r.cost-stats.min)<=.005;
+    return '<td><div class="year-table-cost '+(best?'is-best':'')+'"><strong>'+money(r.cost)+'</strong>'+(best?'<span class="best-pill">menor</span>':'')+'</div></td>';
+   }).join('')+
   '</tr>';
  }).join('');
 
  renderYearDetail(yearDetailSelected);
- $('yearlyProjectionNote').textContent='Comprador: '+PURCHASE_BUYER_LABELS[buyerRegime]+'. As quatro colunas mostram fornecedores diferentes para a mesma compra e o mesmo segmento.';
+ $('yearlyProjectionNote').textContent='Comprador: '+PURCHASE_BUYER_LABELS[buyerRegime]+'. Os cards e a tabela mostram o custo efetivo da mesma compra em quatro tipos de fornecedor; clique em um ano para abrir os detalhes.';
 }
 
 function showTaxTool(which){
