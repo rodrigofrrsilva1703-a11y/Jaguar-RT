@@ -565,6 +565,52 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .buyer-example-card div{display:flex;justify-content:space-between;gap:6px;font-size:11px;padding:5px 0}.buyer-example-card .buyer-total{border-top:1px solid #e5dfea;margin-top:5px;font-weight:700}.buyer-example-card footer{border-top:1px solid #ddd;margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;gap:4px;font-size:11px}.buyer-example-card footer b{font-size:15px}.buyer-example-card .up{color:#a73737}.buyer-example-card .down{color:#147045}.buyer-example-note{font-size:12px;color:#5e5a63;line-height:1.5}
 @media(max-width:850px){.buyer-example-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.buyer-example-grid{grid-template-columns:1fr}.buyer-example-head{display:block}}
 .course-main .course-block + .course-block{margin-top:12px}
+/* Estudos seguem a paleta neutra do site. */
+.study-dashboard,.course-hero{background:#111;color:#fff}
+.study-dashboard .eyebrow,.course-hero .module-no{color:#bbb}
+.study-progress-track{background:#414141}.study-progress-track i{background:#f5f5f1}
+.study-filters button{border-color:#555;color:#eee}.study-filters button.active,.study-filters button:hover{background:#fff;border-color:#fff;color:#111}
+.study-empty{border-color:#bbb;color:#555}.module-card:focus-visible,.course-toc button:focus-visible,.course-controls button:focus-visible{outline-color:#111}
+.module-status,.module-status.done{color:#333;background:#eeeeea}.module-card-progress{background:#e7e7e3}.module-card-progress i{background:#111}
+.course-hero .page-lead{color:#d5d5d5}.course-hero-progress .study-progress-track{background:#464646}
+.course-toc-head span,.course-step-number{color:#777}.course-toc button{color:#444}.course-toc button:hover{background:#f2f2ef}.course-toc button.active{background:#111;color:#fff}.course-toc button.active .course-step-number{color:#bbb}.course-step-check{color:#111}.course-toc button.active .course-step-check{color:#fff}.course-toc .course-view-all{border-color:#ddd}
+.course-stage-label{color:#666}.course-main .course-block{box-shadow:0 10px 35px rgba(0,0,0,.035)}.course-main .course-subhead{border-left-color:#111;background:#f1f1ee}.course-controls button{border-color:#d6d6d2;color:#111}.course-controls button.course-next{background:#111;color:#fff;border-color:#111}
+.course-note{background:#efefec;border-left-color:#111;color:#333}.course-note p{color:#555}.course-quiz-callout{background:#ecece8}
+/* Início: um convite principal e três caminhos com mais hierarquia. */
+#home .interactive-hero{grid-template-columns:minmax(0,1.06fr) minmax(340px,.94fr);gap:clamp(28px,4vw,58px);min-height:480px;padding:clamp(30px,4vw,56px);background:radial-gradient(circle at 8% 0%,#232323 0,#111 36%,#0b0b0b 76%)}
+#home .interactive-hero:before{right:-160px;top:-220px;border-color:rgba(255,255,255,.075)}
+#home .hero-copy{justify-content:center;align-items:flex-start}
+#home .hero-status{font-size:10px;padding:8px 12px;margin-bottom:21px;color:#d2d2d2}
+#home .hero-copy>.eyebrow{color:#aaa;font-size:10px}
+#home .interactive-hero h1{font-size:clamp(46px,5.1vw,70px);line-height:1.02;max-width:690px;margin:15px 0 19px}
+#home .interactive-hero h1 span{color:#b9b9b9}
+#home .interactive-hero .hero-copy>p{font-size:16px;line-height:1.7;max-width:590px;color:#d0d0d0}
+#home .interactive-hero .hero-actions{margin-top:27px}
+#home .interactive-hero .hero-actions .primary-action{font-size:13px;padding:14px 18px;border-radius:12px;gap:20px}
+#home .interactive-hero .hero-actions .primary-action b{margin-left:12px}
+#home .home-command{background:#202020;border:1px solid #373737;border-radius:23px;padding:23px;box-shadow:0 20px 50px rgba(0,0,0,.18)}
+#home .command-top{margin-bottom:8px}
+#home .command-top .eyebrow{font-size:10px;color:#d6d6d6}
+#home .journey-card{padding:18px 11px;grid-template-columns:36px 1fr 22px;gap:13px;border-color:#3c3c3c;border-radius:10px}
+#home .journey-card:last-of-type{border-bottom:0}
+#home .journey-card:hover{background:#323232}
+#home .journey-card b{font-size:17px}
+#home .journey-card small{font-size:11px;line-height:1.45;color:#b8b8b8;margin-top:5px}
+#home .journey-no{font-size:11px}
+#home .journey-card i{font-size:17px;color:#bcbcbc}
+#home .command-stats{margin-top:15px;padding-top:16px;border-top:1px solid #3c3c3c}
+#home .command-stats b{font-size:22px}
+#home .home-resume{width:100%;max-width:580px}
+#home .home-resume:empty{display:none}
+#home .home-resume button{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;width:100%;margin-top:26px;padding:13px 38px 13px 15px;border:1px solid #444;border-radius:12px;background:#202020;color:#fff}
+#home .home-resume button:hover{background:#303030}
+#home .home-resume span{font-size:9px;letter-spacing:.12em;color:#aaa;font-weight:850}
+#home .home-resume b{font-size:12px;line-height:1.4}
+#home .home-resume i{position:absolute;right:15px;top:calc(50% - 8px);font-size:16px;font-style:normal}
+#home .interactive-search{border-radius:19px;padding:19px 22px}
+#home .interactive-search h3{font-size:17px}
+@media(max-width:920px){#home .interactive-hero{grid-template-columns:1fr;gap:26px;min-height:0}#home .home-command{max-width:none}}
+@media(max-width:650px){#home .interactive-hero{padding:27px 22px}#home .interactive-hero h1{font-size:clamp(40px,10vw,54px)}#home .interactive-hero .hero-copy>p{font-size:14px}#home .home-command{padding:17px}#home .interactive-search{padding:16px}}
 </style>
 <script>
 (async()=>{
@@ -602,17 +648,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <div class="hero-copy">
    <div class="hero-status"><span class="status-dot"></span><span>Jaguar Assessoria Contábil × RTAV</span></div>
    <span class="eyebrow">CENTRAL DE ESTUDO · REFORMA TRIBUTÁRIA</span>
-   <h1>Entenda a mudança.<br><span>Teste o impacto.</span></h1>
-   <p>Estudo, testes e simulação tributária em um único ambiente. Escolha por onde começar e avance da regra para a aplicação no cliente.</p>
+   <h1>Estude a reforma.<br><span>Veja o impacto.</span></h1>
+   <p>Aprenda as regras, teste o que sabe e explore os efeitos para as empresas. Um caminho claro do conceito à aplicação.</p>
    <div class="hero-actions">
-    <button class="primary-action" onclick="go('modules')"><span>01</span> Estudar a reforma <b>→</b></button>
-    <button onclick="go('quiz')"><span>02</span> Fazer um teste <b>→</b></button>
-    <button onclick="go('tools')"><span>03</span> Simular preço <b>→</b></button>
+    <button class="primary-action" onclick="go('modules')">Explorar os estudos <b>→</b></button>
    </div>
+   <div id="homeResume" class="home-resume"></div>
   </div>
 
   <div class="home-command">
-   <div class="command-top"><span class="eyebrow">ESCOLHA UM CAMINHO</span><span class="command-live">INTERATIVO</span></div>
+   <div class="command-top"><span class="eyebrow">COMECE POR AQUI</span><span class="command-live">SEU PERCURSO</span></div>
    <button class="journey-card" onclick="go('modules')">
     <span class="journey-no">01</span>
     <div><b>Quero entender</b><small>Comece pelos 13 estudos estruturados.</small></div><i>↗</i>
@@ -621,7 +666,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <span class="journey-no">02</span>
     <div><b>Quero testar</b><small>Responda 10 perguntas e acompanhe sua evolução.</small></div><i>↗</i>
    </button>
-   <button class="journey-card featured" onclick="go('tools')">
+   <button class="journey-card" onclick="go('tools')">
     <span class="journey-no">03</span>
     <div><b>Quero calcular</b><small>Projete preço, crédito, custo e resultado.</small></div><i>↗</i>
    </button>
@@ -1074,6 +1119,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-rules.js?v=20260928-41"></script>
 <script src="tax-engine.js?v=20260929-57"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-57" defer></script>
+<script src="app-v2.js?v=20260929-59" defer></script>
 </body>
 </html>

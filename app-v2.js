@@ -33,6 +33,7 @@ function go(id){
  $(id)?.classList.add('active');
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='modules') renderModuleGrid();
+ if(id==='home') renderHomeResume();
  window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
@@ -62,6 +63,11 @@ function renderModuleGrid(){
  grid.innerHTML=modules.length?modules.map(moduleCard).join(''):'<div class="study-empty">Nenhum módulo nesta etapa ainda. Escolha “Todos” para começar.</div>';
 }
 function filterStudyModules(filter){studyFilter=filter;renderModuleGrid();}
+function renderHomeResume(){
+ const box=$('homeResume');if(!box)return;
+ const active=STUDY_MODULES.find(m=>{const n=moduleProgress(m).read.length;return n>0&&n<m.blocks.length;});
+ box.innerHTML=active?`<button type="button" onclick="openModule('${active.id}')"><span>CONTINUAR DE ONDE PAROU</span><b>Módulo ${active.id} · ${courseEscape(active.title)}</b><i>↗</i></button>`:'';
+}
 
 const courseEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -75,6 +81,7 @@ function courseText(value){
 }
 
 function renderHome(){
+ renderHomeResume();
  if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
  renderModuleGrid();
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
