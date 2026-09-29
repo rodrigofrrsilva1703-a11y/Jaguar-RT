@@ -1376,6 +1376,16 @@ function printTaxReport(kind){
  },80);
 }
 
+const PRICE_STATE_IDS=[
+ 'priceSegment','priceOperationType','priceBuyerRegime','priceNow','icmsRate','issRate','ipiRate','buyerPurchaseCredit',
+ 'snRbt12','snAnnex','priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceClientName'
+];
+const REVENUE_STATE_IDS=[
+ 'revTaxRegime','revCurrentRevenue','revRevenuePeriod','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate',
+ 'revSnRbt12','revSnAnnex','revYear','revRateMode','revRateReduction','revCbsRate','revIbsRate','revHybridRateMode',
+ 'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset','revenueClientName'
+];
+
 function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v7':'v1');}
 
 function saveSimulation(kind){
