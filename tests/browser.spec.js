@@ -136,15 +136,27 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
  await page.locator('#priceOperationType').selectOption('servico');
  await expect(page.locator('#issRateWrap')).toBeVisible();
 
- // PDF e Excel seguem comprador x fornecedores.
+ // PDF da compra acompanha a estrutura atual: ano selecionado + matriz fornecedor x ano.
  await page.locator('#priceSegment').selectOption('servicos');
  await page.locator('#priceBuyerRegime').selectOption('presumido');
+ await page.locator('#priceYear').selectOption('2030');
  await page.evaluate(()=>{window.print=()=>{};});
  await page.locator('#pricePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('Comprador × fornecedores · custo efetivo');
+ await expect(page.locator('#printReport')).toContainText('Relatório de custo da compra');
  await expect(page.locator('#printReport')).toContainText('comprador Lucro Presumido');
- await expect(page.locator('#printReport')).toContainText('Fornecedor · Simples Nacional — padrão');
- await expect(page.locator('#printReport')).toContainText('Fornecedor · Simples Nacional — IBS/CBS regular');
+ await expect(page.locator('#printReport')).toContainText('ano selecionado 2030');
+ await expect(page.locator('#printReport')).toContainText('Comparação do ano selecionado');
+ await expect(page.locator('#printReport')).toContainText('Evolução do custo 2026–2033');
+ await expect(page.locator('#printReport')).toContainText('Fornecedor × ano');
+ await expect(page.locator('#printReport .price-pdf-selected .pdf-table tbody tr')).toHaveCount(4);
+ await expect(page.locator('#printReport .price-pdf-evolution .pdf-table tbody tr')).toHaveCount(4);
+ await expect(page.locator('#printReport .price-pdf-evolution .pdf-table thead th')).toHaveCount(9);
+ await expect(page.locator('#printReport .price-pdf-evolution .pdf-table thead')).toContainText('2026');
+ await expect(page.locator('#printReport .price-pdf-evolution .pdf-table thead')).toContainText('2033');
+ await expect(page.locator('#printReport .price-pdf-selected')).toContainText('Simples Nacional — padrão');
+ await expect(page.locator('#printReport .price-pdf-selected')).toContainText('Lucro Presumido');
+ await expect(page.locator('#printReport .price-pdf-selected')).toContainText('Lucro Real');
+ await expect(page.locator('#printReport .price-pdf-selected')).toContainText('Simples Nacional — IBS/CBS regular');
 
  const purchaseSheet=await page.evaluate(()=>{
   let out=null;

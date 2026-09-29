@@ -1220,51 +1220,54 @@ function pdfAnnualTable(headers,rows){
 function buildPricePdf(client,year){
  const input=priceEngineInput();
  const buyerRegime=input.buyerRegime;
- const models=purchaseSupplierModels(year,input);
- const supplierCards=models.map(function(model){
-  const x=model.buyers[buyerRegime];
-  return {
-   title:'Fornecedor · '+SUPPLIER_LABELS[model.supplierRegime],
-   rows:[
-    ['Preço atual',money(x.currentPrice)],
-    ['Crédito atual',money(x.currentCredit)],
-    ['Custo efetivo atual',money(x.currentCost)],
-    ['Preço '+year,money(x.futurePrice)],
-    ['CBS',money(model.cbs)],
-    ['IBS',money(model.ibs)],
-    ...(model.oldTaxRemnant>0?[[model.oldTaxName+' remanescente',money(model.oldTaxRemnant)]]:[]),
-    ...(model.dasRemnant>0?[['DAS remanescente',money(model.dasRemnant)]]:[]),
-    ['Créditos '+year,money(x.futureCredit)],
-    ['Custo efetivo '+year,money(x.futureCost)],
-    ['Variação',(x.changePct>0?'+':'')+pct(x.changePct)]
-   ]
-  };
- });
 
  const annual=[{year:2026,buyerRegime,models:purchaseSupplierModels(2027,input)}];
  for(let y=2027;y<=2033;y++) annual.push({year:y,buyerRegime,models:purchaseSupplierModels(y,input)});
- const tableRows=annual.map(function(row){
+
+ const selected=annual.find(function(row){return row.year===year;})||annual.find(function(row){return row.year===2027;})||annual[0];
+ const current=annual[0];
+ const selectedStats=supplierCostStats(selected);
+ const firstModel=selected.models[0];
+
+ const detailRows=PURCHASE_SUPPLIERS.map(function(key){
+  const currentResult=supplierResultForRow(current,key);
+  const futureResult=supplierResultForRow(selected,key);
+  const model=selected.models.find(function(x){return x.supplierRegime===key;});
+  const change=currentResult.cost?((futureResult.cost-currentResult.cost)/currentResult.cost*100):0;
+  const best=Math.abs(futureResult.cost-selectedStats.min)<=.005;
   return [
-   row.year,
-   ...PURCHASE_SUPPLIERS.map(function(key){return money(supplierResultForRow(row,key).cost);})
+   SUPPLIER_LABELS[key],
+   money(currentResult.cost),
+   money(futureResult.price),
+   money(futureResult.credit),
+   money(futureResult.cost),
+   (change>0?'+':'')+pct(change),
+   best?'Menor custo':''
+  ];
+ });
+
+ const matrixHeaders=['Fornecedor','2026','2027','2028','2029','2030','2031','2032','2033'];
+ const matrixRows=PURCHASE_SUPPLIERS.map(function(key){
+  return [
+   SUPPLIER_LABELS[key],
+   ...annual.map(function(row){return money(supplierResultForRow(row,key).cost);})
   ];
  });
 
  return {
-  title:'Comprador × fornecedores · custo efetivo',
-  subtitle:segmentDisplay(models[0])+' · comprador '+PURCHASE_BUYER_LABELS[buyerRegime]+' · análise de '+year,
+  title:'Relatório de custo da compra',
+  subtitle:segmentDisplay(firstModel)+' · comprador '+PURCHASE_BUYER_LABELS[buyerRegime]+' · ano selecionado '+year,
   kpis:[
-   ['Segmento',segmentDisplay(models[0]),'Operação analisada'],
-   ['Comprador',PURCHASE_BUYER_LABELS[buyerRegime],'Regime da empresa'],
-   ['Compra atual',money(input.amount),'Mesmo valor-base nos fornecedores'],
-   ['Ano analisado',String(year),'Comparação entre quatro fornecedores']
+   ['Segmento',segmentDisplay(firstModel),'Operação analisada'],
+   ['Comprador',PURCHASE_BUYER_LABELS[buyerRegime],'Mesmo comprador nos 4 cenários'],
+   ['Compra atual',money(input.amount),'Valor-base informado'],
+   ['Menor custo em '+year,money(selectedStats.min),bestSupplierText(selectedStats)]
   ],
-  currentRows:[],
-  futureRows:[],
-  supplierCards,
-  tableHeaders:['Ano','Fornecedor Simples','Fornecedor LP','Fornecedor LR','Fornecedor Simples regular'],
-  tableRows,
-  note:'A empresa compradora permanece a mesma em toda a comparação. Cada card representa um tipo de fornecedor e mostra como preço, créditos e custo efetivo mudam conforme o regime desse fornecedor.'
+  priceDetailHeaders:['Fornecedor','Custo 2026','Preço '+year,'Crédito '+year,'Custo '+year,'Variação','Destaque'],
+  priceDetailRows:detailRows,
+  matrixHeaders,
+  matrixRows,
+  note:'A empresa compradora é a mesma em toda a análise. Cada linha representa um tipo de fornecedor. A matriz 2026–2033 mostra o custo efetivo da mesma compra ao longo da transição.'
  };
 }
 
@@ -1333,7 +1336,7 @@ function printTaxReport(kind){
  const data=price?buildPricePdf(client,year):buildRevenuePdf(client,year);
  const now=new Date().toLocaleDateString('pt-BR');
 
- report.innerHTML=
+ const commonHead=
   '<div class="pdf-head">'+
    '<div><div class="pdf-brand">Jaguar Assessoria Contábil × RTAV</div><h1>'+xmlEsc(data.title)+'</h1>'+
     '<p><strong>Cliente:</strong> '+xmlEsc(client)+'</p><p>'+xmlEsc(data.subtitle)+'</p></div>'+
@@ -1341,16 +1344,30 @@ function printTaxReport(kind){
   '</div>'+
   '<section class="pdf-section"><div class="pdf-section-title"><h2>Resumo executivo</h2><span>Principais números</span></div>'+
    '<div class="pdf-kpis">'+data.kpis.map(function(k){return '<div class="pdf-kpi"><small>'+xmlEsc(k[0])+'</small><b>'+xmlEsc(k[1])+'</b><span>'+xmlEsc(k[2])+'</span></div>';}).join('')+'</div>'+
-  '</section>'+
-  '<section class="pdf-section"><div class="pdf-section-title"><h2>Comparação tributária</h2><span>'+year+'</span></div>'+
-   (data.supplierCards
-    ?'<div class="pdf-grid supplier-pdf-grid">'+data.supplierCards.map(function(card){return '<div class="pdf-card"><h3>'+xmlEsc(card.title)+'</h3>'+pdfRows(card.rows)+'</div>';}).join('')+'</div>'
-    :'<div class="pdf-grid"><div class="pdf-card"><h3>2026 · Atual</h3>'+pdfRows(data.currentRows)+'</div><div class="pdf-card"><h3>'+year+' · Reforma</h3>'+pdfRows(data.futureRows)+'</div></div>')+
-  '</section>'+
-  '<section class="pdf-section"><div class="pdf-section-title"><h2>'+(price?'Hoje × '+year:'Evolução 2026–2033')+'</h2><span>Resumo</span></div>'+
-   pdfAnnualTable(data.tableHeaders,data.tableRows)+'</section>'+
-  '<div class="pdf-note">'+xmlEsc(data.note)+'</div>'+
-  '<div class="pdf-footer">Relatório de simulação para planejamento. Não substitui enquadramento fiscal, apuração tributária ou validação da legislação aplicável à operação.</div>';
+  '</section>';
+
+ if(price){
+  report.innerHTML=
+   commonHead+
+   '<section class="pdf-section price-pdf-selected"><div class="pdf-section-title"><h2>Comparação do ano selecionado</h2><span>'+year+'</span></div>'+
+    pdfAnnualTable(data.priceDetailHeaders,data.priceDetailRows)+
+   '</section>'+
+   '<section class="pdf-section price-pdf-evolution"><div class="pdf-section-title"><h2>Evolução do custo 2026–2033</h2><span>Fornecedor × ano</span></div>'+
+    pdfAnnualTable(data.matrixHeaders,data.matrixRows)+
+   '</section>'+
+   '<div class="pdf-note">'+xmlEsc(data.note)+'</div>'+
+   '<div class="pdf-footer">Relatório de simulação para planejamento. Não substitui enquadramento fiscal, apuração tributária ou validação da legislação aplicável à operação.</div>';
+ }else{
+  report.innerHTML=
+   commonHead+
+   '<section class="pdf-section"><div class="pdf-section-title"><h2>Comparação tributária</h2><span>'+year+'</span></div>'+
+    '<div class="pdf-grid"><div class="pdf-card"><h3>2026 · Atual</h3>'+pdfRows(data.currentRows)+'</div><div class="pdf-card"><h3>'+year+' · Reforma</h3>'+pdfRows(data.futureRows)+'</div></div>'+
+   '</section>'+
+   '<section class="pdf-section"><div class="pdf-section-title"><h2>Evolução 2026–2033</h2><span>Resumo</span></div>'+
+    pdfAnnualTable(data.tableHeaders,data.tableRows)+'</section>'+
+   '<div class="pdf-note">'+xmlEsc(data.note)+'</div>'+
+   '<div class="pdf-footer">Relatório de simulação para planejamento. Não substitui enquadramento fiscal, apuração tributária ou validação da legislação aplicável à operação.</div>';
+ }
 
  report.setAttribute('aria-hidden','false');
  setTimeout(function(){
