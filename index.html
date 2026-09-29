@@ -224,98 +224,82 @@
  .command-stats{margin-bottom:0}
 }
 
-/* ===== EVOLUÇÃO DO CUSTO · COMPRADOR X FORNECEDORES ===== */
-#tools .yearly-analysis{margin-top:26px;padding-top:24px;border-top:1px solid var(--line)}
-#tools .yearly-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:16px}
-#tools .yearly-head h3{font-size:28px;letter-spacing:-.04em;margin:4px 0 0}
-#tools .yearly-subtitle{margin:6px 0 0!important;text-align:left!important;max-width:680px!important;color:#70706c!important;line-height:1.55}
+/* ===== EVOLUÇÃO DO CUSTO · VISÃO LIMPA ===== */
+#tools .yearly-analysis{margin-top:28px;padding-top:25px;border-top:1px solid var(--line)}
+#tools .yearly-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:17px}
+#tools .yearly-head h3{font-size:29px;letter-spacing:-.045em;margin:4px 0 0}
+#tools .yearly-subtitle{margin:6px 0 0!important;text-align:left!important;max-width:720px!important;color:#70706c!important;line-height:1.55}
 #tools .yearly-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
-#tools .year-price-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:15px 0 20px}
-#tools .year-price-card{border:1px solid #deddd7;background:#fff;border-radius:17px;padding:14px;text-align:left;transition:transform .16s,border-color .16s,box-shadow .16s,background .16s;min-width:0;box-shadow:0 4px 14px rgba(0,0,0,.025)}
-#tools .year-price-card:hover{transform:translateY(-2px);border-color:#a9a8a1;box-shadow:0 10px 24px rgba(0,0,0,.055)}
-#tools .year-price-card.active{background:#111;color:#fff;border-color:#111;box-shadow:0 12px 28px rgba(0,0,0,.14)}
-#tools .year-card-top{display:flex;align-items:start;justify-content:space-between;gap:10px}
-#tools .year-card-year{font-size:25px;font-weight:950;letter-spacing:-.045em;line-height:1}
-#tools .year-card-phase{display:inline-flex;align-items:center;height:25px;border:1px solid #deddd7;background:#f7f7f4;border-radius:999px;padding:0 9px;font-size:7.5px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;color:#676762;white-space:nowrap}
-#tools .year-price-card.active .year-card-phase{border-color:#343434;background:#1b1b1b;color:#c2c2c2}
-#tools .year-card-highlight{margin-top:14px;padding:13px 0 12px;border-top:1px solid #ecebe6;border-bottom:1px solid #ecebe6}
-#tools .year-price-card.active .year-card-highlight{border-color:#303030}
-#tools .year-card-highlight small,#tools .year-card-highlight strong,#tools .year-card-highlight span{display:block}
-#tools .year-card-highlight small{font-size:7.5px;color:#8a8a85;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
-#tools .year-card-highlight strong{font-size:22px;letter-spacing:-.035em;margin:4px 0 2px}
-#tools .year-card-highlight span{font-size:9px;color:#696965;line-height:1.35}
-#tools .year-price-card.active .year-card-highlight small,#tools .year-price-card.active .year-card-highlight span{color:#aaa}
-#tools .year-card-spread{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font-size:8px}
-#tools .year-card-spread span{color:#888}
-#tools .year-card-spread b{font-size:10px}
-#tools .year-supplier-list{display:grid;gap:0;margin-top:9px}
-#tools .year-supplier-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #f0efeb;font-size:8.5px}
-#tools .year-supplier-row:last-child{border-bottom:0}
-#tools .year-price-card.active .year-supplier-row{border-bottom-color:#282828}
-#tools .year-supplier-row span{color:#686864;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#tools .year-supplier-row b{font-size:9px;white-space:nowrap}
-#tools .year-price-card.active .year-supplier-row span{color:#b4b4b4}
-#tools .year-supplier-row.is-best span,#tools .year-supplier-row.is-best b{font-weight:900;color:#111}
-#tools .year-price-card.active .year-supplier-row.is-best span,#tools .year-price-card.active .year-supplier-row.is-best b{color:#fff}
-#tools .year-supplier-row.is-best::before{content:"";width:5px;height:5px;border-radius:50%;background:#111;flex:0 0 auto;margin-right:-4px}
-#tools .year-price-card.active .year-supplier-row.is-best::before{background:#fff}
 
-#tools .compact-yearly-wrap{max-height:none;overflow:auto;margin-top:0;border:1px solid #deddd7;border-radius:17px;background:#fff}
-#tools .compact-yearly-table{min-width:860px!important;width:100%;border-collapse:separate;border-spacing:0}
-#tools .compact-yearly-table thead th{position:sticky;top:0;z-index:2;background:#f5f5f1;color:#777;font-size:7.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:900;padding:12px 14px;border-bottom:1px solid #deddd7;text-align:right}
-#tools .compact-yearly-table thead th:first-child{left:0;z-index:3;text-align:left}
-#tools .compact-yearly-table tbody tr{cursor:pointer;transition:background .12s}
-#tools .compact-yearly-table tbody tr:nth-child(even){background:#fbfbf8}
-#tools .compact-yearly-table tbody tr:hover{background:#f1f1ed}
-#tools .compact-yearly-table th,#tools .compact-yearly-table td{padding:12px 14px;border-bottom:1px solid #efeee9;text-align:right}
-#tools .compact-yearly-table td:first-child{position:sticky;left:0;z-index:1;text-align:left;background:inherit;min-width:126px}
-#tools .compact-yearly-table tbody tr:last-child td{border-bottom:0}
-#tools .compact-yearly-table tbody tr.current-year{background:#ecece7}
-#tools .compact-yearly-table tbody tr.selected-year{background:#111;color:#fff}
-#tools .compact-yearly-table tbody tr.selected-year td{border-bottom-color:#2d2d2d}
-#tools .table-year{display:flex;align-items:center;gap:9px}
-#tools .table-year-badge{display:inline-grid;place-items:center;min-width:48px;height:28px;border-radius:9px;background:#111;color:#fff;font-size:10px;font-weight:950}
-#tools .selected-year .table-year-badge{background:#fff;color:#111}
-#tools .table-year small{display:block;color:#888;font-size:7.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:850}
-#tools .selected-year .table-year small{color:#aaa}
-#tools .year-table-cost{display:inline-flex;align-items:center;justify-content:flex-end;gap:7px;min-width:116px}
-#tools .year-table-cost strong{font-size:11px;white-space:nowrap}
-#tools .year-table-cost .best-pill{display:inline-flex;align-items:center;height:20px;border-radius:999px;background:#111;color:#fff;padding:0 7px;font-size:6.5px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
-#tools .selected-year .year-table-cost .best-pill{background:#fff;color:#111}
-#tools .year-table-cost.is-best strong{font-weight:950}
+/* Navegação por ano: pequena, horizontal, sem cards pesados */
+#tools .year-price-strip{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin:14px 0}
+#tools .year-price-card{appearance:none;border:1px solid #deddd7;background:#fff;border-radius:11px;padding:10px 8px;text-align:center;min-width:0;transition:.14s ease}
+#tools .year-price-card:hover{border-color:#aaa;transform:translateY(-1px)}
+#tools .year-price-card.active{background:#111;color:#fff;border-color:#111}
+#tools .year-price-card .year-nav-year{display:block;font-size:14px;font-weight:950;letter-spacing:-.02em}
+#tools .year-price-card .year-nav-phase{display:block;margin-top:2px;font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:#969691;font-weight:850}
+#tools .year-price-card.active .year-nav-phase{color:#aaa}
 
-#tools .year-detail-panel{margin-top:11px;background:#111;color:#fff;border-radius:17px;padding:18px;display:none}
+/* Painel principal do ano selecionado */
+#tools .year-detail-panel{display:none;margin:0 0 15px;background:#fff;color:#111;border:1px solid #dcdcd6;border-radius:19px;padding:18px}
 #tools .year-detail-panel.visible{display:block}
-#tools .year-detail-top{display:flex;align-items:start;justify-content:space-between;gap:14px;padding-bottom:13px;border-bottom:1px solid #2c2c2c}
-#tools .year-detail-top h4{font-size:21px;letter-spacing:-.03em;margin:4px 0 0}
-#tools .year-detail-top span{font-size:8px;color:#999;text-transform:uppercase;letter-spacing:.1em}
-#tools .year-detail-price{text-align:right}
-#tools .year-detail-price b{display:block;font-size:23px}
-#tools .year-detail-price small{font-size:8px;color:#999}
-#tools .year-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:13px}
-#tools .year-detail-item{border:1px solid #303030;background:#171717;border-radius:11px;padding:11px}
+#tools .year-detail-top{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-bottom:15px;border-bottom:1px solid #e8e7e2}
+#tools .year-detail-top h4{font-size:22px;letter-spacing:-.035em;margin:4px 0 0}
+#tools .year-detail-top>div:first-child>span{font-size:8px;color:#81817d;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
+#tools .year-detail-summary{display:flex;gap:18px;align-items:center}
+#tools .year-detail-summary>div{text-align:right}
+#tools .year-detail-summary small,#tools .year-detail-summary b{display:block}
+#tools .year-detail-summary small{font-size:7px;color:#888;text-transform:uppercase;letter-spacing:.08em;font-weight:850}
+#tools .year-detail-summary b{font-size:16px;margin-top:3px;letter-spacing:-.02em}
+#tools .year-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:15px}
+#tools .year-detail-item{position:relative;border:1px solid #deddd7;background:#fafaf8;border-radius:14px;padding:14px;min-width:0}
 #tools .year-detail-item small,#tools .year-detail-item b,#tools .year-detail-item span{display:block}
-#tools .year-detail-item small{font-size:7.5px;color:#888;text-transform:uppercase;letter-spacing:.07em}
-#tools .year-detail-item b{font-size:14px;margin-top:5px}
-#tools .year-detail-item span{font-size:8px;color:#999;line-height:1.45;margin-top:4px}
-#tools .year-detail-item.is-best{background:#fff;color:#111;border-color:#fff}
-#tools .year-detail-item.is-best small,#tools .year-detail-item.is-best span{color:#676767}
-#tools .tax-analysis-text{margin-top:12px;border-top:1px solid #2d2d2d;padding-top:12px}
-#tools .tax-analysis-text b{display:block;font-size:11px;margin-bottom:5px}
-#tools .tax-analysis-text p{margin:0;color:#aaa;font-size:9px;line-height:1.65}
+#tools .year-detail-item small{font-size:7.5px;color:#777;text-transform:uppercase;letter-spacing:.07em;font-weight:850;min-height:22px}
+#tools .year-detail-item b{font-size:20px;letter-spacing:-.035em;margin-top:7px}
+#tools .year-detail-item span{font-size:8px;color:#777;line-height:1.5;margin-top:6px}
+#tools .year-detail-item.is-best{background:#111;color:#fff;border-color:#111}
+#tools .year-detail-item.is-best small,#tools .year-detail-item.is-best span{color:#aaa}
+#tools .year-detail-item.is-best::after{content:"MENOR CUSTO";position:absolute;right:10px;top:10px;border:1px solid #3b3b3b;border-radius:999px;padding:4px 6px;font-size:6px;letter-spacing:.06em;font-weight:900;color:#ddd}
+#tools .year-detail-read{margin-top:13px;padding-top:12px;border-top:1px solid #ecebe6;display:flex;justify-content:space-between;gap:14px;font-size:9px;color:#686864;line-height:1.55}
+#tools .year-detail-read b{color:#111}
+
+/* Matriz: fornecedor nas linhas, anos nas colunas */
+#tools .evolution-matrix-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:20px 0 9px}
+#tools .evolution-matrix-head b,#tools .evolution-matrix-head small{display:block}
+#tools .evolution-matrix-head b{font-size:13px}
+#tools .evolution-matrix-head small{font-size:8px;color:#888;margin-top:3px}
+#tools .compact-yearly-wrap{max-height:none;overflow:auto;margin-top:0;border:1px solid #deddd7;border-radius:16px;background:#fff}
+#tools .compact-yearly-table{min-width:980px!important;width:100%;border-collapse:separate;border-spacing:0}
+#tools .compact-yearly-table th,#tools .compact-yearly-table td{border-bottom:1px solid #efeee9;padding:12px 13px;text-align:right}
+#tools .compact-yearly-table thead th{position:sticky;top:0;z-index:2;background:#f5f5f1;color:#777;font-size:7.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:900}
+#tools .compact-yearly-table thead th:first-child{left:0;z-index:4;text-align:left;min-width:185px}
+#tools .compact-yearly-table tbody th{position:sticky;left:0;z-index:2;background:#fff;text-align:left;font-size:9px;font-weight:900;min-width:185px}
+#tools .compact-yearly-table tbody tr:nth-child(even) th,#tools .compact-yearly-table tbody tr:nth-child(even) td{background:#fbfbf8}
+#tools .compact-yearly-table tbody tr:last-child th,#tools .compact-yearly-table tbody tr:last-child td{border-bottom:0}
+#tools .compact-yearly-table td{font-size:10px;white-space:nowrap;min-width:96px}
+#tools .compact-yearly-table td strong{font-size:10.5px}
+#tools .compact-yearly-table .selected-column{background:#111!important;color:#fff!important}
+#tools .compact-yearly-table thead .selected-column{color:#fff!important}
+#tools .compact-yearly-table .cell-best{font-weight:950}
+#tools .compact-yearly-table .cell-best::after{content:" •";font-size:10px}
+#tools .matrix-supplier{display:flex;align-items:center;gap:8px}
+#tools .matrix-supplier-dot{width:7px;height:7px;border-radius:50%;background:#111;flex:0 0 auto}
+#tools .matrix-supplier small{display:block;color:#888;font-size:7px;font-weight:650;margin-top:2px}
 #tools .yearly-note{margin-top:10px}
 
-@media(max-width:1100px){
- #tools .year-price-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1000px){
+ #tools .year-price-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
  #tools .year-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:650px){
  #tools .yearly-head{display:block}
  #tools .yearly-actions{margin-top:12px}
- #tools .year-price-strip{grid-template-columns:1fr}
+ #tools .year-price-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
  #tools .year-detail-top{display:block}
- #tools .year-detail-price{text-align:left;margin-top:10px}
+ #tools .year-detail-summary{margin-top:12px;justify-content:space-between}
+ #tools .year-detail-summary>div{text-align:left}
  #tools .year-detail-grid{grid-template-columns:1fr}
+ #tools .year-detail-read{display:block}
 }
 
 /* ===== MARGEM E ANÁLISE POR ANO ===== */
@@ -831,17 +815,18 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
     <section class="yearly-analysis">
      <div class="yearly-head">
-      <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Compare a mesma empresa compradora ao longo dos anos. Cada card destaca o menor custo e a diferença entre os quatro fornecedores.</p></div>
+      <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Selecione um ano para ver os quatro fornecedores. A matriz abaixo mostra a evolução completa sem repetir informação em vários cards.</p></div>
       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
-     <div id="yearlyPriceStrip" class="year-price-strip"></div>
-     <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
-      <table class="comparison-table yearly-table compact-yearly-table price-year-table">
-       <thead><tr><th>Ano / fase</th><th>Simples</th><th>Lucro Presumido</th><th>Lucro Real</th><th>Simples IBS/CBS</th></tr></thead>
+     <div id="yearlyPriceStrip" class="year-price-strip" aria-label="Selecionar ano da evolução"></div>
+     <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
+     <div class="evolution-matrix-head"><div><b>Evolução por fornecedor</b><small>Linhas = fornecedores · colunas = anos · valores = custo efetivo</small></div></div>
+     <div class="compact-yearly-wrap">
+      <table class="compact-yearly-table price-year-table">
+       <thead id="yearlyProjectionHead"></thead>
        <tbody id="yearlyProjectionTable"></tbody>
       </table>
      </div>
-     <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <div id="yearlyProjectionNote" class="rate-note yearly-note"></div>
     </section>
    </section>
@@ -1072,6 +1057,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-rules.js?v=20260928-41"></script>
 <script src="tax-engine.js?v=20260929-57"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-58" defer></script>
+<script src="app-v2.js?v=20260929-59" defer></script>
 </body>
 </html>
