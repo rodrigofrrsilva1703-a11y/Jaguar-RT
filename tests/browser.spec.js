@@ -5,6 +5,21 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
+test('linha do tempo distingue fases e proporções da transição',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=timeline',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#timeline .year')).toHaveCount(8);
+ await page.locator('#timeline [data-year="2029"]').click();
+ await expect(page.locator('#timelinePanel')).toContainText('ICMS / ISS remanescentes 90%');
+ await expect(page.locator('#timelinePanel')).toContainText('IBS na transição 10%');
+ await expect(page.locator('#timeline [data-year="2029"]')).toHaveAttribute('aria-pressed','true');
+ await page.locator('#timelinePanel').getByRole('button',{name:'Próximo ano'}).click();
+ await expect(page.locator('#timelinePanel')).toContainText('2030');
+ await expect(page.locator('#timelinePanel')).toContainText('IBS na transição 20%');
+ await page.locator('#timeline [data-year="2026"]').click();
+ await expect(page.locator('#timelinePanel')).toContainText('CBS 0,9% (teste)');
+ await expect(page.locator('#timelinePanel .transition-bars')).toHaveCount(0);
+});
+
 test('módulos preservam leitura, retomam etapa e filtram o andamento',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=study',{waitUntil:'domcontentloaded'});
  await page.locator('nav [data-go="modules"]').click();
