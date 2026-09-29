@@ -224,55 +224,82 @@
  .command-stats{margin-bottom:0}
 }
 
-/* ===== ANÁLISE ANUAL SIMPLIFICADA ===== */
-#tools .yearly-head{margin-bottom:14px}
-#tools .yearly-subtitle{margin:5px 0 0!important;text-align:left!important;max-width:none!important}
-#tools .year-price-strip{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin:13px 0 17px}
-#tools .year-price-card{border:1px solid #dfded8;background:#fff;border-radius:13px;padding:10px;text-align:left;transition:transform .14s,border-color .14s,background .14s;min-width:0}
-#tools .year-price-card:hover{transform:translateY(-2px);border-color:#aaa}
+/* ===== EVOLUÇÃO DO CUSTO · VISÃO LIMPA ===== */
+#tools .yearly-analysis{margin-top:28px;padding-top:25px;border-top:1px solid var(--line)}
+#tools .yearly-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:17px}
+#tools .yearly-head h3{font-size:29px;letter-spacing:-.045em;margin:4px 0 0}
+#tools .yearly-subtitle{margin:6px 0 0!important;text-align:left!important;max-width:720px!important;color:#70706c!important;line-height:1.55}
+#tools .yearly-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+
+/* Navegação por ano: pequena, horizontal, sem cards pesados */
+#tools .year-price-strip{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;margin:14px 0}
+#tools .year-price-card{appearance:none;border:1px solid #deddd7;background:#fff;border-radius:11px;padding:10px 8px;text-align:center;min-width:0;transition:.14s ease}
+#tools .year-price-card:hover{border-color:#aaa;transform:translateY(-1px)}
 #tools .year-price-card.active{background:#111;color:#fff;border-color:#111}
-#tools .year-price-card small,#tools .year-price-card b,#tools .year-price-card span{display:block}
-#tools .year-price-card small{font-size:8px;color:#999;font-weight:850}
-#tools .year-price-card b{font-size:15px;letter-spacing:-.025em;margin:5px 0 3px;white-space:nowrap}
-#tools .year-price-card span{font-size:8px;color:#777;white-space:nowrap}
-#tools .year-price-card.active small,#tools .year-price-card.active span{color:#aaa}
-#tools .yearly-summary-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:3px 0 8px}
-#tools .yearly-summary-head b,#tools .yearly-summary-head small{display:block}
-#tools .yearly-summary-head b{font-size:13px}
-#tools .yearly-summary-head small{font-size:9px;color:#888;margin-top:2px}
-#tools .yearly-legend.compact{margin:0;padding:0;border:0;background:transparent}
-#tools .compact-yearly-wrap{max-height:none;overflow:auto}
-#tools .compact-yearly-table{min-width:760px!important}
-#tools .compact-yearly-table tbody tr{cursor:pointer}
-#tools .compact-yearly-table th,#tools .compact-yearly-table td{padding:12px 13px}
-#tools .compact-yearly-table td:first-child{font-size:12px;font-weight:900}
-#tools .compact-yearly-table td:nth-child(2) strong{font-size:13px}
-#tools .year-detail-panel{margin-top:10px;background:#111;color:#fff;border-radius:17px;padding:18px;display:none}
+#tools .year-price-card .year-nav-year{display:block;font-size:14px;font-weight:950;letter-spacing:-.02em}
+#tools .year-price-card .year-nav-phase{display:block;margin-top:2px;font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:#969691;font-weight:850}
+#tools .year-price-card.active .year-nav-phase{color:#aaa}
+
+/* Painel principal do ano selecionado */
+#tools .year-detail-panel{display:none;margin:0 0 15px;background:#fff;color:#111;border:1px solid #dcdcd6;border-radius:19px;padding:18px}
 #tools .year-detail-panel.visible{display:block}
-#tools .year-detail-top{display:flex;align-items:start;justify-content:space-between;gap:14px;padding-bottom:13px;border-bottom:1px solid #2c2c2c}
-#tools .year-detail-top h4{font-size:21px;letter-spacing:-.03em;margin:4px 0 0}
-#tools .year-detail-top span{font-size:8px;color:#999;text-transform:uppercase;letter-spacing:.1em}
-#tools .year-detail-price{text-align:right}
-#tools .year-detail-price b{display:block;font-size:23px}
-#tools .year-detail-price small{font-size:8px;color:#999}
-#tools .year-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:13px}
-#tools .year-detail-item{border:1px solid #303030;background:#171717;border-radius:11px;padding:11px}
-#tools .year-detail-item small,#tools .year-detail-item b{display:block}
-#tools .year-detail-item small{font-size:7.5px;color:#888;text-transform:uppercase;letter-spacing:.07em}
-#tools .year-detail-item b{font-size:13px;margin-top:5px}
-#tools .year-detail-foot{margin-top:11px;font-size:9px;color:#aaa;line-height:1.55}
-#tools .yearly-note{margin-top:9px}
+#tools .year-detail-top{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-bottom:15px;border-bottom:1px solid #e8e7e2}
+#tools .year-detail-top h4{font-size:22px;letter-spacing:-.035em;margin:4px 0 0}
+#tools .year-detail-top>div:first-child>span{font-size:8px;color:#81817d;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
+#tools .year-detail-summary{display:flex;gap:18px;align-items:center}
+#tools .year-detail-summary>div{text-align:right}
+#tools .year-detail-summary small,#tools .year-detail-summary b{display:block}
+#tools .year-detail-summary small{font-size:7px;color:#888;text-transform:uppercase;letter-spacing:.08em;font-weight:850}
+#tools .year-detail-summary b{font-size:16px;margin-top:3px;letter-spacing:-.02em}
+#tools .year-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:15px}
+#tools .year-detail-item{position:relative;border:1px solid #deddd7;background:#fafaf8;border-radius:14px;padding:14px;min-width:0}
+#tools .year-detail-item small,#tools .year-detail-item b,#tools .year-detail-item span{display:block}
+#tools .year-detail-item small{font-size:7.5px;color:#777;text-transform:uppercase;letter-spacing:.07em;font-weight:850;min-height:22px}
+#tools .year-detail-item b{font-size:20px;letter-spacing:-.035em;margin-top:7px}
+#tools .year-detail-item span{font-size:8px;color:#777;line-height:1.5;margin-top:6px}
+#tools .year-detail-item.is-best{background:#111;color:#fff;border-color:#111}
+#tools .year-detail-item.is-best small,#tools .year-detail-item.is-best span{color:#aaa}
+#tools .year-detail-item.is-best::after{content:"MENOR CUSTO";position:absolute;right:10px;top:10px;border:1px solid #3b3b3b;border-radius:999px;padding:4px 6px;font-size:6px;letter-spacing:.06em;font-weight:900;color:#ddd}
+#tools .year-detail-read{margin-top:13px;padding-top:12px;border-top:1px solid #ecebe6;display:flex;justify-content:space-between;gap:14px;font-size:9px;color:#686864;line-height:1.55}
+#tools .year-detail-read b{color:#111}
+
+/* Matriz: fornecedor nas linhas, anos nas colunas */
+#tools .evolution-matrix-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:20px 0 9px}
+#tools .evolution-matrix-head b,#tools .evolution-matrix-head small{display:block}
+#tools .evolution-matrix-head b{font-size:13px}
+#tools .evolution-matrix-head small{font-size:8px;color:#888;margin-top:3px}
+#tools .compact-yearly-wrap{max-height:none;overflow:auto;margin-top:0;border:1px solid #deddd7;border-radius:16px;background:#fff}
+#tools .compact-yearly-table{min-width:980px!important;width:100%;border-collapse:separate;border-spacing:0}
+#tools .compact-yearly-table th,#tools .compact-yearly-table td{border-bottom:1px solid #efeee9;padding:12px 13px;text-align:right}
+#tools .compact-yearly-table thead th{position:sticky;top:0;z-index:2;background:#f5f5f1;color:#777;font-size:7.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:900}
+#tools .compact-yearly-table thead th:first-child{left:0;z-index:4;text-align:left;min-width:185px}
+#tools .compact-yearly-table tbody th{position:sticky;left:0;z-index:2;background:#fff;text-align:left;font-size:9px;font-weight:900;min-width:185px}
+#tools .compact-yearly-table tbody tr:nth-child(even) th,#tools .compact-yearly-table tbody tr:nth-child(even) td{background:#fbfbf8}
+#tools .compact-yearly-table tbody tr:last-child th,#tools .compact-yearly-table tbody tr:last-child td{border-bottom:0}
+#tools .compact-yearly-table td{font-size:10px;white-space:nowrap;min-width:96px}
+#tools .compact-yearly-table td strong{font-size:10.5px}
+#tools .compact-yearly-table .selected-column{background:#111!important;color:#fff!important}
+#tools .compact-yearly-table thead .selected-column{color:#fff!important}
+#tools .compact-yearly-table .cell-best{font-weight:950}
+#tools .compact-yearly-table .cell-best::after{content:" •";font-size:10px}
+#tools .matrix-supplier{display:flex;align-items:center;gap:8px}
+#tools .matrix-supplier-dot{width:7px;height:7px;border-radius:50%;background:#111;flex:0 0 auto}
+#tools .matrix-supplier small{display:block;color:#888;font-size:7px;font-weight:650;margin-top:2px}
+#tools .yearly-note{margin-top:10px}
+
 @media(max-width:1000px){
- #tools .year-price-strip{grid-template-columns:repeat(4,1fr)}
- #tools .year-detail-grid{grid-template-columns:repeat(2,1fr)}
+ #tools .year-price-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #tools .year-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media(max-width:600px){
- #tools .year-price-strip{grid-template-columns:repeat(2,1fr)}
- #tools .yearly-summary-head{display:block}
- #tools .yearly-legend.compact{margin-top:8px}
+@media(max-width:650px){
+ #tools .yearly-head{display:block}
+ #tools .yearly-actions{margin-top:12px}
+ #tools .year-price-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
  #tools .year-detail-top{display:block}
- #tools .year-detail-price{text-align:left;margin-top:10px}
- #tools .year-detail-grid{grid-template-columns:1fr 1fr}
+ #tools .year-detail-summary{margin-top:12px;justify-content:space-between}
+ #tools .year-detail-summary>div{text-align:left}
+ #tools .year-detail-grid{grid-template-columns:1fr}
+ #tools .year-detail-read{display:block}
 }
 
 /* ===== MARGEM E ANÁLISE POR ANO ===== */
@@ -510,6 +537,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  .pdf-table th{background:#f2f2ef;text-align:left;padding:6px;border-bottom:1px solid #ccc}
  .pdf-table td{padding:6px;border-bottom:1px solid #e6e6e0}
  .pdf-table th:not(:first-child),.pdf-table td:not(:first-child){text-align:right}
+ .price-pdf-selected .pdf-table{font-size:7px;table-layout:fixed}
+ .price-pdf-selected .pdf-table th:first-child,.price-pdf-selected .pdf-table td:first-child{width:25%;text-align:left}
+ .price-pdf-selected .pdf-table th,.price-pdf-selected .pdf-table td{padding:5px 4px}
+ .price-pdf-evolution{break-inside:auto}
+ .price-pdf-evolution .pdf-table{font-size:6.8px;table-layout:fixed}
+ .price-pdf-evolution .pdf-table th:first-child,.price-pdf-evolution .pdf-table td:first-child{width:28%;text-align:left;font-weight:700}
+ .price-pdf-evolution .pdf-table th:not(:first-child),.price-pdf-evolution .pdf-table td:not(:first-child){width:9%;padding:5px 3px}
  .pdf-note{background:#f5f5f2;border-radius:8px;padding:9px;font-size:7.8px;line-height:1.5;color:#555}
  .pdf-footer{margin-top:12px;padding-top:8px;border-top:1px solid #ddd;font-size:6.8px;color:#777;line-height:1.45}
 }
@@ -518,9 +552,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .course-quiz-callout{max-width:940px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#e9eae5;border-radius:15px;padding:18px;margin:24px 0}.course-quiz-callout b,.course-quiz-callout span{display:block}.course-quiz-callout span{color:#555;font-size:12px;margin-top:4px}@media(max-width:650px){.course-quiz-callout{display:block}.course-quiz-callout button{width:100%;margin-top:14px}}
 .quiz-stats{max-width:920px;color:#555;font-size:12px;font-weight:750;margin:12px 0 0}.quiz-question legend .quiz-context{display:block;background:#f1f2ef;border-left:3px solid #788d7e;border-radius:8px;padding:12px 14px;margin:14px 0 9px;color:#405047;font-size:14px;line-height:1.65;font-weight:450}.quiz-review-item .quiz-review-context{border-left:3px solid #9baea0;padding-left:11px;margin:14px 0 8px;color:#505e54;line-height:1.6}
 .buyer-example{margin:22px 0}.buyer-example-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 12px;font-size:14px}.buyer-example-head span{color:#666;font-size:12px}
-.buyer-example-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.buyer-example-card{background:#fff;border:1px solid #dfd9e8;border-radius:16px;overflow:hidden;padding:0 13px 13px;min-width:0;box-shadow:0 5px 18px rgba(36,18,65,.05)}
-.buyer-example-card h4{background:#6825a9;color:#fff;margin:0 -13px 12px;padding:13px;font-size:13px;min-height:52px}.buyer-example-card strong{display:block;font-size:11px;margin:12px 0 7px;text-transform:uppercase;color:#45216b}
-.buyer-example-card div{display:flex;justify-content:space-between;gap:6px;font-size:11px;padding:5px 0}.buyer-example-card .buyer-total{border-top:1px solid #e5dfea;margin-top:5px;font-weight:700}.buyer-example-card footer{border-top:1px solid #ddd;margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;gap:4px;font-size:11px}.buyer-example-card footer b{font-size:15px}.buyer-example-card .up{color:#a73737}.buyer-example-card .down{color:#147045}.buyer-example-note{font-size:12px;color:#5e5a63;line-height:1.5}
+.buyer-example-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.buyer-example-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;padding:0 13px 13px;min-width:0;box-shadow:0 5px 18px rgba(0,0,0,.035)}
+.buyer-example-card h4{background:#111;color:#fff;margin:0 -13px 12px;padding:13px;font-size:13px;min-height:52px}.buyer-example-card strong{display:block;font-size:11px;margin:12px 0 7px;text-transform:uppercase;color:#5f5f5f}
+.buyer-example-card div{display:flex;justify-content:space-between;gap:6px;font-size:11px;padding:5px 0}.buyer-example-card .buyer-total{border-top:1px solid #e5e4df;margin-top:5px;font-weight:700}.buyer-example-card footer{border-top:1px solid #ddd;margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;gap:4px;font-size:11px}.buyer-example-card footer b{font-size:15px}.buyer-example-card .up{color:#a73737}.buyer-example-card .down{color:#147045}.buyer-example-note{font-size:12px;color:#5e5a63;line-height:1.5}
 @media(max-width:850px){.buyer-example-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.buyer-example-grid{grid-template-columns:1fr}.buyer-example-head{display:block}}
 </style>
 <script>
@@ -659,7 +693,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
   <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
-   <span>01</span><div><b>Compra / fornecedores</b><small>Compare LP · LR · Simples · Híbrido</small></div>
+   <span>01</span><div><b>Compra / segmentos</b><small>Comércio · Indústria · Serviços · Misto</small></div>
   </button>
   <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
@@ -670,45 +704,66 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <article class="integrated-tool tax-calculator">
    <div class="integrated-head">
     <div>
-     <span class="tag">COMPARADOR DE CUSTO DE COMPRA</span>
-     <h3>Quanto custa comprar de cada tipo de fornecedor?</h3>
-     <p>Escolha o regime da sua empresa e informe o preço atual. Compare quatro fornecedores com preço novo, CBS, IBS, crédito e custo efetivo.</p>
+     <span class="tag">CUSTO DA COMPRA · COMPRADOR × FORNECEDORES</span>
+     <h3>Como a mesma compra muda com a Reforma Tributária?</h3>
+     <p>Escolha o segmento e o regime da empresa compradora. A ferramenta compara a mesma compra em quatro tipos de fornecedor, mostrando preço, créditos e custo efetivo antes e depois da reforma.</p>
     </div>
     <div class="tool-head-actions">
-     <div class="integration-badge"><b>4 cenários</b><small>Preço · CBS/IBS · crédito · custo efetivo</small></div>
+     <div class="integration-badge"><b>4 fornecedores</b><small>Simples · LP · LR · Simples regular</small></div>
      <button id="pricePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
      <button id="pricePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
     </div>
    </div>
 
    <div class="scenario-strip">
-    <div><small>REGIME DA SUA EMPRESA</small><b id="activeRegimeBadge">Lucro Presumido</b></div>
+    <div><small>SEGMENTO</small><b id="activeSegmentBadge">Comércio</b></div>
+    <div><small>COMPRADOR</small><b id="activeBuyerBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
-    <div><small>FORNECEDORES</small><b>LP · LR · Simples · Híbrido</b></div>
-    <div class="scenario-strip-note"><small>RESULTADO</small><b>Custo efetivo por fornecedor</b></div>
+    <div class="scenario-strip-note"><small>RESULTADO</small><b>Preço novo · créditos · custo efetivo</b></div>
    </div>
 
    <div class="tax-input-grid">
     <section class="sim-block">
-     <div class="sim-title"><span>01</span><div><b>Sua empresa e a compra</b><small>Regime do comprador e valor-base da aquisição.</small></div></div>
+     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Segmento, regime do comprador e preço da mesma compra nos fornecedores.</small></div></div>
      <div class="fields three">
-      <div class="field wide"><label>Regime da sua empresa</label>
-       <select id="taxRegime"><option value="presumido" selected>Lucro Presumido</option><option value="real">Lucro Real</option><option value="simples">Simples Nacional — padrão</option><option value="simples_hybrid">Simples Nacional — híbrido</option></select>
+      <div class="field"><label>Segmento</label>
+       <select id="priceSegment">
+        <option value="comercio" selected>Comércio</option>
+        <option value="industria">Indústria</option>
+        <option value="servicos">Serviços</option>
+        <option value="misto">Misto</option>
+       </select>
       </div>
-      <div class="field wide"><label>Valor total da compra, com tributos, R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
-      <div class="field"><label>ICMS atual do fornecedor %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
-      <div class="field"><label>ISS atual do fornecedor %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="0"></div>
-      <div class="field"><label>IPI atual do fornecedor %</label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
-      <div class="field"><label>Crédito atual do comprador no Lucro Real %</label><input id="priceCurrentRealCreditPct" type="number" min="0" max="100" step=".01" value="9.25"></div>
-      <div class="field"><label>Crédito atual do comprador no Presumido %</label><input id="priceCurrentPresumedCreditPct" type="number" min="0" max="100" step=".01" value="0"></div>
-      <label class="main-credit-check" for="priceTakesCbsIbsCredit"><input id="priceTakesCbsIbsCredit" type="checkbox" checked><span><b>A compra nova permite aproveitar CBS/IBS</b><small>Disponível no regime regular e no Simples híbrido; o Simples padrão não aproveita.</small></span></label>
+      <div id="priceOperationTypeWrap" class="field" style="display:none"><label>Tipo da operação</label>
+       <select id="priceOperationType">
+        <option value="mercadoria" selected>Mercadoria / revenda</option>
+        <option value="industria">Insumo / operação industrial</option>
+        <option value="servico">Serviço</option>
+       </select>
+      </div>
+      <div class="field wide"><label>Preço atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
+      <div class="field"><label>Regime da empresa compradora</label>
+       <select id="priceBuyerRegime">
+        <option value="simples">Simples Nacional — padrão</option>
+        <option value="presumido" selected>Lucro Presumido</option>
+        <option value="real">Lucro Real</option>
+        <option value="simples_hybrid">Simples Nacional — IBS/CBS regular</option>
+       </select>
+      </div>
+      <div id="icmsRateWrap" class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
+      <div id="issRateWrap" class="field" style="display:none"><label>ISS atual %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="5"></div>
+      <div id="ipiRateWrap" class="field" style="display:none"><label>IPI atual % <small>(se aplicável)</small></label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
+      <label class="main-credit-check" for="buyerPurchaseCredit">
+       <input id="buyerPurchaseCredit" type="checkbox" checked>
+       <span><b>Operação creditável</b><small>Aplica os créditos quando o regime do comprador permitir. No Simples padrão, o crédito permanece zerado.</small></span>
+      </label>
      </div>
 
      <div id="simplesCurrentFields" class="regime-panel">
-      <div class="subpanel-title"><b>Fornecedor do Simples Nacional</b><small>Use o RBT12 e o Anexo do fornecedor que deseja comparar.</small></div>
+      <div class="subpanel-title"><b>Parâmetros dos fornecedores do Simples Nacional</b><small id="simpleSegmentNote">Usados nos cards “Simples padrão” e “Simples com IBS/CBS regular”.</small></div>
       <div class="fields three">
        <div class="field"><label>RBT12 do fornecedor R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
-       <div class="field"><label>Anexo do fornecedor</label>
+       <div class="field"><label>Anexo</label>
         <select id="snAnnex">
          <option value="I" selected>Anexo I · Comércio</option>
          <option value="II">Anexo II · Indústria</option>
@@ -725,12 +780,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     </section>
 
     <section class="sim-block">
-     <div class="sim-title"><span>02</span><div><b>Reforma</b><small>Ano e premissas de CBS/IBS para os fornecedores regulares.</small></div></div>
+     <div class="sim-title"><span>02</span><div><b>Reforma 2027 → 2033</b><small>CBS e IBS no novo modelo; ICMS ou ISS reduzidos gradualmente até 2033.</small></div></div>
      <div class="fields three">
       <div class="field"><label>Ano destacado</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
       <div id="regularFutureFields" class="regime-panel wide">
        <div class="fields three">
-        <div class="field"><label>Alíquotas futuras</label><select id="rateMode"><option value="rtav">CBS 9,21% · premissa</option><option value="manual">Manual / aplicável</option></select></div>
+        <div class="field"><label>Alíquotas futuras</label><select id="rateMode"><option value="rtav">Premissas da ferramenta</option><option value="manual">Manual / aplicável</option></select></div>
         <div class="field"><label>Redução %</label><input id="rateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
         <div class="field"><label>CBS %</label><input id="cbsRate" type="number" step=".001" value="9.21" readonly></div>
         <div class="field"><label>IBS %</label><input id="ibsRate" type="number" step=".001" value=".1" readonly></div>
@@ -745,10 +800,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <div class="autosave-row"><span id="priceSaveStatus">Simulação salva neste navegador</span><button id="resetPriceSimulation" type="button">Restaurar padrão</button></div>
 
    <details class="scenario-manager">
-    <summary><span>Cenários salvos</span><small>Salve e compare configurações da empresa compradora</small></summary>
+    <summary><span>Cenários salvos</span><small>Salve e compare configurações por segmento</small></summary>
     <div class="scenario-manager-grid">
      <div class="field"><label for="priceClientName">Cliente / empresa</label><input id="priceClientName" type="text" placeholder="Ex.: Cliente A"></div>
-     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Compra de mercadoria 2027"></div>
+     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Comércio 2029"></div>
      <button id="savePriceScenario" class="scenario-action primary" type="button">Salvar cenário atual</button>
      <div class="field scenario-select"><label for="priceScenarioSelect">Cenário salvo</label><select id="priceScenarioSelect"><option value="">Nenhum cenário salvo</option></select></div>
      <button id="loadPriceScenario" class="scenario-action" type="button">Carregar</button>
@@ -759,31 +814,26 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
-    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO POR FORNECEDOR</span><h3><span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">4 FORNECEDORES</div></div>
-    <div id="regimeResultNote" class="regime-result-note"></div>
-    <div id="integratedKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
+    <div class="result-head"><div><span class="eyebrow">MESMO COMPRADOR · 4 TIPOS DE FORNECEDOR</span><h3>Hoje × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">4 FORNECEDORES</div></div>
+    <div id="priceEquationMemory" class="rate-note" aria-live="polite"></div>
+    <div id="buyerExample" class="buyer-example" aria-live="polite"></div>
 
-    <div id="supplierComparisonGrid" class="supplier-comparison-grid" aria-live="polite"></div>
-
-    <div id="integratedExplanation" class="integrated-explanation" aria-live="polite"></div>
-    <details class="calc-memory">
-     <summary><span>Memória de cálculo</span><small>Premissas e valores dos quatro cenários de fornecedor</small></summary>
-     <div id="priceMemory" class="memory-grid"></div>
-    </details>
+    
 
     <section class="yearly-analysis">
      <div class="yearly-head">
-      <div><span class="eyebrow">CUSTO POR FORNECEDOR</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Custo efetivo da mesma compra conforme o regime do fornecedor.</p></div>
+      <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Selecione um ano para ver os quatro fornecedores. A matriz abaixo mostra a evolução completa sem repetir informação em vários cards.</p></div>
       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
-     <div id="yearlyPriceStrip" class="year-price-strip"></div>
-     <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
-      <table class="comparison-table yearly-table compact-yearly-table price-year-table">
-       <thead><tr><th>Ano</th><th>Fornecedor LP</th><th>Fornecedor LR</th><th>Fornecedor Simples</th><th>Fornecedor Simples híbrido</th></tr></thead>
+     <div id="yearlyPriceStrip" class="year-price-strip" aria-label="Selecionar ano da evolução"></div>
+     <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
+     <div class="evolution-matrix-head"><div><b>Evolução por fornecedor</b><small>Linhas = fornecedores · colunas = anos · valores = custo efetivo</small></div></div>
+     <div class="compact-yearly-wrap">
+      <table class="compact-yearly-table price-year-table">
+       <thead id="yearlyProjectionHead"></thead>
        <tbody id="yearlyProjectionTable"></tbody>
       </table>
      </div>
-     <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <div id="yearlyProjectionNote" class="rate-note yearly-note"></div>
     </section>
    </section>
@@ -1012,8 +1062,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260929-53"></script>
+<script src="tax-engine.js?v=20260929-57"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-53" defer></script>
+<script src="app-v2.js?v=20260929-60" defer></script>
 </body>
 </html>
