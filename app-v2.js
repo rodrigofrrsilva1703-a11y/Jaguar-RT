@@ -283,9 +283,9 @@ function toggleCourseView(){courseAllVisible=!courseAllVisible;showCourseStep(mo
 let activeTimelineYear='2027';
 function timelineInfo(y){
  const change={2029:10,2030:20,2031:30,2032:40,2033:100}[y];
- if(change!==undefined)return {phase:y==='2033'?'Novo modelo':'Substituição gradual',short:y==='2033'?'Modelo integral':`ICMS/ISS ${100-change}% · IBS ${change}%`,facts:y==='2033'?['ICMS/ISS extintos','IBS integral','CBS vigente']:[`ICMS/ISS ${100-change}%`,`IBS ${change}% da transição`],change};
- if(y==='2026')return {phase:'Ano de teste',short:'Alíquotas de teste',facts:['CBS 0,9% (teste)','IBS 0,1% (teste)']};
- return {phase:'Implantação inicial',short:y==='2027'?'CBS entra em vigor':'IBS inicial',facts:y==='2027'?['PIS/Cofins extintos','IBS 0,1%','CBS vigente']:['IBS 0,1%','CBS vigente']};
+ if(change!==undefined)return {phase:y==='2033'?'Novo modelo':'Substituição gradual',short:y==='2033'?'Modelo integral':`ICMS/ISS ${100-change}% · IBS ${change}%`};
+ if(y==='2026')return {phase:'Ano de teste',short:'Teste'};
+ return {phase:'Implantação inicial',short:y==='2027'?'CBS + IBS':'IBS inicial'};
 }
 function pickYear(y){
  if(!TIMELINE[y]) return;
@@ -294,8 +294,7 @@ function pickYear(y){
  const o=TIMELINE[y], info=timelineInfo(y);
  const years=Object.keys(TIMELINE);
  const idx=years.indexOf(String(y));
- const bars=info.change===undefined?'':`<div class="transition-bars"><div class="transition-bar-label"><span>ICMS / ISS remanescentes <b>${100-info.change}%</b></span><div class="transition-bar-track"><i style="width:${100-info.change}%"></i></div></div><div class="transition-bar-label"><span>IBS na transição <b>${info.change}%</b></span><div class="transition-bar-track"><i style="width:${info.change}%"></i></div></div><small>Proporção de transição. Os percentuais não são as alíquotas finais da operação.</small></div>`;
- $('timelinePanel').innerHTML=`<div class="transition-year-panel"><span class="eyebrow">${courseEscape(info.phase)}</span><strong>${y}</strong><small>ETAPA ${String(idx+1).padStart(2,'0')} / ${String(years.length).padStart(2,'0')}</small></div><div class="transition-detail"><span class="eyebrow">O QUE MUDA NESTE ANO</span><h3>${courseEscape(info.change!==undefined&&y!=='2033'?info.short:o.label)}</h3><div class="transition-facts">${info.facts.map(f=>`<span>${courseEscape(f)}</span>`).join('')}</div><p>${courseEscape(o.text)}</p>${bars}<div class="transition-panel-actions"><button type="button" onclick="moveYear(-1)" ${idx===0?'disabled':''}>← Ano anterior</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Cronograma oficial ↗</a><button type="button" onclick="moveYear(1)" ${idx===years.length-1?'disabled':''}>Próximo ano →</button></div></div>`;
+ $('timelinePanel').innerHTML=`<div class="transition-selected"><strong>${y}</strong><span>${courseEscape(info.phase)}</span></div><div class="transition-summary"><h3>${courseEscape(info.short)}</h3><p>${courseEscape(o.text)}</p>${Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">Os percentuais indicam a proporção da transição, não a alíquota final.</small>':''}<div class="transition-panel-actions"><button type="button" onclick="moveYear(-1)" ${idx===0?'disabled':''}>← Anterior</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Cronograma oficial ↗</a><button type="button" onclick="moveYear(1)" ${idx===years.length-1?'disabled':''}>Próximo →</button></div></div>`;
 }
 
 function moveYear(direction){

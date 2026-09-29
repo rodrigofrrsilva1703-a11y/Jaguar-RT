@@ -5,18 +5,19 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
-test('linha do tempo distingue fases e proporções da transição',async({page})=>{
+test('linha do tempo resume cada ano sem poluir a página inicial',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=timeline',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#timeline .year')).toHaveCount(8);
+ await expect(page.locator('.transition-phases')).toHaveCount(0);
  await page.locator('#timeline [data-year="2029"]').click();
- await expect(page.locator('#timelinePanel')).toContainText('ICMS / ISS remanescentes 90%');
- await expect(page.locator('#timelinePanel')).toContainText('IBS na transição 10%');
+ await expect(page.locator('#timelinePanel h3')).toHaveText('ICMS/ISS 90% · IBS 10%');
+ await expect(page.locator('#timelinePanel')).toContainText('não a alíquota final');
  await expect(page.locator('#timeline [data-year="2029"]')).toHaveAttribute('aria-pressed','true');
- await page.locator('#timelinePanel').getByRole('button',{name:'Próximo ano'}).click();
+ await page.locator('#timelinePanel').getByRole('button',{name:'Próximo'}).click();
  await expect(page.locator('#timelinePanel')).toContainText('2030');
- await expect(page.locator('#timelinePanel')).toContainText('IBS na transição 20%');
+ await expect(page.locator('#timelinePanel h3')).toHaveText('ICMS/ISS 80% · IBS 20%');
  await page.locator('#timeline [data-year="2026"]').click();
- await expect(page.locator('#timelinePanel')).toContainText('CBS 0,9% (teste)');
+ await expect(page.locator('#timelinePanel')).toContainText('CBS 0,9% e IBS 0,1%');
  await expect(page.locator('#timelinePanel .transition-bars')).toHaveCount(0);
 });
 
