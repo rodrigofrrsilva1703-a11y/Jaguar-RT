@@ -110,8 +110,8 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
  await expect(lr).toContainText('Lucro Real');
  await expect(regular).toContainText('Simples Nacional — IBS/CBS regular');
 
- // Paleta restaurada: cabeçalho roxo da comparação.
- expect(await lp.locator('h4').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(104, 37, 169)');
+ // Paleta padrão: cabeçalho escuro da comparação.
+ expect(await lp.locator('h4').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(17, 17, 17)');
 
  // Serviços: fornecedor LP e LR têm bases/preços diferentes, mas o comprador é o mesmo.
  await expect(lp.locator('.buyer-total b').nth(0)).toHaveText('R$ 100,00');
@@ -253,6 +253,6 @@ test('fornecedores do Simples compartilham parâmetros do segmento e faturamento
  await expect(page.locator('#printReport')).toContainText('86.342,03');
  await expect(page.locator('#printReport')).toContainText('IBS');
  await expect(page.locator('#printReport')).toContainText('937,48');
- await expect(page.locator('#printReport')).toContainText('DAS / tributos remanescentes');
+ await expect(page.locator('#printReport')).toContainText('DAS remanescente');
  await expect(page.locator('#printReport')).toContainText('101.327,38');
 });

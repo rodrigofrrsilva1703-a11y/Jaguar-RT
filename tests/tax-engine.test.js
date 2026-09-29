@@ -247,6 +247,11 @@ const commerceSN=engine.commercialPurchaseComparison({...commerceLRInput,supplie
 assert.ok(commerceSN.currentDas>0,'Fornecedor Simples usa DAS atual');
 assert.ok(commerceSN.buyers.presumido.futureCredit>0,'Comprador regular recebe crédito correspondente ao IBS/CBS do Simples');
 close(commerceSN.buyers.simples.futureCredit,0,1e-10,'Simples padrão comprador não toma crédito do fornecedor Simples');
+for(const supplierRegime of ['simples','presumido','real','simples_hybrid']){
+ const comparison=engine.segmentedPurchaseComparison({...commerceLRInput,supplierRegime},2029);
+ close(comparison.buyers.simples.currentCredit,0,1e-10,'Simples padrão sem crédito atual de '+supplierRegime);
+ close(comparison.buyers.simples.futureCredit,0,1e-10,'Simples padrão sem crédito futuro de '+supplierRegime);
+}
 
 // Segmentos adicionais da ferramenta de compra.
 const service2027=engine.segmentedPurchaseComparison({
@@ -311,6 +316,8 @@ const revenue={
 };
 const revBase=engine.currentRevenueScenario(revenue);
 const rev2027=engine.futureRevenueScenario(revenue,2027);
+assert.ok(engine.revenueMemory(revenue,2027).some(row=>row[0]==='ICMS/ISS remanescente'),'Faturamento regular identifica tributo remanescente sem DAS');
+assert.ok(!engine.revenueMemory(revenue,2027).some(row=>row[0].includes('DAS')),'Faturamento regular não mostra DAS');
 close(rev2027.net,revBase.net,0.0001,'Faturamento líquido preservado');
 assert.ok(rev2027.purchaseCredit>0,'Crédito estimado das aquisições deve ser positivo');
 close(rev2027.netTax,rev2027.taxes-rev2027.purchaseCredit,1e-8,'Carga líquida após créditos');

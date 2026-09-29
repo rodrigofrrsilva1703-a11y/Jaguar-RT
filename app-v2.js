@@ -540,7 +540,7 @@ function supplierCardDetailed(model,buyerRegime,year){
   '<h4><small>FORNECEDOR</small>'+SUPPLIER_LABELS[model.supplierRegime]+'</h4>'+
   '<strong>Hoje</strong>'+
   '<div>Preço da compra <b>'+money(x.currentPrice)+'</b></div>'+
-  '<div>Crédito atual <b>'+money(x.currentCredit)+'</b></div>'+
+  '<div>Crédito do comprador <b>'+money(x.currentCredit)+'</b></div>'+
   '<div class="buyer-credit-detail">'+buyerCurrentCreditText(x)+'</div>'+
   '<div class="buyer-total">Custo efetivo <b>'+money(x.currentCost)+'</b></div>'+
   '<strong>'+year+'</strong>'+
@@ -548,7 +548,7 @@ function supplierCardDetailed(model,buyerRegime,year){
   '<div>CBS <b>'+money(model.cbs)+'</b></div>'+
   '<div>IBS <b>'+money(model.ibs)+'</b></div>'+
   remnant+
-  '<div>Créditos <b>'+money(x.futureCredit)+'</b></div>'+
+  '<div>Crédito do comprador <b>'+money(x.futureCredit)+'</b></div>'+
   '<div class="buyer-credit-detail">'+buyerFutureCreditText(x)+'</div>'+
   '<div class="buyer-total">Custo efetivo <b>'+money(x.futureCost)+'</b></div>'+
   '<footer>Variação do custo <b class="'+(x.changePct>0?'up':'down')+'">'+(x.changePct>0?'+':'')+pct(x.changePct)+'</b></footer>'+
@@ -946,11 +946,16 @@ function revCurrentRows(base){
  return rows;
 }
 
+function revenueRemnantLabel(x){
+ if(x.year===2026) return 'Tributos atuais';
+ return x.params?.type==='regular'?'ICMS/ISS remanescente':'DAS remanescente';
+}
+
 function revFutureRows(x){
  const rows=[['Faturamento bruto projetado',money(x.revenue)]];
  if(x.cbs>0) rows.push(['CBS',signedMoney(x.cbs,'−')]);
  if(x.ibs>0) rows.push(['IBS',signedMoney(x.ibs,'−')]);
- if(x.remnant>0) rows.push(['DAS / tributos remanescentes',signedMoney(x.remnant,'−')]);
+ if(x.remnant>0) rows.push([revenueRemnantLabel(x),signedMoney(x.remnant,'−')]);
  rows.push(['Total de tributos',signedMoney(x.taxes,'−')]);
  if((x.purchaseCredit||0)>0){
   rows.push(['Créditos estimados das aquisições',money(x.purchaseCredit)]);
@@ -1030,7 +1035,7 @@ function revRenderDetail(year){
    '<div class="year-detail-item"><small>Faturamento líquido</small><b>'+money(x.net)+'</b></div>'+
    '<div class="year-detail-item"><small>CBS</small><b>'+(x.cbs===null?'—':money(x.cbs))+'</b></div>'+
    '<div class="year-detail-item"><small>IBS</small><b>'+(x.ibs===null?'—':money(x.ibs))+'</b></div>'+
-   '<div class="year-detail-item"><small>DAS / tributos remanescentes</small><b>'+money(x.remnant)+'</b></div>'+
+   '<div class="year-detail-item"><small>'+revenueRemnantLabel(x)+'</small><b>'+money(x.remnant)+'</b></div>'+
    ((x.purchaseCredit||0)>0?'<div class="year-detail-item"><small>Créditos estimados</small><b>'+money(x.purchaseCredit)+'</b></div><div class="year-detail-item"><small>Carga líquida</small><b>'+money(x.netTax)+'</b></div><div class="year-detail-item"><small>Líquido após créditos</small><b>'+money(x.economicNet)+'</b></div>':'')+
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+analysis+'</p></div>';
@@ -1213,9 +1218,9 @@ function exportRevenueExcel(){
  if(!revenueYearlyRows.length) revRenderYearly();
  downloadSpreadsheet(
   'analise-faturamento-'+revRegime()+'-2026-2033.xlsx',
-  ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','DAS / tributos remanescentes','Créditos estimados das aquisições','Carga líquida','Líquido após créditos','Base DAS residual','ICMS/ISS excluído da base CBS/IBS','Base CBS/IBS'],
+  ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','Tipo do tributo remanescente','Tributo remanescente','Créditos estimados das aquisições','Carga líquida','Líquido após créditos','Base DAS residual','ICMS/ISS excluído da base CBS/IBS','Base CBS/IBS'],
   revenueYearlyRows.map(function(x){
-   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.economicNet??x.net,x.residualBase??'',x.excludedTax??'',x.cleanBase??''];
+   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,revenueRemnantLabel(x),x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.economicNet??x.net,x.residualBase??'',x.excludedTax??'',x.cleanBase??''];
   }),
   [
    ['Regime',REGIME_LABELS[revRegime()]],['Faturamento 2026',num('revCurrentRevenue')],
@@ -1348,7 +1353,7 @@ function buildRevenuePdf(client,year){
  ];
  if((future.cbs||0)>0) futureRows.push(['CBS',signedMoney(future.cbs,'−')]);
  if((future.ibs||0)>0) futureRows.push(['IBS',signedMoney(future.ibs,'−')]);
- if((future.remnant||0)>0) futureRows.push(['DAS / tributos remanescentes',signedMoney(future.remnant,'−')]);
+ if((future.remnant||0)>0) futureRows.push([revenueRemnantLabel(future),signedMoney(future.remnant,'−')]);
  futureRows.push(['Tributos brutos',signedMoney(future.taxes,'−')]);
  if((future.purchaseCredit||0)>0){
   futureRows.push(['Créditos estimados',money(future.purchaseCredit)]);
