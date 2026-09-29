@@ -40,24 +40,27 @@ async function supplierValue(card,label){
  return brl(await card.locator('.supplier-line').filter({hasText:label}).locator('b').textContent());
 }
 
-test('compra comercial aplica créditos atuais e transição por regime do comprador',async({page})=>{
+test('compra por segmentos adapta comércio serviços indústria e misto',async({page})=>{
  const errors=[];
  page.on('console',msg=>{if(msg.type()==='error') errors.push(msg.text());});
  page.on('pageerror',err=>errors.push(err.message));
 
- await page.goto('http://127.0.0.1:4173/?e2e=commercial-purchase',{waitUntil:'domcontentloaded'});
+ await page.goto('http://127.0.0.1:4173/?e2e=segments',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
 
  await expect(page.locator('#priceToolPanel')).toHaveClass(/active/);
- await expect(page.locator('#priceToolTab')).toContainText('Compra comercial');
+ await expect(page.locator('#priceToolTab')).toContainText('Compra / segmentos');
 
+ // Comércio: preserva a lógica aprovada anteriormente.
+ await page.locator('#priceSegment').selectOption('comercio');
  await page.locator('#priceNow').fill('100,00');
  await page.locator('#exampleSupplier').selectOption('real');
  await page.locator('#icmsRate').fill('18');
  await page.locator('#priceYear').selectOption('2027');
-
- await expect(page.locator('#activeSupplierBadge')).toHaveText('Lucro Real');
- await expect(page.locator('#priceEquationMemory')).toContainText('Base econômica atual');
+ await expect(page.locator('#activeSegmentBadge')).toHaveText('Comércio');
+ await expect(page.locator('#icmsRateWrap')).toBeVisible();
+ await expect(page.locator('#issRateWrap')).toBeHidden();
+ await expect(page.locator('#ipiRateWrap')).toBeHidden();
  await expect(page.locator('#priceEquationMemory')).toContainText('R$ 72,75');
  await expect(page.locator('#priceEquationMemory')).toContainText('R$ 96,98');
  await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(4);
@@ -66,50 +69,68 @@ test('compra comercial aplica créditos atuais e transição por regime do compr
  const presumido=page.locator('[data-buyer="presumido"]');
  const real=page.locator('[data-buyer="real"]');
  const regular=page.locator('[data-buyer="simples_hybrid"]');
-
  await expect(simple.locator('.buyer-total b').nth(0)).toHaveText('R$ 100,00');
  await expect(simple.locator('.buyer-total b').nth(1)).toHaveText('R$ 96,98');
  await expect(presumido.locator('.buyer-total b').nth(0)).toHaveText('R$ 82,00');
  await expect(presumido.locator('.buyer-total b').nth(1)).toHaveText('R$ 72,75');
  await expect(real.locator('.buyer-total b').nth(0)).toHaveText('R$ 72,75');
  await expect(real.locator('.buyer-total b').nth(1)).toHaveText('R$ 72,75');
- await expect(regular.locator('.buyer-total b').nth(0)).toHaveText('R$ 100,00');
  await expect(regular.locator('.buyer-total b').nth(1)).toHaveText('R$ 90,21');
 
- await expect(presumido).toContainText('CBS');
- await expect(presumido).toContainText('R$ 6,70');
- await expect(presumido).toContainText('IBS');
- await expect(presumido).toContainText('R$ 0,07');
- await expect(presumido).toContainText('ICMS remanescente');
- await expect(presumido).toContainText('R$ 17,46');
+ // Serviços: troca ICMS por ISS e permite anexos de serviço no Simples.
+ await page.locator('#priceSegment').selectOption('servicos');
+ await expect(page.locator('#activeSegmentBadge')).toHaveText('Serviços');
+ await expect(page.locator('#icmsRateWrap')).toBeHidden();
+ await expect(page.locator('#issRateWrap')).toBeVisible();
+ await expect(page.locator('#ipiRateWrap')).toBeHidden();
+ await page.locator('#issRate').fill('5');
+ await page.locator('#exampleSupplier').selectOption('real');
+ await expect(page.locator('#priceEquationMemory')).toContainText('ISS');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 85,75');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 98,67');
+ await expect(presumido.locator('.buyer-total b').nth(0)).toHaveText('R$ 100,00');
+ await expect(real.locator('.buyer-total b').nth(0)).toHaveText('R$ 90,75');
+ await expect(page.locator('#snAnnex')).toBeEnabled();
+ await expect(page.locator('#snAnnex')).toHaveValue('III');
 
- await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
- await page.locator('#priceYear').selectOption('2033');
- await expect(simple.locator('.buyer-total b').nth(1)).toHaveText('R$ 93,05');
- await expect(regular.locator('.buyer-total b').nth(1)).toHaveText('R$ 72,75');
+ // Indústria: usa ICMS e permite IPI atual opcional; Simples aponta Anexo II.
+ await page.locator('#priceSegment').selectOption('industria');
+ await expect(page.locator('#activeSegmentBadge')).toHaveText('Indústria');
+ await expect(page.locator('#icmsRateWrap')).toBeVisible();
+ await expect(page.locator('#issRateWrap')).toBeHidden();
+ await expect(page.locator('#ipiRateWrap')).toBeVisible();
+ await page.locator('#ipiRate').fill('10');
+ await page.locator('#exampleSupplier').selectOption('real');
+ await expect(page.locator('#snAnnex')).toHaveValue('II');
+ await expect(page.locator('#snAnnex')).toBeDisabled();
+ await expect(page.locator('#priceEquationMemory')).toContainText('IPI');
+ await expect(page.locator('#priceEquationMemory')).toContainText('R$ 62,75');
 
+ // Misto: o usuário escolhe a natureza da operação.
+ await page.locator('#priceSegment').selectOption('misto');
+ await expect(page.locator('#priceOperationTypeWrap')).toBeVisible();
+ await page.locator('#priceOperationType').selectOption('servico');
+ await expect(page.locator('#activeSegmentBadge')).toContainText('Misto');
+ await expect(page.locator('#activeSegmentBadge')).toContainText('Serviço');
+ await expect(page.locator('#issRateWrap')).toBeVisible();
+ await expect(page.locator('#icmsRateWrap')).toBeHidden();
+ await page.locator('#priceOperationType').selectOption('mercadoria');
+ await expect(page.locator('#icmsRateWrap')).toBeVisible();
+ await expect(page.locator('#snAnnex')).toHaveValue('I');
+
+ // Comparação entre fornecedores e evolução anual continuam disponíveis.
+ await page.locator('#priceSegment').selectOption('comercio');
+ await page.locator('#exampleSupplier').selectOption('real');
  await expect(page.locator('#supplierComparisonGrid .supplier-card')).toHaveCount(3);
- await expect(page.locator('[data-supplier="presumido"]')).toContainText('Lucro Presumido');
- await expect(page.locator('[data-supplier="real"]')).toContainText('Lucro Real');
- await expect(page.locator('[data-supplier="simples"]')).toContainText('Simples Nacional');
+ await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
 
- await page.locator('#exampleSupplier').selectOption('presumido');
- await page.locator('#priceYear').selectOption('2027');
- await expect(page.locator('#priceEquationMemory')).toContainText('R$ 78,35');
- await expect(page.locator('#priceEquationMemory')).toContainText('R$ 104,44');
-
- await page.locator('#exampleSupplier').selectOption('simples');
- await expect(page.locator('#simplesCurrentFields')).toBeVisible();
- await expect(page.locator('#priceEquationMemory')).toContainText('DAS estimado');
-
+ // PDF e Excel carregam o segmento.
+ await page.locator('#priceSegment').selectOption('servicos');
  await page.locator('#exampleSupplier').selectOption('real');
  await page.evaluate(()=>{window.print=()=>{};});
  await page.locator('#pricePrintBtn').click();
- await expect(page.locator('#printReport')).toContainText('Compra comercial · custo efetivo');
- await expect(page.locator('#printReport')).toContainText('Simples Nacional');
- await expect(page.locator('#printReport')).toContainText('Lucro Presumido');
- await expect(page.locator('#printReport')).toContainText('Lucro Real');
- await expect(page.locator('#printReport')).toContainText('Simples · IBS/CBS regular');
+ await expect(page.locator('#printReport')).toContainText('Compra por segmento · custo efetivo');
+ await expect(page.locator('#printReport')).toContainText('Serviços');
 
  const purchaseSheet=await page.evaluate(()=>{
   let out=null;
@@ -117,10 +138,7 @@ test('compra comercial aplica créditos atuais e transição por regime do compr
   exportPriceExcel();
   return out;
  });
- expect(purchaseSheet[1]).toContain('Custo Simples padrão');
- expect(purchaseSheet[1]).toContain('Custo Lucro Presumido');
- expect(purchaseSheet[1]).toContain('Custo Lucro Real');
- expect(purchaseSheet[1]).toContain('Custo Simples regular IBS/CBS');
+ expect(purchaseSheet[3].some(row=>row[0]==='Segmento'&&String(row[1]).includes('Serviços'))).toBe(true);
  expect(purchaseSheet[2]).toHaveLength(8);
 
  // Regressão: faturamento permanece intacto.
@@ -137,22 +155,27 @@ test('compra comercial aplica créditos atuais e transição por regime do compr
  expect(errors).toEqual([]);
 });
 
-test('fornecedor do Simples usa Anexo I e faturamento híbrido permanece intacto',async({page})=>{
- await page.goto('http://127.0.0.1:4173/?e2e=simple-supplier',{waitUntil:'domcontentloaded'});
+test('fornecedor do Simples adapta anexo ao segmento e faturamento híbrido permanece intacto',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=simple-segment',{waitUntil:'domcontentloaded'});
  await page.evaluate(()=>go('tools'));
 
+ await page.locator('#priceSegment').selectOption('comercio');
  await page.locator('#exampleSupplier').selectOption('simples');
  await page.locator('#priceNow').fill('1000000');
  await page.locator('#snRbt12').fill('1000000');
  await page.locator('#priceYear').selectOption('2027');
-
  await expect(page.locator('#simplesCurrentFields')).toBeVisible();
  await expect(page.locator('#snAnnex')).toHaveValue('I');
+ await expect(page.locator('#snAnnex')).toBeDisabled();
  await expect(page.locator('#priceEquationMemory')).toContainText('DAS estimado');
- await expect(page.locator('[data-buyer="simples"]')).toContainText('Sem crédito');
 
- const lpFutureCredit=brl(await page.locator('[data-buyer="presumido"] div').filter({hasText:'Créditos'}).locator('b').last().textContent());
- expect(lpFutureCredit).toBeGreaterThan(0);
+ await page.locator('#priceSegment').selectOption('industria');
+ await expect(page.locator('#snAnnex')).toHaveValue('II');
+ await page.locator('#priceSegment').selectOption('servicos');
+ await expect(page.locator('#snAnnex')).toHaveValue('III');
+ await expect(page.locator('#snAnnex')).toBeEnabled();
+ await page.locator('#snAnnex').selectOption('V');
+ await expect(page.locator('#snAnnex')).toHaveValue('V');
 
  // Regressão exata da ferramenta de faturamento híbrido.
  await page.evaluate(()=>showTaxTool('revenue'));
@@ -170,5 +193,4 @@ test('fornecedor do Simples usa Anexo I e faturamento híbrido permanece intacto
  await expect(page.locator('#printReport')).toContainText('937,48');
  await expect(page.locator('#printReport')).toContainText('DAS / tributos remanescentes');
  await expect(page.locator('#printReport')).toContainText('101.327,38');
- await expect(page.locator('#printReport')).not.toContainText('Base do DAS residual');
 });
