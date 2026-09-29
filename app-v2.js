@@ -688,21 +688,24 @@ function renderYearDetail(year){
  $('yearDetailPanel').classList.add('visible');
  $('yearDetailPanel').innerHTML=
   '<div class="year-detail-top">'+
-   '<div><span>'+segmentDisplay(first).toUpperCase()+' · COMPRADOR '+PURCHASE_BUYER_LABELS[row.buyerRegime].toUpperCase()+'</span><h4>'+row.year+' · custo por fornecedor</h4></div>'+
-   '<div class="year-detail-price"><small>DIFERENÇA ENTRE FORNECEDORES</small><b>'+money(stats.spread)+'</b></div>'+
+   '<div><span>'+segmentDisplay(first).toUpperCase()+' · COMPRADOR '+PURCHASE_BUYER_LABELS[row.buyerRegime].toUpperCase()+'</span><h4>'+row.year+' · comparação dos fornecedores</h4></div>'+
+   '<div class="year-detail-summary">'+
+    '<div><small>Menor custo</small><b>'+money(stats.min)+'</b></div>'+
+    '<div><small>Diferença entre extremos</small><b>'+money(stats.spread)+'</b></div>'+
+   '</div>'+
   '</div>'+
-  '<div class="year-detail-grid tax-detail">'+
+  '<div class="year-detail-grid">'+
    PURCHASE_SUPPLIERS.map(function(key){
     const r=supplierResultForRow(row,key);
     const best=Math.abs(r.cost-stats.min)<=.005;
     return '<div class="year-detail-item '+(best?'is-best':'')+'">'+
-     '<small>'+SUPPLIER_LABELS[key]+(best?' · menor custo':'')+'</small>'+
+     '<small>'+SUPPLIER_LABELS[key]+'</small>'+
      '<b>'+money(r.cost)+'</b>'+
-     '<span>Preço '+money(r.price)+' · crédito '+money(r.credit)+'</span>'+
+     '<span>Preço da compra '+money(r.price)+'<br>Crédito '+money(r.credit)+'</span>'+
     '</div>';
    }).join('')+
   '</div>'+
-  '<div class="tax-analysis-text"><b>Leitura do ano</b><p>Comprador '+PURCHASE_BUYER_LABELS[row.buyerRegime]+'. O menor custo deste ano é '+money(stats.min)+' em '+bestSupplierText(stats)+'. A diferença entre o menor e o maior custo é '+money(stats.spread)+'.</p></div>';
+  '<div class="year-detail-read"><span><b>Melhor resultado:</b> '+bestSupplierText(stats)+'</span><span>Todos os valores representam a mesma empresa compradora; muda apenas o tipo de fornecedor.</span></div>';
 }
 
 function renderYearlyProjection(){
@@ -718,45 +721,40 @@ function renderYearlyProjection(){
 
  if(yearDetailSelected===null||!rows.some(x=>x.year===yearDetailSelected)) yearDetailSelected=selectedYear;
 
+ // Navegação compacta por ano.
  $('yearlyPriceStrip').innerHTML=rows.map(function(row){
-  const stats=supplierCostStats(row);
   const phase=row.year===2026?'Atual':'Reforma';
   return '<button type="button" class="year-price-card '+(row.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+row.year+')" aria-label="Ver detalhes de '+row.year+'">'+
-   '<div class="year-card-top">'+
-    '<div class="year-card-year">'+row.year+'</div>'+
-    '<span class="year-card-phase">'+phase+'</span>'+
-   '</div>'+
-   '<div class="year-card-highlight">'+
-    '<small>Menor custo efetivo</small>'+
-    '<strong>'+money(stats.min)+'</strong>'+
-    '<span>'+bestSupplierText(stats)+'</span>'+
-   '</div>'+
-   '<div class="year-card-spread"><span>Diferença entre fornecedores</span><b>'+money(stats.spread)+'</b></div>'+
-   '<div class="year-supplier-list">'+
-    stats.items.map(function(item){
-     const best=Math.abs(item.cost-stats.min)<=.005;
-     return '<div class="year-supplier-row '+(best?'is-best':'')+'"><span>'+item.label+'</span><b>'+money(item.cost)+'</b></div>';
-    }).join('')+
-   '</div>'+
+   '<span class="year-nav-year">'+row.year+'</span>'+
+   '<span class="year-nav-phase">'+phase+'</span>'+
   '</button>';
  }).join('');
 
- $('yearlyProjectionTable').innerHTML=rows.map(function(row){
-  const stats=supplierCostStats(row);
-  const cls=row.year===2026?'current-year':(row.year===yearDetailSelected?'selected-year':'');
-  const phase=row.year===2026?'Atual':'Reforma';
-  return '<tr class="'+cls+'" onclick="selectYearDetail('+row.year+')">'+
-   '<td><div class="table-year"><span class="table-year-badge">'+row.year+'</span><small>'+phase+'</small></div></td>'+
-   PURCHASE_SUPPLIERS.map(function(key){
+ renderYearDetail(yearDetailSelected);
+
+ // Matriz transposta: fornecedores nas linhas, anos nas colunas.
+ const head=$('yearlyProjectionHead');
+ if(head){
+  head.innerHTML='<tr><th>Fornecedor</th>'+rows.map(function(row){
+   const selected=row.year===yearDetailSelected?' selected-column':'';
+   return '<th class="'+selected.trim()+'">'+row.year+'</th>';
+  }).join('')+'</tr>';
+ }
+
+ $('yearlyProjectionTable').innerHTML=PURCHASE_SUPPLIERS.map(function(key){
+  return '<tr>'+
+   '<th scope="row"><div class="matrix-supplier"><span class="matrix-supplier-dot"></span><div>'+shortSupplierLabel(key)+'<small>'+SUPPLIER_LABELS[key]+'</small></div></div></th>'+
+   rows.map(function(row){
+    const stats=supplierCostStats(row);
     const r=supplierResultForRow(row,key);
     const best=Math.abs(r.cost-stats.min)<=.005;
-    return '<td><div class="year-table-cost '+(best?'is-best':'')+'"><strong>'+money(r.cost)+'</strong>'+(best?'<span class="best-pill">menor</span>':'')+'</div></td>';
+    const selected=row.year===yearDetailSelected?' selected-column':'';
+    return '<td class="'+(selected+(best?' cell-best':'')).trim()+'" onclick="selectYearDetail('+row.year+')"><strong>'+money(r.cost)+'</strong></td>';
    }).join('')+
   '</tr>';
  }).join('');
 
- renderYearDetail(yearDetailSelected);
- $('yearlyProjectionNote').textContent='Comprador: '+PURCHASE_BUYER_LABELS[buyerRegime]+'. Os cards e a tabela mostram o custo efetivo da mesma compra em quatro tipos de fornecedor; clique em um ano para abrir os detalhes.';
+ $('yearlyProjectionNote').textContent='Comprador: '+PURCHASE_BUYER_LABELS[buyerRegime]+'. Selecione um ano acima ou clique em uma coluna da matriz para comparar os quatro fornecedores.';
 }
 
 function showTaxTool(which){
