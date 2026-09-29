@@ -537,7 +537,7 @@ function supplierCardDetailed(model,buyerRegime,year){
   ?'<div>'+model.oldTaxName+' remanescente <b>'+money(model.oldTaxRemnant)+'</b></div>'
   :(model.dasRemnant>0?'<div>DAS remanescente <b>'+money(model.dasRemnant)+'</b></div>':'');
  return '<article class="buyer-example-card" data-supplier="'+model.supplierRegime+'">'+
-  '<h4>'+SUPPLIER_LABELS[model.supplierRegime]+'</h4>'+
+  '<h4><small>FORNECEDOR</small>'+SUPPLIER_LABELS[model.supplierRegime]+'</h4>'+
   '<strong>Hoje</strong>'+
   '<div>Preço da compra <b>'+money(x.currentPrice)+'</b></div>'+
   '<div>Crédito atual <b>'+money(x.currentCredit)+'</b></div>'+

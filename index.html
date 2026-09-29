@@ -43,6 +43,13 @@
 #tools .scenario-strip small{font-size:8px;letter-spacing:.12em;font-weight:900;color:#9a9a95;margin-bottom:5px}
 #tools .scenario-strip b{font-size:12px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #tools .scenario-strip-note{background:#f3f3ef}
+#tools .purchase-choice{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:16px;padding:18px 20px;background:#fff;border:1px solid #ded6e7;border-left:4px solid #6825a9;border-radius:18px}
+#tools .purchase-choice-copy b,#tools .purchase-choice-copy small{display:block}
+#tools .purchase-choice-copy b{font-size:16px;margin-bottom:5px}
+#tools .purchase-choice-copy small{font-size:11px;color:#68616e;line-height:1.5}
+#tools .purchase-choice .field{width:min(100%,390px);flex:none}
+#tools .purchase-choice select{width:100%;min-height:46px;border:1px solid #b99fd1;border-radius:11px;background:#faf7fd;padding:10px 12px;font-weight:700;color:#442064}
+@media(max-width:680px){#tools .purchase-choice{display:block}#tools .purchase-choice .field{margin-top:14px}}
 #tools .sim-sections{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
 #tools .sim-block{position:relative;background:#fff;border:1px solid var(--tool-border)!important;border-radius:20px;padding:20px;box-shadow:0 8px 28px rgba(0,0,0,.035);min-width:0}
 #tools .sim-block:before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:#111;border-radius:20px 20px 0 0;opacity:.9}
@@ -562,6 +569,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .buyer-example{margin:22px 0}.buyer-example-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 12px;font-size:14px}.buyer-example-head span{color:#666;font-size:12px}
 .buyer-example-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.buyer-example-card{background:#fff;border:1px solid #dfd9e8;border-radius:16px;overflow:hidden;padding:0 13px 13px;min-width:0;box-shadow:0 5px 18px rgba(36,18,65,.05)}
 .buyer-example-card h4{background:#6825a9;color:#fff;margin:0 -13px 12px;padding:13px;font-size:13px;min-height:52px}.buyer-example-card strong{display:block;font-size:11px;margin:12px 0 7px;text-transform:uppercase;color:#45216b}
+.buyer-example-card h4 small{display:block;font-size:9px;letter-spacing:.12em;opacity:.75;margin-bottom:5px}
 .buyer-example-card div{display:flex;justify-content:space-between;gap:6px;font-size:11px;padding:5px 0}.buyer-example-card .buyer-total{border-top:1px solid #e5dfea;margin-top:5px;font-weight:700}.buyer-example-card footer{border-top:1px solid #ddd;margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;gap:4px;font-size:11px}.buyer-example-card footer b{font-size:15px}.buyer-example-card .up{color:#a73737}.buyer-example-card .down{color:#147045}.buyer-example-note{font-size:12px;color:#5e5a63;line-height:1.5}
 @media(max-width:850px){.buyer-example-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.buyer-example-grid{grid-template-columns:1fr}.buyer-example-head{display:block}}
 .course-main .course-block + .course-block{margin-top:12px}
@@ -792,9 +800,21 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <div class="scenario-strip-note"><small>RESULTADO</small><b>Preço novo · créditos · custo efetivo</b></div>
    </div>
 
+   <div class="purchase-choice">
+    <div class="purchase-choice-copy"><b>1 comprador → 4 fornecedores</b><small>Escolha o regime de quem compra. Abaixo, compare a mesma compra com fornecedores de cada um dos quatro regimes.</small></div>
+    <div class="field"><label for="priceBuyerRegime">Regime da empresa compradora</label>
+     <select id="priceBuyerRegime">
+      <option value="simples">Simples Nacional — padrão</option>
+      <option value="presumido" selected>Lucro Presumido</option>
+      <option value="real">Lucro Real</option>
+      <option value="simples_hybrid">Simples Nacional — IBS/CBS regular</option>
+     </select>
+    </div>
+   </div>
+
    <div class="tax-input-grid">
     <section class="sim-block">
-     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Segmento, regime do comprador e preço da mesma compra nos fornecedores.</small></div></div>
+     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Segmento e preço da mesma compra nos quatro fornecedores.</small></div></div>
      <div class="fields three">
       <div class="field"><label>Segmento</label>
        <select id="priceSegment">
@@ -812,14 +832,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
        </select>
       </div>
       <div class="field wide"><label>Preço atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
-      <div class="field"><label>Regime da empresa compradora</label>
-       <select id="priceBuyerRegime">
-        <option value="simples">Simples Nacional — padrão</option>
-        <option value="presumido" selected>Lucro Presumido</option>
-        <option value="real">Lucro Real</option>
-        <option value="simples_hybrid">Simples Nacional — IBS/CBS regular</option>
-       </select>
-      </div>
       <div id="icmsRateWrap" class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
       <div id="issRateWrap" class="field" style="display:none"><label>ISS atual %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="5"></div>
       <div id="ipiRateWrap" class="field" style="display:none"><label>IPI atual % <small>(se aplicável)</small></label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
@@ -1134,6 +1146,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-rules.js?v=20260928-41"></script>
 <script src="tax-engine.js?v=20260929-57"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-62" defer></script>
+<script src="app-v2.js?v=20260929-63" defer></script>
 </body>
 </html>
