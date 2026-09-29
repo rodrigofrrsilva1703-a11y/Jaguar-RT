@@ -248,6 +248,48 @@ assert.ok(commerceSN.currentDas>0,'Fornecedor Simples usa DAS atual');
 assert.ok(commerceSN.buyers.presumido.futureCredit>0,'Comprador regular recebe crédito correspondente ao IBS/CBS do Simples');
 close(commerceSN.buyers.simples.futureCredit,0,1e-10,'Simples padrão comprador não toma crédito do fornecedor Simples');
 
+// Segmentos adicionais da ferramenta de compra.
+const service2027=engine.segmentedPurchaseComparison({
+ amount:100,segment:'servicos',supplierRegime:'real',issRate:5,
+ simple:{annex:'III',rbt12:1000000},future:{mode:'rtav'},purchaseGeneratesCredit:true
+},2027);
+assert.equal(service2027.oldTaxName,'ISS');
+close(service2027.currentPisCofins,9.25,1e-10,'Serviços: PIS/Cofins atuais');
+close(service2027.currentIss,5,1e-10,'Serviços: ISS atual');
+close(service2027.economicBase,85.75,1e-10,'Serviços: base econômica');
+close(service2027.buyers.presumido.currentCost,100,1e-10,'LP não usa ISS como crédito neste modelo');
+close(service2027.buyers.real.currentCost,90.75,1e-10,'LR usa crédito atual de PIS/Cofins');
+close(service2027.futurePrice,(85.75+85.75*.0921+85.75*.001)/(1-.05),1e-10,'Serviços: preço 2027');
+close(service2027.issRemnant,service2027.futurePrice*.05,1e-10,'Serviços: ISS remanescente');
+close(service2027.icmsRemnant,0,1e-10,'Serviços: sem ICMS');
+
+const industry2027=engine.segmentedPurchaseComparison({
+ amount:100,segment:'industria',supplierRegime:'real',icmsRate:18,ipiRate:10,
+ simple:{annex:'II',rbt12:1000000},future:{mode:'rtav'},purchaseGeneratesCredit:true
+},2027);
+assert.equal(industry2027.oldTaxName,'ICMS');
+close(industry2027.currentIpi,10,1e-10,'Indústria: IPI atual opcional');
+close(industry2027.economicBase,62.75,1e-10,'Indústria: base econômica');
+close(industry2027.futurePrice,(62.75+62.75*.0921+62.75*.001)/(1-.18),1e-10,'Indústria: preço 2027');
+close(industry2027.buyers.presumido.currentCost,82,1e-10,'Indústria LP: crédito atual de ICMS');
+close(industry2027.buyers.real.currentCost,72.75,1e-10,'Indústria LR: ICMS + PIS/Cofins');
+
+const mixedService=engine.segmentedPurchaseComparison({
+ amount:100,segment:'misto',operationType:'servico',supplierRegime:'real',issRate:5,
+ simple:{annex:'V',rbt12:1000000},future:{mode:'rtav'},purchaseGeneratesCredit:true
+},2029);
+assert.equal(mixedService.segment,'misto');
+assert.equal(mixedService.operationType,'servico');
+assert.equal(mixedService.oldTaxName,'ISS');
+close(mixedService.futureIssPct,4.5,1e-10,'Misto serviço: ISS cai a 90% em 2029');
+
+const mixedGoods=engine.segmentedPurchaseComparison({
+ amount:100,segment:'misto',operationType:'mercadoria',supplierRegime:'real',icmsRate:18,
+ simple:{annex:'I',rbt12:1000000},future:{mode:'rtav'},purchaseGeneratesCredit:true
+},2029);
+assert.equal(mixedGoods.oldTaxName,'ICMS');
+close(mixedGoods.futureIcmsPct,16.2,1e-10,'Misto mercadoria: ICMS cai a 90% em 2029');
+
 // Faturamento com créditos estimados das aquisições.
 const revenue={
  regime:'presumido',

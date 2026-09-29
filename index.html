@@ -659,7 +659,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
  <div class="tool-switcher" role="tablist" aria-label="Calculadoras">
   <button id="priceToolTab" class="tool-switch active" type="button" role="tab" aria-selected="true" aria-controls="priceToolPanel" onclick="showTaxTool('price')">
-   <span>01</span><div><b>Compra comercial</b><small>Atual × Reforma · 3 fornecedores</small></div>
+   <span>01</span><div><b>Compra / segmentos</b><small>Comércio · Indústria · Serviços · Misto</small></div>
   </button>
   <button id="revenueToolTab" class="tool-switch" type="button" role="tab" aria-selected="false" aria-controls="revenueToolPanel" onclick="showTaxTool('revenue')">
    <span>02</span><div><b>Faturamento</b><small>Visão macro da receita</small></div>
@@ -670,9 +670,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <article class="integrated-tool tax-calculator">
    <div class="integrated-head">
     <div>
-     <span class="tag">CUSTO DA COMPRA · EMPRESA COMERCIAL</span>
+     <span class="tag">CUSTO DA COMPRA · POR SEGMENTO</span>
      <h3>Como a mesma compra muda com a Reforma Tributária?</h3>
-     <p>Partimos do preço atual da mercadoria, retiramos os tributos atuais do fornecedor para encontrar a base econômica e projetamos 2027–2033 com ICMS remanescente, CBS e IBS. Depois aplicamos os créditos permitidos para cada regime comprador.</p>
+     <p>Escolha o segmento da empresa/operação. A ferramenta identifica os tributos atuais relevantes, encontra a base econômica e projeta 2027–2033 com CBS, IBS e a redução gradual de ICMS ou ISS.</p>
     </div>
     <div class="tool-head-actions">
      <div class="integration-badge"><b>4 compradores</b><small>Simples · LP · LR · Simples regular</small></div>
@@ -682,7 +682,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    </div>
 
    <div class="scenario-strip">
-    <div><small>SEGMENTO</small><b>Comércio</b></div>
+    <div><small>SEGMENTO</small><b id="activeSegmentBadge">Comércio</b></div>
     <div><small>FORNECEDOR</small><b id="activeSupplierBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
     <div class="scenario-strip-note"><small>RESULTADO</small><b>Preço novo · créditos · custo efetivo</b></div>
@@ -690,8 +690,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div class="tax-input-grid">
     <section class="sim-block">
-     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Mercadoria comercial e regime do fornecedor.</small></div></div>
+     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Segmento, tipo de operação, fornecedor e preço atual.</small></div></div>
      <div class="fields three">
+      <div class="field"><label>Segmento</label>
+       <select id="priceSegment">
+        <option value="comercio" selected>Comércio</option>
+        <option value="industria">Indústria</option>
+        <option value="servicos">Serviços</option>
+        <option value="misto">Misto</option>
+       </select>
+      </div>
+      <div id="priceOperationTypeWrap" class="field" style="display:none"><label>Tipo da operação</label>
+       <select id="priceOperationType">
+        <option value="mercadoria" selected>Mercadoria / revenda</option>
+        <option value="industria">Insumo / operação industrial</option>
+        <option value="servico">Serviço</option>
+       </select>
+      </div>
       <div class="field wide"><label>Preço atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <div class="field"><label>Regime do fornecedor</label>
        <select id="exampleSupplier">
@@ -700,18 +715,28 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
         <option value="simples">Simples Nacional</option>
        </select>
       </div>
-      <div class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
+      <div id="icmsRateWrap" class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
+      <div id="issRateWrap" class="field" style="display:none"><label>ISS atual %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="5"></div>
+      <div id="ipiRateWrap" class="field" style="display:none"><label>IPI atual % <small>(se aplicável)</small></label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
       <label class="main-credit-check" for="buyerPurchaseCredit">
        <input id="buyerPurchaseCredit" type="checkbox" checked>
-       <span><b>Operação comercial creditável</b><small>Aplica os créditos quando o regime do comprador permitir. No Simples padrão, o crédito permanece zerado.</small></span>
+       <span><b>Operação creditável</b><small>Aplica os créditos quando o regime do comprador permitir. No Simples padrão, o crédito permanece zerado.</small></span>
       </label>
      </div>
 
      <div id="simplesCurrentFields" class="regime-panel" style="display:none">
-      <div class="subpanel-title"><b>Fornecedor do Simples Nacional</b><small>Para comércio, a ferramenta usa o Anexo I e o RBT12 para estimar o DAS e as parcelas de IBS/CBS.</small></div>
+      <div class="subpanel-title"><b>Fornecedor do Simples Nacional</b><small id="simpleSegmentNote">O Anexo é ajustado ao segmento da operação.</small></div>
       <div class="fields three">
        <div class="field"><label>RBT12 do fornecedor R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
-       <div class="field"><label>Anexo</label><select id="snAnnex"><option value="I" selected>Anexo I · Comércio</option></select></div>
+       <div class="field"><label>Anexo</label>
+        <select id="snAnnex">
+         <option value="I" selected>Anexo I · Comércio</option>
+         <option value="II">Anexo II · Indústria</option>
+         <option value="III">Anexo III · Serviços</option>
+         <option value="IV">Anexo IV · Serviços</option>
+         <option value="V">Anexo V · Serviços</option>
+        </select>
+       </div>
        <div class="field"><label>Faixa</label><input id="snBandLabel" type="text" readonly></div>
        <div class="field wide"><label>Alíquota efetiva do DAS em 2026</label><input id="snCurrentEffective" type="text" readonly></div>
       </div>
@@ -720,7 +745,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     </section>
 
     <section class="sim-block">
-     <div class="sim-title"><span>02</span><div><b>Reforma 2027 → 2033</b><small>CBS e IBS por fora; ICMS reduzido gradualmente na transição.</small></div></div>
+     <div class="sim-title"><span>02</span><div><b>Reforma 2027 → 2033</b><small>CBS e IBS no novo modelo; ICMS ou ISS reduzidos gradualmente até 2033.</small></div></div>
      <div class="fields three">
       <div class="field"><label>Ano destacado</label><select id="priceYear"><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></div>
       <div id="regularFutureFields" class="regime-panel wide">
@@ -740,10 +765,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <div class="autosave-row"><span id="priceSaveStatus">Simulação salva neste navegador</span><button id="resetPriceSimulation" type="button">Restaurar padrão</button></div>
 
    <details class="scenario-manager">
-    <summary><span>Cenários salvos</span><small>Salve e compare configurações da compra comercial</small></summary>
+    <summary><span>Cenários salvos</span><small>Salve e compare configurações por segmento</small></summary>
     <div class="scenario-manager-grid">
      <div class="field"><label for="priceClientName">Cliente / empresa</label><input id="priceClientName" type="text" placeholder="Ex.: Cliente A"></div>
-     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Mercadoria 2029"></div>
+     <div class="field"><label for="priceScenarioName">Nome do cenário</label><input id="priceScenarioName" type="text" placeholder="Ex.: Comércio 2029"></div>
      <button id="savePriceScenario" class="scenario-action primary" type="button">Salvar cenário atual</button>
      <div class="field scenario-select"><label for="priceScenarioSelect">Cenário salvo</label><select id="priceScenarioSelect"><option value="">Nenhum cenário salvo</option></select></div>
      <button id="loadPriceScenario" class="scenario-action" type="button">Carregar</button>
@@ -772,7 +797,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
     <section class="yearly-analysis">
      <div class="yearly-head">
-      <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Fornecedor selecionado · custo efetivo para cada regime comprador.</p></div>
+      <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Segmento e fornecedor selecionados · custo efetivo para cada regime comprador.</p></div>
       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
      <div id="yearlyPriceStrip" class="year-price-strip"></div>
@@ -1011,8 +1036,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260929-55"></script>
+<script src="tax-engine.js?v=20260929-56"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-55" defer></script>
+<script src="app-v2.js?v=20260929-56" defer></script>
 </body>
 </html>

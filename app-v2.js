@@ -328,7 +328,76 @@ function updateSnSummary(){
  }
 }
 
+const SEGMENT_LABELS={
+ comercio:'Comércio',
+ industria:'Indústria',
+ servicos:'Serviços',
+ misto:'Misto'
+};
+const OPERATION_LABELS={
+ mercadoria:'Mercadoria / revenda',
+ industria:'Insumo / operação industrial',
+ servico:'Serviço'
+};
+const PURCHASE_BUYER_LABELS={
+ simples:'Simples Nacional',
+ presumido:'Lucro Presumido',
+ real:'Lucro Real',
+ simples_hybrid:'Simples · IBS/CBS regular'
+};
+const SUPPLIER_LABELS={
+ presumido:'Fornecedor · Lucro Presumido',
+ real:'Fornecedor · Lucro Real',
+ simples:'Fornecedor · Simples Nacional'
+};
+
+function purchaseSegment(){return $('priceSegment')?.value||'comercio';}
+
+function selectedOperationType(){
+ const segment=purchaseSegment();
+ if(segment==='servicos') return 'servico';
+ if(segment==='industria') return 'industria';
+ if(segment==='misto') return $('priceOperationType')?.value||'mercadoria';
+ return 'mercadoria';
+}
+
+function defaultSimpleAnnex(operation=selectedOperationType()){
+ return operation==='mercadoria'?'I':operation==='industria'?'II':'III';
+}
+
+function syncSegmentFields(){
+ const segment=purchaseSegment();
+ const operation=selectedOperationType();
+ if($('priceOperationTypeWrap')) $('priceOperationTypeWrap').style.display=segment==='misto'?'block':'none';
+ if($('icmsRateWrap')) $('icmsRateWrap').style.display=operation==='servico'?'none':'block';
+ if($('issRateWrap')) $('issRateWrap').style.display=operation==='servico'?'block':'none';
+ if($('ipiRateWrap')) $('ipiRateWrap').style.display=operation==='industria'?'block':'none';
+
+ const annex=$('snAnnex');
+ if(annex){
+  if(operation==='mercadoria'){
+   annex.value='I';
+   annex.disabled=true;
+  }else if(operation==='industria'){
+   annex.value='II';
+   annex.disabled=true;
+  }else{
+   if(!['III','IV','V'].includes(annex.value)) annex.value='III';
+   annex.disabled=false;
+  }
+ }
+ if($('simpleSegmentNote')){
+  $('simpleSegmentNote').textContent=
+   operation==='mercadoria'
+    ?'Comércio: Anexo I.'
+    :operation==='industria'
+      ?'Indústria: Anexo II. IPI atual é opcional e deve ser informado apenas quando aplicável.'
+      :'Serviços: escolha o Anexo III, IV ou V aplicável à atividade.';
+ }
+}
+
 function applyRegimeUI({preset=true}={}){
+ syncSegmentFields();
  const supplier=$('exampleSupplier')?.value||'presumido';
  if($('simplesCurrentFields')) $('simplesCurrentFields').style.display=supplier==='simples'?'block':'none';
  if($('regularFutureFields')) $('regularFutureFields').style.display='block';
@@ -344,15 +413,18 @@ function applyYearPreset(){
   $('ibsRate').value=p.ibs;
  }
  updateSnSummary();
+
  const supplier=$('exampleSupplier')?.value||'presumido';
+ const operation=selectedOperationType();
+ const oldTax=operation==='servico'?'ISS':'ICMS';
  if($('rateNote')){
   if(supplier==='simples'){
-   $('rateNote').textContent='Fornecedor no Simples Nacional: a projeção usa o Anexo I e o RBT12. As parcelas de IBS/CBS permanecem dentro do DAS do fornecedor padrão; compradores em regime regular podem aproveitar apenas o crédito correspondente quando permitido.';
+   $('rateNote').textContent='Fornecedor no Simples Nacional: a projeção usa o Anexo e o RBT12 informados. O crédito do adquirente regular fica limitado à parcela de IBS/CBS correspondente ao fornecedor.';
   }else{
    const oldPct=Math.round((p.old??1)*100);
    $('rateNote').textContent=($('rateMode')?.value==='manual')
-    ?'Compra comercial: CBS e IBS informados manualmente. O ICMS atual permanece na transição conforme o percentual do ano e é extinto em 2033.'
-    :'Premissa da ferramenta: CBS '+String(p.cbs).replace('.',',')+'% · IBS '+String(p.ibs).replace('.',',')+'% · ICMS remanescente '+oldPct+'% da alíquota atual.';
+    ?'CBS e IBS foram informados manualmente. O '+oldTax+' atual permanece parcialmente na transição e é extinto em 2033.'
+    :'Premissa da ferramenta: CBS '+String(p.cbs).replace('.',',')+'% · IBS '+String(p.ibs).replace('.',',')+'% · '+oldTax+' remanescente '+oldPct+'% da alíquota atual.';
   }
  }
  calcIntegrated();
@@ -361,29 +433,21 @@ function applyYearPreset(){
 function priceEngineInput(){
  return {
   amount:Math.max(0,num('priceNow')),
+  segment:purchaseSegment(),
+  operationType:selectedOperationType(),
   supplierRegime:$('exampleSupplier')?.value||'presumido',
   icmsRate:num('icmsRate'),
-  simple:{annex:'I',rbt12:num('snRbt12')},
+  issRate:num('issRate'),
+  ipiRate:num('ipiRate'),
+  simple:{annex:snAnnex(),rbt12:num('snRbt12')},
   future:{mode:$('rateMode')?.value||'rtav',reduction:num('rateReduction'),cbs:num('cbsRate'),ibs:num('ibsRate')},
   purchaseGeneratesCredit:!!$('buyerPurchaseCredit')?.checked
  };
 }
 
 function purchaseComparison(year=Number($('priceYear')?.value||2027),input=priceEngineInput()){
- return RTAV_ENGINE.commercialPurchaseComparison(input,year);
+ return RTAV_ENGINE.segmentedPurchaseComparison(input,year);
 }
-
-const PURCHASE_BUYER_LABELS={
- simples:'Simples Nacional',
- presumido:'Lucro Presumido',
- real:'Lucro Real',
- simples_hybrid:'Simples · IBS/CBS regular'
-};
-const SUPPLIER_LABELS={
- presumido:'Fornecedor · Lucro Presumido',
- real:'Fornecedor · Lucro Real',
- simples:'Fornecedor · Simples Nacional'
-};
 
 function buyerCurrentCreditText(x){
  const parts=[];
@@ -400,21 +464,32 @@ function buyerFutureCreditText(x){
  return parts.length?parts.join(' · '):'Sem crédito';
 }
 
+function segmentDisplay(model){
+ const base=SEGMENT_LABELS[model.segment]||model.segment;
+ return model.segment==='misto'?base+' · '+(OPERATION_LABELS[model.operationType]||model.operationType):base;
+}
+
 function renderBuyerExample(year,input){
  const model=purchaseComparison(year,input);
  const regular=model.supplierRegime!=='simples';
  if(regular){
+  const currentParts=['PIS/Cofins '+money(model.currentPisCofins)];
+  if(model.currentIcms>0) currentParts.push('ICMS '+money(model.currentIcms));
+  if(model.currentIss>0) currentParts.push('ISS '+money(model.currentIss));
+  if(model.currentIpi>0) currentParts.push('IPI '+money(model.currentIpi));
   $('priceEquationMemory').innerHTML=
-   '<b>Base econômica atual:</b> '+money(model.currentPrice)+' − PIS/Cofins '+money(model.currentPisCofins)+' − ICMS '+money(model.currentIcms)+' = <b>'+money(model.economicBase)+'</b>.'+
-   '<br><b>Preço '+year+':</b> ('+money(model.economicBase)+' + CBS '+money(model.cbs)+' + IBS '+money(model.ibs)+') ÷ (1 − ICMS remanescente '+pct(model.futureIcmsPct)+') = <b>'+money(model.futurePrice)+'</b>.';
+   '<b>Base econômica atual:</b> '+money(model.currentPrice)+' − '+currentParts.join(' − ')+' = <b>'+money(model.economicBase)+'</b>.'+
+   '<br><b>Preço '+year+':</b> ('+money(model.economicBase)+' + CBS '+money(model.cbs)+' + IBS '+money(model.ibs)+')'+
+   (model.futureOldTaxPct>0?' ÷ (1 − '+model.oldTaxName+' remanescente '+pct(model.futureOldTaxPct)+')':'')+
+   ' = <b>'+money(model.futurePrice)+'</b>.';
  }else{
   $('priceEquationMemory').innerHTML=
    '<b>Fornecedor do Simples:</b> preço atual '+money(model.currentPrice)+' − DAS estimado '+money(model.currentDas)+' = base econômica <b>'+money(model.economicBase)+'</b>.'+
-   '<br>Em '+year+', o preço é recomposto pelo DAS do Anexo I para preservar essa base: <b>'+money(model.futurePrice)+'</b>.';
+   '<br>Em '+year+', o preço é recomposto pelo DAS do Anexo '+snAnnex()+' para preservar essa base: <b>'+money(model.futurePrice)+'</b>.';
  }
 
  $('buyerExample').innerHTML=
-  '<div class="buyer-example-head"><b>'+SUPPLIER_LABELS[model.supplierRegime]+'</b><span>Hoje '+money(model.currentPrice)+' · '+year+' '+money(model.futurePrice)+'</span></div>'+
+  '<div class="buyer-example-head"><b>'+segmentDisplay(model)+' · '+SUPPLIER_LABELS[model.supplierRegime]+'</b><span>Hoje '+money(model.currentPrice)+' · '+year+' '+money(model.futurePrice)+'</span></div>'+
   '<div class="buyer-example-grid">'+['simples','presumido','real','simples_hybrid'].map(function(key){
    const x=model.buyers[key];
    return '<article class="buyer-example-card" data-buyer="'+key+'">'+
@@ -428,27 +503,36 @@ function renderBuyerExample(year,input){
     '<div>Preço novo <b>'+money(x.futurePrice)+'</b></div>'+
     '<div>CBS <b>'+money(model.cbs)+'</b></div>'+
     '<div>IBS <b>'+money(model.ibs)+'</b></div>'+
-    (model.icmsRemnant>0?'<div>ICMS remanescente <b>'+money(model.icmsRemnant)+'</b></div>':'')+
+    (model.oldTaxRemnant>0?'<div>'+model.oldTaxName+' remanescente <b>'+money(model.oldTaxRemnant)+'</b></div>':'')+
     '<div>Créditos <b>'+money(x.futureCredit)+'</b></div>'+
     '<div class="buyer-credit-detail">'+buyerFutureCreditText(x)+'</div>'+
     '<div class="buyer-total">Custo efetivo <b>'+money(x.futureCost)+'</b></div>'+
     '<footer>Variação do custo <b class="'+(x.changePct>0?'up':'down')+'">'+(x.changePct>0?'+':'')+pct(x.changePct)+'</b></footer>'+
    '</article>';
   }).join('')+
-  '</div><p class="buyer-example-note">No modelo comercial, o Simples padrão não toma crédito. O Lucro Presumido toma ICMS no cenário atual e, na reforma, ICMS remanescente + CBS/IBS. O Lucro Real soma o crédito atual de PIS/Cofins de 9,25% ao ICMS. O Simples com IBS/CBS no regime regular passa a tomar CBS/IBS, sem crédito do ICMS residual nesta simulação.</p>';
+  '</div><p class="buyer-example-note">'+
+   (model.usesIcms
+    ?'Em operações com mercadorias, o Lucro Presumido e o Lucro Real podem aproveitar o ICMS quando a operação for creditável; o Lucro Real também usa a premissa de crédito atual de PIS/Cofins de 9,25%.'
+    :'Em serviços, o ISS não é tratado como crédito do comprador neste modelo. O Lucro Real mantém a premissa de crédito atual de PIS/Cofins de 9,25% quando a aquisição for creditável.')+
+   ' O Simples padrão permanece sem crédito. No Simples com IBS/CBS no regime regular, a ferramenta aplica crédito de CBS/IBS após a reforma.</p>';
 }
 
 function updateScenarioStrip(){
  const supplier=$('exampleSupplier')?.value||'presumido';
- const labels={presumido:'Lucro Presumido',real:'Lucro Real',simples:'Simples Nacional'};
+ const supplierLabels={presumido:'Lucro Presumido',real:'Lucro Real',simples:'Simples Nacional'};
+ const segment=purchaseSegment();
+ const operation=selectedOperationType();
+ const segmentText=segment==='misto'?(SEGMENT_LABELS[segment]+' · '+OPERATION_LABELS[operation]):SEGMENT_LABELS[segment];
  const year=$('priceYear')?.value||'2027';
- if($('activeSupplierBadge')) $('activeSupplierBadge').textContent=labels[supplier]||supplier;
+ if($('activeSegmentBadge')) $('activeSegmentBadge').textContent=segmentText;
+ if($('activeSupplierBadge')) $('activeSupplierBadge').textContent=supplierLabels[supplier]||supplier;
  if($('activeYearBadge')) $('activeYearBadge').textContent=year;
  if($('resultYearLabel')) $('resultYearLabel').textContent=year;
 }
 
 function comparisonMemoryRows(model){
  const rows=[
+  ['Segmento',segmentDisplay(model)],
   ['Preço atual da compra',model.currentPrice],
   ['Regime do fornecedor',SUPPLIER_LABELS[model.supplierRegime]],
   ['Base econômica preservada',model.economicBase]
@@ -456,14 +540,12 @@ function comparisonMemoryRows(model){
  if(model.supplierRegime==='simples') rows.push(['DAS atual estimado',model.currentDas]);
  else{
   rows.push(['PIS/Cofins atuais do fornecedor',model.currentPisCofins]);
-  rows.push(['ICMS atual do fornecedor',model.currentIcms]);
+  if(model.currentIcms>0) rows.push(['ICMS atual do fornecedor',model.currentIcms]);
+  if(model.currentIss>0) rows.push(['ISS atual do fornecedor',model.currentIss]);
+  if(model.currentIpi>0) rows.push(['IPI atual do fornecedor',model.currentIpi]);
  }
- rows.push(
-  ['Preço projetado',model.futurePrice],
-  ['CBS',model.cbs],
-  ['IBS',model.ibs]
- );
- if(model.icmsRemnant>0) rows.push(['ICMS remanescente',model.icmsRemnant]);
+ rows.push(['Preço projetado',model.futurePrice],['CBS',model.cbs],['IBS',model.ibs]);
+ if(model.oldTaxRemnant>0) rows.push([model.oldTaxName+' remanescente',model.oldTaxRemnant]);
  if(model.dasRemnant>0) rows.push(['DAS remanescente sem IBS/CBS',model.dasRemnant]);
  ['simples','presumido','real','simples_hybrid'].forEach(function(key){
   rows.push([PURCHASE_BUYER_LABELS[key]+' · custo efetivo',model.buyers[key].futureCost]);
@@ -473,7 +555,7 @@ function comparisonMemoryRows(model){
 
 function supplierCardHtml(model){
  return '<article class="supplier-card" data-supplier="'+model.supplierRegime+'">'+
-  '<div><h4>'+SUPPLIER_LABELS[model.supplierRegime]+'</h4><div class="supplier-sub">Base econômica '+money(model.economicBase)+'</div></div>'+
+  '<div><h4>'+SUPPLIER_LABELS[model.supplierRegime]+'</h4><div class="supplier-sub">'+segmentDisplay(model)+' · base '+money(model.economicBase)+'</div></div>'+
   '<div class="supplier-cost"><small>Preço projetado</small><b>'+money(model.futurePrice)+'</b></div>'+
   '<div class="supplier-lines">'+
    '<div class="supplier-line"><span>Simples padrão</span><b>'+money(model.buyers.simples.futureCost)+'</b></div>'+
@@ -544,15 +626,23 @@ function renderMemory(id,rows){
 
 function calcIntegrated(){
  if(!$('buyerExample')) return;
+ syncSegmentFields();
  updateScenarioStrip();
  const input=priceEngineInput();
  const y=Number($('priceYear')?.value||2027);
  const messages=[];
+ const operation=input.operationType;
+ const oldRate=operation==='servico'?input.issRate:input.icmsRate;
 
  if(input.amount<=0) messages.push({level:'error',message:'Informe um preço de compra maior que zero.'});
- if(input.icmsRate<0||input.icmsRate>=100) messages.push({level:'error',message:'Informe uma alíquota de ICMS entre 0% e menos de 100%.'});
- if(input.supplierRegime==='presumido'&&(input.icmsRate+3.65)>=100) messages.push({level:'error',message:'ICMS + PIS/Cofins do fornecedor no Lucro Presumido não pode consumir 100% ou mais do preço.'});
- if(input.supplierRegime==='real'&&(input.icmsRate+9.25)>=100) messages.push({level:'error',message:'ICMS + PIS/Cofins do fornecedor no Lucro Real não pode consumir 100% ou mais do preço.'});
+ if(oldRate<0||oldRate>=100) messages.push({level:'error',message:'Informe uma alíquota de '+(operation==='servico'?'ISS':'ICMS')+' entre 0% e menos de 100%.'});
+ if(input.ipiRate<0||input.ipiRate>=100) messages.push({level:'error',message:'Informe uma alíquota de IPI entre 0% e menos de 100%.'});
+
+ const currentPisCofins=input.supplierRegime==='real'?9.25:input.supplierRegime==='presumido'?3.65:0;
+ const totalCurrent=currentPisCofins+oldRate+(operation==='industria'?input.ipiRate:0);
+ if(input.supplierRegime!=='simples'&&totalCurrent>=100)
+  messages.push({level:'error',message:'A soma dos tributos atuais do fornecedor deve ser menor que 100% do preço.'});
+
  if(input.supplierRegime==='simples'){
   if(input.simple.rbt12<=0) messages.push({level:'error',message:'Informe o RBT12 do fornecedor do Simples.'});
   if(input.simple.rbt12>3600000) messages.push({level:'warning',message:'RBT12 acima de R$ 3,6 milhões exige validação específica do sublimite.'});
@@ -582,21 +672,26 @@ function calcIntegrated(){
  renderMemory('priceMemory',comparisonMemoryRows(model));
 
  $('resultSignal').textContent='4 REGIMES';
- $('regimeResultNote').textContent='Mesma compra atual de '+money(input.amount)+' · comparação entre Lucro Presumido, Lucro Real e Simples Nacional como fornecedores.';
+ $('regimeResultNote').textContent=segmentDisplay(model)+' · mesma compra atual de '+money(input.amount)+' · comparação entre Lucro Presumido, Lucro Real e Simples Nacional como fornecedores.';
 
  $('integratedKpis').innerHTML=
-  '<div class="integrated-kpi dark"><small>Fornecedor selecionado</small><b>'+SUPPLIER_LABELS[model.supplierRegime].replace('Fornecedor · ','')+'</b><span>Regime atual</span></div>'+
-  '<div class="integrated-kpi"><small>Preço atual</small><b>'+money(model.currentPrice)+'</b><span>Compra comercial</span></div>'+
-  '<div class="integrated-kpi dark"><small>Base econômica</small><b>'+money(model.economicBase)+'</b><span>Após tributos atuais do fornecedor</span></div>'+
-  '<div class="integrated-kpi"><small>Preço em '+y+'</small><b>'+money(model.futurePrice)+'</b><span>CBS/IBS + tributo remanescente</span></div>';
+  '<div class="integrated-kpi dark"><small>Segmento</small><b>'+segmentDisplay(model)+'</b><span>Operação analisada</span></div>'+
+  '<div class="integrated-kpi"><small>Fornecedor</small><b>'+SUPPLIER_LABELS[model.supplierRegime].replace('Fornecedor · ','')+'</b><span>Regime atual</span></div>'+
+  '<div class="integrated-kpi dark"><small>Base econômica</small><b>'+money(model.economicBase)+'</b><span>Após tributos atuais</span></div>'+
+  '<div class="integrated-kpi"><small>Preço em '+y+'</small><b>'+money(model.futurePrice)+'</b><span>CBS/IBS + '+model.oldTaxName+' remanescente</span></div>';
 
  const supplierModels=['presumido','real','simples'].map(function(supplierRegime){
-  return RTAV_ENGINE.commercialPurchaseComparison({...input,supplierRegime},y);
+  return RTAV_ENGINE.segmentedPurchaseComparison({...input,supplierRegime},y);
  });
  $('supplierComparisonGrid').innerHTML=supplierModels.map(supplierCardHtml).join('');
 
  $('integratedExplanation').innerHTML=
-  '<b>Lógica aplicada ao comércio.</b><p>Para fornecedores no Lucro Presumido, a base econômica retira ICMS e PIS/Cofins de 3,65% do preço atual. No Lucro Real, retira ICMS e PIS/Cofins de 9,25%. Na reforma, CBS e IBS são adicionados por fora e o ICMS permanece parcialmente até 2032. Para fornecedor do Simples, a projeção usa o DAS do Anexo I e o RBT12.</p>';
+  '<b>Lógica aplicada ao segmento '+segmentDisplay(model)+'.</b><p>'+
+  'Para fornecedores regulares, a ferramenta retira PIS/Cofins e '+model.oldTaxName+
+  (model.usesIpi?' — e IPI, quando informado —':'')+
+  ' do preço atual para estimar a base econômica. Na reforma, CBS e IBS entram na projeção e '+model.oldTaxName+' é reduzido gradualmente até 2033. '+
+  (model.usesIcms?'O crédito de ICMS é considerado para compradores regulares quando a operação é creditável. ':'O ISS não é tratado como crédito do comprador neste modelo. ')+
+  'O Simples padrão não toma crédito; o Simples com IBS/CBS no regime regular passa a aproveitar CBS/IBS.</p>';
 
  renderYearlyProjection();
 }
@@ -612,8 +707,7 @@ function selectYearDetail(year){
 }
 
 function baseSupplierComparisonRow(){
- const model=purchaseComparison(2027);
- return {year:2026,model};
+ return {year:2026,model:purchaseComparison(2027)};
 }
 
 function costForRow(row,key){
@@ -634,7 +728,7 @@ function renderYearDetail(year){
  $('yearDetailPanel').classList.add('visible');
  $('yearDetailPanel').innerHTML=
   '<div class="year-detail-top">'+
-   '<div><span>'+SUPPLIER_LABELS[model.supplierRegime].toUpperCase()+'</span><h4>'+row.year+' · custo por regime comprador</h4></div>'+
+   '<div><span>'+segmentDisplay(model).toUpperCase()+' · '+SUPPLIER_LABELS[model.supplierRegime].toUpperCase()+'</span><h4>'+row.year+' · custo por regime comprador</h4></div>'+
    '<div class="year-detail-price"><small>PREÇO DA COMPRA</small><b>'+money(shownPrice)+'</b></div>'+
   '</div>'+
   '<div class="year-detail-grid tax-detail">'+
@@ -644,7 +738,7 @@ function renderYearDetail(year){
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+
    (isCurrent
-    ?'2026 mostra o custo efetivo atual. No modelo comercial, o Simples não toma crédito; o Lucro Presumido toma o ICMS quando a operação é creditável; e o Lucro Real soma ICMS e crédito de PIS/Cofins de 9,25%.'
+    ?'2026 mostra o custo efetivo atual conforme o segmento e os créditos considerados para cada regime comprador.'
     :'O preço foi recomposto preservando a base econômica do fornecedor. O custo efetivo muda conforme os créditos disponíveis para cada regime comprador.')+
   '</p></div>';
 }
@@ -676,8 +770,8 @@ function renderYearlyProjection(){
  }).join('');
 
  renderYearDetail(yearDetailSelected);
- const supplier=$('exampleSupplier')?.value||'presumido';
- $('yearlyProjectionNote').textContent='Fornecedor selecionado: '+SUPPLIER_LABELS[supplier].replace('Fornecedor · ','')+'. A linha de 2026 mostra os créditos atuais; de 2027 a 2033, a ferramenta aplica a transição do ICMS e as premissas de CBS/IBS do projeto.';
+ const model=purchaseComparison(selectedYear);
+ $('yearlyProjectionNote').textContent='Segmento: '+segmentDisplay(model)+' · fornecedor: '+SUPPLIER_LABELS[model.supplierRegime].replace('Fornecedor · ','')+'. A linha de 2026 mostra os créditos atuais; de 2027 a 2033, a ferramenta aplica a transição do '+model.oldTaxName+' e as premissas de CBS/IBS do projeto.';
 }
 
 function showTaxTool(which){
@@ -1041,23 +1135,24 @@ function exportPriceExcel(){
  const selected=purchaseComparison(selectedYear);
  const keys=['simples','presumido','real','simples_hybrid'];
  downloadSpreadsheet(
-  'compra-comercial-'+selected.supplierRegime+'-2026-2033.xlsx',
+  'compra-'+selected.segment+'-'+selected.supplierRegime+'-2026-2033.xlsx',
   ['Ano','Preço da compra','Custo Simples padrão','Crédito Simples padrão','Custo Lucro Presumido','Crédito Lucro Presumido','Custo Lucro Real','Crédito Lucro Real','Custo Simples regular IBS/CBS','Crédito Simples regular IBS/CBS'],
   yearlyRows.map(function(row){
    const price=row.year===2026?row.model.currentPrice:row.model.futurePrice;
    const values=[row.year,price];
-   keys.forEach(function(key){
-    values.push(costForRow(row,key),creditForRow(row,key));
-   });
+   keys.forEach(function(key){values.push(costForRow(row,key),creditForRow(row,key));});
    return values;
   }),
   [
-   ['Segmento','Comércio'],
+   ['Segmento',segmentDisplay(selected)],
    ['Regime do fornecedor',SUPPLIER_LABELS[selected.supplierRegime]],
    ['Preço atual',num('priceNow')],
-   ['ICMS atual %',num('icmsRate')],
+   ['Tributo atual principal',selected.oldTaxName],
+   ['Alíquota atual principal %',selected.currentOldTaxPct],
+   ['IPI atual %',selected.ipiPct||0],
    ['Operação creditável',$('buyerPurchaseCredit')?.checked?'Sim':'Não'],
    ['RBT12 fornecedor Simples',num('snRbt12')],
+   ['Anexo fornecedor Simples',snAnnex()],
    ['Ano destacado',selectedYear],
    ['CBS %',num('cbsRate')],
    ['IBS %',num('ibsRate')]
@@ -1151,7 +1246,7 @@ function buildPricePdf(client,year){
     ['Preço '+year,money(x.futurePrice)],
     ['CBS',money(model.cbs)],
     ['IBS',money(model.ibs)],
-    ...(model.icmsRemnant>0?[['ICMS remanescente',money(model.icmsRemnant)]]:[]),
+    ...(model.oldTaxRemnant>0?[[model.oldTaxName+' remanescente',money(model.oldTaxRemnant)]]:[]),
     ['Créditos '+year,money(x.futureCredit)],
     ['Custo efetivo '+year,money(x.futureCost)],
     ['Variação',(x.changePct>0?'+':'')+pct(x.changePct)]
@@ -1172,20 +1267,21 @@ function buildPricePdf(client,year){
  });
 
  return {
-  title:'Compra comercial · custo efetivo',
-  subtitle:'Fornecedor '+supplierName+' · atual × '+year,
+  title:'Compra por segmento · custo efetivo',
+  subtitle:segmentDisplay(model)+' · fornecedor '+supplierName+' · atual × '+year,
   kpis:[
+   ['Segmento',segmentDisplay(model),'Operação analisada'],
    ['Fornecedor',supplierName,'Regime da compra'],
-   ['Preço atual',money(model.currentPrice),'Mercadoria'],
-   ['Base econômica',money(model.economicBase),'Após tributos atuais do fornecedor'],
-   ['Preço '+year,money(model.futurePrice),'CBS/IBS + remanescente']
+   ['Preço atual',money(model.currentPrice),'Valor informado'],
+   ['Base econômica',money(model.economicBase),'Após tributos atuais'],
+   ['Preço '+year,money(model.futurePrice),'CBS/IBS + '+model.oldTaxName+' remanescente']
   ],
   currentRows:[],
   futureRows:[],
   supplierCards,
   tableHeaders:['Ano','Preço da compra','Simples padrão','Lucro Presumido','Lucro Real','Simples regular IBS/CBS'],
   tableRows,
-  note:'Modelo comercial: ICMS e PIS/Cofins compõem a leitura atual dos fornecedores regulares; na transição, CBS e IBS são projetados com as premissas da ferramenta e o ICMS é reduzido gradualmente. Os créditos variam conforme o regime do comprador e a operação.'
+  note:'A projeção adapta os tributos atuais ao segmento. Mercadorias e indústria usam ICMS; serviços usam ISS; indústria pode incluir IPI atual quando aplicável. Na transição, CBS/IBS entram na projeção e ICMS/ISS são reduzidos gradualmente até 2033. Os créditos variam conforme o regime do comprador e a operação.'
  };
 }
 
@@ -1281,8 +1377,8 @@ function printTaxReport(kind){
 }
 
 const PRICE_STATE_IDS=[
- 'priceNow','exampleSupplier','icmsRate','buyerPurchaseCredit','snRbt12','snAnnex',
- 'priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceClientName'
+ 'priceSegment','priceOperationType','priceNow','exampleSupplier','icmsRate','issRate','ipiRate','buyerPurchaseCredit',
+ 'snRbt12','snAnnex','priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
  'revTaxRegime','revCurrentRevenue','revRevenuePeriod','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate',
@@ -1290,7 +1386,7 @@ const REVENUE_STATE_IDS=[
  'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset','revenueClientName'
 ];
 
-function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v5':'v1');}
+function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v6':'v1');}
 
 function saveSimulation(kind){
  const ids=kind==='price'?PRICE_STATE_IDS:REVENUE_STATE_IDS;
@@ -1419,11 +1515,17 @@ function numberFromState(data,id,fallback=0){
 }
 
 function priceInputFromState(data){
+ const segment=data?.priceSegment||'comercio';
+ const operationType=segment==='misto'?(data?.priceOperationType||'mercadoria'):segment==='servicos'?'servico':segment==='industria'?'industria':'mercadoria';
  return {
   amount:numberFromState(data,'priceNow'),
+  segment,
+  operationType,
   supplierRegime:data?.exampleSupplier||'presumido',
   icmsRate:numberFromState(data,'icmsRate',18),
-  simple:{annex:'I',rbt12:numberFromState(data,'snRbt12')},
+  issRate:numberFromState(data,'issRate',5),
+  ipiRate:numberFromState(data,'ipiRate',0),
+  simple:{annex:data?.snAnnex||defaultSimpleAnnex(operationType),rbt12:numberFromState(data,'snRbt12')},
   future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate')},
   purchaseGeneratesCredit:data?.buyerPurchaseCredit!==false
  };
@@ -1452,13 +1554,13 @@ function compareNamedScenario(kind){
  if(kind==='price'){
   const year=Number($('priceYear')?.value||2027);
   const current=purchaseComparison(year);
-  const other=RTAV_ENGINE.commercialPurchaseComparison(priceInputFromState(saved.data),year);
+  const other=RTAV_ENGINE.segmentedPurchaseComparison(priceInputFromState(saved.data),year);
   panel.innerHTML='<div class="scenario-compare-grid">'+
    compareItem('Simples padrão',other.buyers.simples.futureCost,current.buyers.simples.futureCost)+
    compareItem('Lucro Presumido',other.buyers.presumido.futureCost,current.buyers.presumido.futureCost)+
    compareItem('Lucro Real',other.buyers.real.futureCost,current.buyers.real.futureCost)+
    compareItem('Simples regular IBS/CBS',other.buyers.simples_hybrid.futureCost,current.buyers.simples_hybrid.futureCost)+
-  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'.</div>';
+  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+' · '+segmentDisplay(other)+'.</div>';
  }else{
   const year=Number($('revYear')?.value||2027);
   const current=RTAV_ENGINE.futureRevenueScenario(revenueEngineInput(),year);
@@ -1482,6 +1584,8 @@ function resetSimulation(kind){
  location.reload();
 }
 
+$('priceSegment')?.addEventListener('change',function(){syncSegmentFields();applyRegimeUI({preset:false});});
+$('priceOperationType')?.addEventListener('change',function(){syncSegmentFields();applyRegimeUI({preset:false});});
 $('exampleSupplier')?.addEventListener('change',function(){applyRegimeUI({preset:false});});
 $('snAnnex')?.addEventListener('change',function(){updateSnSummary();calcIntegrated();});
 $('snRbt12')?.addEventListener('input',function(){updateSnSummary();calcIntegrated();});
@@ -1501,7 +1605,7 @@ $('rateMode')?.addEventListener('change',function(){
  $('ibsRate').readOnly=!manual;
  applyYearPreset();
 });
-['priceNow','icmsRate','rateReduction','cbsRate','ibsRate'].forEach(function(id){
+['priceNow','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate'].forEach(function(id){
  $(id)?.addEventListener('input',calcIntegrated);
 });
 $('priceNow')?.addEventListener('blur',function(){formatMoneyInput(this);calcIntegrated();});
