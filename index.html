@@ -518,9 +518,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .course-quiz-callout{max-width:940px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#e9eae5;border-radius:15px;padding:18px;margin:24px 0}.course-quiz-callout b,.course-quiz-callout span{display:block}.course-quiz-callout span{color:#555;font-size:12px;margin-top:4px}@media(max-width:650px){.course-quiz-callout{display:block}.course-quiz-callout button{width:100%;margin-top:14px}}
 .quiz-stats{max-width:920px;color:#555;font-size:12px;font-weight:750;margin:12px 0 0}.quiz-question legend .quiz-context{display:block;background:#f1f2ef;border-left:3px solid #788d7e;border-radius:8px;padding:12px 14px;margin:14px 0 9px;color:#405047;font-size:14px;line-height:1.65;font-weight:450}.quiz-review-item .quiz-review-context{border-left:3px solid #9baea0;padding-left:11px;margin:14px 0 8px;color:#505e54;line-height:1.6}
 .buyer-example{margin:22px 0}.buyer-example-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 12px;font-size:14px}.buyer-example-head span{color:#666;font-size:12px}
-.buyer-example-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.buyer-example-card{background:#fff;border:1px solid #dfd9e8;border-radius:16px;overflow:hidden;padding:0 13px 13px;min-width:0;box-shadow:0 5px 18px rgba(36,18,65,.05)}
-.buyer-example-card h4{background:#6825a9;color:#fff;margin:0 -13px 12px;padding:13px;font-size:13px;min-height:52px}.buyer-example-card strong{display:block;font-size:11px;margin:12px 0 7px;text-transform:uppercase;color:#45216b}
-.buyer-example-card div{display:flex;justify-content:space-between;gap:6px;font-size:11px;padding:5px 0}.buyer-example-card .buyer-total{border-top:1px solid #e5dfea;margin-top:5px;font-weight:700}.buyer-example-card footer{border-top:1px solid #ddd;margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;gap:4px;font-size:11px}.buyer-example-card footer b{font-size:15px}.buyer-example-card .up{color:#a73737}.buyer-example-card .down{color:#147045}.buyer-example-note{font-size:12px;color:#5e5a63;line-height:1.5}
+.buyer-example-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.buyer-example-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;padding:0 13px 13px;min-width:0;box-shadow:0 5px 18px rgba(0,0,0,.035)}
+.buyer-example-card h4{background:#111;color:#fff;margin:0 -13px 12px;padding:13px;font-size:13px;min-height:52px}.buyer-example-card strong{display:block;font-size:11px;margin:12px 0 7px;text-transform:uppercase;color:#5f5f5f}
+.buyer-example-card div{display:flex;justify-content:space-between;gap:6px;font-size:11px;padding:5px 0}.buyer-example-card .buyer-total{border-top:1px solid #e5e4df;margin-top:5px;font-weight:700}.buyer-example-card footer{border-top:1px solid #ddd;margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;gap:4px;font-size:11px}.buyer-example-card footer b{font-size:15px}.buyer-example-card .up{color:#a73737}.buyer-example-card .down{color:#147045}.buyer-example-note{font-size:12px;color:#5e5a63;line-height:1.5}
 @media(max-width:850px){.buyer-example-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.buyer-example-grid{grid-template-columns:1fr}.buyer-example-head{display:block}}
 </style>
 <script>
@@ -670,12 +670,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   <article class="integrated-tool tax-calculator">
    <div class="integrated-head">
     <div>
-     <span class="tag">CUSTO DA COMPRA · POR SEGMENTO</span>
+     <span class="tag">CUSTO DA COMPRA · COMPRADOR × FORNECEDORES</span>
      <h3>Como a mesma compra muda com a Reforma Tributária?</h3>
-     <p>Escolha o segmento da empresa/operação. A ferramenta identifica os tributos atuais relevantes, encontra a base econômica e projeta 2027–2033 com CBS, IBS e a redução gradual de ICMS ou ISS.</p>
+     <p>Escolha o segmento e o regime da empresa compradora. A ferramenta compara a mesma compra em quatro tipos de fornecedor, mostrando preço, créditos e custo efetivo antes e depois da reforma.</p>
     </div>
     <div class="tool-head-actions">
-     <div class="integration-badge"><b>4 compradores</b><small>Simples · LP · LR · Simples regular</small></div>
+     <div class="integration-badge"><b>4 fornecedores</b><small>Simples · LP · LR · Simples regular</small></div>
      <button id="pricePresentationBtn" class="mini-action" type="button" aria-pressed="false">Modo reunião</button>
      <button id="pricePrintBtn" class="mini-action" type="button">Imprimir / PDF</button>
     </div>
@@ -683,14 +683,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div class="scenario-strip">
     <div><small>SEGMENTO</small><b id="activeSegmentBadge">Comércio</b></div>
-    <div><small>FORNECEDOR</small><b id="activeSupplierBadge">Lucro Presumido</b></div>
+    <div><small>COMPRADOR</small><b id="activeBuyerBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="activeYearBadge">2027</b></div>
     <div class="scenario-strip-note"><small>RESULTADO</small><b>Preço novo · créditos · custo efetivo</b></div>
    </div>
 
    <div class="tax-input-grid">
     <section class="sim-block">
-     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Segmento, tipo de operação, fornecedor e preço atual.</small></div></div>
+     <div class="sim-title"><span>01</span><div><b>Compra atual</b><small>Segmento, regime do comprador e preço da mesma compra nos fornecedores.</small></div></div>
      <div class="fields three">
       <div class="field"><label>Segmento</label>
        <select id="priceSegment">
@@ -708,11 +708,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
        </select>
       </div>
       <div class="field wide"><label>Preço atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
-      <div class="field"><label>Regime do fornecedor</label>
-       <select id="exampleSupplier">
+      <div class="field"><label>Regime da empresa compradora</label>
+       <select id="priceBuyerRegime">
+        <option value="simples">Simples Nacional — padrão</option>
         <option value="presumido" selected>Lucro Presumido</option>
         <option value="real">Lucro Real</option>
-        <option value="simples">Simples Nacional</option>
+        <option value="simples_hybrid">Simples Nacional — IBS/CBS regular</option>
        </select>
       </div>
       <div id="icmsRateWrap" class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
@@ -724,8 +725,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       </label>
      </div>
 
-     <div id="simplesCurrentFields" class="regime-panel" style="display:none">
-      <div class="subpanel-title"><b>Fornecedor do Simples Nacional</b><small id="simpleSegmentNote">O Anexo é ajustado ao segmento da operação.</small></div>
+     <div id="simplesCurrentFields" class="regime-panel">
+      <div class="subpanel-title"><b>Parâmetros dos fornecedores do Simples Nacional</b><small id="simpleSegmentNote">Usados nos cards “Simples padrão” e “Simples com IBS/CBS regular”.</small></div>
       <div class="fields three">
        <div class="field"><label>RBT12 do fornecedor R$</label><input id="snRbt12" type="number" step=".01" value="1000000"></div>
        <div class="field"><label>Anexo</label>
@@ -779,31 +780,21 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
    <div id="pricePrintHeader" class="print-report-header"></div>
    <section class="integrated-results tax-results">
-    <div class="result-head"><div><span class="eyebrow">CUSTO EFETIVO POR REGIME DO COMPRADOR</span><h3>Hoje × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">4 REGIMES</div></div>
+    <div class="result-head"><div><span class="eyebrow">MESMO COMPRADOR · 4 TIPOS DE FORNECEDOR</span><h3>Hoje × <span id="resultYearLabel">2027</span></h3></div><div id="resultSignal" class="result-signal">4 FORNECEDORES</div></div>
     <div id="priceEquationMemory" class="rate-note" aria-live="polite"></div>
     <div id="buyerExample" class="buyer-example" aria-live="polite"></div>
 
-    <details class="additional-options">
-     <summary>Comparar também os 3 regimes de fornecedor</summary>
-     <div id="regimeResultNote" class="regime-result-note"></div>
-     <div id="integratedKpis" class="integrated-kpis tax-kpis" aria-live="polite"></div>
-     <div id="supplierComparisonGrid" class="supplier-comparison-grid" aria-live="polite"></div>
-     <div id="integratedExplanation" class="integrated-explanation" aria-live="polite"></div>
-     <details class="calc-memory">
-      <summary><span>Memória de cálculo</span><small>Base econômica, tributos e créditos</small></summary>
-      <div id="priceMemory" class="memory-grid"></div>
-     </details>
-    </details>
+    
 
     <section class="yearly-analysis">
      <div class="yearly-head">
-      <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Segmento e fornecedor selecionados · custo efetivo para cada regime comprador.</p></div>
+      <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Comprador selecionado · custo efetivo em cada tipo de fornecedor.</p></div>
       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
      <div id="yearlyPriceStrip" class="year-price-strip"></div>
      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
       <table class="comparison-table yearly-table compact-yearly-table price-year-table">
-       <thead><tr><th>Ano</th><th>Simples padrão</th><th>Lucro Presumido</th><th>Lucro Real</th><th>Simples regular IBS/CBS</th></tr></thead>
+       <thead><tr><th>Ano</th><th>Fornecedor Simples</th><th>Fornecedor LP</th><th>Fornecedor LR</th><th>Fornecedor Simples regular</th></tr></thead>
        <tbody id="yearlyProjectionTable"></tbody>
       </table>
      </div>
@@ -1036,8 +1027,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="quiz-bank.js?v=20260928-47"></script>
 <script src="quiz-engine.js?v=20260928-46"></script>
 <script src="tax-rules.js?v=20260928-41"></script>
-<script src="tax-engine.js?v=20260929-56"></script>
+<script src="tax-engine.js?v=20260929-57"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-56" defer></script>
+<script src="app-v2.js?v=20260929-57" defer></script>
 </body>
 </html>
