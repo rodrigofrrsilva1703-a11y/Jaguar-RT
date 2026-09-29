@@ -103,18 +103,27 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
  const regularFuture=brl(await regular.locator('.buyer-total b').nth(1).textContent());
  expect(snFuture).not.toBe(regularFuture);
 
- // Evolução anual agora também usa fornecedor nas colunas.
- await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(8);
- await expect(page.locator('.price-year-table thead')).toContainText('Ano / fase');
- await expect(page.locator('.price-year-table thead')).toContainText('Simples');
- await expect(page.locator('.price-year-table thead')).toContainText('Lucro Presumido');
- await expect(page.locator('.price-year-table thead')).toContainText('Lucro Real');
- await expect(page.locator('.price-year-table thead')).toContainText('Simples IBS/CBS');
+ // Evolução anual: navegação compacta, painel do ano e matriz fornecedor x ano.
  await expect(page.locator('#yearlyPriceStrip .year-price-card')).toHaveCount(8);
- await expect(page.locator('#yearlyPriceStrip .year-card-highlight').first()).toContainText('Menor custo efetivo');
- await expect(page.locator('#yearlyPriceStrip .year-card-spread').first()).toContainText('Diferença entre fornecedores');
- await expect(page.locator('#yearlyPriceStrip .year-supplier-row').first()).toBeVisible();
- await expect(page.locator('#yearlyProjectionTable .best-pill').first()).toHaveText('menor');
+ await expect(page.locator('#yearlyPriceStrip .year-nav-year').first()).toHaveText('2026');
+ await expect(page.locator('#yearlyPriceStrip .year-nav-phase').first()).toHaveText('Atual');
+ await expect(page.locator('#yearDetailPanel .year-detail-item')).toHaveCount(4);
+ await expect(page.locator('#yearDetailPanel')).toContainText('comparação dos fornecedores');
+ await expect(page.locator('#yearDetailPanel')).toContainText('Menor custo');
+ await expect(page.locator('#yearlyProjectionTable tr')).toHaveCount(4);
+ await expect(page.locator('#yearlyProjectionHead th')).toHaveCount(9);
+ await expect(page.locator('#yearlyProjectionHead')).toContainText('Fornecedor');
+ await expect(page.locator('#yearlyProjectionHead')).toContainText('2026');
+ await expect(page.locator('#yearlyProjectionHead')).toContainText('2033');
+ await expect(page.locator('#yearlyProjectionTable')).toContainText('Lucro Presumido');
+ await expect(page.locator('#yearlyProjectionTable')).toContainText('Lucro Real');
+ await expect(page.locator('#yearlyProjectionTable .cell-best').first()).toBeVisible();
+
+ // Navegar por um ano troca o painel e destaca a coluna correspondente.
+ await page.locator('#yearlyPriceStrip .year-price-card').filter({hasText:'2030'}).click();
+ await expect(page.locator('#yearDetailPanel')).toContainText('2030 · comparação dos fornecedores');
+ await expect(page.locator('#yearlyPriceStrip .year-price-card').filter({hasText:'2030'})).toHaveClass(/active/);
+ await expect(page.locator('#yearlyProjectionHead .selected-column')).toHaveText('2030');
 
  // Segmentos continuam funcionando.
  await page.locator('#priceSegment').selectOption('comercio');
