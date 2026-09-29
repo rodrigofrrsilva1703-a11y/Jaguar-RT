@@ -537,6 +537,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  .pdf-table th{background:#f2f2ef;text-align:left;padding:6px;border-bottom:1px solid #ccc}
  .pdf-table td{padding:6px;border-bottom:1px solid #e6e6e0}
  .pdf-table th:not(:first-child),.pdf-table td:not(:first-child){text-align:right}
+ .price-pdf-selected .pdf-table{font-size:7px;table-layout:fixed}
+ .price-pdf-selected .pdf-table th:first-child,.price-pdf-selected .pdf-table td:first-child{width:25%;text-align:left}
+ .price-pdf-selected .pdf-table th,.price-pdf-selected .pdf-table td{padding:5px 4px}
+ .price-pdf-evolution{break-inside:auto}
+ .price-pdf-evolution .pdf-table{font-size:6.8px;table-layout:fixed}
+ .price-pdf-evolution .pdf-table th:first-child,.price-pdf-evolution .pdf-table td:first-child{width:28%;text-align:left;font-weight:700}
+ .price-pdf-evolution .pdf-table th:not(:first-child),.price-pdf-evolution .pdf-table td:not(:first-child){width:9%;padding:5px 3px}
  .pdf-note{background:#f5f5f2;border-radius:8px;padding:9px;font-size:7.8px;line-height:1.5;color:#555}
  .pdf-footer{margin-top:12px;padding-top:8px;border-top:1px solid #ddd;font-size:6.8px;color:#777;line-height:1.45}
 }
@@ -1057,6 +1064,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-rules.js?v=20260928-41"></script>
 <script src="tax-engine.js?v=20260929-57"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-59" defer></script>
+<script src="app-v2.js?v=20260929-60" defer></script>
 </body>
 </html>
