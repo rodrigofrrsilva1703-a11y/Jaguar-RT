@@ -469,7 +469,7 @@
  // - Simples com IBS/CBS no regime regular toma CBS/IBS, mas não o ICMS residual.
  function segmentedPurchaseComparison(input={},year=2027){
   const currentPrice=Math.max(0,Number(input.amount)||0);
-  const supplierRegime=['presumido','real','simples'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
+  const supplierRegime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
   const segment=['comercio','industria','servicos','misto'].includes(input.segment)?input.segment:'comercio';
   const defaultOperation=segment==='servicos'?'servico':segment==='industria'?'industria':'mercadoria';
   const operationType=segment==='misto'
@@ -501,7 +501,7 @@
   let currentPisCofinsPct=0,currentPisCofins=0,currentIcms=0,currentIss=0,currentIpi=0;
   let currentSupplierTaxes=0,economicBase=0,currentDas=0;
 
-  if(supplierRegime==='simples'){
+  if(supplierRegime==='simples'||supplierRegime==='simples_hybrid'){
    const eff=snEffective(2026,simple.annex,simple.rbt12).eff;
    currentDas=currentPrice*eff;
    currentSupplierTaxes=currentDas;
@@ -516,8 +516,9 @@
    economicBase=Math.max(0,currentPrice-currentSupplierTaxes);
   }
 
-  const regularOldTaxCredit=creditable&&supplierRegime!=='simples'&&usesIcms?currentIcms:0;
-  const realPisCofinsCredit=creditable&&supplierRegime!=='simples'?currentPrice*.0925:0;
+  const simpleSupplier=supplierRegime==='simples'||supplierRegime==='simples_hybrid';
+  const regularOldTaxCredit=creditable&&!simpleSupplier&&usesIcms?currentIcms:0;
+  const realPisCofinsCredit=creditable&&!simpleSupplier?currentPrice*.0925:0;
   const currentCredits={
    simples:{icms:0,iss:0,ipi:0,pisCofins:0,total:0},
    presumido:{icms:regularOldTaxCredit,iss:0,ipi:0,pisCofins:0,total:regularOldTaxCredit},
@@ -536,6 +537,21 @@
    cbs=futurePrice*simpleShares.cbsEff;
    ibs=futurePrice*simpleShares.ibsEff;
    dasRemnant=futurePrice*Math.max(0,simpleShares.eff-simpleShares.cbsEff-simpleShares.ibsEff);
+  }else if(supplierRegime==='simples_hybrid'){
+   simpleShares=snShares(Number(year),simple.annex,simple.rbt12);
+   const hybridInput={
+    regime:'simples_hybrid',
+    amount:currentPrice,
+    currentRates:{pis:0,cofins:0,icms:usesIcms?icmsPct:0,iss:usesIss?issPct:0,ipi:usesIpi?ipiPct:0},
+    simple,
+    future,
+    hybridFuture:future
+   };
+   const hybrid=futurePriceScenario(hybridInput,Number(year));
+   futurePrice=hybrid.price;
+   cbs=hybrid.cbs;
+   ibs=hybrid.ibs;
+   dasRemnant=hybrid.remnant;
   }else{
    futureOldTaxPct=currentOldTaxPct*(transition.old??1);
    cbs=economicBase*rates.cbs/100;
@@ -545,7 +561,7 @@
    oldTaxRemnant=futurePrice*futureOldTaxPct/100;
   }
 
-  const regularOldTaxFutureCredit=creditable&&supplierRegime!=='simples'&&usesIcms?oldTaxRemnant:0;
+  const regularOldTaxFutureCredit=creditable&&!simpleSupplier&&usesIcms?oldTaxRemnant:0;
   const futureCredits={
    simples:{icms:0,iss:0,cbs:0,ibs:0,total:0},
    presumido:{
@@ -578,8 +594,8 @@
    year:Number(year),segment,operationType,supplierRegime,currentPrice,
    oldTaxName,currentOldTaxPct,icmsPct,issPct,ipiPct,currentPisCofinsPct,
    currentPisCofins,currentIcms,currentIss,currentIpi,currentDas,currentSupplierTaxes,economicBase,
-   cbsPct:supplierRegime==='simples'?(futurePrice?cbs/futurePrice*100:0):rates.cbs,
-   ibsPct:supplierRegime==='simples'?(futurePrice?ibs/futurePrice*100:0):rates.ibs,
+   cbsPct:simpleSupplier?(futurePrice?cbs/futurePrice*100:0):rates.cbs,
+   ibsPct:simpleSupplier?(futurePrice?ibs/futurePrice*100:0):rates.ibs,
    cbs,ibs,futureOldTaxPct,oldTaxRemnant,
    futureIcmsPct:usesIcms?futureOldTaxPct:0,
    futureIssPct:usesIss?futureOldTaxPct:0,
@@ -647,7 +663,7 @@
  }
 
  return Object.freeze({
-  version:'1.3.0',
+  version:'1.4.0',
   rulesVersion:RULES.version,
   clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
   currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,supplierPurchaseComparison,supplierPriceProjection,
