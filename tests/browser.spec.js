@@ -5,6 +5,26 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
+test('módulos preservam leitura, retomam etapa e filtram o andamento',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=study',{waitUntil:'domcontentloaded'});
+ await page.locator('nav [data-go="modules"]').click();
+ await expect(page.locator('#moduleGrid .module-card')).toHaveCount(13);
+ await page.locator('#moduleGrid .module-card').first().click();
+ await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(1);
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 01 DE 06');
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
+ await expect(page.locator('#courseProgressLabel')).toHaveText('1 de 6 etapas lidas');
+ await page.locator('#courseViewAll').click();
+ await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(6);
+ await page.locator('#courseViewAll').click();
+ await page.locator('#modulePage .back').click();
+ await page.locator('[data-study-filter="started"]').click();
+ await expect(page.locator('#moduleGrid .module-card')).toHaveCount(1);
+ await page.locator('#moduleGrid .module-card').click();
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
+});
+
 test('teste por módulo corrige, refaz e troca perguntas; teste geral mistura módulos',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=quiz',{waitUntil:'domcontentloaded'});
  await page.locator('nav [data-go="quiz"]').click();
@@ -74,8 +94,8 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
  await expect(lr).toContainText('Lucro Real');
  await expect(regular).toContainText('Simples Nacional — IBS/CBS regular');
 
- // Paleta do sistema: cabeçalhos pretos, sem roxo.
- expect(await lp.locator('h4').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(17, 17, 17)');
+ // Paleta restaurada: cabeçalho roxo da comparação.
+ expect(await lp.locator('h4').evaluate(el=>getComputedStyle(el).backgroundColor)).toBe('rgb(104, 37, 169)');
 
  // Serviços: fornecedor LP e LR têm bases/preços diferentes, mas o comprador é o mesmo.
  await expect(lp.locator('.buyer-total b').nth(0)).toHaveText('R$ 100,00');
