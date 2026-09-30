@@ -313,6 +313,35 @@ test('fornecedores do Simples compartilham parâmetros do segmento e faturamento
  await expect(page.locator('#printReport')).toContainText('101.327,38');
 });
 
+test('recarregar preserva o módulo e a etapa em que o usuário estava',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=reload-module',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#siteShell')).toBeVisible();
+ await page.locator('nav [data-go="modules"]').click();
+ await page.locator('#moduleGrid .module-card').nth(4).click();
+ await expect(page.locator('#modulePage')).toHaveClass(/active/);
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await page.waitForTimeout(800);
+
+ await page.reload({waitUntil:'domcontentloaded'});
+ await expect(page.locator('#modulePage')).toHaveClass(/active/);
+ await expect(page.locator('#modulePage .page-title')).toContainText('Créditos de IBS/CBS');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+});
+
+test('recarregar preserva a ferramenta e a aba selecionada',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=reload-tool',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#siteShell')).toBeVisible();
+ await page.evaluate(()=>openDiagnostic());
+ await expect(page.locator('#tools')).toHaveClass(/active/);
+ await expect(page.locator('#diagnosticToolPanel')).toHaveClass(/active/);
+
+ await page.reload({waitUntil:'domcontentloaded'});
+ await expect(page.locator('#tools')).toHaveClass(/active/);
+ await expect(page.locator('#diagnosticToolPanel')).toHaveClass(/active/);
+ await expect(page.locator('#diagnosticToolTab')).toHaveAttribute('aria-selected','true');
+});
+
 test('recarregar a página mantém a sessão e não exibe novamente o login',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=session-reload',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#siteShell')).toBeVisible();
