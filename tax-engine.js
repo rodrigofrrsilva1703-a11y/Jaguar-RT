@@ -466,34 +466,7 @@
  }
 
  // Um fornecedor e uma cotação para todos os regimes de comprador.
- function buyerPurchaseComparison(input={},year=2027){
-  const currentPrice=Math.max(0,Number(input.amount)||0);
-  const supplierRegime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
-  const projection=supplierPriceProjection({...input,supplierRegime},year);
-  const futurePrice=projection.projectedPrice;
-  const supplier=supplierPurchaseComparison({...input,companyRegime:'real',amount:futurePrice,
-   projectFromCurrent:false,taxOnProjectedPrice:true,purchaseGeneratesCredit:true},year).suppliers[supplierRegime];
-  const estimatedCredit=supplier.cbs+supplier.ibs;
-  const futureCredit=estimatedCredit;
-  const currentRealCredit=currentPrice*clamp(input.currentRealCreditPct,0,100)/100;
-  const currentPresumedCredit=currentPrice*clamp(input.currentPresumedCreditPct,0,100)/100;
-  const buyers={};
-  for(const regime of ['simples','presumido','real','simples_hybrid']){
-   const currentCredit=regime==='real'?currentRealCredit:regime==='presumido'?currentPresumedCredit:0;
-   const credit=regime==='simples'||input.buyerPurchaseCredit===false?0:futureCredit;
-   const currentCost=currentPrice-currentCredit;
-   const effectiveCost=futurePrice-credit;
-   buyers[regime]={currentPrice,currentCredit,currentCost,futurePrice,credit,effectiveCost,
-    changePct:effectPct(currentCost,effectiveCost)};
-  }
-  return {year:Number(year),supplierRegime,currentPrice,futurePrice,projection,
-   cbs:supplier.cbs,ibs:supplier.ibs,cbsPct:futurePrice?supplier.cbs/futurePrice*100:0,
-   ibsPct:futurePrice?supplier.ibs/futurePrice*100:0,
-   remnant:supplier.remnant,estimatedCredit,futureCredit,buyers};
- }
-
-
- // Compra comercial: preserva a base econômica do fornecedor e compara
+  // Compra comercial: preserva a base econômica do fornecedor e compara
  // o custo efetivo para quatro regimes de comprador.
  // Premissas didáticas do projeto:
  // - operação comercial de mercadoria;
