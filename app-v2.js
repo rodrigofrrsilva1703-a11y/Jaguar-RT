@@ -43,7 +43,7 @@ let studyFilter='all';
 let activeCourse=null;
 let courseAllVisible=false;
 function studyProgress(){try{return JSON.parse(localStorage.getItem(STUDY_PROGRESS_KEY))||{};}catch(e){return {};}}
-function saveStudyProgress(value){try{localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(value));}catch(e){}}
+function saveStudyProgress(value){try{localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(value));window.JaguarAccount?.changed();}catch(e){}}
 function moduleProgress(m){const saved=studyProgress()[m.id]||{};return {read:Array.isArray(saved.read)?saved.read.filter(i=>Number.isInteger(i)&&i>=0&&i<m.blocks.length):[],step:Math.min(Math.max(Number(saved.step)||0,0),m.blocks.length-1)};}
 function moduleStatus(m){const n=moduleProgress(m).read.length;return n===m.blocks.length?'Concluído':n?'Em andamento':'Começar';}
 function moduleCard(m){
@@ -95,7 +95,7 @@ const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v2';
 const QUIZ_SESSION_KEY='jaguar-rtav-quiz-session-v3';
 let quizSession=null;
 function quizRead(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
-function quizSave(key,value){try{localStorage.setItem(key,JSON.stringify(value));}catch(e){}}
+function quizSave(key,value){try{localStorage.setItem(key,JSON.stringify(value));window.JaguarAccount?.changed();}catch(e){}}
 function quizTitle(id){return id==='all'?'Todos os módulos':`Módulo ${id} · ${STUDY_MODULES.find(m=>m.id===id)?.title||''}`;}
 function updateQuizStats(){
  const el=$('quizStats');if(!el)return;
@@ -184,6 +184,7 @@ function finishQuiz(){
  quizSave(QUIZ_HISTORY_KEY,history);
  updateQuizStats();
  s.finished=true;
+ window.JaguarAccount?.attempt(s);
  quizSave(QUIZ_SESSION_KEY,s);
  updateQuizResume();
  renderQuizResult();
