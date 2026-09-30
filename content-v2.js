@@ -310,7 +310,7 @@ const STUDY_MODULES = [
       },
       {
         "t": "2. Disciplina Normativa (Art. 41 da LC 214/2025)",
-        "x": "* Faculdade da Opção pelo Regime Regular: Permite apurar e recolher IBS e CBS pelas regras gerais, mantendo no DAS apenas os demais tributos.\n* Prazos Oficiais de Opção (Resoluções CGSN nº 190 e 191/2026):\n* Opção para o 1º Semestre de 2027: De 1º a 30 de setembro de 2026;\n* Opção para o 2º Semestre de 2027: De 1º a 31 de março de 2027.\n* Fim do Regime de Caixa em 01/01/2027: Extingue-se a tributação por recebimento financeiro. Todas as empresas optantes apurarão pelo Regime de Competência (data da emissão da nota).",
+        "x": "* Faculdade da Opção pelo Regime Regular: Permite apurar e recolher IBS e CBS pelas regras gerais, mantendo no DAS apenas os demais tributos.\n* Prazos atualizados para 2027 (Resolução CGSN nº 194/2026): a opção de ingresso/retorno ao Simples Nacional para 2027 vai de 01/09/2026 a 15/10/2026; para empresas do Simples que desejem recolher IBS e CBS pelo regime regular no primeiro semestre de 2027, o prazo vai de 01/09/2026 a 30/10/2026; o cancelamento das opções pode ser realizado de 03/11/2026 a 20/12/2026.\n* Opção pelo regime regular de IBS/CBS para o 2º Semestre de 2027: De 1º a 31 de março de 2027, conforme a regulamentação aplicável.\n* Fim do Regime de Caixa em 01/01/2027: deixa de existir a opção pelo regime de caixa para a apuração mensal do Simples; o reconhecimento da receita passa a observar as novas regras de faturamento da operação.",
         "k": "ESTUDO"
       },
       {
@@ -386,7 +386,7 @@ const STUDY_MODULES = [
       },
       {
         "t": "2. Disciplina Normativa",
-        "x": "* Obrigatoriedade da NFS-e Nacional (Ato Conjunto RFB/CGIBS nº 4/2026): Emissão padronizada nacionalmente. Obrigatória para ME e EPP a partir de 1º de novembro de 2026. Campos para CBS e IBS obrigatórios em 1º de janeiro de 2027 (Nota Técnica 009/2026).\n* Saneamento de NCM e NBS: A classificação errônea no cadastro de produtos ou serviços provoca glosa imediata do crédito pelo sistema ou cobrança indevida de Imposto Seletivo.\n* Mecânica da Apuração Assistida: O contribuinte audita, confirma ou retifica o saldo pré-preenchido. A falta de manifestação no prazo legal constitui confissão de dívida e lançamento automático do crédito tributário.",
+        "x": "* NFS-e Nacional no Simples: a Resolução CGSN nº 191/2026 tornou obrigatório o uso do Emissor Nacional da NFS-e para ME e EPP optantes pelo Simples a partir de 1º de novembro de 2026. As regras de IBS/CBS aplicáveis aos optantes do Simples produzem efeitos a partir de 1º de janeiro de 2027, conforme a regulamentação específica.\n* Saneamento de NCM, NBS e demais cadastros fiscais: erros de classificação podem levar a tratamento tributário incorreto, exigindo revisão antes da emissão e da apropriação de créditos.\n* Mecânica da Apuração Assistida: o contribuinte deve confrontar a proposta do sistema com seus documentos e controles, corrigindo inconsistências conforme os procedimentos oficiais. A automação não elimina a responsabilidade pela conferência.",
         "k": "ESTUDO"
       },
       {
