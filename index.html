@@ -757,6 +757,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  #home .home-search-compact{padding:12px}
 }
 
+
+.auth-loading-card{display:flex;flex-direction:column;align-items:center;gap:8px;color:#111}.auth-loading-card .mark{margin-bottom:7px}.auth-loading-card b{font-size:13px;letter-spacing:.08em}.auth-loading-card span{font-size:11px;color:#777}
+
 </style>
 <script>
 (async()=>{
@@ -775,7 +778,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <link rel="stylesheet" href="account.css?v=78">
 </head>
 <body>
-<section id="loginGate" class="login-gate"><form id="loginForm" class="login-card"><div class="mark">J</div><small>JAGUAR RT</small><h1>Seu espaço de estudo</h1><p>Acesse com seu e-mail Jaguar para acompanhar sua evolução.</p><label for="loginEmail">E-mail corporativo</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="nome@jaguarcontabil.com.br"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required><button id="loginSubmit" type="submit">Entrar →</button><p id="loginError" class="account-error" role="alert"></p><small>Acesso exclusivo aos colaboradores. Seu progresso e resultados ficam associados ao e-mail informado e disponíveis ao administrador.</small></form></section>
+<section id="authLoading" class="login-gate auth-loading"><div class="auth-loading-card"><div class="mark">J</div><b>JAGUAR RT</b><span>Carregando seu acesso…</span></div></section>
+<section id="loginGate" class="login-gate" hidden><form id="loginForm" class="login-card"><div class="mark">J</div><small>JAGUAR RT</small><h1>Seu espaço de estudo</h1><p>Acesse com seu e-mail Jaguar para acompanhar sua evolução.</p><label for="loginEmail">E-mail corporativo</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="nome@jaguarcontabil.com.br"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required><button id="loginSubmit" type="submit">Entrar →</button><p id="loginError" class="account-error" role="alert"></p><small>Acesso exclusivo aos colaboradores. Seu progresso e resultados ficam associados ao e-mail informado e disponíveis ao administrador.</small></form></section>
 <div id="siteShell" hidden>
 <a class="skip-link" href="#mainContent">Pular para o conteúdo</a>
 <header class="top">
@@ -1300,6 +1304,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
 <script src="app-v2.js?v=20260930-85" defer></script>
-<script src="account.js?v=81" defer></script>
+<script src="account.js?v=82" defer></script>
 </body>
 </html>
