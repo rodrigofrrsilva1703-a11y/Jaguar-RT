@@ -1532,7 +1532,7 @@ function printTaxReport(kind){
 
  const commonHead=
   '<div class="pdf-head">'+
-   '<div><div class="pdf-brand">Jaguar Assessoria Contábil × RTAV</div><h1>'+xmlEsc(data.title)+'</h1>'+
+   '<div><div class="pdf-brand">JAGUAR RT</div><h1>'+xmlEsc(data.title)+'</h1>'+
     '<p><strong>Cliente:</strong> '+xmlEsc(client)+'</p><p>'+xmlEsc(data.subtitle)+'</p></div>'+
    '<div class="pdf-stamp"><div>'+xmlEsc(now)+'</div><div>Motor '+xmlEsc(RTAV_ENGINE.version)+'</div><div>Regras '+xmlEsc(RTAV_ENGINE.rulesVersion)+'</div></div>'+
   '</div>'+

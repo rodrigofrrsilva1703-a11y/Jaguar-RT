@@ -1,4 +1,4 @@
-# Jaguar × RTAV
+# JAGUAR RT
 
 Plataforma estática da Jaguar Assessoria Contábil para estudo, simulação e apresentação da Reforma Tributária do Consumo.
 

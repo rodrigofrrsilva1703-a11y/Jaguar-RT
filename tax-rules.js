@@ -52,7 +52,7 @@
   metadata:Object.freeze({
    transition:{classification:'premissas_didaticas_e_transicao',source:'RTAV + materiais oficiais indicados na plataforma',reviewedAt},
    simpleTables:{classification:'tabelas_do_modelo_de_simulacao',source:'base vigente adotada pelo projeto; validar enquadramento real do contribuinte',reviewedAt},
-   warning:'As alíquotas CBS 9,21% e IBS 18,70% são premissas didáticas temporárias do Jaguar-RTAV, mantidas até a parametrização das alíquotas oficiais aplicáveis. Não devem ser tratadas como alíquota universal definitiva; use as regras do ano, destino, regime e operação concreta.'
+   warning:'As alíquotas CBS 9,21% e IBS 18,70% são premissas didáticas temporárias do JAGUAR RT, mantidas até a parametrização das alíquotas oficiais aplicáveis. Não devem ser tratadas como alíquota universal definitiva; use as regras do ano, destino, regime e operação concreta.'
   })
  });
 });
