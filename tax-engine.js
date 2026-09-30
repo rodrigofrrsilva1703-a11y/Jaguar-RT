@@ -12,6 +12,38 @@
  const clamp=(v,min,max)=>Math.min(max,Math.max(min,Number(v)||0));
  const effectPct=(before,after)=>before?((after/before)-1)*100:0;
  const isSimple=r=>r==='simples'||r==='simples_hybrid';
+ const operationUsesIcms=op=>op==='mercadoria'||op==='industria';
+ const operationUsesIss=op=>op==='servico';
+
+ function inferOperationType(input={}){
+  if(['mercadoria','industria','servico'].includes(input.operationType)) return input.operationType;
+  const r=input.currentRates||{};
+  if((Number(r.iss)||0)>0&&(Number(r.icms)||0)<=0) return 'servico';
+  if((Number(r.ipi)||0)>0) return 'industria';
+  return 'mercadoria';
+ }
+
+ function legacyTaxBreakdown(amount,currentRates={},operationType='mercadoria'){
+  const value=Math.max(0,Number(amount)||0);
+  const r={
+   pis:clamp(currentRates.pis,0,100),cofins:clamp(currentRates.cofins,0,100),
+   icms:clamp(currentRates.icms,0,100),iss:clamp(currentRates.iss,0,100),ipi:clamp(currentRates.ipi,0,100)
+  };
+  const usesIcms=operationUsesIcms(operationType);
+  const usesIss=operationUsesIss(operationType);
+  const icms=usesIcms?value*r.icms/100:0;
+  const iss=usesIss?value*r.iss/100:0;
+  const ipi=operationType==='industria'?value*r.ipi/100:0;
+  // Desde 2023, o ICMS destacado não integra a base do PIS/Cofins.
+  // Para serviços, esta ferramenta não presume exclusão do ISS: use as alíquotas
+  // efetivas aplicáveis ou uma simulação separada quando houver tratamento distinto.
+  const pisCofinsBase=Math.max(0,value-icms);
+  const pis=pisCofinsBase*r.pis/100;
+  const cofins=pisCofinsBase*r.cofins/100;
+  const components={pis,cofins,icms,iss,ipi};
+  const taxes=Object.values(components).reduce((a,b)=>a+b,0);
+  return {components,taxes,net:Math.max(0,value-taxes),pisCofinsBase,usesIcms,usesIss};
+ }
 
  function snBand(rbt12){
   const r=Math.max(0,Number(rbt12)||0);
@@ -57,15 +89,17 @@
   }
 
   if(band===4&&annex==='III'&&eff>.1492537&&year<=2032){
-   if(year===2027||year===2028){
-    const residual=Math.max(0,eff-.05);
-    return {band,eff,cbsEff:residual*.2320,ibsEff:residual*.0026,oldEff:.05,otherEff:Math.max(0,eff-(residual*.2320)-(residual*.0026)-.05),special:true};
-   }
-   const residual=Math.max(0,eff-.05);
-   const ibsFixed=year===2029?.005:year===2030?.01:year===2031?.015:year===2032?.02:.05;
-   const oldFixed=Math.max(0,.05-ibsFixed);
-   const cbsEff=residual*.2346;
-   return {band,eff,cbsEff,ibsEff:ibsFixed,oldEff:oldFixed,otherEff:Math.max(0,eff-cbsEff-ibsFixed-oldFixed),special:true};
+   const specialByYear={
+    2027:{iss:.05,cbs:.2320,ibs:.0026},2028:{iss:.05,cbs:.2320,ibs:.0026},
+    2029:{iss:.045,cbs:.2233,ibs:.0480},
+    2030:{iss:.040,cbs:.2131,ibs:.0915},
+    2031:{iss:.035,cbs:.2038,ibs:.1313},
+    2032:{iss:.030,cbs:.1952,ibs:.1677}
+   };
+   const sp=specialByYear[year];
+   const residual=Math.max(0,eff-sp.iss);
+   const cbsEff=residual*sp.cbs,ibsEff=residual*sp.ibs,oldEff=sp.iss;
+   return {band,eff,cbsEff,ibsEff,oldEff,otherEff:Math.max(0,eff-cbsEff-ibsEff-oldEff),special:true};
   }
 
   if(band===4&&annex==='IV'&&eff>.125&&year<=2032){
@@ -73,11 +107,16 @@
     const residual=Math.max(0,eff-.05);
     return {band,eff,cbsEff:residual*.3627,ibsEff:residual*.0040,oldEff:.05,otherEff:Math.max(0,eff-(residual*.3627)-(residual*.0040)-.05),special:true};
    }
-   const residual=Math.max(0,eff-.05);
-   const ibsFixed=year===2029?.005:year===2030?.01:year===2031?.015:year===2032?.02:.05;
-   const oldFixed=Math.max(0,.05-ibsFixed);
-   const cbsEff=residual*.3667;
-   return {band,eff,cbsEff,ibsEff:ibsFixed,oldEff:oldFixed,otherEff:Math.max(0,eff-cbsEff-ibsFixed-oldFixed),special:true};
+   const specialByYear={
+    2029:{iss:.045,cbs:.3438,ibs:.0625},
+    2030:{iss:.040,cbs:.3235,ibs:.1176},
+    2031:{iss:.035,cbs:.3056,ibs:.1667},
+    2032:{iss:.030,cbs:.2895,ibs:.2105}
+   };
+   const sp=specialByYear[year];
+   const residual=Math.max(0,eff-sp.iss);
+   const cbsEff=residual*sp.cbs,ibsEff=residual*sp.ibs,oldEff=sp.iss;
+   return {band,eff,cbsEff,ibsEff,oldEff,otherEff:Math.max(0,eff-cbsEff-ibsEff-oldEff),special:true};
   }
 
   const cbsEff=eff*(cbsShare/100);
@@ -97,8 +136,10 @@
  }
 
  function normalizeInput(input={}){
+  const operationType=inferOperationType(input);
   return {
    regime:input.regime||'presumido',
+   operationType,
    amount:Math.max(0,Number(input.amount)||0),
    currentRates:{
     pis:clamp(input.currentRates?.pis,0,100),
@@ -110,11 +151,13 @@
    simple:{annex:input.simple?.annex||'III',rbt12:Math.max(0,Number(input.simple?.rbt12)||0)},
    future:{
     mode:input.future?.mode||'rtav',reduction:clamp(input.future?.reduction,0,100),
-    cbs:clamp(input.future?.cbs,0,100),ibs:clamp(input.future?.ibs,0,100)
+    cbs:clamp(input.future?.cbs,0,100),ibs:clamp(input.future?.ibs,0,100),
+    selective:clamp(input.future?.selective,0,100)
    },
    hybridFuture:{
     mode:input.hybridFuture?.mode||'rtav',reduction:clamp(input.hybridFuture?.reduction,0,100),
-    cbs:clamp(input.hybridFuture?.cbs,0,100),ibs:clamp(input.hybridFuture?.ibs,0,100)
+    cbs:clamp(input.hybridFuture?.cbs,0,100),ibs:clamp(input.hybridFuture?.ibs,0,100),
+    selective:clamp(input.hybridFuture?.selective,0,100)
    },
    buyer:{
     profile:input.buyer?.profile||'b2c',
@@ -123,8 +166,11 @@
    },
    purchases:{
     enabled:!!input.purchases?.enabled,
+    mode:input.purchases?.mode==='manual'?'manual':'estimate',
     creditablePct:clamp(input.purchases?.creditablePct,0,100),
-    usePct:clamp(input.purchases?.usePct??100,0,100)
+    usePct:clamp(input.purchases?.usePct??100,0,100),
+    cbsCredit:Math.max(0,Number(input.purchases?.cbsCredit)||0),
+    ibsCredit:Math.max(0,Number(input.purchases?.ibsCredit)||0)
    }
   };
  }
@@ -142,9 +188,11 @@
    return {type:'hybrid',excludedRate:sh.oldEff,excludedLabel:['I','II'].includes(cfg.simple.annex)?'ICMS':'ISS',remRate:Math.max(0,sh.eff-sh.cbsEff-sh.ibsEff),cbsRate:rates.cbs/100,ibsRate:rates.ibs/100,source:sh,rates};
   }
   const p=RULES.transition[year]||RULES.transition[2027];
-  const oldRate=((cfg.currentRates.icms+cfg.currentRates.iss)*p.old)/100;
+  const currentOldRate=operationUsesIss(cfg.operationType)?cfg.currentRates.iss:cfg.currentRates.icms;
+  const oldRate=(currentOldRate*p.old)/100;
   const rates=resolveRegularRates(year,cfg.future);
-  return {type:'regular',remRate:oldRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100,rates};
+  return {type:'regular',remRate:oldRate,cbsRate:rates.cbs/100,ibsRate:rates.ibs/100,
+   selectiveRate:cfg.future.selective/100,rates};
  }
 
  function currentBaseScenario(input,kind){
@@ -157,15 +205,9 @@
    taxes=value*eff;
    components={das:taxes};
   }else{
-   const r=cfg.currentRates;
-   components={
-    pis:value*r.pis/100,
-    cofins:value*r.cofins/100,
-    icms:value*r.icms/100,
-    iss:value*r.iss/100,
-    ipi:value*r.ipi/100
-   };
-   taxes=Object.values(components).reduce((a,b)=>a+b,0);
+   const legacy=legacyTaxBreakdown(value,cfg.currentRates,cfg.operationType);
+   components=legacy.components;
+   taxes=legacy.taxes;
   }
   const net=Math.max(0,value-taxes);
 
@@ -212,7 +254,7 @@
   const cfg=normalizeInput(input);
   const p=paramsForYear(cfg,year);
   const price=Math.max(0,Number(projected)||0);
-  let cbs=0,ibs=0,remnant=0,taxes=0,net=0,cleanBase=0,residualBase=null,excludedTax=0;
+  let cbs=0,ibs=0,selectiveTax=0,remnant=0,taxes=0,net=0,cleanBase=0,residualBase=null,excludedTax=0;
 
   if(p.type==='simple'){
    taxes=price*p.dasRate;
@@ -225,18 +267,21 @@
    ({cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax}=hybridAtGross(p,price));
   }else{
    const newRate=p.cbsRate+p.ibsRate;
-   cleanBase=(1+newRate)>0?price*(1-p.remRate)/(1+newRate):0;
-   cbs=cleanBase*p.cbsRate;
-   ibs=cleanBase*p.ibsRate;
+   const selectiveRate=p.selectiveRate||0;
+   cleanBase=(1+newRate)>0?price*(1-p.remRate)/((1+selectiveRate)*(1+newRate)):0;
+   selectiveTax=cleanBase*selectiveRate;
+   const ivaBase=cleanBase+selectiveTax;
+   cbs=ivaBase*p.cbsRate;
+   ibs=ivaBase*p.ibsRate;
    remnant=price*p.remRate;
-   taxes=cbs+ibs+remnant;
+   taxes=cbs+ibs+selectiveTax+remnant;
    net=Math.max(0,price-taxes);
   }
 
   const creditEligible=!!cfg.purchases.enabled;
   const buyerCredit=creditEligible?(cbs+ibs):0;
   const buyerCost=Math.max(0,price-buyerCredit);
-  return {year,regime:cfg.regime,price,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,creditEligible,purchaseCredit:buyerCredit,netTax:Math.max(0,taxes-buyerCredit),economicNet:buyerCost,buyerCredit,buyerCost,effectiveCost:buyerCost,params:p};
+  return {year,regime:cfg.regime,price,cbs,ibs,selectiveTax,remnant,taxes,net,cleanBase,residualBase,excludedTax,creditEligible,purchaseCredit:buyerCredit,netTax:Math.max(0,taxes-buyerCredit),economicNet:buyerCost,buyerCredit,buyerCost,effectiveCost:buyerCost,params:p};
  }
 
  function futurePriceScenario(input,year,keepGross=false){
@@ -250,7 +295,8 @@
    else if(p.type==='hybrid') projected=hybridGrossFromNet(p,base.net);
    else{
     const newRate=p.cbsRate+p.ibsRate;
-    projected=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
+    const selectiveRate=p.selectiveRate||0;
+    projected=(1-p.remRate)>0?base.net*(1+selectiveRate)*(1+newRate)/(1-p.remRate):0;
    }
   }
 
@@ -263,7 +309,7 @@
   const cfg=normalizeInput(input);
   const p=paramsForYear(cfg,year);
   const revenue=Math.max(0,Number(gross)||0);
-  let cbs=0,ibs=0,remnant=0,taxes=0,net=0,cleanBase=0,residualBase=null,excludedTax=0;
+  let cbs=0,ibs=0,selectiveTax=0,remnant=0,taxes=0,net=0,cleanBase=0,residualBase=null,excludedTax=0;
 
   if(p.type==='simple'){
    taxes=revenue*p.dasRate;
@@ -276,18 +322,39 @@
    ({cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax}=hybridAtGross(p,revenue));
   }else{
    const newRate=p.cbsRate+p.ibsRate;
-   cleanBase=(1+newRate)>0?revenue*(1-p.remRate)/(1+newRate):0;
-   cbs=cleanBase*p.cbsRate;
-   ibs=cleanBase*p.ibsRate;
+   const selectiveRate=p.selectiveRate||0;
+   cleanBase=(1+newRate)>0?revenue*(1-p.remRate)/((1+selectiveRate)*(1+newRate)):0;
+   selectiveTax=cleanBase*selectiveRate;
+   const ivaBase=cleanBase+selectiveTax;
+   cbs=ivaBase*p.cbsRate;
+   ibs=ivaBase*p.ibsRate;
    remnant=revenue*p.remRate;
-   taxes=cbs+ibs+remnant;
+   taxes=cbs+ibs+selectiveTax+remnant;
    net=Math.max(0,revenue-taxes);
   }
 
-  const purchaseCredit=p.type==='simple'?0:revenue*(cfg.purchases.creditablePct/100)*((p.cbsRate||0)+(p.ibsRate||0))*(cfg.purchases.usePct/100);
-  const netTax=Math.max(0,taxes-purchaseCredit);
+  let cbsCredit=0,ibsCredit=0;
+  if(p.type!=='simple'){
+   if(cfg.purchases.mode==='manual'){
+    cbsCredit=cfg.purchases.cbsCredit;
+    ibsCredit=cfg.purchases.ibsCredit;
+   }else{
+    const purchaseBase=revenue*(cfg.purchases.creditablePct/100)*(cfg.purchases.usePct/100);
+    cbsCredit=purchaseBase*(p.cbsRate||0);
+    ibsCredit=purchaseBase*(p.ibsRate||0);
+   }
+  }
+  const purchaseCredit=cbsCredit+ibsCredit;
+  const cbsPayable=Math.max(0,cbs-cbsCredit);
+  const ibsPayable=Math.max(0,ibs-ibsCredit);
+  const cbsCreditBalance=Math.max(0,cbsCredit-cbs);
+  const ibsCreditBalance=Math.max(0,ibsCredit-ibs);
+  const creditBalance=cbsCreditBalance+ibsCreditBalance;
+  // Créditos de CBS/IBS não reduzem ICMS/ISS remanescente nem Imposto Seletivo.
+  const netTax=remnant+selectiveTax+cbsPayable+ibsPayable;
   const economicNet=Math.max(0,revenue-netTax);
-  return {year,regime:cfg.regime,revenue,cbs,ibs,remnant,taxes,net,cleanBase,residualBase,excludedTax,purchaseCredit,netTax,economicNet,params:p};
+  return {year,regime:cfg.regime,revenue,cbs,ibs,selectiveTax,remnant,taxes,net,cleanBase,residualBase,excludedTax,
+   purchaseCredit,cbsCredit,ibsCredit,cbsPayable,ibsPayable,cbsCreditBalance,ibsCreditBalance,creditBalance,netTax,economicNet,params:p};
  }
 
  function futureRevenueScenario(input,year,keepGross=false){
@@ -301,7 +368,8 @@
    else if(p.type==='hybrid') gross=hybridGrossFromNet(p,base.net);
    else{
     const newRate=p.cbsRate+p.ibsRate;
-    gross=(1-p.remRate)>0?base.net*(1+newRate)/(1-p.remRate):0;
+    const selectiveRate=p.selectiveRate||0;
+    gross=(1-p.remRate)>0?base.net*(1+selectiveRate)*(1+newRate)/(1-p.remRate):0;
    }
   }
 
@@ -312,85 +380,47 @@
 
  function supplierPurchaseComparison(input={},year=2027){
   const companyRegime=input.companyRegime||'presumido';
-  const amount=Math.max(0,Number(input.amount)||0);
-  const simple={
-   annex:input.simple?.annex||'III',
-   rbt12:Math.max(0,Number(input.simple?.rbt12)||0)
-  };
-  const future={
-   mode:input.future?.mode||'rtav',
-   reduction:clamp(input.future?.reduction,0,100),
-   cbs:clamp(input.future?.cbs,0,100),
-   ibs:clamp(input.future?.ibs,0,100)
-  };
-
-  const regularBuyer=companyRegime==='presumido'||companyRegime==='real'||companyRegime==='simples_hybrid';
-  const purchaseGeneratesCredit=input.purchaseGeneratesCredit!==false;
-  const creditEnabled=regularBuyer&&purchaseGeneratesCredit;
-
   const suppliers={};
   for(const key of ['presumido','real','simples','simples_hybrid']){
-   const price=input.projectFromCurrent?supplierPriceProjection({...input,supplierRegime:key},year).projectedPrice:amount;
-   const cfg={regime:key,amount:price,simple,future,hybridFuture:future};
-   const p=paramsForYear(cfg,Number(year));
-   let cbs=0,ibs=0,remnant=0;
-   if(p.type==='simple'){
-    // O adquirente regular recebe somente a parcela de IBS/CBS cobrada no DAS.
-    cbs=price*p.cbsInside;
-    ibs=price*p.ibsInside;
-    remnant=price*Math.max(0,p.dasRate-p.cbsInside-p.ibsInside);
-   }else if(input.projectFromCurrent||input.taxOnProjectedPrice){
-    // Nesta comparação didática, o preço novo sai primeiro da equação;
-    // CBS e IBS são calculados separadamente sobre esse preço projetado.
-    cbs=price*p.cbsRate;
-    ibs=price*p.ibsRate;
-    remnant=price*(p.remRate||0);
-   }else if(p.type==='hybrid'){
-    ({cbs,ibs,remnant}=hybridAtGross(p,price));
-   }else{
-    // O valor informado é o total da aquisição, já com IBS/CBS por fora.
-    // Tributos antigos do fornecedor não são um crédito novo do comprador.
-    const base=price/(1+p.cbsRate+p.ibsRate);
-    cbs=base*p.cbsRate;
-    ibs=base*p.ibsRate;
-   }
-   const credit=creditEnabled?cbs+ibs:0;
+   const model=segmentedPurchaseComparison({...input,supplierRegime:key},Number(year));
+   const buyer=model.buyers[companyRegime]||model.buyers.presumido;
    suppliers[key]={
-    supplierRegime:key,
-    price,cbs,ibs,remnant,credit,effectiveCost:Math.max(0,price-credit)
+    supplierRegime:key,price:Number(year)===2026?buyer.currentPrice:buyer.futurePrice,
+    cbs:model.cbs||0,ibs:model.ibs||0,remnant:(model.oldTaxRemnant||0)+(model.dasRemnant||0),
+    credit:Number(year)===2026?buyer.currentCredit:buyer.futureCredit,
+    effectiveCost:Number(year)===2026?buyer.currentCost:buyer.futureCost
    };
   }
-
-  return {
-   year:Number(year),
-   companyRegime,
-   regularBuyer,
-   purchaseGeneratesCredit,
-   creditEnabled,
-   amount,
-   suppliers
-  };
+  return {year:Number(year),companyRegime,regularBuyer:companyRegime!=='simples',
+   purchaseGeneratesCredit:input.purchaseGeneratesCredit!==false,
+   creditUsePct:clamp(input.creditUsePct??100,0,100),
+   creditEnabled:companyRegime!=='simples'&&input.purchaseGeneratesCredit!==false,
+   amount:Math.max(0,Number(input.amount)||0),suppliers};
  }
 
  function supplierPriceProjection(input={},year=2027){
   const regime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
-  const rates=input.currentRates||{};
-  const cfg={
-   regime,amount:Math.max(0,Number(input.amount)||0),
-   currentRates:{
-    pis:regime==='presumido'?.65:regime==='real'?1.65:0,
-    cofins:regime==='presumido'?3:regime==='real'?7.6:0,
-    icms:rates.icms||0,iss:rates.iss||0,ipi:rates.ipi||0
-   },
-   simple:input.simple,future:input.future,hybridFuture:input.future
-  };
-  const current=currentPriceScenario(cfg);
-  const projected=futurePriceScenario(cfg,Number(year));
-  const p=projected.params;
-  return {regime,year:Number(year),currentPrice:current.price,currentTaxes:current.taxes,currentComponents:current.components,
-   netPrice:current.net,remainingRate:p.type==='regular'?p.remRate:p.type==='hybrid'?p.remRate:p.dasRate,
-   newRate:(p.cbsRate||0)+(p.ibsRate||0),projectedPrice:projected.price,
-   method:p.type==='regular'?'formula_evento':p.type==='hybrid'?'simples_hibrido':'simples_das'};
+  const model=segmentedPurchaseComparison({...input,supplierRegime:regime},Number(year));
+  return {regime,year:Number(year),currentPrice:model.currentPrice,currentTaxes:model.currentSupplierTaxes,
+   currentComponents:{pisCofins:model.currentPisCofins,icms:model.currentIcms,iss:model.currentIss,ipi:model.currentIpi,das:model.currentDas},
+   netPrice:model.economicBase,remainingRate:model.futureOldTaxPct/100,newRate:(model.cbsPct+model.ibsPct)/100,
+   projectedPrice:model.futurePrice,method:'segmented_canonical'};
+ }
+
+ function buyerPurchaseComparison(input={},year=2027){
+  const supplierRegime=['presumido','real','simples','simples_hybrid'].includes(input.supplierRegime)?input.supplierRegime:'presumido';
+  const model=segmentedPurchaseComparison({...input,supplierRegime},Number(year));
+  const buyers={};
+  for(const regime of ['simples','presumido','real','simples_hybrid']){
+   const x=model.buyers[regime];
+   buyers[regime]={currentPrice:x.currentPrice,currentCredit:x.currentCredit,currentCost:x.currentCost,
+    futurePrice:x.futurePrice,credit:x.futureCredit,effectiveCost:x.futureCost,changePct:x.changePct};
+  }
+  return {year:Number(year),supplierRegime,currentPrice:model.currentPrice,futurePrice:model.futurePrice,
+   projection:supplierPriceProjection({...input,supplierRegime},year),
+   cbs:model.cbs,ibs:model.ibs,cbsPct:model.cbsPct,ibsPct:model.ibsPct,
+   remnant:(model.oldTaxRemnant||0)+(model.dasRemnant||0),estimatedCredit:model.cbs+model.ibs,
+   futureCredit:model.cbs+model.ibs,buyers};
  }
 
  function validateInput(input,kind='price'){
@@ -416,8 +446,14 @@
    messages.push({level:'info',code:'purchase_credit',message:'Crédito CBS/IBS ativado: o custo efetivo desconta os valores de CBS e IBS calculados nesta aquisição. O aproveitamento real depende do regime do adquirente e dos requisitos legais/documentais.'});
   }
 
-  if(kind==='revenue'&&cfg.regime==='simples'&&cfg.purchases.creditablePct>0){
+  if(kind==='revenue'&&cfg.regime==='simples'&&(cfg.purchases.creditablePct>0||cfg.purchases.cbsCredit>0||cfg.purchases.ibsCredit>0)){
    messages.push({level:'info',code:'simple_credit',message:'No Simples padrão, a simulação não apropria créditos de IBS/CBS das aquisições dentro do regime.'});
+  }
+  if(kind==='revenue'&&!isSimple(cfg.regime)&&cfg.currentRates.icms>0&&cfg.currentRates.iss>0){
+   messages.push({level:'error',code:'mixed_legacy',message:'Não aplique ICMS e ISS sobre o mesmo faturamento. Para atividade mista, faça cenários separados de mercadorias e serviços ou use alíquotas efetivas previamente ponderadas.'});
+  }
+  if(isSimple(cfg.regime)&&(cfg.future.selective>0||cfg.hybridFuture.selective>0)){
+   messages.push({level:'warning',code:'selective_simple',message:'O Imposto Seletivo manual desta ferramenta está modelado para regimes regulares; valide separadamente operações do Simples sujeitas a regime específico.'});
   }
 
   const futureMode=cfg.regime==='simples_hybrid'?cfg.hybridFuture.mode:cfg.future.mode;
@@ -485,6 +521,7 @@
   const currentOldTaxPct=usesIcms?icmsPct:issPct;
   const oldTaxName=usesIcms?'ICMS':'ISS';
   const creditable=input.purchaseGeneratesCredit!==false;
+  const creditUsePct=clamp(input.creditUsePct??100,0,100);
 
   const defaultAnnex=operationType==='mercadoria'?'I':operationType==='industria'?'II':'III';
   const simple={
@@ -524,10 +561,10 @@
   const simpleIcmsRate=usesIcms&&['I','II'].includes(simple.annex)
    ?simpleCurrent.eff*(RULES.simpleTables[simple.annex].oldBase[simpleCurrent.band]||0)/100:0;
   const simpleIcms=currentPrice*simpleIcmsRate;
-  const regularOldTaxCredit=creditable&&usesIcms?(simpleSupplier?simpleIcms:currentIcms):0;
+  const regularOldTaxCredit=creditable&&usesIcms?(simpleSupplier?simpleIcms:currentIcms)*(creditUsePct/100):0;
   // A aquisição elegível do Simples também gera crédito no regime não cumulativo.
   const pisCreditBase=Math.max(0,currentPrice-(usesIcms?(simpleSupplier?simpleIcms:currentIcms):0));
-  const realPisCofinsCredit=creditable?pisCreditBase*.0925:0;
+  const realPisCofinsCredit=creditable?pisCreditBase*.0925*(creditUsePct/100):0;
   const currentCredits={
    simples:{icms:0,iss:0,ipi:0,pisCofins:0,total:0},
    presumido:{icms:regularOldTaxCredit,iss:0,ipi:0,pisCofins:0,total:regularOldTaxCredit},
@@ -537,7 +574,7 @@
 
   const transition=RULES.transition[Number(year)]||RULES.transition[2027];
   const rates=resolveRegularRates(Number(year),future);
-  let futurePrice=0,cbs=0,ibs=0,oldTaxRemnant=0,dasRemnant=0;
+  let futurePrice=0,cbs=0,ibs=0,selectiveTax=0,oldTaxRemnant=0,dasRemnant=0;
   let futureOldTaxPct=0,simpleShares=null;
 
   if(supplierRegime==='simples'){
@@ -563,25 +600,28 @@
    dasRemnant=hybrid.remnant;
   }else{
    futureOldTaxPct=currentOldTaxPct*(transition.old??1);
-   cbs=economicBase*rates.cbs/100;
-   ibs=economicBase*rates.ibs/100;
-   const beforeOldTax=economicBase+cbs+ibs;
+   selectiveTax=economicBase*(future.selective/100);
+   const ivaBase=economicBase+selectiveTax;
+   cbs=ivaBase*rates.cbs/100;
+   ibs=ivaBase*rates.ibs/100;
+   const beforeOldTax=economicBase+selectiveTax+cbs+ibs;
    futurePrice=(1-futureOldTaxPct/100)>0?beforeOldTax/(1-futureOldTaxPct/100):0;
    oldTaxRemnant=futurePrice*futureOldTaxPct/100;
   }
 
   const simpleFutureIcms=simpleSupplier&&usesIcms&&['I','II'].includes(simple.annex)
    ?(supplierRegime==='simples'?futurePrice:futurePrice-cbs-ibs)*(simpleShares?.oldEff||0):0;
-  const regularOldTaxFutureCredit=creditable&&usesIcms?(simpleSupplier?simpleFutureIcms:oldTaxRemnant):0;
+  const creditFactor=creditable?creditUsePct/100:0;
+  const regularOldTaxFutureCredit=creditable&&usesIcms?(simpleSupplier?simpleFutureIcms:oldTaxRemnant)*creditFactor:0;
   const futureCredits={
    simples:{icms:0,iss:0,cbs:0,ibs:0,total:0},
    presumido:{
-    icms:regularOldTaxFutureCredit,iss:0,cbs:creditable?cbs:0,ibs:creditable?ibs:0,total:0
+    icms:regularOldTaxFutureCredit,iss:0,cbs:cbs*creditFactor,ibs:ibs*creditFactor,total:0
    },
    real:{
-    icms:regularOldTaxFutureCredit,iss:0,cbs:creditable?cbs:0,ibs:creditable?ibs:0,total:0
+    icms:regularOldTaxFutureCredit,iss:0,cbs:cbs*creditFactor,ibs:ibs*creditFactor,total:0
    },
-   simples_hybrid:{icms:0,iss:0,cbs:creditable?cbs:0,ibs:creditable?ibs:0,total:0}
+   simples_hybrid:{icms:0,iss:0,cbs:cbs*creditFactor,ibs:ibs*creditFactor,total:0}
   };
   for(const key of Object.keys(futureCredits)){
    const x=futureCredits[key];
@@ -607,13 +647,13 @@
    currentPisCofins,currentIcms,currentIss,currentIpi,currentDas,currentSupplierTaxes,economicBase,
    cbsPct:simpleSupplier?(futurePrice?cbs/futurePrice*100:0):rates.cbs,
    ibsPct:simpleSupplier?(futurePrice?ibs/futurePrice*100:0):rates.ibs,
-   cbs,ibs,futureOldTaxPct,oldTaxRemnant,
+   cbs,ibs,selectiveTax,futureOldTaxPct,oldTaxRemnant,
    futureIcmsPct:usesIcms?futureOldTaxPct:0,
    futureIssPct:usesIss?futureOldTaxPct:0,
    icmsRemnant:usesIcms?oldTaxRemnant:0,
    issRemnant:usesIss?oldTaxRemnant:0,
    dasRemnant,futurePrice,transitionOldFactor:transition.old??1,
-   creditable,simpleShares,buyers,usesIcms,usesIss,usesIpi
+   creditable,creditUsePct,simpleShares,buyers,usesIcms,usesIss,usesIpi
   };
  }
 
@@ -637,6 +677,7 @@
    ['Preço da compra projetado',x.price],
    ...hybridBaseMemory(x),
    [x.params?.type==='hybrid'?'Base da CBS/IBS após excluir '+x.params.excludedLabel:'Base limpa usada no novo sistema',x.cleanBase],
+   ['Imposto Seletivo (se informado)',x.selectiveTax||0],
    ['CBS da aquisição',x.cbs],
    ['IBS da aquisição',x.ibs],
    [x.params?.type==='regular'?'ICMS/ISS remanescente':'DAS remanescente',x.remnant],
@@ -670,20 +711,23 @@
    ['Faturamento líquido preservado de 2026',base.net],
    ...hybridBaseMemory(x),
    [x.params?.type==='hybrid'?'Base da CBS/IBS após excluir '+x.params.excludedLabel:'Base limpa usada no novo sistema',x.cleanBase],
+   ['Imposto Seletivo (se informado)',x.selectiveTax||0],
    ['CBS calculada',x.cbs],
    ['IBS calculado',x.ibs],
    [x.params?.type==='regular'?'ICMS/ISS remanescente':'DAS remanescente',x.remnant],
    ['Tributos brutos',x.taxes],
-   ['Créditos estimados das aquisições',x.purchaseCredit],
+   ['Crédito de CBS',x.cbsCredit||0],
+   ['Crédito de IBS',x.ibsCredit||0],
    ['Carga líquida após créditos',x.netTax],
+   ['Saldo credor remanescente',x.creditBalance||0],
    ['Faturamento bruto projetado',x.revenue]
   ];
  }
 
  return Object.freeze({
-  version:'1.4.0',
+  version:'1.5.0',
   rulesVersion:RULES.version,
-  clamp,effectPct,isSimple,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
+  clamp,effectPct,isSimple,inferOperationType,legacyTaxBreakdown,snBand,snRateRow,snEffective,snShares,resolveRegularRates,normalizeInput,paramsForYear,
   currentPriceScenario,priceScenarioAtPrice,futurePriceScenario,supplierPurchaseComparison,supplierPriceProjection,
   buyerPurchaseComparison,commercialPurchaseComparison,segmentedPurchaseComparison,
   currentRevenueScenario,revenueScenarioAtRevenue,futureRevenueScenario,
