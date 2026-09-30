@@ -18,6 +18,7 @@ const brl=text=>{
 
 test('linha do tempo resume cada ano sem poluir a página inicial',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=timeline',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
  await expect(page.locator('#timeline .year')).toHaveCount(8);
  await expect(page.locator('.transition-phases')).toHaveCount(0);
  await page.locator('#timeline [data-year="2029"]').click();
@@ -34,6 +35,7 @@ test('linha do tempo resume cada ano sem poluir a página inicial',async({page})
 
 test('módulos preservam leitura, retomam etapa e filtram o andamento',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=study',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
  await page.locator('nav [data-go="modules"]').click();
  await expect(page.locator('#moduleGrid .module-card')).toHaveCount(13);
  await page.locator('#moduleGrid .module-card').first().click();
@@ -54,6 +56,7 @@ test('módulos preservam leitura, retomam etapa e filtram o andamento',async({pa
 
 test('teste por módulo corrige, refaz e troca perguntas; teste geral mistura módulos',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=quiz',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
  await page.locator('nav [data-go="quiz"]').click();
  await page.locator('#quizModule').selectOption('05');
  await page.locator('#quiz .quiz-primary').click();
@@ -93,6 +96,7 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
  page.on('pageerror',err=>errors.push(err.message));
 
  await page.goto('http://127.0.0.1:4173/?e2e=buyer-suppliers',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
  await page.evaluate(()=>go('tools'));
 
  await expect(page.locator('#priceToolPanel')).toHaveClass(/active/);
@@ -233,6 +237,7 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
 
 test('fornecedores do Simples compartilham parâmetros do segmento e faturamento híbrido permanece intacto',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=simple-suppliers',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
  await page.evaluate(()=>go('tools'));
 
  await expect(page.locator('#simplesCurrentFields')).toBeVisible();
@@ -270,6 +275,7 @@ test('fornecedores do Simples compartilham parâmetros do segmento e faturamento
 
 test('painel pessoal abre sem substituir a navegação',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=account');
+ await expect(page.locator('#accountToggle')).toBeVisible();
  await expect(page.locator('#loginGate')).toBeHidden();
  await expect(page.locator('nav [data-go="tools"]')).toBeVisible();
  await page.locator('#accountToggle').click();
