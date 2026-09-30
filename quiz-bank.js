@@ -2458,7 +2458,69 @@ const QUIZ_BANK = {
         "O contador revisa XMLs que originaram créditos.",
         "O financeiro estornou uma venda, mas o fiscal ainda não tratou o documento."
       ]
-    }
+    },
+    "c": [
+      [
+        "O fechamento mostra R$ 18.000 de crédito de CBS e R$ 12.000 de débito de CBS.",
+        "Qual é o saldo de CBS antes de eventual ressarcimento?",
+        [
+          "R$ 6.000 credor",
+          "R$ 30.000 devedor",
+          "R$ 12.000 credor",
+          "Zero automaticamente"
+        ],
+        0,
+        "Créditos menos débitos resultam em saldo credor de R$ 6.000."
+      ],
+      [
+        "Uma empresa possui saldo credor de CBS e débito de IBS.",
+        "Qual procedimento é mais correto?",
+        [
+          "Controlar os tributos separadamente e aplicar somente compensações legalmente admitidas",
+          "Compensar automaticamente CBS contra IBS",
+          "Apagar o saldo menor",
+          "Transferir tudo para ICMS"
+        ],
+        0,
+        "CBS e IBS possuem controles próprios; não se presume compensação cruzada."
+      ],
+      [
+        "Uma venda tributada foi cancelada após a emissão do documento.",
+        "O que a equipe fiscal deve fazer primeiro?",
+        [
+          "Rastrear o documento original e o evento de cancelamento para avaliar os ajustes de débito e crédito",
+          "Alterar apenas o extrato bancário",
+          "Manter todos os créditos sem análise",
+          "Emitir um DAS complementar"
+        ],
+        0,
+        "O ajuste deve partir da operação e do documento fiscal que geraram os efeitos originais."
+      ],
+      [
+        "Um cliente confunde cashback com ressarcimento empresarial.",
+        "Qual explicação é correta?",
+        [
+          "Cashback é devolução voltada ao beneficiário pessoa física previsto em lei; ressarcimento trata saldo a recuperar do contribuinte",
+          "Os dois são exatamente o mesmo crédito",
+          "Cashback só existe para Lucro Real",
+          "Ressarcimento é benefício pessoal do sócio"
+        ],
+        0,
+        "São mecanismos com destinatários e fundamentos diferentes."
+      ],
+      [
+        "A empresa pretende pedir ressarcimento de saldo credor.",
+        "Qual controle aumenta a segurança do pedido?",
+        [
+          "Conciliação do saldo com documentos e eventos que originaram os créditos",
+          "Somente uma estimativa verbal",
+          "Excluir os XMLs antigos",
+          "Misturar CBS e IBS numa única conta"
+        ],
+        0,
+        "Rastreabilidade documental sustenta a formação do saldo a recuperar."
+      ]
+    ]
   },
   "07": {
     "m": [
@@ -2784,7 +2846,69 @@ const QUIZ_BANK = {
         "A área fiscal cruza DeRE e apuração assistida.",
         "A Receita publica nova versão de leiaute."
       ]
-    }
+    },
+    "c": [
+      [
+        "Uma instituição financeira pede simulação do IBS/CBS usando somente faturamento × 27,91%.",
+        "Qual é o primeiro passo correto?",
+        [
+          "Verificar o regime específico e sua base/deduções antes de usar a calculadora padrão",
+          "Aplicar 27,91% automaticamente",
+          "Usar a alíquota do Simples",
+          "Ignorar o setor"
+        ],
+        0,
+        "Serviços financeiros possuem disciplina própria e não devem ser tratados como operação padrão sem enquadramento."
+      ],
+      [
+        "Uma empresa obrigada à DeRE possui matriz e três filiais.",
+        "Como os dados devem ser organizados segundo a orientação atual?",
+        [
+          "Consolidados pelo CNPJ raiz, observando o leiaute aplicável",
+          "Uma declaração por empregado",
+          "Somente pela filial maior",
+          "Sem identificação das filiais"
+        ],
+        0,
+        "A orientação vigente trabalha com entrega consolidada pelo CNPJ raiz."
+      ],
+      [
+        "Um restaurante é parametrizado com a mesma fórmula de uma indústria comum.",
+        "Qual risco existe?",
+        [
+          "Ignorar regras setoriais específicas aplicáveis à atividade",
+          "Nenhum, pois todos os setores são idênticos",
+          "Somente erro de IRPJ",
+          "Apenas diferença de folha"
+        ],
+        0,
+        "O enquadramento setorial deve preceder o cálculo do IBS/CBS."
+      ],
+      [
+        "O leiaute da DeRE é atualizado pela administração tributária.",
+        "O que o escritório deve fazer?",
+        [
+          "Validar a versão vigente antes da entrega e ajustar integrações",
+          "Continuar indefinidamente com o leiaute antigo",
+          "Parar de emitir qualquer documento fiscal",
+          "Excluir os dados históricos"
+        ],
+        0,
+        "Conformidade tecnológica exige acompanhar versões e regras técnicas."
+      ],
+      [
+        "Uma empresa tem receitas em regime específico e outras operações regulares.",
+        "Como tratar?",
+        [
+          "Segregar as operações e aplicar a disciplina correspondente a cada grupo",
+          "Aplicar o regime específico a tudo",
+          "Aplicar o regime regular a tudo",
+          "Escolher a menor alíquota"
+        ],
+        0,
+        "Receitas com tratamentos distintos precisam ser separadas para apuração correta."
+      ]
+    ]
   },
   "09": {
     "m": [
@@ -2916,7 +3040,69 @@ const QUIZ_BANK = {
         "O ERP começa a importar dados novos da Duimp.",
         "O usuário tenta simular uma ZPE como operação doméstica comum."
       ]
-    }
+    },
+    "c": [
+      [
+        "Uma importadora recebe mercadoria e informa apenas o valor da invoice para calcular IBS/CBS.",
+        "Qual revisão é necessária?",
+        [
+          "Reconstruir a base de importação com o valor aduaneiro e demais parcelas previstas em lei",
+          "Usar somente a invoice em qualquer caso",
+          "Aplicar ISS sobre a invoice",
+          "Usar o faturamento anual do importador"
+        ],
+        0,
+        "A base da importação pode incluir outras parcelas além do valor comercial."
+      ],
+      [
+        "Uma empresa vende bens com fim específico de exportação.",
+        "Qual cuidado é essencial?",
+        [
+          "Controlar os requisitos, prazos e comprovação da efetiva exportação",
+          "Tratar como venda interna definitiva sem análise",
+          "Eliminar toda documentação",
+          "Aplicar automaticamente ICMS de origem"
+        ],
+        0,
+        "Tratamentos suspensivos ou desonerados dependem do cumprimento das condições legais."
+      ],
+      [
+        "Uma operação destina mercadorias à Zona Franca de Manaus.",
+        "Qual procedimento deve anteceder o cálculo?",
+        [
+          "Validar produto, habilitação, ingresso e tratamento específico da operação",
+          "Aplicar a regra doméstica padrão imediatamente",
+          "Zerar todos os tributos sem verificar nada",
+          "Tratar a ZFM como país estrangeiro"
+        ],
+        0,
+        "O regime da ZFM contém condições e mecanismos próprios."
+      ],
+      [
+        "A Duimp indica local de destino diferente da sede do importador.",
+        "Por que isso importa?",
+        [
+          "O destino é relevante para a tributação do consumo e para os dados de IBS",
+          "Não tem efeito algum",
+          "Serve apenas para IRPJ",
+          "Define a folha de pagamento"
+        ],
+        0,
+        "A Reforma reforça a tributação no destino e a Duimp foi adaptada para registrar dados necessários ao cálculo."
+      ],
+      [
+        "Um cliente opera em ZPE e pede que o escritório use a calculadora doméstica comum.",
+        "Qual resposta técnica é adequada?",
+        [
+          "Primeiro validar o regime especial aplicável à ZPE e só depois simular",
+          "Usar sempre 27,91%",
+          "Aplicar somente PIS/Cofins",
+          "Ignorar a localização"
+        ],
+        0,
+        "Regimes territoriais e aduaneiros especiais devem ser enquadrados antes do cálculo."
+      ]
+    ]
   }
 };
 if(typeof module!=='undefined'&&module.exports)module.exports=QUIZ_BANK;
