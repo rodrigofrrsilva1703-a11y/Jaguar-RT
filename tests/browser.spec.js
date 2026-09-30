@@ -37,12 +37,12 @@ test('módulos preservam leitura, retomam etapa e filtram o andamento',async({pa
  await page.goto('http://127.0.0.1:4173/?e2e=study',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#accountToggle')).toBeVisible();
  await page.locator('nav [data-go="modules"]').click();
- await expect(page.locator('#moduleGrid .module-card')).toHaveCount(13);
+ await expect(page.locator('#moduleGrid .module-card')).toHaveCount(16);
  await page.locator('#moduleGrid .module-card').first().click();
  await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(1);
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 01 DE 06');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 01 DE 07');
  await page.locator('#courseNext').click();
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
  await expect(page.locator('#courseProgressLabel')).toHaveText('1 de 6 etapas lidas');
  await page.locator('#courseViewAll').click();
  await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(6);
