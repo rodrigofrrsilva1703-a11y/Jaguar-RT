@@ -313,6 +313,21 @@ test('fornecedores do Simples compartilham parâmetros do segmento e faturamento
  await expect(page.locator('#printReport')).toContainText('101.327,38');
 });
 
+test('recarregar a página mantém a sessão e não exibe novamente o login',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=session-reload',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#siteShell')).toBeVisible();
+ await expect(page.locator('#loginGate')).toBeHidden();
+ await expect(page.locator('#authLoading')).toBeHidden();
+ await expect(page.locator('#accountToggle')).toBeVisible();
+
+ await page.reload({waitUntil:'domcontentloaded'});
+ await expect(page.locator('#siteShell')).toBeVisible();
+ await expect(page.locator('#loginGate')).toBeHidden();
+ await expect(page.locator('#authLoading')).toBeHidden();
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await expect(page.locator('#accountName')).toHaveText('Teste');
+});
+
 test('painel pessoal abre sem substituir a navegação',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=account');
  await expect(page.locator('#accountToggle')).toBeVisible();
