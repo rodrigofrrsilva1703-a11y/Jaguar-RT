@@ -648,6 +648,13 @@
    ];
   }
   const x=futureRevenueScenario(cfg,Number(year));
+  if(cfg.regime==='simples') return [
+   ['Faturamento líquido preservado de 2026',base.net],
+   ['Alíquota efetiva do DAS',(x.params.dasRate*100).toFixed(4).replace('.',',')+'%'],
+   ['DAS total',x.taxes],
+   ['Faturamento bruto projetado',x.revenue],
+   ['Faturamento líquido',x.net]
+  ];
   return [
    ['Faturamento líquido preservado de 2026',base.net],
    ...hybridBaseMemory(x),

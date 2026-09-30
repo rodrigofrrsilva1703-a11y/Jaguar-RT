@@ -846,7 +846,7 @@ function revUpdateSnSummary(){
  if($('revSnAutoSummary')){
   $('revSnAutoSummary').innerHTML=[2027,2029,2033].map(function(year){
    const sh=revSnShares(year);
-   return '<div class="sn-auto-card"><small>'+year+'</small><b>DAS '+pct(sh.eff*100)+'</b><span>CBS efetiva '+pct(sh.cbsEff*100)+' · IBS efetivo '+pct(sh.ibsEff*100)+'</span></div>';
+   return '<div class="sn-auto-card"><small>'+year+'</small><b>DAS '+pct(sh.eff*100)+'</b><span>Recolhimento único pelo Simples</span></div>';
   }).join('');
  }
 
@@ -953,6 +953,10 @@ function revenueRemnantLabel(x){
 
 function revFutureRows(x){
  const rows=[['Faturamento bruto projetado',money(x.revenue)]];
+ if(x.regime==='simples'){
+  rows.push(['DAS total',signedMoney(x.taxes,'−')],['Faturamento líquido',money(x.net)]);
+  return rows;
+ }
  if(x.cbs>0) rows.push(['CBS',signedMoney(x.cbs,'−')]);
  if(x.ibs>0) rows.push(['IBS',signedMoney(x.ibs,'−')]);
  if(x.remnant>0) rows.push([revenueRemnantLabel(x),signedMoney(x.remnant,'−')]);
@@ -1030,12 +1034,13 @@ function revRenderDetail(year){
    '<div class="year-detail-price"><small>FATURAMENTO BRUTO</small><b>'+money(x.revenue)+'</b></div>'+
   '</div>'+
   '<div class="year-detail-grid tax-detail">'+
-   '<div class="year-detail-item"><small>Total de tributos</small><b>'+money(x.taxes)+'</b></div>'+
+   '<div class="year-detail-item"><small>'+(x.regime==='simples'?'DAS total':'Total de tributos')+'</small><b>'+money(x.taxes)+'</b></div>'+
    '<div class="year-detail-item"><small>Carga</small><b>'+pct(x.revenue?x.taxes/x.revenue*100:0)+'</b></div>'+
    '<div class="year-detail-item"><small>Faturamento líquido</small><b>'+money(x.net)+'</b></div>'+
+   (x.regime==='simples'?'':
    '<div class="year-detail-item"><small>CBS</small><b>'+(x.cbs===null?'—':money(x.cbs))+'</b></div>'+
    '<div class="year-detail-item"><small>IBS</small><b>'+(x.ibs===null?'—':money(x.ibs))+'</b></div>'+
-   '<div class="year-detail-item"><small>'+revenueRemnantLabel(x)+'</small><b>'+money(x.remnant)+'</b></div>'+
+   '<div class="year-detail-item"><small>'+revenueRemnantLabel(x)+'</small><b>'+money(x.remnant)+'</b></div>')+
    ((x.purchaseCredit||0)>0?'<div class="year-detail-item"><small>Créditos estimados</small><b>'+money(x.purchaseCredit)+'</b></div><div class="year-detail-item"><small>Carga líquida</small><b>'+money(x.netTax)+'</b></div><div class="year-detail-item"><small>Líquido após créditos</small><b>'+money(x.economicNet)+'</b></div>':'')+
   '</div>'+
   '<div class="tax-analysis-text"><b>Leitura do ano</b><p>'+analysis+'</p></div>';
@@ -1216,6 +1221,14 @@ function exportPriceExcel(){
 
 function exportRevenueExcel(){
  if(!revenueYearlyRows.length) revRenderYearly();
+ if(revRegime()==='simples'){
+  downloadSpreadsheet('analise-faturamento-simples-2026-2033.xlsx',
+   ['Ano','Regime','Faturamento bruto','DAS total','Alíquota efetiva %','Faturamento líquido'],
+   revenueYearlyRows.map(x=>[x.year,REGIME_LABELS[x.regime],x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net]),
+   [['Regime',REGIME_LABELS.simples],['RBT12',revRbt12()],['Anexo',revAnnex()]],
+   RTAV_ENGINE.revenueMemory(revenueEngineInput(),Number($('revYear')?.value||2027)));
+  return;
+ }
  downloadSpreadsheet(
   'analise-faturamento-'+revRegime()+'-2026-2033.xlsx',
   ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','Tipo do tributo remanescente','Tributo remanescente','Créditos estimados das aquisições','Carga líquida','Líquido após créditos','Base DAS residual','ICMS/ISS excluído da base CBS/IBS','Base CBS/IBS'],
@@ -1351,10 +1364,12 @@ function buildRevenuePdf(client,year){
  const futureRows=[
   ['Faturamento projetado',money(future.revenue)]
  ];
- if((future.cbs||0)>0) futureRows.push(['CBS',signedMoney(future.cbs,'−')]);
- if((future.ibs||0)>0) futureRows.push(['IBS',signedMoney(future.ibs,'−')]);
- if((future.remnant||0)>0) futureRows.push([revenueRemnantLabel(future),signedMoney(future.remnant,'−')]);
- futureRows.push(['Tributos brutos',signedMoney(future.taxes,'−')]);
+ if(input.regime!=='simples'){
+  if((future.cbs||0)>0) futureRows.push(['CBS',signedMoney(future.cbs,'−')]);
+  if((future.ibs||0)>0) futureRows.push(['IBS',signedMoney(future.ibs,'−')]);
+  if((future.remnant||0)>0) futureRows.push([revenueRemnantLabel(future),signedMoney(future.remnant,'−')]);
+ }
+ futureRows.push([input.regime==='simples'?'DAS total':'Tributos brutos',signedMoney(future.taxes,'−')]);
  if((future.purchaseCredit||0)>0){
   futureRows.push(['Créditos estimados',money(future.purchaseCredit)]);
   futureRows.push(['Carga líquida',signedMoney(future.netTax,'−')]);
