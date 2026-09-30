@@ -23,6 +23,7 @@ begin
   insert into jaguarrt.login_limits(key,count) values (p_data->>'limit_key',1) on conflict(key) do update set count=case when login_limits.started_at<now()-interval '15 minutes' then 1 else login_limits.count+1 end,started_at=case when login_limits.started_at<now()-interval '15 minutes' then now() else login_limits.started_at end returning count into v_count;
   if v_count>15 then return jsonb_build_object('error','Muitas tentativas. Aguarde 15 minutos.'); end if;
   if not exists(select 1 from jaguarrt.settings where password_hash=extensions.crypt(p_password,password_hash)) then return jsonb_build_object('error','E-mail ou senha incorretos.'); end if;
+  delete from jaguarrt.login_limits where key=p_data->>'limit_key';
   insert into jaguarrt.accounts(email,last_seen) values(p_email,now()) on conflict(email) do update set last_seen=now();
   insert into jaguarrt.sessions(token_hash,email) values(encode(extensions.digest(p_token,'sha256'),'hex'),p_email);
  end if;
