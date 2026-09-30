@@ -33,6 +33,11 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 02",
         "x": "Estabelecido que o IVA Dual incide exclusivamente sobre o valor adicionado de cada etapa, torna-se necessário definir a sua dimensão espacial: a qual jurisdição política pertence o produto da arrecadação e como se determina a alíquota aplicável em operações interestaduais ou municipais? Esse é o objeto do Princípio do Destino.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Identificar quais tributos atuais serão afetados, separar regra oficial de premissa RTAV e registrar a fonte legal usada na análise.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -71,6 +76,11 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 03",
         "x": "Uma vez compreendidos os critérios espaciais e a fixação das alíquotas no destino, impõe-se a análise temporal: em qual momento jurídico exato a obrigação tributária se aperfeiçoa? Como a legislação disciplina adiantamentos financeiros e contratos continuados? Essas questões são respondidas no estudo do Fato Gerador e Temporalidade.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Confirmar o destino da operação, o local relevante e a alíquota aplicável antes de calcular IBS; não assumir que a sede do fornecedor define o imposto.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -109,6 +119,11 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 04",
         "x": "Identificado o momento em que a incidência ocorre, surge a questão quantitativa: sobre qual grandeza numérica a alíquota de 27,91% é aplicada? Como se compõe a base de cálculo, como são tratadas as despesas acessórias e qual o efeito da inclusão do Imposto Seletivo? Esse é o foco do estudo da Base de Cálculo.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Revisar momento do fato gerador, antecipações, pagamentos parciais e contratos continuados antes de reconhecer o débito.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -147,6 +162,11 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 05",
         "x": "Compreendida a mensuração do débito gerado na emissão do documento fiscal, é fundamental examinar a contrapartida da operação: como o comprador apropria esses R$ 3.162,20 como crédito tributário? Quais os requisitos para o creditamento e como isso impacta o custo econômico das empresas? Essas regras estruturam o Módulo 05.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Validar o que integra ou não a base de cálculo e conferir se o valor informado pela ferramenta é preço-base ou preço total da operação.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -185,6 +205,16 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 06",
         "x": "O modelo padrão prevê a alíquota geral de 27,91% com crédito amplo. Contudo, o texto constitucional estabeleceu exceções materiais para resguardar a essencialidade pública e setores com características econômicas específicas: quais atividades operam com redução de alíquota e quais sofrem restrições ao direito de crédito? Esses tratamentos compõem o Módulo 06.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "Saldo Credor, Compensação e Ressarcimento",
+        "x": "Quando os créditos de IBS ou CBS superarem os débitos do período, o excesso não deve ser tratado como perda nem como autorização para compensar qualquer tributo. O saldo a recuperar permanece segregado por tributo e pode ser utilizado em períodos posteriores ou ser objeto de pedido de ressarcimento, observadas as regras, os controles e os prazos aplicáveis. A LC 214/2025 prevê que o contribuinte pode solicitar ressarcimento integral ou parcial; o valor não solicitado permanece como crédito para compensação ou ressarcimento futuro.\nNa prática, o escritório precisa conciliar o saldo fiscal com os documentos que deram origem aos créditos, acompanhar pedidos e evitar utilizar crédito de CBS para reduzir ICMS/ISS remanescente ou Imposto Seletivo.",
+        "k": "APLICAÇÃO PRÁTICA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Conciliar créditos por documento, validar direito ao crédito, acompanhar saldo credor e separar CBS de IBS.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -218,6 +248,16 @@ const STUDY_MODULES = [
         "t": "Quadro Didático 06: Matriz das Alíquotas Efetivas Reduzidas",
         "x": "Cálculo exato das alíquotas efetivas resultantes da aplicação das desonerações legais sobre os parâmetros de referência (CBS = 9,21% | IBS = 18,70% | Alíquota Geral = 27,91%):\nCategoria / Hipótese Legal\nDesoneração Legal\nCBS Efetiva\nIBS Efetivo\nAlíquota Total Efetiva\nAlíquota Padrão (Regra Geral)\nSem redução (100%)\n9,210%\n18,700%\n27,910%\nSaúde, Educação e Agropecuária\nRedução de 60%\n9,21% × 0,40 = 3,684%\n18,70% × 0,40 = 7,480%\n11,164%\nProfissões Regulamentadas (Art. 127)\n(Contabilistas, Médicos, Advogados, etc.)\nRedução de 30%\n9,21% × 0,70 = 6,447%\n18,70% × 0,70 = 13,090%\n19,537%\nBares, Restaurantes e Hotelaria\nRedução de 40%\n9,21% × 0,60 = 5,526%\n18,70% × 0,60 = 11,220%\n16,746%\nCesta Básica Nacional\nAlíquota Zero (100%)\n0,000%\n0,000%\n0,000%\nConexão Estrutural com o Módulo 07: Dominadas as bases de cálculo, o crédito amplo e a matriz de alíquotas nominais e reduzidas, surge a questão da implantação: como será o cronograma prático de convivência entre os tributos que saem e os que entram? Como se comportam PIS, Cofins, ICMS e ISS entre 2026 e 2033? Essa transição é detalhada no Módulo 07.",
         "k": "EXEMPLO NUMÉRICO"
+      },
+      {
+        "t": "Diferenciado não é a mesma coisa que Específico",
+        "x": "Regime diferenciado normalmente preserva a arquitetura geral do IBS/CBS, mas altera a carga por redução de alíquota, alíquota zero, crédito presumido ou outro tratamento previsto em lei. Regime específico pode mudar a própria forma de apuração, a base de cálculo, as deduções, a documentação ou a lógica de crédito.\nPor isso, não é correto representar todo regime especial apenas com o campo “redução %”. Serviços financeiros, bens imóveis, planos de assistência à saúde, concursos de prognósticos, combustíveis e outras atividades possuem regras próprias que exigem identificação setorial antes do cálculo.",
+        "k": "ALERTA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Classificar a operação como regime padrão, diferenciado ou específico antes de aplicar redução de alíquota.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -251,6 +291,16 @@ const STUDY_MODULES = [
         "t": "Quadro Didático 07: Evolução Anual da Carga Tributária sobre Serviços na Transição",
         "x": "Prestação de serviços contínuos com valor líquido de R$ 10.000,00 (admitindo ISS antigo histórico fixado em 5% = R$ 500,00):\nAno de Competência\nTributo Antigo Remanescente\nCBS Aplicável\nIBS Aplicável\nCarga Tributária Consolidada\n2026\nISS 5,00% (R$ 500,00)\n0,90% (R$ 90,00)\n0,10% (R$ 10,00)\nR$ 600,00 (fase de teste compensável)\n2028\nISS 5,00% (R$ 500,00)\n9,21% (R$ 921,00) — premissa didática RTAV\n0,10% (R$ 10,00)\nR$ 1.431,00\n2029\n90% do ISS = 4,50% (R$ 450,00)\n9,21% (R$ 921,00)\n10% do IBS = 1,87% (R$ 187,00)\nR$ 1.558,00\n2030\n80% do ISS = 4,00% (R$ 400,00)\n9,21% (R$ 921,00)\n20% do IBS = 3,74% (R$ 374,00)\nR$ 1.695,00\n2031\n70% do ISS = 3,50% (R$ 350,00)\n9,21% (R$ 921,00)\n30% do IBS = 5,61% (R$ 561,00)\nR$ 1.832,00\n2032\n60% do ISS = 3,00% (R$ 300,00)\n9,21% (R$ 921,00)\n40% do IBS = 7,48% (R$ 748,00)\nR$ 1.969,00\n2033\n0,00% (ISS Extinto)\n9,21% (R$ 921,00)\n100% do IBS = 18,70% (R$ 1.870,00)\nR$ 2.791,00 (27,91%)\nConexão Estrutural com o Módulo 08: Compreendida a evolução das alíquotas ao longo do calendário, surge o desafio financeiro concreto: como reestruturar a formação de preços de venda e os orçamentos da empresa para assegurar a preservação das margens de contribuição sem perder espaço no mercado? Esse é o objeto da Engenharia de Preços e Reprecificação.",
         "k": "EXEMPLO NUMÉRICO"
+      },
+      {
+        "t": "Zona Franca de Manaus durante a Transição",
+        "x": "A redução do IPI a zero a partir de 2027 não é absoluta. A legislação preserva hipóteses ligadas à competitividade da Zona Franca de Manaus, e a LC 214/2025 contém tratamentos próprios de IBS/CBS para operações com a ZFM e Áreas de Livre Comércio. Portanto, em operações incentivadas, não se deve aplicar automaticamente a regra geral da transição sem verificar origem, destino, habilitação e finalidade do bem.",
+        "k": "EXCEÇÃO RELEVANTE"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Manter calendário 2026–2033 e revisar anualmente parâmetros de CBS, IBS, ICMS/ISS remanescentes e exceções.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -289,6 +339,11 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 09",
         "x": "Ajustada a metodologia de formação de preços, a análise precisa voltar-se para o enquadramento estratégico das empresas segundo o seu regime de tributação. O ponto de partida obrigatório é a análise do Simples Nacional frente à opção híbrida e às novas restrições operacionais.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Recalcular preço com base econômica limpa, créditos efetivamente aproveitáveis e margem desejada; não tratar 27,91% como universal.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -327,6 +382,11 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 10",
         "x": "Analisada a estratégia da micro e pequena empresa, torna-se necessário examinar as médias e grandes empresas: como se posicionam as organizações fora do Simples? Como fica o duelo histórico entre Lucro Presumido e Lucro Real sem o PIS/Cofins cumulativo e diante das novas regras da Lei Complementar nº 224/2025? Esse é o foco do Módulo 10.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Simular Simples padrão versus IBS/CBS no regime regular considerando perfil B2B, créditos, anexo, faixa e prazos de opção.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -365,6 +425,11 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 11",
         "x": "Definido o posicionamento da empresa perante o regime tributário e as alíquotas aplicáveis, impõe-se a governança operacional: como essas informações são formalizadas eletronicamente perante o Fisco? Como operam os novos Documentos Fiscais Eletrônicos (DF-e) e a declaração de débitos gerada pelo próprio sistema fazendário (Apuração Assistida)? Essa engrenagem é apresentada no Módulo 11.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Comparar Presumido e Real com cálculo completo de IRPJ/CSLL, ajustes e margem real; não decidir apenas pela alíquota nominal.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -403,6 +468,16 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 12",
         "x": "Se o documento fiscal registra a dívida em tempo real, como ocorre a quitação financeira quando a transação é liquidada eletronicamente no sistema bancário? O que é o Split Payment? Como funciona a Plataforma Pública do Split Payment (PPSP) e como conciliar notas, bancos e contabilidade? Esses mecanismos são explorados no Módulo 12.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "Cronograma dos Novos Documentos e Declarações",
+        "x": "A implantação dos documentos da Reforma é escalonada. Em 2026 e 2027 entram ou são adaptados diferentes DF-e e declarações, entre eles NFS-e, NFCom, DIR, DeRE, BP-e, NF-e de alienação de bens imóveis, NFAg, documentos do Simples, Duimp, NF-e de importação e NF-e de combustíveis monofásicos. O cronograma oficial deve ser acompanhado porque leiautes e datas podem ser atualizados.\nA equipe fiscal deve controlar versão de leiaute, CST, classificação tributária, campos de IBS/CBS e eventos de ajuste antes de considerar um documento apto à apuração assistida.",
+        "k": "CONFORMIDADE"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Saneamento de cadastro, CST, NCM/NBS, leiautes e eventos; testar emissão antes das datas obrigatórias.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -441,6 +516,16 @@ const STUDY_MODULES = [
         "t": "Conexão Estrutural com o Módulo 13",
         "x": "Uma vez dominada toda a estrutura normativa, da base constitucional até a retenção eletrônica no extrato bancário, impõe-se a aplicação prática: como estruturar esses conhecimentos em serviços consultivos de alto valor para clientes e como automatizar o processamento de dados contábeis no dia a dia do escritório? Essa é a conclusão no Módulo 13.",
         "k": "PRÓXIMA ETAPA"
+      },
+      {
+        "t": "Split Payment, Créditos e Saldo Credor",
+        "x": "O split payment não elimina a necessidade de apuração. A segregação financeira é uma forma de extinção do débito quando aplicável, enquanto o direito ao crédito, o saldo credor e eventual ressarcimento seguem regras próprias. A conciliação deve vincular documento fiscal, liquidação, valor segregado, débito apurado e crédito do adquirente.\nUm erro comum seria concluir que valor retido pelo banco encerra qualquer obrigação do período. A empresa ainda precisa conferir documentos, ajustes, devoluções, créditos e diferenças entre a informação fiscal e financeira.",
+        "k": "CONCILIAÇÃO"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Conciliar DF-e, adquirente/meio de pagamento e extrato bancário, investigando diferenças antes de fechar a apuração.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -477,8 +562,132 @@ const STUDY_MODULES = [
       },
       {
         "t": "Quadro Didático 13: Checklist Executivo de Ações Imediatas",
-        "x": "Ações Estruturadas para Aplicação Imediata:\n* [ ] Ação 1 (Saneamento de Base): Auditar 100% dos cadastros de mercadorias (NCM) e serviços (NBS) da carteira de clientes;\n* [ ] Ação 2 (NFS-e Nacional): Adequar a emissão de notas de serviço dos optantes do Simples ao leiaute nacional até 01/11/2026;\n* [ ] Ação 3 (Janela de Opção do Simples): Concluir os estudos de viabilidade e, se for o caso, exercer até 30/10/2026 a opção pelo regime regular de IBS/CBS para o primeiro semestre de 2027, observando os prazos atualizados da Resolução CGSN nº 194/2026;\n* [ ] Ação 4 (Planejamento de Fluxo de Caixa): Preparar a área financeira para o fim do regime de caixa do Simples em 01/01/2027 e simular os efeitos do split payment conforme sua implementação gradual e aplicabilidade às operações do cliente;\n* [ ] Ação 5 (Automação Operacional): Integrar o sistema contábil (Domínio) com rotinas automatizadas de importação de extratos e conciliação tripla de adquirentes.\nConclusão Consolidada: A trilha integral dos 13 módulos do JAGUAR RT fornece a matriz analítica e operacional completa para liderar o processo de transição tributária no Brasil: desde os alicerces constitucionais e a parametrização de alíquotas até a engenharia de dados, conciliação do split payment e consultoria contábil de alto impacto.",
+        "x": "Ações Estruturadas para Aplicação Imediata:\n* [ ] Ação 1 (Saneamento de Base): Auditar 100% dos cadastros de mercadorias (NCM) e serviços (NBS) da carteira de clientes;\n* [ ] Ação 2 (NFS-e Nacional): Adequar a emissão de notas de serviço dos optantes do Simples ao leiaute nacional até 01/11/2026;\n* [ ] Ação 3 (Janela de Opção do Simples): Concluir os estudos de viabilidade e, se for o caso, exercer até 30/10/2026 a opção pelo regime regular de IBS/CBS para o primeiro semestre de 2027, observando os prazos atualizados da Resolução CGSN nº 194/2026;\n* [ ] Ação 4 (Planejamento de Fluxo de Caixa): Preparar a área financeira para o fim do regime de caixa do Simples em 01/01/2027 e simular os efeitos do split payment conforme sua implementação gradual e aplicabilidade às operações do cliente;\n* [ ] Ação 5 (Automação Operacional): Integrar o sistema contábil (Domínio) com rotinas automatizadas de importação de extratos e conciliação tripla de adquirentes.\nConclusão Consolidada: A trilha integral dos 16 módulos do JAGUAR RT fornece a matriz analítica e operacional completa para liderar o processo de transição tributária no Brasil: desde os alicerces constitucionais e a parametrização de alíquotas até a engenharia de dados, conciliação do split payment e consultoria contábil de alto impacto.",
         "k": "EXEMPLO NUMÉRICO"
+      },
+      {
+        "t": "Padrão de Entrega Jaguar",
+        "x": "Toda análise entregue ao cliente deve separar: regra legal vigente, premissa da simulação, dado fornecido pelo cliente e conclusão condicionada. O relatório deve registrar a data da legislação consultada, a origem dos dados, as exceções identificadas e as ações recomendadas.\nNo Jaguar-RTAV, CBS de 9,21% e IBS cheio de 18,70% permanecem premissas didáticas temporárias. Antes de uma decisão contratual ou tributária real, a equipe deve substituir a premissa pela alíquota efetivamente aplicável à operação e ao período.",
+        "k": "PADRÃO JAGUAR"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Transformar diagnóstico em plano com responsável, prazo, evidência e revisão periódica da legislação.",
+        "k": "JAGUAR NA PRÁTICA"
+      }
+    ],
+    "fullCourse": true
+  },
+  {
+    "id": "14",
+    "title": "Saldo Credor, Ressarcimento, Restituição, Cashback e Ajustes",
+    "subtitle": "Como tratar excedentes de crédito, pedidos de ressarcimento, devoluções de operações e a devolução personalizada de IBS/CBS às famílias de baixa renda.",
+    "blocks": [
+      {
+        "t": "1. Saldo a Recuperar e Ressarcimento",
+        "x": "No regime regular, créditos e débitos de IBS e CBS são apurados de forma própria. Se ao final do período houver saldo a recuperar, a LC 214/2025 permite solicitar ressarcimento integral ou parcial. O valor que não for pedido permanece como crédito do contribuinte e pode ser utilizado em compensações futuras ou ser ressarcido posteriormente.\nIBS e CBS devem ser controlados separadamente. Um saldo credor de CBS não autoriza, por si só, reduzir ICMS, ISS, Imposto Seletivo ou qualquer outro tributo.",
+        "k": "ESTUDO"
+      },
+      {
+        "t": "2. Compensação, Ressarcimento e Restituição não são Sinônimos",
+        "x": "Compensação é o uso de crédito admitido para extinguir débito conforme as regras do sistema. Ressarcimento é a devolução financeira de saldo a recuperar formado na apuração. Restituição normalmente se relaciona a valor pago indevidamente ou a maior e segue disciplina própria.\nO contador deve identificar a origem do valor antes de escolher o procedimento. Misturar esses conceitos pode gerar pedido incorreto ou conciliação errada.",
+        "k": "CONCEITO"
+      },
+      {
+        "t": "3. Devoluções, Cancelamentos e Ajustes",
+        "x": "Uma devolução comercial, cancelamento ou ajuste posterior pode exigir correção do débito do fornecedor e do crédito do adquirente. O tratamento depende do documento fiscal, do evento correspondente e do momento da apuração.\nA regra operacional do escritório deve preservar rastreabilidade: documento original → evento de devolução/cancelamento → ajuste do débito → ajuste do crédito → reflexo na apuração e na conciliação financeira.",
+        "k": "PROCESSO"
+      },
+      {
+        "t": "4. Cashback de IBS e CBS",
+        "x": "A Reforma criou devolução personalizada de CBS e IBS para famílias de baixa renda. O destinatário é o responsável pela unidade familiar enquadrada nas condições legais e cadastrada no CadÚnico, observados os demais requisitos da LC 214/2025. O cashback é um mecanismo voltado à pessoa física beneficiária e não deve ser confundido com crédito empresarial de IBS/CBS.\nOs sistemas fiscais e documentos de consumo são relevantes porque fornecem dados para a operacionalização da devolução.",
+        "k": "CASHBACK"
+      },
+      {
+        "t": "5. Exemplo de Controle",
+        "x": "Uma empresa encerra o período com débito de CBS de R$ 40.000 e créditos admitidos de R$ 52.000. O saldo credor de CBS é R$ 12.000. Esse valor não reduz automaticamente o IBS ou o ICMS remanescente. A empresa deve mantê-lo na conta própria da CBS e decidir, conforme os requisitos aplicáveis, entre utilização futura e pedido de ressarcimento.",
+        "k": "EXEMPLO NUMÉRICO"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Separar saldos de CBS e IBS, conferir a origem documental de cada crédito, identificar devoluções e ajustes, acompanhar pedidos de ressarcimento e explicar ao cliente que cashback de pessoa física não é crédito empresarial.",
+        "k": "JAGUAR NA PRÁTICA"
+      }
+    ],
+    "fullCourse": true
+  },
+  {
+    "id": "15",
+    "title": "Comércio Exterior, Importações, Exportações, ZFM, ALC e ZPE",
+    "subtitle": "Tratamento do IBS/CBS nas operações internacionais e nos principais regimes territoriais incentivados.",
+    "blocks": [
+      {
+        "t": "1. Importação no IVA Dual",
+        "x": "A importação de bens materiais, bens imateriais e serviços integra a arquitetura do IBS/CBS. Para bens materiais, a LC 214/2025 define regras próprias de local, base, alíquota e responsabilidade. A base pode incluir, além do valor aduaneiro, tributos e encargos previstos em lei, como Imposto de Importação, Imposto Seletivo e outras parcelas incidentes até a liberação.\nA alíquota aplicável ao bem importado, em regra, acompanha a tributação do bem correspondente no País, observadas as regras específicas.",
+        "k": "ESTUDO"
+      },
+      {
+        "t": "2. Exportações e Desoneração",
+        "x": "As exportações recebem tratamento de desoneração previsto constitucionalmente e na LC 214/2025, preservando a lógica de não exportar tributos. A comprovação da exportação e o atendimento aos procedimentos aduaneiros são essenciais. Em operações com fim específico de exportação, a legislação prevê hipóteses de suspensão que podem se converter em alíquota zero após a efetiva exportação, desde que cumpridas as condições e prazos.\nCréditos relacionados a operações de exportação devem ser controlados conforme a disciplina legal de manutenção e ressarcimento.",
+        "k": "EXPORTAÇÃO"
+      },
+      {
+        "t": "3. Duimp e Documentação",
+        "x": "A Duimp está sendo adaptada para calcular e registrar os tributos da Reforma por item, incluindo informações de local da operação de consumo. O cronograma oficial também prevê NF-e de importação e outros documentos relacionados ao comércio exterior.\nO escritório deve validar classificação do item, local de destino, base aduaneira, tributos incidentes e versão do leiaute antes da contabilização.",
+        "k": "CONFORMIDADE"
+      },
+      {
+        "t": "4. Zona Franca de Manaus e Áreas Incentivadas",
+        "x": "A Zona Franca de Manaus possui regime próprio para preservar sua competitividade. A LC 214/2025 prevê hipóteses de suspensão, isenção, alíquota zero e créditos presumidos, condicionadas à operação, ao tipo de bem, à habilitação e à comprovação de ingresso. O IPI também permanece em hipóteses relacionadas à proteção do diferencial competitivo da ZFM.\nÁreas de Livre Comércio e Zonas de Processamento de Exportação possuem tratamentos específicos e não devem ser simuladas como uma operação doméstica comum.",
+        "k": "REGIME TERRITORIAL"
+      },
+      {
+        "t": "5. Exemplo Prático",
+        "x": "Uma empresa importa mercadoria para revenda. Antes de calcular IBS/CBS, a equipe deve identificar o valor aduaneiro, os acréscimos que integram a base, o destino da operação, eventual Imposto Seletivo e o tratamento do produto no mercado interno. Se a operação estiver ligada à ZFM, ALC, ZPE ou regime aduaneiro especial, a regra geral deve ser suspensa até que o enquadramento específico seja validado.",
+        "k": "CASO PRÁTICO"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Conferir Duimp e documentos de importação, validar destino e classificação, separar exportação comprovada de venda interna e nunca aplicar automaticamente a regra padrão em operações com ZFM, ALC, ZPE ou regime aduaneiro especial.",
+        "k": "JAGUAR NA PRÁTICA"
+      }
+    ],
+    "fullCourse": true
+  },
+  {
+    "id": "16",
+    "title": "Regimes Específicos, DeRE e Tributação Setorial",
+    "subtitle": "Como reconhecer setores que não seguem apenas a sistemática padrão de débito e crédito e como a DeRE se integra à apuração assistida.",
+    "blocks": [
+      {
+        "t": "1. Por que existem Regimes Específicos",
+        "x": "Alguns setores não podem ser representados corretamente pela fórmula padrão preço × alíquota − créditos. A LC 214/2025 estabelece regimes específicos em que podem mudar a base de cálculo, as deduções, a forma de apuração, a alíquota, a documentação e o crédito do adquirente.\nEntre os temas setoriais relevantes estão serviços financeiros, planos de assistência à saúde, concursos de prognósticos, operações com bens imóveis, bares e restaurantes, hotelaria, agências de turismo, transporte de passageiros, combustíveis e outras hipóteses previstas em lei.",
+        "k": "ESTUDO"
+      },
+      {
+        "t": "2. DeRE — Declaração de Regimes Específicos",
+        "x": "A DeRE foi criada para viabilizar a apuração de IBS/CBS em atividades cuja base não é obtida apenas pelo valor de cada nota fiscal. Ela alimenta o motor da apuração assistida com informações como margens, deduções e eventos próprios.\nNa implementação divulgada em 2026, a obrigação alcança, entre outros, prestadores de serviços financeiros, operadoras de planos de assistência à saúde e entidades que explorem concursos de prognósticos. O envio é consolidado pelo CNPJ raiz para os contribuintes abrangidos.",
+        "k": "DeRE"
+      },
+      {
+        "t": "3. Cronograma Operacional da DeRE",
+        "x": "O cronograma oficial de implementação em 2026 foi dividido em fases: eventos de tabela, eventos periódicos mensais e demais eventos. Como leiautes e datas são passíveis de atualização, o escritório deve consultar a página oficial da Receita/SPED antes de implantar rotinas definitivas.\nA existência da DeRE não elimina automaticamente outras obrigações: receitas fora do regime específico e tributos antigos durante a transição podem exigir documentos fiscais próprios.",
+        "k": "CRONOGRAMA"
+      },
+      {
+        "t": "4. Exemplos Setoriais",
+        "x": "Serviços financeiros podem utilizar bases formadas por receitas e deduções próprias; planos de assistência à saúde e concursos de prognósticos também possuem tratamento setorial. Operações imobiliárias possuem regime específico e documentação vinculada ao ecossistema cadastral de imóveis. Combustíveis têm hipóteses de tributação monofásica.\nA consequência prática é simples: antes de usar a calculadora padrão do Jaguar-RTAV, a equipe deve confirmar se a operação pertence ao regime regular ou a um regime específico.",
+        "k": "SETORES"
+      },
+      {
+        "t": "5. DeRE, Apuração Assistida e Cashback",
+        "x": "As informações da DeRE alimentam a apuração assistida e ajudam a calcular corretamente operações em que a incidência depende de margem ou deduções. A documentação oficial também relaciona a DeRE à operacionalização do cashback em situações abrangidas pelos dados declarados.\nIsso reforça uma regra de governança: qualidade cadastral e qualidade da declaração são parte do cálculo tributário, não apenas uma obrigação posterior.",
+        "k": "INTEGRAÇÃO"
+      },
+      {
+        "t": "O que o colaborador da Jaguar precisa fazer na prática",
+        "x": "Identificar o setor antes do cálculo, verificar se há regime específico e DeRE, validar leiaute e obrigatoriedade por CNPJ raiz, separar receitas do regime específico das receitas regulares e documentar qualquer premissa usada na simulação.",
+        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -585,5 +794,30 @@ const SOURCES = [
     "RTAV + Material de Estudo 26/09/2026",
     "#",
     "Base didática do treinamento. Exemplos, estimativas e opiniões do palestrante são identificados e não substituem a regra oficial."
+  ],
+  [
+    "Receita Federal — Curso RTC 2026",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/curso/programacao",
+    "Programação oficial com comércio internacional, ressarcimento/cashback, regimes específicos, ZFM, combustíveis e demais temas setoriais."
+  ],
+  [
+    "SPED — Declaração de Regimes Específicos (DeRE)",
+    "https://www.gov.br/sped/pt-br/assuntos/documentos-fiscais/dere",
+    "Documentação e orientações da DeRE, sua relação com a apuração assistida e com regimes específicos."
+  ],
+  [
+    "Receita — DeRE Perguntas Frequentes",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/perguntas-frequentes/sped/dere/dere",
+    "Abrangência, obrigatoriedade, entrega consolidada pelo CNPJ raiz e coexistência com documentos fiscais."
+  ],
+  [
+    "Receita — Duimp e Reforma Tributária",
+    "https://www.gov.br/receitafederal/pt-br/assuntos/aduana-e-comercio-exterior/manuais/despacho-de-importacao/sistemas/duimp/rtc/reforma-tributaria-do-consumo",
+    "Orientações dos novos campos e do cálculo de IBS/CBS por item na importação."
+  ],
+  [
+    "Receita — Materiais oficiais dos módulos RTC",
+    "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/curso/material-de-apoio/modulos-do-curso",
+    "Materiais técnicos do curso RFB/CFC, incluindo ZFM, combustíveis, Imposto Seletivo e outros temas setoriais."
   ]
 ];
