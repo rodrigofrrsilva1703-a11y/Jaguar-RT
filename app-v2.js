@@ -32,8 +32,8 @@ function go(id){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  $(id)?.classList.add('active');
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
- if(id==='modules') renderModuleGrid();
- if(id==='home') renderHomeResume();
+ if(id==='modules'){renderModuleGrid();renderLearningPath('learningPath');}
+ if(id==='home'){renderHomeResume();renderHomeDashboard();renderLearningPath('homeLearningPath');}
  window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
@@ -96,6 +96,58 @@ function renderModuleGrid(){
  grid.innerHTML=modules.length?modules.map(moduleCard).join(''):'<div class="study-empty">Nenhum módulo nesta etapa ainda. Escolha “Todos” para começar.</div>';
 }
 function filterStudyModules(filter){studyFilter=filter;renderModuleGrid();}
+
+const LEARNING_PHASES=Object.freeze([
+ {label:'01 · FUNDAMENTOS',title:'Como o novo IVA funciona',modules:['01','02','03','04']},
+ {label:'02 · CRÉDITOS',title:'Créditos e tratamentos',modules:['05','06','07','08']},
+ {label:'03 · OPERAÇÕES',title:'Comércio exterior',modules:['09']},
+ {label:'04 · TRANSIÇÃO',title:'Anos e regimes',modules:['10','11','12']},
+ {label:'05 · APLICAÇÃO',title:'Preço e operação',modules:['13','14','15']},
+ {label:'06 · ENTREGA',title:'Consultoria',modules:['16']}
+]);
+function renderLearningPath(id){
+ const el=$(id);if(!el)return;
+ el.innerHTML=LEARNING_PHASES.map(function(phase){
+  const mods=phase.modules.map(function(mid){return STUDY_MODULES.find(function(m){return m.id===mid;});}).filter(Boolean);
+  const done=mods.filter(function(m){return moduleStatus(m)==='Concluído';}).length;
+  const started=mods.some(function(m){return moduleStatus(m)==='Em andamento';});
+  const pctValue=mods.length?done/mods.length*100:0;
+  return '<article class="learning-phase '+(done===mods.length?'complete':started?'active':'')+'">'+
+   '<small>'+phase.label+'</small><b>'+phase.title+'</b>'+
+   '<span>'+phase.modules.map(Number).join(' · ')+' · '+done+'/'+mods.length+' concluídos</span>'+
+   '<div class="learning-phase-progress"><i style="width:'+pctValue+'%"></i></div></article>';
+ }).join('');
+}
+function currentStudyTarget(){
+ const active=STUDY_MODULES.find(function(m){return moduleStatus(m)==='Em andamento';});
+ return active||STUDY_MODULES.find(function(m){return moduleStatus(m)!=='Concluído';})||STUDY_MODULES[STUDY_MODULES.length-1];
+}
+function renderHomeDashboard(){
+ const el=$('homeDashboard');if(!el)return;
+ const complete=STUDY_MODULES.filter(function(m){return moduleStatus(m)==='Concluído';}).length;
+ const target=currentStudyTarget();
+ const pctDone=Math.round(complete/STUDY_MODULES.length*100);
+ let lastScore=null,lastScope=null;
+ try{
+  const saved=JSON.parse(localStorage.getItem('jaguar-rtav-quiz-session-v3')||'null');
+  if(saved&&saved.finished&&Array.isArray(saved.questions)&&Array.isArray(saved.answers)){
+   lastScore=RTAV_QUIZ.grade(saved.questions,saved.answers).score;
+   lastScope=saved.scope;
+  }
+ }catch(e){}
+ const targetProgress=target?moduleProgress(target):{read:[]};
+ const targetLabel=target?('Módulo '+target.id+' · '+target.title):'Trilha concluída';
+ const targetAction=target?("openModule('"+target.id+"')"):"go('quiz')";
+ el.innerHTML=
+  '<article class="home-dashboard-card primary"><small>PRÓXIMO PASSO</small><b>'+courseEscape(targetLabel)+'</b><span>'+(target?targetProgress.read.length+' de '+target.blocks.length+' etapas lidas':'Você concluiu os 16 módulos')+'</span><button type="button" onclick="'+targetAction+'">'+(target?'Continuar módulo':'Fazer revisão geral')+' →</button></article>'+
+  '<article class="home-dashboard-card"><small>PROGRESSO DA TRILHA</small><strong>'+pctDone+'%</strong><span>'+complete+' de '+STUDY_MODULES.length+' módulos concluídos</span></article>'+
+  '<article class="home-dashboard-card"><small>ÚLTIMO TESTE</small><strong>'+(lastScore===null?'—':lastScore+'/10')+'</strong><span>'+(lastScore===null?'Faça seu primeiro teste':lastScope==='all'?'Teste geral':'Módulo '+lastScope)+'</span></article>'+
+  '<article class="home-dashboard-card"><small>ANÁLISE PRÁTICA</small><b>3 ferramentas</b><span>Compra · faturamento · diagnóstico</span><button type="button" onclick="openDiagnostic()">Abrir diagnóstico →</button></article>';
+ if($('homePrimaryAction')&&target){
+  $('homePrimaryAction').onclick=function(){openModule(target.id);};
+  $('homePrimaryAction').innerHTML=(moduleStatus(target)==='Em andamento'?'Continuar módulo ':'Começar módulo ')+target.id+' <b>→</b>';
+ }
+}
 function renderHomeResume(){
  const box=$('homeResume');if(!box)return;
  const active=STUDY_MODULES.find(m=>{const n=moduleProgress(m).read.length;return n>0&&n<m.blocks.length;});
@@ -115,6 +167,9 @@ function courseText(value){
 
 function renderHome(){
  renderHomeResume();
+ renderHomeDashboard();
+ renderLearningPath('homeLearningPath');
+ renderLearningPath('learningPath');
  if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
  renderModuleGrid();
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
