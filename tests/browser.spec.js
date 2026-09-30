@@ -299,3 +299,29 @@ test('perfil no celular fica no cabeçalho e informa progresso',async({page})=>{
  await expect(page.locator('#accountDrawer')).toBeVisible();
  await expect(page.locator('#accountEmail')).toHaveText('teste@jaguarcontabil.com.br');
 });
+
+test('lateral compacta no celular e relatórios em tela própria',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const body=route.request().postDataJSON();
+  const account={email:'rodrigo.silva@jaguarcontabil.com.br',admin:true,state:{},attempts:[]};
+  await route.fulfill({json:body.action==='admin'?{accounts:[{...account,online:true,last_seen:new Date().toISOString()},{email:'ana@jaguarcontabil.com.br',online:false,state:{study:{'01':{read:[0]}}},attempts:[{scope:'01',score:8,created_at:new Date().toISOString()}]}]}:account});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=team-reports');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.locator('#accountToggle').click();
+ const drawer=await page.locator('#accountDrawer').boundingBox();
+ expect(drawer.width).toBeLessThan(390);
+ await expect(page.locator('#accountContent')).toContainText('Módulo 1');
+ await expect(page.locator('#accountContent')).not.toContainText('No modelo de');
+ await page.locator('#reportsOpen').click();
+ await expect(page.locator('#accountDrawer')).toBeHidden();
+ await expect(page.locator('#teamReports')).toBeVisible();
+ await expect(page.locator('#reportsList .report-person')).toHaveCount(2);
+ await page.locator('#reportsSearch').fill('ana');
+ await expect(page.locator('#reportsList .report-person')).toHaveCount(1);
+ await page.locator('#reportsList summary').click();
+ await expect(page.locator('#reportsList')).toContainText('8/10');
+ await page.locator('#reportsBack').click();
+ await expect(page.locator('#home')).toBeVisible();
+});
