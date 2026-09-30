@@ -736,6 +736,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 #home .transition-selected strong{font-size:32px}#home .transition-selected span{color:#686868;font-size:9px}
 #home .transition-summary{padding:15px 18px}#home .transition-summary h3{font-size:16px}#home .transition-summary p{font-size:11px}
 @media(max-width:760px){#home .home-command{grid-template-columns:1fr}#home .journey-card{min-height:85px;padding:16px}#home .interactive-search{grid-template-columns:1fr}#home .quick-topics{grid-column:1}#home .interactive-hero{padding:25px}#home .interactive-transition .timeline-panel{grid-template-columns:1fr}#home .transition-selected{flex-direction:row;justify-content:space-between;align-items:center}}
+/* Abertura leve, com atalhos em linhas. */
+#home .interactive-hero{background:transparent;color:#111;padding:18px 0 26px;border-radius:0;border-bottom:1px solid var(--line);box-shadow:none}
+#home .interactive-hero:before,#home .interactive-hero:after{display:none}
+#home .hero-status{color:#777;margin-bottom:14px}
+#home .hero-copy>.eyebrow{color:#777}
+#home .interactive-hero h1{font-size:clamp(34px,4.2vw,54px);max-width:900px;line-height:1.06;letter-spacing:-.045em;margin:14px 0}
+#home .interactive-hero h1 br{display:none}
+#home .interactive-hero h1 span{color:#777}
+#home .interactive-hero .hero-copy>p{color:#686868;font-size:14px;max-width:760px}
+#home .interactive-hero .hero-actions .primary-action{background:#111;color:#fff;border-color:#111;border-radius:9px;padding:11px 16px}
+#home .home-resume button{background:#fff;color:#111;border-color:var(--line)}
+#home .home-resume span{color:#777}
+#home .home-command{display:block;margin-top:24px}
+#home .command-top{margin-bottom:8px}
+#home .command-live{display:none}
+#home .journey-card{display:grid;width:100%;grid-template-columns:34px 1fr 20px;background:transparent;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0;padding:18px 4px;min-height:0;text-align:left;box-shadow:none}
+#home .journey-card:hover{background:#eaeae5;transform:none}
+#home .journey-card>div{display:flex;align-items:center;gap:24px}
+#home .journey-card b{font-size:16px;min-width:140px}
+#home .journey-card small{margin:0;font-size:12px}
+#home .journey-no{border:0;background:transparent;font-size:10px;padding:0}
+#home .interactive-search{margin-top:24px}
+#home .interactive-transition{margin-top:18px}
+@media(max-width:650px){#home .interactive-hero{padding:12px 0 22px}#home .interactive-hero h1 br{display:block}#home .journey-card>div{display:block}#home .journey-card small{display:block;margin-top:4px}#home .journey-card{padding:15px 4px}}
 </style>
 <script>
 (async()=>{
