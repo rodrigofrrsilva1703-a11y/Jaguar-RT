@@ -141,17 +141,14 @@ function renderHomeDashboard(){
  el.innerHTML=
   '<article class="home-dashboard-card primary"><small>PRÓXIMO PASSO</small><b>'+courseEscape(targetLabel)+'</b><span>'+(target?targetProgress.read.length+' de '+target.blocks.length+' etapas lidas':'Você concluiu os 16 módulos')+'</span><button type="button" onclick="'+targetAction+'">'+(target?'Continuar módulo':'Fazer revisão geral')+' →</button></article>'+
   '<article class="home-dashboard-card"><small>PROGRESSO DA TRILHA</small><strong>'+pctDone+'%</strong><span>'+complete+' de '+STUDY_MODULES.length+' módulos concluídos</span></article>'+
-  '<article class="home-dashboard-card"><small>ÚLTIMO TESTE</small><strong>'+(lastScore===null?'—':lastScore+'/10')+'</strong><span>'+(lastScore===null?'Faça seu primeiro teste':lastScope==='all'?'Teste geral':'Módulo '+lastScope)+'</span></article>'+
-  '<article class="home-dashboard-card"><small>ANÁLISE PRÁTICA</small><b>3 ferramentas</b><span>Compra · faturamento · diagnóstico</span><button type="button" onclick="openDiagnostic()">Abrir diagnóstico →</button></article>';
+  '<article class="home-dashboard-card"><small>ÚLTIMO TESTE</small><strong>'+(lastScore===null?'—':lastScore+'/10')+'</strong><span>'+(lastScore===null?'Faça seu primeiro teste':lastScope==='all'?'Teste geral':'Módulo '+lastScope)+'</span></article>';
  if($('homePrimaryAction')&&target){
   $('homePrimaryAction').onclick=function(){openModule(target.id);};
   $('homePrimaryAction').innerHTML=(moduleStatus(target)==='Em andamento'?'Continuar módulo ':'Começar módulo ')+target.id+' <b>→</b>';
  }
 }
 function renderHomeResume(){
- const box=$('homeResume');if(!box)return;
- const active=STUDY_MODULES.find(m=>{const n=moduleProgress(m).read.length;return n>0&&n<m.blocks.length;});
- box.innerHTML=active?`<button type="button" onclick="openModule('${active.id}')"><span>CONTINUAR DE ONDE PAROU</span><b>Módulo ${active.id} · ${courseEscape(active.title)}</b><i>↗</i></button>`:'';
+ const box=$('homeResume');if(box)box.innerHTML='';
 }
 
 const courseEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -168,7 +165,6 @@ function courseText(value){
 function renderHome(){
  renderHomeResume();
  renderHomeDashboard();
- renderLearningPath('homeLearningPath');
  renderLearningPath('learningPath');
  if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
  renderModuleGrid();
