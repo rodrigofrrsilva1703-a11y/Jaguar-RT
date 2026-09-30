@@ -657,7 +657,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 #tools #revenueToolPanel #revKpis .integrated-kpi:nth-child(4){order:4}
 #tools #revenueToolPanel #revKpis b{font-size:clamp(19px,2.1vw,28px);line-height:1.2;margin:9px 0 6px;overflow-wrap:anywhere}
 #tools #revenueToolPanel #revKpis small,#tools #revenueToolPanel #revKpis span{font-size:10px;line-height:1.5}
-#tools #revenueToolPanel .tax-compare-grid{gap:16px;align-items:start}
+#tools #revenueToolPanel .tax-compare-grid{gap:16px;align-items:stretch}
 #tools #revenueToolPanel .tax-summary-card{padding:20px;border-radius:16px}
 #tools #revenueToolPanel .tax-summary-card.reform{background:#fff;color:#111;border-color:#d9d8d2;border-top:3px solid #111}
 #tools #revenueToolPanel .tax-summary-card.current{border-top:3px solid #b7b7b0}
@@ -666,7 +666,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 #tools #revenueToolPanel .tax-summary-row b{font-size:13px;white-space:nowrap;line-height:1.5}
 #tools #revenueToolPanel .tax-summary-row:last-child{margin-top:4px;padding-top:16px;border-top:1px solid #d9d8d2}
 #tools #revenueToolPanel .tax-summary-row:last-child span{font-weight:700;color:#111}
-#tools #revenueToolPanel .integrated-explanation{background:transparent;border:0;padding:16px 0;margin-top:8px;box-shadow:none;font-size:12px;line-height:1.7}
+#tools #revenueToolPanel .integrated-explanation{background:transparent;color:#111;border:0;padding:16px 0;margin-top:8px;box-shadow:none;font-size:12px;line-height:1.7}
+#tools #revenueToolPanel .integrated-explanation p{color:#686868}
+#tools #revenueToolPanel .integrated-explanation strong{color:#111}
 #tools #revenueToolPanel .yearly-analysis{margin-top:28px}
 #tools #revenueToolPanel .yearly-subtitle{font-size:11px;text-align:left;margin-top:6px}
 #tools #revenueToolPanel #revYearStrip{gap:6px;margin:18px 0 12px}
@@ -683,6 +685,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 #tools #revenueToolPanel .revenue-chart-details{margin:14px 0}
 #tools #revenueToolPanel .revenue-chart-details .chart-card{border:0;box-shadow:none;padding:16px 0 0;margin:0}
 #tools #revenueToolPanel .revenue-year-table{min-width:660px!important}
+#tools #revenueToolPanel .revenue-year-table th:first-child,#tools #revenueToolPanel .revenue-year-table td:first-child{min-width:70px;width:70px;text-align:left}
+#tools #revenueToolPanel .revenue-year-table tr.selected-year td{background:#e8e8e2;color:#111;border-bottom-color:#d9d8d2}
 @media(max-width:1000px){#tools #revenueToolPanel #revKpis{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){
  #tools #revenueToolPanel .integrated-results{padding:16px}
