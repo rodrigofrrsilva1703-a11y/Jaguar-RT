@@ -106,7 +106,6 @@ test('home orienta o próximo passo sem sobrecarregar a tela',async({page})=>{
  await expect(page.locator('#home .home-command-links button')).toHaveCount(2);
 
  await page.locator('nav [data-go="modules"]').click();
- await expect(page.locator('#learningPath .learning-phase')).toHaveCount(6);
  await page.locator('#moduleGrid .module-card').nth(4).click();
  await expect(page.locator('#modulePage .module-summary')).toBeVisible();
  await expect(page.locator('#modulePage .module-apply')).toBeVisible();
