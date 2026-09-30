@@ -1,5 +1,1177 @@
-// Banco revisado pelo usuário em três arquivos; IDs e gabaritos preservados.
+// Banco de questões alinhado aos 16 módulos do curso Jaguar-RTAV.
 const QUIZ_BANK = {
+  "10": {
+    "m": [
+      [
+        "Qual tributo continua relevante na comparação Lucro Presumido x Real?",
+        [
+          "IRPJ e CSLL",
+          "Somente IBS",
+          "Apenas ISS",
+          "Nenhum tributo"
+        ],
+        0,
+        "O regime de renda ainda diferencia as opções."
+      ],
+      [
+        "No regime regular de consumo, LP e LR seguem qual lógica geral?",
+        [
+          "Apuração de IBS/CBS com créditos legais",
+          "DAS unificado",
+          "Isenção geral de IBS",
+          "Só ICMS antigo"
+        ],
+        0,
+        "A diferença de IRPJ/CSLL permanece separada."
+      ],
+      [
+        "Qual base é usada no exemplo de presunção do Lucro Presumido?",
+        [
+          "Percentual legal sobre receita enquadrada",
+          "Toda compra da empresa",
+          "Somente saldo bancário",
+          "Crédito de IBS"
+        ],
+        0,
+        "A base presumida depende da atividade e regras legais."
+      ],
+      [
+        "O que deve ser separado em uma comparação de regimes?",
+        [
+          "Tributos sobre renda e sobre consumo",
+          "Somente saldo de clientes",
+          "Folha e patrimônio sem receitas",
+          "Preço e código postal"
+        ],
+        0,
+        "A escolha de regime não se resume à CBS/IBS."
+      ],
+      [
+        "A LC 224 é examinada no curso por qual possível efeito?",
+        [
+          "Alteração em percentuais de presunção sob condições legais",
+          "Extinção do IBS",
+          "Criação do ISS nacional",
+          "Fim da CBS"
+        ],
+        0,
+        "O módulo discute os reflexos na base presumida."
+      ]
+    ],
+    "c": [
+      [
+        "Uma clínica no Lucro Presumido informa que a reforma mudou IBS/CBS, mas quer saber se IRPJ e CSLL desapareceram.",
+        "Qual resposta orienta a análise?",
+        [
+          "IRPJ/CSLL continuam e devem ser avaliados separadamente",
+          "CBS substitui automaticamente IRPJ",
+          "IBS substitui CSLL",
+          "Só resta o DAS"
+        ],
+        0,
+        "Tributos sobre renda não são substituídos pelo IVA dual."
+      ],
+      [
+        "Uma empresa tem margem efetiva diferente da base presumida e considera migrar para o Lucro Real.",
+        "Que informação é essencial na comparação?",
+        [
+          "Lucro, base de IRPJ/CSLL e efeitos de créditos",
+          "Somente a CBS nominal",
+          "Só o endereço do cliente",
+          "A cor da DRE"
+        ],
+        0,
+        "A escolha requer análise econômica e fiscal ampla."
+      ],
+      [
+        "Comércio e serviços possuem atividades distintas, mas a planilha usa um único percentual de presunção.",
+        "Qual revisão é necessária?",
+        [
+          "Identificar percentuais aplicáveis por atividade",
+          "Manter a taxa única sempre",
+          "Aplicar IBS no lugar da presunção",
+          "Ignorar a receita"
+        ],
+        0,
+        "A presunção depende do enquadramento legal da atividade."
+      ],
+      [
+        "Duas empresas, uma no Presumido e outra no Real, compram insumo creditável no regime regular de IBS/CBS.",
+        "Qual ideia não deve ser confundida?",
+        [
+          "Regime de renda e regras de crédito de consumo são análises distintas",
+          "Só o Real pode ter qualquer crédito de IBS/CBS",
+          "O Presumido é o DAS",
+          "O crédito de IBS é IRPJ"
+        ],
+        0,
+        "A forma de apurar IRPJ não elimina por si a lógica regular de IBS/CBS."
+      ],
+      [
+        "O consultor apresenta comparação LP x LR baseada apenas em 27,91% de IBS/CBS didáticos.",
+        "Qual dimensão foi omitida?",
+        [
+          "Apuração de IRPJ/CSLL, margens e condições legais",
+          "Apenas o logotipo",
+          "Só o CNPJ do contador",
+          "A cor da nota"
+        ],
+        0,
+        "A comparação de regimes precisa incluir tributos sobre renda."
+      ]
+    ],
+    "v": [
+      [
+        "O Lucro Presumido e o Lucro Real são idênticos em IRPJ/CSLL.",
+        false,
+        "As formas de apuração de renda diferem."
+      ],
+      [
+        "O tratamento de IBS/CBS deve ser separado da apuração de IRPJ/CSLL.",
+        true,
+        "São dimensões tributárias diferentes."
+      ],
+      [
+        "A escolha entre LP e LR pode depender de margem efetiva e créditos aplicáveis.",
+        true,
+        "A análise econômica é integrada."
+      ],
+      [
+        "O percentual de presunção é sempre o mesmo para toda atividade.",
+        false,
+        "Depende da atividade e regra legal."
+      ],
+      [
+        "Uma mudança legal na presunção deve ser considerada na simulação.",
+        true,
+        "O módulo discute essa hipótese."
+      ],
+      [
+        "A CBS substitui diretamente o IRPJ no Lucro Presumido.",
+        false,
+        "CBS é tributo de consumo, IRPJ de renda."
+      ],
+      [
+        "É útil comparar bases e carga de IRPJ/CSLL de ambos regimes.",
+        true,
+        "A escolha não se resolve apenas pelo IVA."
+      ],
+      [
+        "Lucro Real é sempre mais barato independentemente dos dados.",
+        false,
+        "A resposta depende das condições da empresa."
+      ],
+      [
+        "Lucro Presumido impede toda apropriação de crédito no regime regular de IBS/CBS.",
+        false,
+        "A lógica de crédito de consumo pode se aplicar."
+      ],
+      [
+        "A receita e o enquadramento da atividade influenciam a base presumida.",
+        true,
+        "São dados essenciais do cálculo."
+      ]
+    ],
+    "contexts": {
+      "m": [
+        "Um cliente compara Lucro Presumido e Lucro Real para planejar o próximo exercício.",
+        "Duas empresas fora do Simples apuram IBS/CBS sobre operações equivalentes.",
+        "Um prestador estima base de IRPJ a partir da receita e da atividade.",
+        "A planilha mistura efeitos sobre lucro com os tributos incidentes no consumo.",
+        "O escritório estuda como uma regra de presunção pode afetar a base de cálculo."
+      ],
+      "v": [
+        "Uma diretoria compara os dois regimes para IRPJ e CSLL.",
+        "O cliente analisa uma DRE junto à apuração de IBS/CBS.",
+        "Uma empresa tem margem diferente da presumida e precisa simular alternativas.",
+        "O analista usa um percentual de presunção único para serviços e comércio.",
+        "Uma nova regra pode mudar a base de cálculo em situações específicas.",
+        "O comercial sugere descontar CBS como se fosse IRPJ.",
+        "O contador prepara cenários de apuração de renda.",
+        "O cliente afirma que basta comparar as alíquotas do IVA.",
+        "Uma empresa escolhe Lucro Real sem examinar margem e créditos.",
+        "Um prestador no Presumido pergunta sobre créditos de IBS/CBS."
+      ]
+    }
+  },
+  "11": {
+    "m": [
+      [
+        "Qual é a função central do DF-e na reforma?",
+        [
+          "Registrar dados fiscais da operação",
+          "Substituir toda contabilidade",
+          "Determinar o lucro sozinho",
+          "Dispensar classificação fiscal"
+        ],
+        0,
+        "O documento alimenta a apuração e a conferência."
+      ],
+      [
+        "O que é apuração assistida?",
+        [
+          "Proposta de apuração apoiada nos documentos eletrônicos",
+          "Cálculo sem documentos",
+          "Uma conta bancária obrigatória",
+          "Um anexo do Simples"
+        ],
+        0,
+        "O contribuinte precisa revisar os dados."
+      ],
+      [
+        "Por que revisar NCM/NBS e cadastros?",
+        [
+          "Para evitar tratamento fiscal incorreto",
+          "Para alterar o nome da empresa",
+          "Para gerar IRPJ automaticamente",
+          "Para eliminar fornecedores"
+        ],
+        0,
+        "Classificação interfere em alíquota e enquadramento."
+      ],
+      [
+        "Qual rotina reduz divergências na apuração assistida?",
+        [
+          "Conferir XMLs emitidos e recebidos",
+          "Ignorar notas rejeitadas",
+          "Somar apenas extratos",
+          "Conferir só no fim do ano"
+        ],
+        0,
+        "A qualidade da origem dos dados é decisiva."
+      ],
+      [
+        "A apuração proposta pelo Fisco dispensa o contribuinte de revisão?",
+        [
+          "Não",
+          "Sim, sempre",
+          "Só no Lucro Real",
+          "Somente para compras"
+        ],
+        0,
+        "A conferência continua necessária."
+      ]
+    ],
+    "c": [
+      [
+        "Um XML de compra aparece no ERP, mas a autorização fiscal não foi confirmada.",
+        "Qual passo deve preceder o uso do documento na conferência de créditos?",
+        [
+          "Verificar validade/autorização e dados fiscais",
+          "Creditar imediatamente sem exame",
+          "Apagar a nota do fornecedor",
+          "Usar só o extrato"
+        ],
+        0,
+        "A qualidade do documento é requisito da apuração."
+      ],
+      [
+        "Uma mercadoria foi cadastrada em NCM incorreta e a nota usa tratamento reduzido.",
+        "Qual risco a equipe deve avaliar?",
+        [
+          "Alíquota e crédito calculados a partir de classificação inadequada",
+          "Apenas alteração do nome fantasia",
+          "Fim automático do IRPJ",
+          "Nenhum efeito fiscal"
+        ],
+        0,
+        "A classificação fiscal afeta o enquadramento."
+      ],
+      [
+        "O saldo proposto pela apuração assistida difere do controle de notas do escritório.",
+        "Qual ação é mais adequada?",
+        [
+          "Conciliar documentos e retificar dados necessários",
+          "Aceitar sem revisão",
+          "Comparar apenas extrato bancário",
+          "Ignorar notas recebidas"
+        ],
+        0,
+        "A proposta deve ser conferida pelo contribuinte."
+      ],
+      [
+        "Uma empresa emite notas sem preencher corretamente dados do adquirente e do item.",
+        "Qual melhoria previne erros futuros?",
+        [
+          "Saneamento cadastral antes da emissão",
+          "Corrigir só a DRE anual",
+          "Alterar a alíquota manualmente em todas as notas",
+          "Deixar o campo em branco"
+        ],
+        0,
+        "Corrigir os dados na origem melhora a apuração."
+      ],
+      [
+        "O escritório possui notas de saída e entrada autorizadas, mas não as cruza.",
+        "Qual controle simples é útil?",
+        [
+          "Reconciliar débitos, créditos e XMLs do período",
+          "Somar apenas receitas no banco",
+          "Excluir entradas da análise",
+          "Dispensar classificação"
+        ],
+        0,
+        "O cruzamento revela divergências da apuração assistida."
+      ]
+    ],
+    "v": [
+      [
+        "Documento fiscal eletrônico confiável é importante para débito e crédito.",
+        true,
+        "Os dados alimentam a apuração."
+      ],
+      [
+        "Erro de cadastro pode levar a alíquota ou tratamento incorreto.",
+        true,
+        "A classificação fiscal é relevante."
+      ],
+      [
+        "Apuração assistida elimina a necessidade de auditoria pelo contribuinte.",
+        false,
+        "A revisão é essencial."
+      ],
+      [
+        "Apenas o extrato bancário substitui integralmente o XML fiscal.",
+        false,
+        "As informações têm funções distintas."
+      ],
+      [
+        "NCM e NBS podem ser relevantes no enquadramento de itens.",
+        true,
+        "Servem à classificação da operação."
+      ],
+      [
+        "Uma nota rejeitada deve ser tratada como documento autorizado sem revisão.",
+        false,
+        "A autorização precisa ser verificada."
+      ],
+      [
+        "Saneamento de cadastro antes da emissão pode prevenir divergências.",
+        true,
+        "É uma medida de conformidade."
+      ],
+      [
+        "A conferência pode comparar documentos emitidos e recebidos.",
+        true,
+        "O cruzamento revela inconsistências."
+      ],
+      [
+        "Todos os itens têm sempre alíquota idêntica independentemente da classificação.",
+        false,
+        "Há regimes e reduções específicos."
+      ],
+      [
+        "É preciso acompanhar leiautes e cronogramas oficiais dos documentos.",
+        true,
+        "Regras operacionais podem mudar."
+      ]
+    ],
+    "contexts": {
+      "m": [
+        "O ERP emite NF-e e NFS-e que alimentam os dados de apuração dos novos tributos.",
+        "Um cliente recebe proposta de apuração calculada a partir de documentos fiscais.",
+        "O cadastro de produtos contém NCM e descrições incompletas.",
+        "O escritório identifica diferença entre notas emitidas e recebidas no mês.",
+        "A declaração preliminar apresenta saldo que não coincide com o controle interno."
+      ],
+      "v": [
+        "Uma empresa confere uma nota autorizada antes de registrar o crédito.",
+        "Um item foi cadastrado na classificação errada.",
+        "O sistema oferece apuração assistida, e o gerente cogita não conferir nada.",
+        "A tesouraria possui extrato bancário, mas não localiza alguns XMLs.",
+        "O setor fiscal revisa classificações de mercadorias e serviços.",
+        "Um fornecedor enviou arquivo fiscal cuja autorização ainda não foi confirmada.",
+        "A equipe saneia cadastros antes de transmitir novos documentos.",
+        "O responsável compara o conjunto de notas de entrada e saída.",
+        "O ERP sugere tratamento idêntico para itens de regimes distintos.",
+        "O escritório acompanha comunicados de leiaute e prazos oficiais."
+      ]
+    }
+  },
+  "12": {
+    "m": [
+      [
+        "O que descreve o split payment?",
+        [
+          "Segregação do tributo na liquidação financeira conforme regras aplicáveis",
+          "Parcelamento obrigatório de IRPJ",
+          "Desconto comercial do fornecedor",
+          "Crédito automático de folha"
+        ],
+        0,
+        "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação."
+      ],
+      [
+        "Quais três fontes aparecem na conciliação do módulo?",
+        [
+          "Documento fiscal, relatório financeiro e extrato bancário",
+          "DRE, currículo e contrato social",
+          "Folha, estoque e aluguel",
+          "Somente comprovante Pix"
+        ],
+        0,
+        "A conciliação cruza obrigação, retenção/taxa e caixa."
+      ],
+      [
+        "Uma venda de R$ 12.791 com tributos de R$ 2.791 e taxa de R$ 255,82 gera qual líquido, no exemplo?",
+        [
+          "R$ 9.744,18",
+          "R$ 10.000,00",
+          "R$ 12.791,00",
+          "R$ 9.488,36"
+        ],
+        0,
+        "12.791 − 2.791 − 255,82 = 9.744,18."
+      ],
+      [
+        "Por que a empresa precisa revisar seu fluxo de caixa?",
+        [
+          "O tributo pode ser segregado na liquidação",
+          "A receita bruta sempre aumenta",
+          "O custo de estoque some",
+          "IRPJ deixa de existir"
+        ],
+        0,
+        "A disponibilidade imediata de caixa pode mudar."
+      ],
+      [
+        "Qual divergência deve ser investigada?",
+        [
+          "Nota, retenção, taxa e crédito bancário não reconciliam",
+          "A nota tem data de emissão",
+          "Existe cliente identificado",
+          "A venda ocorreu no cartão"
+        ],
+        0,
+        "A trilha financeira precisa fechar."
+      ]
+    ],
+    "c": [
+      [
+        "Nota de venda: R$ 12.791. Na liquidação, o exemplo considera R$ 2.791 de tributos segregados e R$ 255,82 de taxa.",
+        "Quanto deve aparecer como crédito líquido no banco?",
+        [
+          "R$ 9.744,18",
+          "R$ 10.000",
+          "R$ 12.535,18",
+          "R$ 12.791"
+        ],
+        0,
+        "12.791 − 2.791 − 255,82 = 9.744,18."
+      ],
+      [
+        "A credenciadora informa retenção tributária e taxa de cartão no mesmo relatório.",
+        "Como a contabilidade deve tratar esses valores?",
+        [
+          "Separar baixa do tributo e despesa da taxa",
+          "Registrar tudo como CBS",
+          "Tratar tudo como faturamento novo",
+          "Ignorar o extrato"
+        ],
+        0,
+        "A retenção e a taxa têm naturezas diferentes."
+      ],
+      [
+        "O XML registra R$ 5.000, mas o relatório de liquidação e o crédito bancário não fecham após taxas e tributos.",
+        "Qual ação vem primeiro?",
+        [
+          "Conciliar cada componente e investigar a diferença",
+          "Ajustar o banco para igualar a nota sem evidência",
+          "Excluir o XML",
+          "Considerar todo valor como desconto"
+        ],
+        0,
+        "A conciliação tripla localiza a diferença."
+      ],
+      [
+        "Uma venda foi faturada hoje, mas o cartão liquida dois dias depois.",
+        "Qual conta ajuda a acompanhar o intervalo?",
+        [
+          "Clientes/adquirente a receber",
+          "IRPJ a recuperar por padrão",
+          "Estoque em trânsito",
+          "Somente caixa imediato"
+        ],
+        0,
+        "O recebível liga a nota à liquidação futura."
+      ],
+      [
+        "Com parte do tributo segregada na liquidação, o cliente pergunta por que entrou menos dinheiro no banco.",
+        "Que relatório explica o fluxo?",
+        [
+          "Nota, retenção, taxa e valor líquido conciliados",
+          "Somente o total da nota",
+          "Apenas a DRE do ano",
+          "Só a cotação do dólar"
+        ],
+        0,
+        "É preciso decompor o valor bruto até o crédito bancário."
+      ]
+    ],
+    "v": [
+      [
+        "Split payment pode alterar o valor líquido que entra no banco.",
+        true,
+        "Tributos podem ser segregados na liquidação."
+      ],
+      [
+        "O relatório da adquirente pode incluir taxas além da retenção tributária.",
+        true,
+        "Esses componentes precisam ser separados."
+      ],
+      [
+        "O extrato bancário isolado demonstra todos os valores da nota.",
+        false,
+        "É necessário conciliar com documento e relatório financeiro."
+      ],
+      [
+        "Uma retenção de IBS/CBS pode requerer baixa do passivo correspondente.",
+        true,
+        "A contabilidade deve acompanhar a liquidação."
+      ],
+      [
+        "No exemplo do curso, R$ 12.791 menos R$ 2.791 menos R$ 255,82 é R$ 9.744,18.",
+        true,
+        "A reconciliação aritmética fecha."
+      ],
+      [
+        "O adquirente no regime regular é sempre obrigado a recolher IBS/CBS quando o instrumento de pagamento não permitir split payment.",
+        false,
+        "Falso. O art. 36 prevê que, nas condições legais, o adquirente poderá optar pelo recolhimento; não é uma obrigação automática em toda operação."
+      ],
+      [
+        "Diferenças de centavos na conciliação devem ser ignoradas sempre.",
+        false,
+        "Precisam ser identificadas e tratadas."
+      ],
+      [
+        "A nota fiscal e a liquidação podem ocorrer em momentos diferentes.",
+        true,
+        "Por isso há controle de valores a receber."
+      ],
+      [
+        "O mecanismo de split payment dispensa toda apuração de IBS/CBS.",
+        false,
+        "A apuração e conciliação continuam necessárias."
+      ],
+      [
+        "A implantação exige acompanhar as regras e o cronograma aplicável.",
+        true,
+        "O mecanismo não deve ser presumido idêntico para toda operação."
+      ]
+    ],
+    "contexts": {
+      "m": [
+        "Uma venda no cartão terá liquidação financeira com possível segregação de IBS/CBS.",
+        "O contador precisa fechar valores entre nota, relatório da credenciadora e banco.",
+        "No exemplo do curso, uma nota totaliza R$ 12.791, com tributos e taxa de cartão informados.",
+        "A empresa costumava usar o valor integral das vendas até o recolhimento mensal.",
+        "Uma conciliação mostra valores distintos no XML, no relatório de cartão e no extrato."
+      ],
+      "v": [
+        "Um cliente acompanha o valor que realmente entrou na conta após a venda.",
+        "A adquirente apresenta retenção tributária e taxa de serviço em linhas próprias.",
+        "A equipe olha apenas o crédito bancário, sem consultar a nota.",
+        "Após uma retenção na liquidação, o passivo fiscal precisa ser conferido.",
+        "O exemplo do módulo mostra nota, tributos, taxa e valor líquido no banco.",
+        "O financeiro registra uma taxa de cartão e uma CBS da mesma venda.",
+        "Ao fechar o mês, há diferença de centavos no relatório da adquirente.",
+        "A emissão da nota e o pagamento do cliente ocorrem em dias diferentes.",
+        "O gerente acha que retenção financeira elimina qualquer conferência tributária.",
+        "Uma implantação do split payment será feita por etapas e regras aplicáveis."
+      ]
+    }
+  },
+  "13": {
+    "m": [
+      [
+        "Qual é o primeiro passo de uma consultoria tributária baseada em dados?",
+        [
+          "Diagnóstico das operações e dados do cliente",
+          "Aplicar 27,91% a tudo",
+          "Trocar de regime sem análise",
+          "Apagar histórico fiscal"
+        ],
+        0,
+        "É preciso conhecer operações, compras, vendas e enquadramentos."
+      ],
+      [
+        "Qual benefício da automação em dados fiscais?",
+        [
+          "Reduzir retrabalho e localizar divergências",
+          "Eliminar responsabilidade profissional",
+          "Substituir toda legislação",
+          "Garantir crédito de qualquer nota"
+        ],
+        0,
+        "Automação ajuda na conferência, sob supervisão."
+      ],
+      [
+        "Qual indicador ajuda a medir impacto da reforma?",
+        [
+          "Custo efetivo de compras e margem por cenário",
+          "Somente número de funcionários",
+          "Cor do dashboard",
+          "Quantidade de logotipos"
+        ],
+        0,
+        "Créditos, preços e margem conectam regra e negócio."
+      ],
+      [
+        "O que deve constar de um plano de ação para clientes?",
+        [
+          "Responsáveis, dados, prazos e validações",
+          "Apenas um slogan",
+          "Uma alíquota única sem premissas",
+          "Só nome do contador"
+        ],
+        0,
+        "O plano transforma diagnóstico em execução."
+      ],
+      [
+        "Como apresentar uma simulação ao cliente?",
+        [
+          "Com premissas, resultado e limitações explícitas",
+          "Como garantia de imposto futuro",
+          "Sem memória de cálculo",
+          "Apenas com porcentagem final"
+        ],
+        0,
+        "A transparência permite revisão e decisão informada."
+      ]
+    ],
+    "c": [
+      [
+        "Um escritório atende comércio, indústria e serviços; quer priorizar revisão da reforma.",
+        "Qual diagnóstico inicial é mais útil?",
+        [
+          "Mapear operações, regimes, compras, vendas e dados fiscais",
+          "Aplicar uma alíquota única a todos",
+          "Escolher só o maior faturamento",
+          "Excluir clientes do Simples"
+        ],
+        0,
+        "O diagnóstico precede a recomendação."
+      ],
+      [
+        "A equipe recebe 10 mil XMLs e detecta centenas de classificações inconsistentes.",
+        "Qual papel adequado da automação?",
+        [
+          "Triar divergências e encaminhar exceções para revisão",
+          "Aprovar todo crédito sem auditoria",
+          "Substituir a lei",
+          "Ocultar os dados de origem"
+        ],
+        0,
+        "A automação reduz retrabalho, mas não substitui julgamento."
+      ],
+      [
+        "Uma carteira tem empresas com grandes compras B2B e outras só vendem a consumidores finais.",
+        "Qual indicador ajuda a segmentar a análise?",
+        [
+          "Créditos potenciais, custo efetivo e perfil dos clientes",
+          "Apenas número de notas",
+          "Só idade do sócio",
+          "Uma taxa nominal para todos"
+        ],
+        0,
+        "O impacto depende das cadeias de aquisição e venda."
+      ],
+      [
+        "Um relatório lista 20 melhorias, mas não informa quem fará cada uma nem até quando.",
+        "O que falta no plano de ação?",
+        [
+          "Responsáveis, prazos e critérios de validação",
+          "Uma capa mais colorida",
+          "Mais siglas sem definição",
+          "Só o nome da reforma"
+        ],
+        0,
+        "Execução requer dono, prazo e evidência."
+      ],
+      [
+        "O cliente recebeu simulação com alíquota didática, mas vai tomar decisão contratual real.",
+        "O que o contador deve explicitar?",
+        [
+          "Premissas, limitações e dados a validar na operação concreta",
+          "Que o resultado é garantido",
+          "Que não existe risco de mudança",
+          "Somente a porcentagem final"
+        ],
+        0,
+        "Cenários educacionais precisam de enquadramento antes do uso prático."
+      ]
+    ],
+    "v": [
+      [
+        "Um diagnóstico deve mapear compras, vendas, regime e documentos.",
+        true,
+        "São insumos da análise consultiva."
+      ],
+      [
+        "Automação dispensa a revisão humana de exceções fiscais.",
+        false,
+        "A supervisão continua necessária."
+      ],
+      [
+        "Comparar custo efetivo e margem ajuda a priorizar clientes.",
+        true,
+        "Mostra onde o impacto pode ser maior."
+      ],
+      [
+        "Todo cliente deve receber a mesma conclusão sem examinar seus dados.",
+        false,
+        "As operações e enquadramentos variam."
+      ],
+      [
+        "Um plano de ação útil contém responsáveis e prazos.",
+        true,
+        "Isso torna as tarefas executáveis."
+      ],
+      [
+        "Premissas da simulação devem ser documentadas.",
+        true,
+        "Permite auditoria e atualização."
+      ],
+      [
+        "O relatório final deve omitir limitações para parecer mais seguro.",
+        false,
+        "Limitações precisam ser claras."
+      ],
+      [
+        "A conferência de dados cadastrais faz parte da preparação.",
+        true,
+        "Qualidade de origem afeta os resultados."
+      ],
+      [
+        "A decisão sobre regime pode ser tomada só pela alíquota nominal.",
+        false,
+        "Créditos, margem, atividade e clientes importam."
+      ],
+      [
+        "O contador pode usar cenários para discutir efeitos com o cliente.",
+        true,
+        "Cenários apoiam planejamento fundamentado."
+      ]
+    ],
+    "contexts": {
+      "m": [
+        "O escritório quer oferecer diagnóstico da reforma a um cliente com vários tipos de operações.",
+        "Um contador recebe muitos XMLs e extratos e procura automatizar a conferência.",
+        "Uma carteira de clientes possui margens e perfis de fornecedores distintos.",
+        "A equipe precisa transformar o diagnóstico em tarefas com responsáveis.",
+        "Uma reunião apresenta ao cliente projeções de custo e tributação futura."
+      ],
+      "v": [
+        "Antes de propor medidas, o contador recebe documentos de compras e vendas.",
+        "Uma rotina automática identifica operações classificadas como exceção.",
+        "O escritório busca ordenar o atendimento por possível impacto econômico.",
+        "Uma apresentação pretende aplicar a mesma solução a toda a carteira.",
+        "O gestor monta cronograma para saneamento de cadastros e simulações.",
+        "A planilha contém percentuais usados em cenários de estudo.",
+        "O relatório inclui premissas que podem mudar no futuro.",
+        "Um consultor revisa um documento antes de entregá-lo ao cliente.",
+        "Há erros recorrentes nos cadastros de produtos.",
+        "A diretoria escolhe regime tributário com base em uma única taxa nominal."
+      ]
+    }
+  },
+  "14": {
+    "m": [
+      [
+        "Ao final do período, uma empresa apura mais créditos de CBS do que débitos. Qual tratamento é compatível com a LC 214/2025?",
+        [
+          "O saldo a recuperar pode ser mantido para compensação futura ou, observadas as regras, ser objeto de pedido de ressarcimento.",
+          "O saldo deve obrigatoriamente ser usado para pagar ICMS.",
+          "O saldo é perdido no encerramento do mês.",
+          "O saldo deve ser convertido automaticamente em crédito de IBS."
+        ],
+        0,
+        "A LC 214/2025 permite ressarcimento integral ou parcial; o valor não pedido permanece como crédito para utilização posterior."
+      ],
+      [
+        "Qual diferença básica existe entre ressarcimento e restituição?",
+        [
+          "Ressarcimento se relaciona ao saldo a recuperar da apuração; restituição, em regra, trata de valor pago indevidamente ou a maior.",
+          "São expressões idênticas em qualquer situação.",
+          "Ressarcimento é exclusivo de ICMS e restituição de IBS.",
+          "Restituição só existe para pessoa física."
+        ],
+        0,
+        "A origem do valor define o procedimento. Saldo credor de apuração e pagamento indevido não são a mesma situação."
+      ],
+      [
+        "O que deve ocorrer quando uma devolução comercial altera uma operação que já gerou débito e crédito?",
+        [
+          "Devem ser avaliados os ajustes correspondentes no débito do fornecedor e no crédito do adquirente, com rastreabilidade documental.",
+          "Nada muda porque a nota original já foi emitida.",
+          "O crédito do adquirente sempre permanece integral.",
+          "O fornecedor deve alterar somente o extrato bancário."
+        ],
+        0,
+        "Devoluções e cancelamentos podem exigir ajustes fiscais e devem permanecer vinculados ao documento original."
+      ],
+      [
+        "O cashback de IBS/CBS criado pela Reforma é, principalmente:",
+        [
+          "Uma devolução personalizada voltada a famílias de baixa renda que atendam aos requisitos legais.",
+          "Um crédito adicional de 27,91% para todas as empresas.",
+          "Um desconto automático de IRPJ.",
+          "Um crédito exclusivo para exportadores."
+        ],
+        0,
+        "O cashback é destinado a pessoas físicas integrantes de famílias de baixa renda conforme os requisitos da LC 214/2025."
+      ],
+      [
+        "Uma empresa possui R$ 12.000 de saldo credor de CBS. Qual atitude é inadequada?",
+        [
+          "Usar o saldo automaticamente para reduzir ICMS remanescente sem fundamento legal.",
+          "Manter controle segregado da CBS.",
+          "Avaliar pedido de ressarcimento conforme as regras.",
+          "Conferir os documentos que originaram o saldo."
+        ],
+        0,
+        "Créditos de CBS não devem ser usados indiscriminadamente para extinguir tributos de natureza distinta."
+      ]
+    ],
+    "v": [
+      [
+        "Saldo credor de CBS e saldo credor de IBS devem ser controlados separadamente.",
+        true,
+        "A apuração e o controle dos dois tributos possuem contas próprias."
+      ],
+      [
+        "Todo saldo credor precisa ser obrigatoriamente ressarcido em dinheiro no mesmo mês.",
+        false,
+        "O contribuinte pode manter saldo para períodos seguintes, conforme as regras."
+      ],
+      [
+        "Um pedido de ressarcimento pode ser integral ou parcial.",
+        true,
+        "A LC 214/2025 admite as duas possibilidades."
+      ],
+      [
+        "Restituição e ressarcimento são sempre sinônimos.",
+        false,
+        "A origem do valor e o fundamento do pedido são diferentes."
+      ],
+      [
+        "Devoluções e cancelamentos podem exigir ajuste do crédito do adquirente.",
+        true,
+        "A operação posterior pode modificar os efeitos fiscais da operação original."
+      ],
+      [
+        "Cashback é crédito empresarial de IBS/CBS.",
+        false,
+        "É mecanismo de devolução voltado ao beneficiário pessoa física de baixa renda."
+      ],
+      [
+        "O responsável pela unidade familiar deve atender às condições legais do cashback.",
+        true,
+        "A LC 214/2025 estabelece requisitos para o destinatário da devolução."
+      ],
+      [
+        "Saldo credor de CBS pode ser usado automaticamente para quitar Imposto Seletivo.",
+        false,
+        "Não existe compensação automática entre esses tributos."
+      ],
+      [
+        "A origem documental dos créditos deve ser conciliada antes de solicitar ressarcimento.",
+        true,
+        "Rastreabilidade é essencial para justificar o saldo."
+      ],
+      [
+        "Um cancelamento fiscal pode ser tratado apenas como movimento bancário, sem reflexo na apuração.",
+        false,
+        "Documento, débito e crédito precisam ser avaliados em conjunto."
+      ]
+    ],
+    "contexts": {
+      "m": [
+        "Uma empresa encerra o mês com créditos de CBS maiores que os débitos.",
+        "O cliente pagou um tributo em duplicidade e pergunta qual procedimento adotar.",
+        "Uma venda foi devolvida depois de ter gerado débito e crédito.",
+        "Uma família pergunta sobre a devolução personalizada da Reforma.",
+        "O balancete fiscal mostra saldo credor, ICMS remanescente e Imposto Seletivo."
+      ],
+      "v": [
+        "A equipe confere contas de CBS e IBS no fechamento.",
+        "O cliente quer receber todo crédito no mesmo dia.",
+        "O pedido foi feito apenas sobre parte do saldo.",
+        "A empresa pagou valor que entende ser indevido.",
+        "Uma nota de devolução foi emitida no mês seguinte.",
+        "Uma pessoa confunde cashback com crédito da empresa.",
+        "O sistema cadastral identifica o responsável familiar.",
+        "A empresa possui saldo credor e também débito de IS.",
+        "O contador revisa XMLs que originaram créditos.",
+        "O financeiro estornou uma venda, mas o fiscal ainda não tratou o documento."
+      ]
+    }
+  },
+  "15": {
+    "m": [
+      [
+        "Na importação de bens materiais, a base do IBS/CBS pode incluir:",
+        [
+          "O valor aduaneiro e os acréscimos previstos em lei, como Imposto de Importação e Imposto Seletivo quando aplicáveis.",
+          "Somente o valor da mercadoria sem qualquer acréscimo.",
+          "Apenas o frete nacional após o desembaraço.",
+          "Somente a margem de lucro do importador."
+        ],
+        0,
+        "A LC 214/2025 estabelece uma base própria para importações, formada pelo valor aduaneiro acrescido das parcelas legalmente previstas."
+      ],
+      [
+        "Em regra, as alíquotas de IBS/CBS na importação de um bem material:",
+        [
+          "Acompanham as aplicáveis à aquisição do bem correspondente no País, observadas regras específicas.",
+          "São sempre zero.",
+          "São definidas pelo país exportador.",
+          "Correspondem sempre a 27,91%, sem exceções."
+        ],
+        0,
+        "A lei busca neutralidade entre o produto importado e o equivalente adquirido internamente, ressalvados tratamentos específicos."
+      ],
+      [
+        "Qual afirmação descreve melhor o tratamento das exportações?",
+        [
+          "A legislação busca desonerar a exportação e exige comprovação e procedimentos adequados para os tratamentos condicionados.",
+          "Toda exportação paga IBS e CBS integralmente sem possibilidade de crédito.",
+          "A exportação elimina automaticamente qualquer obrigação documental.",
+          "A exportação é tratada como venda interna para o destino da sede."
+        ],
+        0,
+        "A desoneração das exportações convive com requisitos de comprovação, documentação e controle de créditos."
+      ],
+      [
+        "Por que uma operação com Zona Franca de Manaus não deve ser calculada automaticamente pela regra doméstica padrão?",
+        [
+          "Porque pode envolver suspensão, isenção, alíquota zero, crédito presumido e requisitos de habilitação e ingresso.",
+          "Porque a ZFM não está sujeita a qualquer legislação tributária.",
+          "Porque toda operação com a ZFM é exportação.",
+          "Porque somente municípios definem o tratamento."
+        ],
+        0,
+        "A LC 214/2025 preserva tratamentos próprios para a ZFM e exige análise do enquadramento concreto."
+      ],
+      [
+        "Qual informação ganhou relevância na Duimp adaptada à Reforma?",
+        [
+          "Dados para cálculo de IBS/CBS por item e identificação do local da operação de consumo.",
+          "Apenas a cor da embalagem.",
+          "Somente o regime de IRPJ do exportador estrangeiro.",
+          "A senha bancária do importador."
+        ],
+        0,
+        "A Receita adaptou a Duimp para suportar os novos tributos e informações necessárias à tributação no destino."
+      ]
+    ],
+    "v": [
+      [
+        "Importação de bens materiais possui regras próprias de base de cálculo na LC 214/2025.",
+        true,
+        "A lei disciplina local, base, alíquota e sujeitos da importação."
+      ],
+      [
+        "O valor aduaneiro é sempre a única parcela da base do IBS/CBS na importação.",
+        false,
+        "A base pode incorporar outros tributos e encargos previstos em lei."
+      ],
+      [
+        "A alíquota da importação pode depender do tratamento do bem equivalente no mercado interno.",
+        true,
+        "Essa é a lógica geral prevista na lei."
+      ],
+      [
+        "Exportações devem ser analisadas sem qualquer documento aduaneiro.",
+        false,
+        "A comprovação é relevante para a aplicação dos tratamentos legais."
+      ],
+      [
+        "Em hipóteses de fornecimento com fim específico de exportação, podem existir suspensões condicionadas.",
+        true,
+        "A LC 214 prevê hipóteses específicas com requisitos."
+      ],
+      [
+        "Toda operação com a Zona Franca de Manaus recebe o mesmo benefício.",
+        false,
+        "O tratamento depende de bem, operação, habilitação e condições."
+      ],
+      [
+        "A ZFM pode envolver créditos presumidos e alíquota zero em situações previstas em lei.",
+        true,
+        "A legislação contém diferentes mecanismos de preservação do regime."
+      ],
+      [
+        "O IPI é necessariamente zerado para qualquer produto, sem exceção ligada à ZFM.",
+        false,
+        "Há hipóteses residuais voltadas à preservação da competitividade da ZFM."
+      ],
+      [
+        "A Duimp faz parte da adaptação tecnológica do comércio exterior à Reforma.",
+        true,
+        "A Receita incorporou novos campos e cálculo por item."
+      ],
+      [
+        "Uma empresa deve aplicar a calculadora padrão antes de verificar se a operação está em ZFM, ALC ou ZPE.",
+        false,
+        "O enquadramento especial deve ser validado antes do cálculo."
+      ]
+    ],
+    "contexts": {
+      "m": [
+        "Uma empresa nacionaliza mercadorias para revenda.",
+        "O importador quer saber se a alíquota do produto estrangeiro é completamente independente da doméstica.",
+        "Uma comercial exportadora recebe bens com finalidade específica de exportação.",
+        "Um cliente compra mercadorias destinadas à Zona Franca de Manaus.",
+        "A equipe fiscal está parametrizando a integração da Duimp."
+      ],
+      "v": [
+        "O escritório revisa a base de uma importação.",
+        "O cliente considera somente o valor aduaneiro.",
+        "A equipe compara o produto importado ao equivalente nacional.",
+        "O exportador não consegue comprovar uma operação.",
+        "Há mercadoria destinada diretamente à exportação.",
+        "Uma operação envolve empresa habilitada na ZFM.",
+        "O cliente assume que qualquer bem recebe o mesmo incentivo.",
+        "O cadastro mantém IPI zerado para todos os produtos sem exceção.",
+        "O ERP começa a importar dados novos da Duimp.",
+        "O usuário tenta simular uma ZPE como operação doméstica comum."
+      ]
+    }
+  },
+  "16": {
+    "m": [
+      [
+        "Qual é a principal característica de um regime específico de IBS/CBS?",
+        [
+          "Pode alterar base de cálculo, deduções, forma de apuração, alíquota, documentação ou crédito em relação ao regime padrão.",
+          "É apenas um desconto comercial concedido pelo fornecedor.",
+          "Sempre significa redução linear de 60% da alíquota.",
+          "Existe somente para empresas do Simples."
+        ],
+        0,
+        "Regimes específicos não podem ser reduzidos a um campo genérico de redução percentual."
+      ],
+      [
+        "Para que serve a DeRE?",
+        [
+          "Para fornecer dados necessários à apuração de regimes específicos que não são representados apenas pela sistemática comum de notas e débitos/créditos.",
+          "Para substituir a DRE contábil.",
+          "Para declarar exclusivamente folha de pagamento.",
+          "Para calcular IRPJ do Lucro Presumido."
+        ],
+        0,
+        "A DeRE foi criada para suportar particularidades de setores com bases e deduções específicas."
+      ],
+      [
+        "Na implementação divulgada em 2026, quem está entre os obrigados à DeRE?",
+        [
+          "Prestadores de serviços financeiros, operadoras de planos de assistência à saúde e entidades que explorem concursos de prognósticos, conforme o escopo técnico aplicável.",
+          "Qualquer microempresa sem exceção.",
+          "Somente indústrias exportadoras.",
+          "Apenas pessoas físicas."
+        ],
+        0,
+        "As FAQs oficiais da Receita listam esses grupos no escopo obrigatório da DeRE."
+      ],
+      [
+        "Como é feita a entrega da DeRE para contribuinte obrigado com matriz e filiais?",
+        [
+          "De forma consolidada pelo CNPJ raiz, conforme a orientação técnica atual.",
+          "Uma declaração independente para cada empregado.",
+          "Somente pela filial de maior faturamento.",
+          "Não existe consolidação."
+        ],
+        0,
+        "A orientação oficial prevê arquivo consolidado pelo CNPJ raiz."
+      ],
+      [
+        "Qual conduta é mais segura antes de usar uma calculadora padrão de IBS/CBS?",
+        [
+          "Confirmar se a operação está no regime regular, diferenciado ou específico.",
+          "Aplicar sempre 27,91% sem verificar o setor.",
+          "Ignorar a atividade econômica.",
+          "Usar apenas o regime de IRPJ como critério."
+        ],
+        0,
+        "O enquadramento setorial é anterior ao cálculo."
+      ]
+    ],
+    "v": [
+      [
+        "Regime diferenciado e regime específico são necessariamente a mesma coisa.",
+        false,
+        "O primeiro pode preservar a estrutura geral com tratamento reduzido; o específico pode alterar a própria mecânica de apuração."
+      ],
+      [
+        "Serviços financeiros podem possuir base e deduções próprias.",
+        true,
+        "A LC 214 contém disciplina específica para o setor."
+      ],
+      [
+        "Bens imóveis possuem tratamento setorial próprio na Reforma.",
+        true,
+        "A lei prevê regime específico e obrigações relacionadas."
+      ],
+      [
+        "Combustíveis podem estar sujeitos a tributação monofásica.",
+        true,
+        "Há regime específico para determinadas operações com combustíveis."
+      ],
+      [
+        "A DeRE alimenta a apuração assistida.",
+        true,
+        "Os dados declarados são usados pelo motor de cálculo dos novos tributos."
+      ],
+      [
+        "A DeRE elimina toda e qualquer emissão de documento fiscal para qualquer receita do contribuinte.",
+        false,
+        "Receitas fora do regime específico e obrigações de outros tributos podem continuar exigindo documentos."
+      ],
+      [
+        "A entrega da DeRE é, segundo a orientação atual, consolidada pelo CNPJ raiz.",
+        true,
+        "A matriz agrega os dados das filiais abrangidas."
+      ],
+      [
+        "Uma redução genérica de alíquota é suficiente para representar qualquer regime específico.",
+        false,
+        "Muitos regimes alteram base, deduções, documentos e créditos."
+      ],
+      [
+        "A documentação oficial da DeRE relaciona seus dados à operacionalização do cashback.",
+        true,
+        "A DeRE integra o ecossistema de apuração e informações usado nesses processos."
+      ],
+      [
+        "Antes de parametrizar um cliente de regime específico, é dispensável conferir o leiaute vigente.",
+        false,
+        "Leiautes e regras técnicas são parte essencial da conformidade."
+      ]
+    ],
+    "contexts": {
+      "m": [
+        "Um cliente do setor financeiro pede simulação de IBS/CBS.",
+        "O escritório começa a receber informações de planos de assistência à saúde.",
+        "Uma empresa obrigada possui matriz e várias filiais.",
+        "Um restaurante é comparado com uma empresa do regime regular comum.",
+        "A equipe pretende usar a calculadora padrão em um setor com regra própria."
+      ],
+      "v": [
+        "O analista compara redução de alíquota e regime específico.",
+        "Um banco possui receitas e deduções próprias.",
+        "Uma operação imobiliária entra no planejamento.",
+        "O cadastro contém combustíveis sujeitos a tratamento específico.",
+        "O sistema recebe eventos da DeRE.",
+        "A empresa possui também receitas fora do regime específico.",
+        "O arquivo da DeRE consolida dados da empresa.",
+        "O usuário tenta resolver um regime específico com apenas um percentual de redução.",
+        "A área fiscal cruza DeRE e apuração assistida.",
+        "A Receita publica nova versão de leiaute."
+      ]
+    }
+  },
   "01": {
     "m": [
       [
@@ -1743,782 +2915,6 @@ const QUIZ_BANK = {
         "Uma optante padrão tenta registrar crédito regular em suas compras.",
         "A decisão envolve anexo, faturamento, compras e perfil do comprador.",
         "Uma pequena empresa pergunta se continuará optante do Simples no híbrido."
-      ]
-    }
-  },
-  "10": {
-    "m": [
-      [
-        "Qual tributo continua relevante na comparação Lucro Presumido x Real?",
-        [
-          "IRPJ e CSLL",
-          "Somente IBS",
-          "Apenas ISS",
-          "Nenhum tributo"
-        ],
-        0,
-        "O regime de renda ainda diferencia as opções."
-      ],
-      [
-        "No regime regular de consumo, LP e LR seguem qual lógica geral?",
-        [
-          "Apuração de IBS/CBS com créditos legais",
-          "DAS unificado",
-          "Isenção geral de IBS",
-          "Só ICMS antigo"
-        ],
-        0,
-        "A diferença de IRPJ/CSLL permanece separada."
-      ],
-      [
-        "Qual base é usada no exemplo de presunção do Lucro Presumido?",
-        [
-          "Percentual legal sobre receita enquadrada",
-          "Toda compra da empresa",
-          "Somente saldo bancário",
-          "Crédito de IBS"
-        ],
-        0,
-        "A base presumida depende da atividade e regras legais."
-      ],
-      [
-        "O que deve ser separado em uma comparação de regimes?",
-        [
-          "Tributos sobre renda e sobre consumo",
-          "Somente saldo de clientes",
-          "Folha e patrimônio sem receitas",
-          "Preço e código postal"
-        ],
-        0,
-        "A escolha de regime não se resume à CBS/IBS."
-      ],
-      [
-        "A LC 224 é examinada no curso por qual possível efeito?",
-        [
-          "Alteração em percentuais de presunção sob condições legais",
-          "Extinção do IBS",
-          "Criação do ISS nacional",
-          "Fim da CBS"
-        ],
-        0,
-        "O módulo discute os reflexos na base presumida."
-      ]
-    ],
-    "c": [
-      [
-        "Uma clínica no Lucro Presumido informa que a reforma mudou IBS/CBS, mas quer saber se IRPJ e CSLL desapareceram.",
-        "Qual resposta orienta a análise?",
-        [
-          "IRPJ/CSLL continuam e devem ser avaliados separadamente",
-          "CBS substitui automaticamente IRPJ",
-          "IBS substitui CSLL",
-          "Só resta o DAS"
-        ],
-        0,
-        "Tributos sobre renda não são substituídos pelo IVA dual."
-      ],
-      [
-        "Uma empresa tem margem efetiva diferente da base presumida e considera migrar para o Lucro Real.",
-        "Que informação é essencial na comparação?",
-        [
-          "Lucro, base de IRPJ/CSLL e efeitos de créditos",
-          "Somente a CBS nominal",
-          "Só o endereço do cliente",
-          "A cor da DRE"
-        ],
-        0,
-        "A escolha requer análise econômica e fiscal ampla."
-      ],
-      [
-        "Comércio e serviços possuem atividades distintas, mas a planilha usa um único percentual de presunção.",
-        "Qual revisão é necessária?",
-        [
-          "Identificar percentuais aplicáveis por atividade",
-          "Manter a taxa única sempre",
-          "Aplicar IBS no lugar da presunção",
-          "Ignorar a receita"
-        ],
-        0,
-        "A presunção depende do enquadramento legal da atividade."
-      ],
-      [
-        "Duas empresas, uma no Presumido e outra no Real, compram insumo creditável no regime regular de IBS/CBS.",
-        "Qual ideia não deve ser confundida?",
-        [
-          "Regime de renda e regras de crédito de consumo são análises distintas",
-          "Só o Real pode ter qualquer crédito de IBS/CBS",
-          "O Presumido é o DAS",
-          "O crédito de IBS é IRPJ"
-        ],
-        0,
-        "A forma de apurar IRPJ não elimina por si a lógica regular de IBS/CBS."
-      ],
-      [
-        "O consultor apresenta comparação LP x LR baseada apenas em 27,91% de IBS/CBS didáticos.",
-        "Qual dimensão foi omitida?",
-        [
-          "Apuração de IRPJ/CSLL, margens e condições legais",
-          "Apenas o logotipo",
-          "Só o CNPJ do contador",
-          "A cor da nota"
-        ],
-        0,
-        "A comparação de regimes precisa incluir tributos sobre renda."
-      ]
-    ],
-    "v": [
-      [
-        "O Lucro Presumido e o Lucro Real são idênticos em IRPJ/CSLL.",
-        false,
-        "As formas de apuração de renda diferem."
-      ],
-      [
-        "O tratamento de IBS/CBS deve ser separado da apuração de IRPJ/CSLL.",
-        true,
-        "São dimensões tributárias diferentes."
-      ],
-      [
-        "A escolha entre LP e LR pode depender de margem efetiva e créditos aplicáveis.",
-        true,
-        "A análise econômica é integrada."
-      ],
-      [
-        "O percentual de presunção é sempre o mesmo para toda atividade.",
-        false,
-        "Depende da atividade e regra legal."
-      ],
-      [
-        "Uma mudança legal na presunção deve ser considerada na simulação.",
-        true,
-        "O módulo discute essa hipótese."
-      ],
-      [
-        "A CBS substitui diretamente o IRPJ no Lucro Presumido.",
-        false,
-        "CBS é tributo de consumo, IRPJ de renda."
-      ],
-      [
-        "É útil comparar bases e carga de IRPJ/CSLL de ambos regimes.",
-        true,
-        "A escolha não se resolve apenas pelo IVA."
-      ],
-      [
-        "Lucro Real é sempre mais barato independentemente dos dados.",
-        false,
-        "A resposta depende das condições da empresa."
-      ],
-      [
-        "Lucro Presumido impede toda apropriação de crédito no regime regular de IBS/CBS.",
-        false,
-        "A lógica de crédito de consumo pode se aplicar."
-      ],
-      [
-        "A receita e o enquadramento da atividade influenciam a base presumida.",
-        true,
-        "São dados essenciais do cálculo."
-      ]
-    ],
-    "contexts": {
-      "m": [
-        "Um cliente compara Lucro Presumido e Lucro Real para planejar o próximo exercício.",
-        "Duas empresas fora do Simples apuram IBS/CBS sobre operações equivalentes.",
-        "Um prestador estima base de IRPJ a partir da receita e da atividade.",
-        "A planilha mistura efeitos sobre lucro com os tributos incidentes no consumo.",
-        "O escritório estuda como uma regra de presunção pode afetar a base de cálculo."
-      ],
-      "v": [
-        "Uma diretoria compara os dois regimes para IRPJ e CSLL.",
-        "O cliente analisa uma DRE junto à apuração de IBS/CBS.",
-        "Uma empresa tem margem diferente da presumida e precisa simular alternativas.",
-        "O analista usa um percentual de presunção único para serviços e comércio.",
-        "Uma nova regra pode mudar a base de cálculo em situações específicas.",
-        "O comercial sugere descontar CBS como se fosse IRPJ.",
-        "O contador prepara cenários de apuração de renda.",
-        "O cliente afirma que basta comparar as alíquotas do IVA.",
-        "Uma empresa escolhe Lucro Real sem examinar margem e créditos.",
-        "Um prestador no Presumido pergunta sobre créditos de IBS/CBS."
-      ]
-    }
-  },
-  "11": {
-    "m": [
-      [
-        "Qual é a função central do DF-e na reforma?",
-        [
-          "Registrar dados fiscais da operação",
-          "Substituir toda contabilidade",
-          "Determinar o lucro sozinho",
-          "Dispensar classificação fiscal"
-        ],
-        0,
-        "O documento alimenta a apuração e a conferência."
-      ],
-      [
-        "O que é apuração assistida?",
-        [
-          "Proposta de apuração apoiada nos documentos eletrônicos",
-          "Cálculo sem documentos",
-          "Uma conta bancária obrigatória",
-          "Um anexo do Simples"
-        ],
-        0,
-        "O contribuinte precisa revisar os dados."
-      ],
-      [
-        "Por que revisar NCM/NBS e cadastros?",
-        [
-          "Para evitar tratamento fiscal incorreto",
-          "Para alterar o nome da empresa",
-          "Para gerar IRPJ automaticamente",
-          "Para eliminar fornecedores"
-        ],
-        0,
-        "Classificação interfere em alíquota e enquadramento."
-      ],
-      [
-        "Qual rotina reduz divergências na apuração assistida?",
-        [
-          "Conferir XMLs emitidos e recebidos",
-          "Ignorar notas rejeitadas",
-          "Somar apenas extratos",
-          "Conferir só no fim do ano"
-        ],
-        0,
-        "A qualidade da origem dos dados é decisiva."
-      ],
-      [
-        "A apuração proposta pelo Fisco dispensa o contribuinte de revisão?",
-        [
-          "Não",
-          "Sim, sempre",
-          "Só no Lucro Real",
-          "Somente para compras"
-        ],
-        0,
-        "A conferência continua necessária."
-      ]
-    ],
-    "c": [
-      [
-        "Um XML de compra aparece no ERP, mas a autorização fiscal não foi confirmada.",
-        "Qual passo deve preceder o uso do documento na conferência de créditos?",
-        [
-          "Verificar validade/autorização e dados fiscais",
-          "Creditar imediatamente sem exame",
-          "Apagar a nota do fornecedor",
-          "Usar só o extrato"
-        ],
-        0,
-        "A qualidade do documento é requisito da apuração."
-      ],
-      [
-        "Uma mercadoria foi cadastrada em NCM incorreta e a nota usa tratamento reduzido.",
-        "Qual risco a equipe deve avaliar?",
-        [
-          "Alíquota e crédito calculados a partir de classificação inadequada",
-          "Apenas alteração do nome fantasia",
-          "Fim automático do IRPJ",
-          "Nenhum efeito fiscal"
-        ],
-        0,
-        "A classificação fiscal afeta o enquadramento."
-      ],
-      [
-        "O saldo proposto pela apuração assistida difere do controle de notas do escritório.",
-        "Qual ação é mais adequada?",
-        [
-          "Conciliar documentos e retificar dados necessários",
-          "Aceitar sem revisão",
-          "Comparar apenas extrato bancário",
-          "Ignorar notas recebidas"
-        ],
-        0,
-        "A proposta deve ser conferida pelo contribuinte."
-      ],
-      [
-        "Uma empresa emite notas sem preencher corretamente dados do adquirente e do item.",
-        "Qual melhoria previne erros futuros?",
-        [
-          "Saneamento cadastral antes da emissão",
-          "Corrigir só a DRE anual",
-          "Alterar a alíquota manualmente em todas as notas",
-          "Deixar o campo em branco"
-        ],
-        0,
-        "Corrigir os dados na origem melhora a apuração."
-      ],
-      [
-        "O escritório possui notas de saída e entrada autorizadas, mas não as cruza.",
-        "Qual controle simples é útil?",
-        [
-          "Reconciliar débitos, créditos e XMLs do período",
-          "Somar apenas receitas no banco",
-          "Excluir entradas da análise",
-          "Dispensar classificação"
-        ],
-        0,
-        "O cruzamento revela divergências da apuração assistida."
-      ]
-    ],
-    "v": [
-      [
-        "Documento fiscal eletrônico confiável é importante para débito e crédito.",
-        true,
-        "Os dados alimentam a apuração."
-      ],
-      [
-        "Erro de cadastro pode levar a alíquota ou tratamento incorreto.",
-        true,
-        "A classificação fiscal é relevante."
-      ],
-      [
-        "Apuração assistida elimina a necessidade de auditoria pelo contribuinte.",
-        false,
-        "A revisão é essencial."
-      ],
-      [
-        "Apenas o extrato bancário substitui integralmente o XML fiscal.",
-        false,
-        "As informações têm funções distintas."
-      ],
-      [
-        "NCM e NBS podem ser relevantes no enquadramento de itens.",
-        true,
-        "Servem à classificação da operação."
-      ],
-      [
-        "Uma nota rejeitada deve ser tratada como documento autorizado sem revisão.",
-        false,
-        "A autorização precisa ser verificada."
-      ],
-      [
-        "Saneamento de cadastro antes da emissão pode prevenir divergências.",
-        true,
-        "É uma medida de conformidade."
-      ],
-      [
-        "A conferência pode comparar documentos emitidos e recebidos.",
-        true,
-        "O cruzamento revela inconsistências."
-      ],
-      [
-        "Todos os itens têm sempre alíquota idêntica independentemente da classificação.",
-        false,
-        "Há regimes e reduções específicos."
-      ],
-      [
-        "É preciso acompanhar leiautes e cronogramas oficiais dos documentos.",
-        true,
-        "Regras operacionais podem mudar."
-      ]
-    ],
-    "contexts": {
-      "m": [
-        "O ERP emite NF-e e NFS-e que alimentam os dados de apuração dos novos tributos.",
-        "Um cliente recebe proposta de apuração calculada a partir de documentos fiscais.",
-        "O cadastro de produtos contém NCM e descrições incompletas.",
-        "O escritório identifica diferença entre notas emitidas e recebidas no mês.",
-        "A declaração preliminar apresenta saldo que não coincide com o controle interno."
-      ],
-      "v": [
-        "Uma empresa confere uma nota autorizada antes de registrar o crédito.",
-        "Um item foi cadastrado na classificação errada.",
-        "O sistema oferece apuração assistida, e o gerente cogita não conferir nada.",
-        "A tesouraria possui extrato bancário, mas não localiza alguns XMLs.",
-        "O setor fiscal revisa classificações de mercadorias e serviços.",
-        "Um fornecedor enviou arquivo fiscal cuja autorização ainda não foi confirmada.",
-        "A equipe saneia cadastros antes de transmitir novos documentos.",
-        "O responsável compara o conjunto de notas de entrada e saída.",
-        "O ERP sugere tratamento idêntico para itens de regimes distintos.",
-        "O escritório acompanha comunicados de leiaute e prazos oficiais."
-      ]
-    }
-  },
-  "12": {
-    "m": [
-      [
-        "O que descreve o split payment?",
-        [
-          "Segregação do tributo na liquidação financeira conforme regras aplicáveis",
-          "Parcelamento obrigatório de IRPJ",
-          "Desconto comercial do fornecedor",
-          "Crédito automático de folha"
-        ],
-        0,
-        "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação."
-      ],
-      [
-        "Quais três fontes aparecem na conciliação do módulo?",
-        [
-          "Documento fiscal, relatório financeiro e extrato bancário",
-          "DRE, currículo e contrato social",
-          "Folha, estoque e aluguel",
-          "Somente comprovante Pix"
-        ],
-        0,
-        "A conciliação cruza obrigação, retenção/taxa e caixa."
-      ],
-      [
-        "Uma venda de R$ 12.791 com tributos de R$ 2.791 e taxa de R$ 255,82 gera qual líquido, no exemplo?",
-        [
-          "R$ 9.744,18",
-          "R$ 10.000,00",
-          "R$ 12.791,00",
-          "R$ 9.488,36"
-        ],
-        0,
-        "12.791 − 2.791 − 255,82 = 9.744,18."
-      ],
-      [
-        "Por que a empresa precisa revisar seu fluxo de caixa?",
-        [
-          "O tributo pode ser segregado na liquidação",
-          "A receita bruta sempre aumenta",
-          "O custo de estoque some",
-          "IRPJ deixa de existir"
-        ],
-        0,
-        "A disponibilidade imediata de caixa pode mudar."
-      ],
-      [
-        "Qual divergência deve ser investigada?",
-        [
-          "Nota, retenção, taxa e crédito bancário não reconciliam",
-          "A nota tem data de emissão",
-          "Existe cliente identificado",
-          "A venda ocorreu no cartão"
-        ],
-        0,
-        "A trilha financeira precisa fechar."
-      ]
-    ],
-    "c": [
-      [
-        "Nota de venda: R$ 12.791. Na liquidação, o exemplo considera R$ 2.791 de tributos segregados e R$ 255,82 de taxa.",
-        "Quanto deve aparecer como crédito líquido no banco?",
-        [
-          "R$ 9.744,18",
-          "R$ 10.000",
-          "R$ 12.535,18",
-          "R$ 12.791"
-        ],
-        0,
-        "12.791 − 2.791 − 255,82 = 9.744,18."
-      ],
-      [
-        "A credenciadora informa retenção tributária e taxa de cartão no mesmo relatório.",
-        "Como a contabilidade deve tratar esses valores?",
-        [
-          "Separar baixa do tributo e despesa da taxa",
-          "Registrar tudo como CBS",
-          "Tratar tudo como faturamento novo",
-          "Ignorar o extrato"
-        ],
-        0,
-        "A retenção e a taxa têm naturezas diferentes."
-      ],
-      [
-        "O XML registra R$ 5.000, mas o relatório de liquidação e o crédito bancário não fecham após taxas e tributos.",
-        "Qual ação vem primeiro?",
-        [
-          "Conciliar cada componente e investigar a diferença",
-          "Ajustar o banco para igualar a nota sem evidência",
-          "Excluir o XML",
-          "Considerar todo valor como desconto"
-        ],
-        0,
-        "A conciliação tripla localiza a diferença."
-      ],
-      [
-        "Uma venda foi faturada hoje, mas o cartão liquida dois dias depois.",
-        "Qual conta ajuda a acompanhar o intervalo?",
-        [
-          "Clientes/adquirente a receber",
-          "IRPJ a recuperar por padrão",
-          "Estoque em trânsito",
-          "Somente caixa imediato"
-        ],
-        0,
-        "O recebível liga a nota à liquidação futura."
-      ],
-      [
-        "Com parte do tributo segregada na liquidação, o cliente pergunta por que entrou menos dinheiro no banco.",
-        "Que relatório explica o fluxo?",
-        [
-          "Nota, retenção, taxa e valor líquido conciliados",
-          "Somente o total da nota",
-          "Apenas a DRE do ano",
-          "Só a cotação do dólar"
-        ],
-        0,
-        "É preciso decompor o valor bruto até o crédito bancário."
-      ]
-    ],
-    "v": [
-      [
-        "Split payment pode alterar o valor líquido que entra no banco.",
-        true,
-        "Tributos podem ser segregados na liquidação."
-      ],
-      [
-        "O relatório da adquirente pode incluir taxas além da retenção tributária.",
-        true,
-        "Esses componentes precisam ser separados."
-      ],
-      [
-        "O extrato bancário isolado demonstra todos os valores da nota.",
-        false,
-        "É necessário conciliar com documento e relatório financeiro."
-      ],
-      [
-        "Uma retenção de IBS/CBS pode requerer baixa do passivo correspondente.",
-        true,
-        "A contabilidade deve acompanhar a liquidação."
-      ],
-      [
-        "No exemplo do curso, R$ 12.791 menos R$ 2.791 menos R$ 255,82 é R$ 9.744,18.",
-        true,
-        "A reconciliação aritmética fecha."
-      ],
-      [
-        "O adquirente no regime regular é sempre obrigado a recolher IBS/CBS quando o instrumento de pagamento não permitir split payment.",
-        false,
-        "Falso. O art. 36 prevê que, nas condições legais, o adquirente poderá optar pelo recolhimento; não é uma obrigação automática em toda operação."
-      ],
-      [
-        "Diferenças de centavos na conciliação devem ser ignoradas sempre.",
-        false,
-        "Precisam ser identificadas e tratadas."
-      ],
-      [
-        "A nota fiscal e a liquidação podem ocorrer em momentos diferentes.",
-        true,
-        "Por isso há controle de valores a receber."
-      ],
-      [
-        "O mecanismo de split payment dispensa toda apuração de IBS/CBS.",
-        false,
-        "A apuração e conciliação continuam necessárias."
-      ],
-      [
-        "A implantação exige acompanhar as regras e o cronograma aplicável.",
-        true,
-        "O mecanismo não deve ser presumido idêntico para toda operação."
-      ]
-    ],
-    "contexts": {
-      "m": [
-        "Uma venda no cartão terá liquidação financeira com possível segregação de IBS/CBS.",
-        "O contador precisa fechar valores entre nota, relatório da credenciadora e banco.",
-        "No exemplo do curso, uma nota totaliza R$ 12.791, com tributos e taxa de cartão informados.",
-        "A empresa costumava usar o valor integral das vendas até o recolhimento mensal.",
-        "Uma conciliação mostra valores distintos no XML, no relatório de cartão e no extrato."
-      ],
-      "v": [
-        "Um cliente acompanha o valor que realmente entrou na conta após a venda.",
-        "A adquirente apresenta retenção tributária e taxa de serviço em linhas próprias.",
-        "A equipe olha apenas o crédito bancário, sem consultar a nota.",
-        "Após uma retenção na liquidação, o passivo fiscal precisa ser conferido.",
-        "O exemplo do módulo mostra nota, tributos, taxa e valor líquido no banco.",
-        "O financeiro registra uma taxa de cartão e uma CBS da mesma venda.",
-        "Ao fechar o mês, há diferença de centavos no relatório da adquirente.",
-        "A emissão da nota e o pagamento do cliente ocorrem em dias diferentes.",
-        "O gerente acha que retenção financeira elimina qualquer conferência tributária.",
-        "Uma implantação do split payment será feita por etapas e regras aplicáveis."
-      ]
-    }
-  },
-  "13": {
-    "m": [
-      [
-        "Qual é o primeiro passo de uma consultoria tributária baseada em dados?",
-        [
-          "Diagnóstico das operações e dados do cliente",
-          "Aplicar 27,91% a tudo",
-          "Trocar de regime sem análise",
-          "Apagar histórico fiscal"
-        ],
-        0,
-        "É preciso conhecer operações, compras, vendas e enquadramentos."
-      ],
-      [
-        "Qual benefício da automação em dados fiscais?",
-        [
-          "Reduzir retrabalho e localizar divergências",
-          "Eliminar responsabilidade profissional",
-          "Substituir toda legislação",
-          "Garantir crédito de qualquer nota"
-        ],
-        0,
-        "Automação ajuda na conferência, sob supervisão."
-      ],
-      [
-        "Qual indicador ajuda a medir impacto da reforma?",
-        [
-          "Custo efetivo de compras e margem por cenário",
-          "Somente número de funcionários",
-          "Cor do dashboard",
-          "Quantidade de logotipos"
-        ],
-        0,
-        "Créditos, preços e margem conectam regra e negócio."
-      ],
-      [
-        "O que deve constar de um plano de ação para clientes?",
-        [
-          "Responsáveis, dados, prazos e validações",
-          "Apenas um slogan",
-          "Uma alíquota única sem premissas",
-          "Só nome do contador"
-        ],
-        0,
-        "O plano transforma diagnóstico em execução."
-      ],
-      [
-        "Como apresentar uma simulação ao cliente?",
-        [
-          "Com premissas, resultado e limitações explícitas",
-          "Como garantia de imposto futuro",
-          "Sem memória de cálculo",
-          "Apenas com porcentagem final"
-        ],
-        0,
-        "A transparência permite revisão e decisão informada."
-      ]
-    ],
-    "c": [
-      [
-        "Um escritório atende comércio, indústria e serviços; quer priorizar revisão da reforma.",
-        "Qual diagnóstico inicial é mais útil?",
-        [
-          "Mapear operações, regimes, compras, vendas e dados fiscais",
-          "Aplicar uma alíquota única a todos",
-          "Escolher só o maior faturamento",
-          "Excluir clientes do Simples"
-        ],
-        0,
-        "O diagnóstico precede a recomendação."
-      ],
-      [
-        "A equipe recebe 10 mil XMLs e detecta centenas de classificações inconsistentes.",
-        "Qual papel adequado da automação?",
-        [
-          "Triar divergências e encaminhar exceções para revisão",
-          "Aprovar todo crédito sem auditoria",
-          "Substituir a lei",
-          "Ocultar os dados de origem"
-        ],
-        0,
-        "A automação reduz retrabalho, mas não substitui julgamento."
-      ],
-      [
-        "Uma carteira tem empresas com grandes compras B2B e outras só vendem a consumidores finais.",
-        "Qual indicador ajuda a segmentar a análise?",
-        [
-          "Créditos potenciais, custo efetivo e perfil dos clientes",
-          "Apenas número de notas",
-          "Só idade do sócio",
-          "Uma taxa nominal para todos"
-        ],
-        0,
-        "O impacto depende das cadeias de aquisição e venda."
-      ],
-      [
-        "Um relatório lista 20 melhorias, mas não informa quem fará cada uma nem até quando.",
-        "O que falta no plano de ação?",
-        [
-          "Responsáveis, prazos e critérios de validação",
-          "Uma capa mais colorida",
-          "Mais siglas sem definição",
-          "Só o nome da reforma"
-        ],
-        0,
-        "Execução requer dono, prazo e evidência."
-      ],
-      [
-        "O cliente recebeu simulação com alíquota didática, mas vai tomar decisão contratual real.",
-        "O que o contador deve explicitar?",
-        [
-          "Premissas, limitações e dados a validar na operação concreta",
-          "Que o resultado é garantido",
-          "Que não existe risco de mudança",
-          "Somente a porcentagem final"
-        ],
-        0,
-        "Cenários educacionais precisam de enquadramento antes do uso prático."
-      ]
-    ],
-    "v": [
-      [
-        "Um diagnóstico deve mapear compras, vendas, regime e documentos.",
-        true,
-        "São insumos da análise consultiva."
-      ],
-      [
-        "Automação dispensa a revisão humana de exceções fiscais.",
-        false,
-        "A supervisão continua necessária."
-      ],
-      [
-        "Comparar custo efetivo e margem ajuda a priorizar clientes.",
-        true,
-        "Mostra onde o impacto pode ser maior."
-      ],
-      [
-        "Todo cliente deve receber a mesma conclusão sem examinar seus dados.",
-        false,
-        "As operações e enquadramentos variam."
-      ],
-      [
-        "Um plano de ação útil contém responsáveis e prazos.",
-        true,
-        "Isso torna as tarefas executáveis."
-      ],
-      [
-        "Premissas da simulação devem ser documentadas.",
-        true,
-        "Permite auditoria e atualização."
-      ],
-      [
-        "O relatório final deve omitir limitações para parecer mais seguro.",
-        false,
-        "Limitações precisam ser claras."
-      ],
-      [
-        "A conferência de dados cadastrais faz parte da preparação.",
-        true,
-        "Qualidade de origem afeta os resultados."
-      ],
-      [
-        "A decisão sobre regime pode ser tomada só pela alíquota nominal.",
-        false,
-        "Créditos, margem, atividade e clientes importam."
-      ],
-      [
-        "O contador pode usar cenários para discutir efeitos com o cliente.",
-        true,
-        "Cenários apoiam planejamento fundamentado."
-      ]
-    ],
-    "contexts": {
-      "m": [
-        "O escritório quer oferecer diagnóstico da reforma a um cliente com vários tipos de operações.",
-        "Um contador recebe muitos XMLs e extratos e procura automatizar a conferência.",
-        "Uma carteira de clientes possui margens e perfis de fornecedores distintos.",
-        "A equipe precisa transformar o diagnóstico em tarefas com responsáveis.",
-        "Uma reunião apresenta ao cliente projeções de custo e tributação futura."
-      ],
-      "v": [
-        "Antes de propor medidas, o contador recebe documentos de compras e vendas.",
-        "Uma rotina automática identifica operações classificadas como exceção.",
-        "O escritório busca ordenar o atendimento por possível impacto econômico.",
-        "Uma apresentação pretende aplicar a mesma solução a toda a carteira.",
-        "O gestor monta cronograma para saneamento de cadastros e simulações.",
-        "A planilha contém percentuais usados em cenários de estudo.",
-        "O relatório inclui premissas que podem mudar no futuro.",
-        "Um consultor revisa um documento antes de entregá-lo ao cliente.",
-        "Há erros recorrentes nos cadastros de produtos.",
-        "A diretoria escolhe regime tributário com base em uma única taxa nominal."
       ]
     }
   }
