@@ -887,6 +887,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <option value="simples_hybrid">Simples Nacional — IBS/CBS regular</option>
      </select>
     </div>
+    <div class="field"><label for="priceCreditMode">Direito a crédito nesta aquisição</label>
+     <select id="priceCreditMode">
+      <option value="full" selected>Integral</option>
+      <option value="partial">Parcial</option>
+      <option value="none">Não gera crédito</option>
+     </select>
+    </div>
+    <div id="priceCreditUseWrap" class="field" style="display:none"><label for="priceCreditUsePct">Percentual aproveitável %</label><input id="priceCreditUsePct" type="number" min="0" max="100" step=".01" value="100"></div>
    </div>
 
    <div class="tax-input-grid">
@@ -911,7 +919,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div class="field wide"><label>Preço atual da compra R$</label><input id="priceNow" class="money-input" type="text" inputmode="decimal" autocomplete="off" value="100,00" placeholder="0,00"></div>
       <div id="icmsRateWrap" class="field"><label>ICMS atual %</label><input id="icmsRate" type="number" min="0" max="100" step=".01" value="18"></div>
       <div id="issRateWrap" class="field" style="display:none"><label>ISS atual %</label><input id="issRate" type="number" min="0" max="100" step=".01" value="5"></div>
-      <div id="ipiRateWrap" class="field" style="display:none"><label>IPI atual % <small>(se aplicável)</small></label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
+      <div id="ipiRateWrap" class="field" style="display:none"><label>IPI atual % <small>(já contido no preço informado, se aplicável)</small></label><input id="ipiRate" type="number" min="0" max="100" step=".01" value="0"></div>
      </div>
 
      <div id="simplesCurrentFields" class="regime-panel">
@@ -941,9 +949,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div id="regularFutureFields" class="regime-panel wide">
        <div class="fields three">
         <div class="field"><label>Alíquotas futuras</label><select id="rateMode"><option value="rtav">Premissas da ferramenta</option><option value="manual">Manual / aplicável</option></select></div>
-        <div class="field"><label>Redução %</label><input id="rateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
+        <div class="field"><label>Redução da alíquota padrão %</label><input id="rateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
         <div class="field"><label>CBS %</label><input id="cbsRate" type="number" step=".001" value="9.21" readonly></div>
         <div class="field"><label>IBS %</label><input id="ibsRate" type="number" step=".001" value=".1" readonly></div>
+        <div class="field"><label>Imposto Seletivo % <small>(se aplicável)</small></label><input id="selectiveTaxRate" type="number" min="0" max="100" step=".01" value="0"></div>
        </div>
       </div>
      </div>
@@ -1048,12 +1057,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
        <small>Atalho didático; confirme as alíquotas reais do cliente.</small>
       </div>
       <div class="fields three">
+       <div class="field"><label>Tipo da operação atual</label><select id="revOperationType"><option value="mercadoria" selected>Mercadoria / comércio</option><option value="industria">Indústria</option><option value="servico">Serviço</option></select></div>
        <div class="field"><label>PIS %</label><input id="revPisRate" type="number" step=".01" value=".65"></div>
        <div class="field"><label>Cofins %</label><input id="revCofinsRate" type="number" step=".01" value="3"></div>
        <div class="field"><label>ICMS %</label><input id="revIcmsRate" type="number" step=".01" value="18"></div>
        <div class="field"><label>ISS %</label><input id="revIssRate" type="number" step=".01" value="0"></div>
-       <div class="field"><label>IPI %</label><input id="revIpiRate" type="number" step=".01" value="0"></div>
+       <div class="field"><label>IPI % <small>(já contido no faturamento, se aplicável)</small></label><input id="revIpiRate" type="number" step=".01" value="0"></div>
       </div>
+      <div class="rate-note">Para empresas com receitas mistas de mercadorias e serviços, faça simulações separadas por operação. A ferramenta não aplica ICMS e ISS simultaneamente sobre a mesma receita.</div>
      </div>
 
      <div id="revSimplesCurrentFields" class="regime-panel" style="display:none">
@@ -1083,9 +1094,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div id="revRegularFutureFields" class="regime-panel wide">
        <div class="fields three">
         <div class="field"><label>Alíquotas futuras</label><select id="revRateMode"><option value="rtav">CBS 9,21% · premissa</option><option value="manual">Manual / aplicável</option></select></div>
-        <div class="field"><label>Redução %</label><input id="revRateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
+        <div class="field"><label>Redução da alíquota padrão %</label><input id="revRateReduction" type="number" min="0" max="100" step=".01" value="0"></div>
         <div class="field"><label>CBS %</label><input id="revCbsRate" type="number" step=".001" value="9.21" readonly></div>
         <div class="field"><label>IBS %</label><input id="revIbsRate" type="number" step=".001" value=".1" readonly></div>
+        <div class="field"><label>Imposto Seletivo % <small>(se aplicável)</small></label><input id="revSelectiveTaxRate" type="number" min="0" max="100" step=".01" value="0"></div>
        </div>
       </div>
 
@@ -1111,12 +1123,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    </div>
 
    <details id="revenueAdvanced" class="advanced-analysis">
-    <summary><span>Análise avançada</span><small>Créditos estimados das aquisições</small></summary>
+    <summary><span>Análise avançada</span><small>Créditos de CBS/IBS das aquisições</small></summary>
     <div class="advanced-grid">
-     <div class="field"><label for="revCreditablePurchasesPct">Base estimada de compras/serviços com direito a crédito (% do faturamento)</label><input id="revCreditablePurchasesPct" type="number" min="0" max="100" step=".01" value="0"></div>
-     <div class="field"><label for="revPurchaseCreditUsePct">Aproveitamento estimado dos créditos %</label><input id="revPurchaseCreditUsePct" type="number" min="0" max="100" step=".01" value="100"></div>
+     <div class="field"><label for="revCreditMode">Forma de informar créditos</label><select id="revCreditMode"><option value="estimate" selected>Estimativa pela base de compras</option><option value="manual">Informar créditos de CBS e IBS</option></select></div>
+     <div id="revEstimatedCreditFields" class="field-group">
+      <div class="field"><label for="revCreditablePurchasesPct">Base líquida estimada de aquisições creditáveis (% do faturamento)</label><input id="revCreditablePurchasesPct" type="number" min="0" max="100" step=".01" value="0"></div>
+      <div class="field"><label for="revPurchaseCreditUsePct">Percentual de aproveitamento %</label><input id="revPurchaseCreditUsePct" type="number" min="0" max="100" step=".01" value="100"></div>
+     </div>
+     <div id="revManualCreditFields" class="field-group" style="display:none">
+      <div class="field"><label for="revManualCbsCredit">Crédito de CBS R$</label><input id="revManualCbsCredit" class="money-input" type="text" inputmode="decimal" value="0,00"></div>
+      <div class="field"><label for="revManualIbsCredit">Crédito de IBS R$</label><input id="revManualIbsCredit" class="money-input" type="text" inputmode="decimal" value="0,00"></div>
+     </div>
     </div>
-    <div class="rate-note">No regime regular, a estimativa reduz a carga líquida com base nas aquisições informadas. No Simples padrão, a empresa não apropria esses créditos de IBS/CBS dentro do regime.</div>
+    <div class="rate-note">Os créditos são compensados separadamente com CBS e IBS. Eles não reduzem ICMS/ISS remanescente nem Imposto Seletivo. No Simples padrão, não há apropriação desses créditos dentro do regime.</div>
    </details>
 
    <div id="revenueValidation" class="validation-panel" aria-live="polite"></div>
