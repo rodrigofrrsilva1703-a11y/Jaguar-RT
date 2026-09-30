@@ -27,16 +27,13 @@ begin
   insert into jaguarrt.accounts(email,last_seen) values(p_email,now()) on conflict(email) do update set last_seen=now();
   insert into jaguarrt.sessions(token_hash,email) values(encode(extensions.digest(p_token,'sha256'),'hex'),p_email);
  end if;
- select s.email,coalesce(s.admin_until>now(),false) into v_email,v_admin from jaguarrt.sessions s where s.token_hash=encode(extensions.digest(p_token,'sha256'),'hex') and s.expires_at>now();
+ select s.email,s.email='rodrigo.silva@jaguarcontabil.com.br' into v_email,v_admin from jaguarrt.sessions s where s.token_hash=encode(extensions.digest(p_token,'sha256'),'hex') and s.expires_at>now();
  if v_email is null then return jsonb_build_object('error','Sessão expirada. Entre novamente.'); end if;
  if p_action='logout' then delete from jaguarrt.sessions where token_hash=encode(extensions.digest(p_token,'sha256'),'hex'); return '{}'::jsonb; end if;
  update jaguarrt.sessions set last_seen=now() where token_hash=encode(extensions.digest(p_token,'sha256'),'hex');
  update jaguarrt.accounts set last_seen=now() where email=v_email;
  if p_action='save' then update jaguarrt.accounts set state=p_data where email=v_email; end if;
  if p_action='attempt' then insert into jaguarrt.attempts(id,email,scope,score,details) values((p_data->>'id')::uuid,v_email,p_data->>'scope',(p_data->>'score')::int,p_data->'details') on conflict(id) do nothing; end if;
- if p_action='verify_admin' and v_email='rodrigo.silva@jaguarcontabil.com.br' then
-  update jaguarrt.sessions set admin_until=now()+interval '1 hour' where token_hash=encode(extensions.digest(p_token,'sha256'),'hex');v_admin:=true;
- end if;
  if p_action='admin' then
   if not v_admin then return jsonb_build_object('error','Confirme o e-mail do administrador para acessar.'); end if;
   select coalesce(jsonb_agg(jsonb_build_object('email',a.email,'created_at',a.created_at,'last_seen',a.last_seen,'online',exists(select 1 from jaguarrt.sessions s where s.email=a.email and s.expires_at>now() and s.last_seen>now()-interval '2 minutes'),'state',a.state,'attempts',coalesce((select jsonb_agg(to_jsonb(t) order by t.created_at desc) from jaguarrt.attempts t where t.email=a.email),'[]'::jsonb)) order by a.last_seen desc),'[]'::jsonb) into v_result from jaguarrt.accounts a;

@@ -19,27 +19,8 @@ Deno.serve(async(req)=>{
   return reply(result.error?result:{...result,token},result.error?401:200);
  }
  if(!/^[a-f0-9]{64}$/.test(token))return reply({error:'Entre para continuar.'},401);
- if(!['state','save','attempt','logout','admin','send_admin','verify_admin'].includes(b.action))return reply({error:'Ação inválida'},400);
+ if(!['state','save','attempt','logout','admin'].includes(b.action))return reply({error:'Ação inválida'},400);
  const me=await rpc({p_action:'state',p_token:token});if(me.error)return reply(me,401);
- if(b.action==='send_admin'){
-  if(me.email!==ADMIN)return reply({error:'Acesso restrito ao administrador.'},403);
-  const r=await fetch(URL+'/auth/v1/otp?redirect_to='+encodeURIComponent(SITE),{method:'POST',headers:{'Content-Type':'application/json',apikey:Deno.env.get('SUPABASE_ANON_KEY')!},body:JSON.stringify({email:ADMIN,create_user:true})});
-  if(!r.ok)return reply({error:'O envio de confirmação precisa ser configurado no Supabase (SMTP e URL de redirecionamento).'},503);
-  return reply({sent:true});
- }
- if(b.action==='verify_admin'){
-  if(me.email!==ADMIN)return reply({error:'Acesso restrito.'},403);
-  let proof=String(b.access_token||'');
-  if(b.confirmation_link){
-   let link;try{link=new globalThis.URL(String(b.confirmation_link));}catch{return reply({error:'Link inválido.'},400);}
-   if(link.origin!==URL||link.pathname!=='/auth/v1/verify'||link.searchParams.get('type')!=='magiclink'||!link.searchParams.get('token'))return reply({error:'Use o link de confirmação recebido do Supabase.'},400);
-   const verification=await fetch(URL+'/auth/v1/verify',{method:'POST',headers:{'Content-Type':'application/json',apikey:Deno.env.get('SUPABASE_ANON_KEY')!},body:JSON.stringify({token_hash:link.searchParams.get('token'),type:'magiclink'})});
-   const verified=await verification.json();if(!verification.ok||!verified.access_token)return reply({error:'Link inválido, já utilizado ou expirado.'},403);
-   proof=verified.access_token;
-  }
-  const r=await fetch(URL+'/auth/v1/user' ,{headers:{apikey:Deno.env.get('SUPABASE_ANON_KEY')!,Authorization:'Bearer '+proof}});
-  const user=await r.json();if(!r.ok||user.email!==ADMIN||!user.email_confirmed_at)return reply({error:'Confirmação de e-mail inválida ou expirada.'},403);
- }
  let data=b.data||{};
  if(b.action==='save'){
   if(!data||typeof data!=='object'||Array.isArray(data))return reply({error:'Progresso inválido'},400);

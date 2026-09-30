@@ -285,3 +285,17 @@ test('painel pessoal abre sem substituir a navegação',async({page})=>{
  await page.locator('#accountClose').click();
  await expect(page.locator('#accountDrawer')).toBeHidden();
 });
+
+test('perfil no celular fica no cabeçalho e informa progresso',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('http://127.0.0.1:4173/?e2e=mobile-profile');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await expect(page.locator('#accountName')).toHaveText('Teste');
+ await expect(page.locator('#accountProgress')).toHaveText('0%');
+ const box=await page.locator('#accountToggle').boundingBox();
+ expect(box.y).toBeLessThan(100);
+ expect(box.x+box.width).toBeLessThanOrEqual(390);
+ await page.locator('#accountToggle').click();
+ await expect(page.locator('#accountDrawer')).toBeVisible();
+ await expect(page.locator('#accountEmail')).toHaveText('teste@jaguarcontabil.com.br');
+});
