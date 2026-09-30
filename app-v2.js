@@ -500,7 +500,7 @@ function priceEngineInput(){
   ipiRate:num('ipiRate'),
   simple:{annex:snAnnex(),rbt12:num('snRbt12')},
   future:{mode:$('rateMode')?.value||'rtav',reduction:num('rateReduction'),cbs:num('cbsRate'),ibs:num('ibsRate')},
-  purchaseGeneratesCredit:!!$('buyerPurchaseCredit')?.checked
+  purchaseGeneratesCredit:true
  };
 }
 
@@ -677,7 +677,6 @@ function calcIntegrated(){
  if(input.simple.rbt12<=0) messages.push({level:'error',message:'Informe o RBT12 usado nos fornecedores do Simples.'});
  if(input.simple.rbt12>3600000) messages.push({level:'warning',message:'RBT12 acima de R$ 3,6 milhões exige validação específica do sublimite.'});
  if(input.simple.rbt12>4800000) messages.push({level:'error',message:'RBT12 acima de R$ 4,8 milhões está fora do limite geral tratado pela ferramenta.'});
- if(!input.purchaseGeneratesCredit) messages.push({level:'info',message:'Operação marcada como não creditável: todos os fornecedores serão comparados sem abatimento de créditos.'});
 
  renderValidation('priceValidation',messages);
  if(messages.some(m=>m.level==='error')){
@@ -1210,7 +1209,7 @@ function exportPriceExcel(){
    ['ICMS atual %',input.icmsRate],
    ['ISS atual %',input.issRate],
    ['IPI atual %',input.ipiRate],
-   ['Operação creditável',$('buyerPurchaseCredit')?.checked?'Sim':'Não'],
+   ['Créditos','Automáticos conforme os regimes do comprador e do fornecedor'],
    ['RBT12 fornecedores Simples',input.simple.rbt12],
    ['Anexo fornecedores Simples',input.simple.annex],
    ['Ano destacado',selectedYear],
@@ -1461,7 +1460,7 @@ function printTaxReport(kind){
 }
 
 const PRICE_STATE_IDS=[
- 'priceSegment','priceOperationType','priceBuyerRegime','priceNow','icmsRate','issRate','ipiRate','buyerPurchaseCredit',
+ 'priceSegment','priceOperationType','priceBuyerRegime','priceNow','icmsRate','issRate','ipiRate',
  'snRbt12','snAnnex','priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
@@ -1611,7 +1610,7 @@ function priceInputFromState(data){
   ipiRate:numberFromState(data,'ipiRate',0),
   simple:{annex:data?.snAnnex||defaultSimpleAnnex(operationType),rbt12:numberFromState(data,'snRbt12')},
   future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate')},
-  purchaseGeneratesCredit:data?.buyerPurchaseCredit!==false
+  purchaseGeneratesCredit:true
  };
 }
 
@@ -1684,7 +1683,6 @@ $('resetPriceSimulation')?.addEventListener('click',function(){resetSimulation('
 $('savePriceScenario')?.addEventListener('click',function(){saveNamedScenario('price');});
 $('loadPriceScenario')?.addEventListener('click',function(){loadNamedScenario('price');});
 $('comparePriceScenario')?.addEventListener('click',function(){compareNamedScenario('price');});
-$('buyerPurchaseCredit')?.addEventListener('change',calcIntegrated);
 
 $('rateMode')?.addEventListener('change',function(){
  const manual=$('rateMode').value==='manual';
