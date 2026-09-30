@@ -1059,7 +1059,7 @@ function revRenderYearly(){
 
  $('revYearStrip').innerHTML=rows.map(function(x){
   return '<button type="button" class="year-price-card '+(x.year===revYearDetailSelected?'active':'')+'" onclick="revSelectYear('+x.year+')">'+
-   '<small>'+x.year+'</small><b>'+money(x.revenue)+'</b><span>'+(x.year===2026?'Base':effectText(x.delta)+' vs. 2026')+'</span></button>';
+   '<span class="year-nav-year">'+x.year+'</span><span class="year-nav-phase">'+(x.year===2026?'Atual':'Reforma')+'</span></button>';
  }).join('');
 
  $('revYearlyTable').innerHTML=rows.map(function(x){

@@ -645,6 +645,55 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .transition-panel-actions a{font-size:10px;font-weight:800;color:#555;text-decoration:underline;text-underline-offset:2px}
 @media(max-width:920px){#home .interactive-transition .timeline{display:flex;overflow-x:auto;padding-bottom:5px;scroll-snap-type:x proximity}#home .interactive-transition .year{flex:0 0 112px;scroll-snap-align:start}}
 @media(max-width:650px){#home .interactive-transition{padding:17px}#home .interactive-transition .section-head p{text-align:left;margin-top:6px}#home .interactive-transition .timeline-panel{grid-template-columns:1fr}.transition-selected{flex-direction:row;align-items:center;justify-content:space-between;padding:13px 17px}.transition-selected strong{font-size:31px}.transition-selected span{margin:0;text-align:right}.transition-summary{padding:16px}.transition-panel-actions a{order:3;width:100%;text-align:center}}
+/* Faturamento: resumo, composição e evolução em uma sequência clara. */
+#tools #revenueToolPanel .integrated-results{padding:24px;background:#f7f7f4}
+#tools #revenueToolPanel .regime-result-note{background:transparent;border:0;padding:0;color:#686868;font-size:11px;line-height:1.6}
+#tools #revenueToolPanel #revKpis{gap:12px;margin:20px 0}
+#tools #revenueToolPanel #revKpis .integrated-kpi{min-height:120px;padding:18px;justify-content:center;box-shadow:none}
+#tools #revenueToolPanel #revKpis .integrated-kpi:before{display:none}
+#tools #revenueToolPanel #revKpis .integrated-kpi:nth-child(1){order:1}
+#tools #revenueToolPanel #revKpis .integrated-kpi:nth-child(2){order:3}
+#tools #revenueToolPanel #revKpis .integrated-kpi:nth-child(3){order:2}
+#tools #revenueToolPanel #revKpis .integrated-kpi:nth-child(4){order:4}
+#tools #revenueToolPanel #revKpis b{font-size:clamp(19px,2.1vw,28px);line-height:1.2;margin:9px 0 6px;overflow-wrap:anywhere}
+#tools #revenueToolPanel #revKpis small,#tools #revenueToolPanel #revKpis span{font-size:10px;line-height:1.5}
+#tools #revenueToolPanel .tax-compare-grid{gap:16px;align-items:start}
+#tools #revenueToolPanel .tax-summary-card{padding:20px;border-radius:16px}
+#tools #revenueToolPanel .tax-summary-card.reform{background:#fff;color:#111;border-color:#d9d8d2;border-top:3px solid #111}
+#tools #revenueToolPanel .tax-summary-card.current{border-top:3px solid #b7b7b0}
+#tools #revenueToolPanel .tax-summary-row{padding:12px 0;font-size:12px;border-bottom-color:#ecebe6;align-items:start}
+#tools #revenueToolPanel .tax-summary-row span{color:#686868;line-height:1.5;max-width:65%}
+#tools #revenueToolPanel .tax-summary-row b{font-size:13px;white-space:nowrap;line-height:1.5}
+#tools #revenueToolPanel .tax-summary-row:last-child{margin-top:4px;padding-top:16px;border-top:1px solid #d9d8d2}
+#tools #revenueToolPanel .tax-summary-row:last-child span{font-weight:700;color:#111}
+#tools #revenueToolPanel .integrated-explanation{background:transparent;border:0;padding:16px 0;margin-top:8px;box-shadow:none;font-size:12px;line-height:1.7}
+#tools #revenueToolPanel .yearly-analysis{margin-top:28px}
+#tools #revenueToolPanel .yearly-subtitle{font-size:11px;text-align:left;margin-top:6px}
+#tools #revenueToolPanel #revYearStrip{gap:6px;margin:18px 0 12px}
+#tools #revenueToolPanel #revYearDetailPanel{padding:20px;border-radius:16px}
+#tools #revenueToolPanel .year-detail-price small,#tools #revenueToolPanel .year-detail-price b{display:block;text-align:right}
+#tools #revenueToolPanel .year-detail-price small{font-size:9px;color:#777;letter-spacing:.08em}
+#tools #revenueToolPanel .year-detail-price b{font-size:26px;margin-top:5px;letter-spacing:-.03em}
+#tools #revenueToolPanel .year-detail-grid.tax-detail{grid-template-columns:1fr 1fr;gap:0 24px;margin-top:8px}
+#tools #revenueToolPanel .year-detail-item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;border-bottom:1px solid #ecebe6;background:transparent;border-radius:0;padding:13px 0}
+#tools #revenueToolPanel .year-detail-item small{font-size:10px;min-height:0;letter-spacing:0;text-transform:none;line-height:1.5}
+#tools #revenueToolPanel .year-detail-item b{font-size:15px;margin:0;white-space:nowrap}
+#tools #revenueToolPanel .tax-analysis-text{border-top:0;padding-top:14px;margin-top:0}
+#tools #revenueToolPanel .tax-analysis-text p{color:#686868;font-size:11px;line-height:1.7}
+#tools #revenueToolPanel .revenue-chart-details{margin:14px 0}
+#tools #revenueToolPanel .revenue-chart-details .chart-card{border:0;box-shadow:none;padding:16px 0 0;margin:0}
+#tools #revenueToolPanel .revenue-year-table{min-width:660px!important}
+@media(max-width:1000px){#tools #revenueToolPanel #revKpis{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){
+ #tools #revenueToolPanel .integrated-results{padding:16px}
+ #tools #revenueToolPanel #revKpis{grid-template-columns:1fr;gap:8px}
+ #tools #revenueToolPanel #revKpis .integrated-kpi{min-height:100px}
+ #tools #revenueToolPanel .tax-compare-grid{grid-template-columns:1fr}
+ #tools #revenueToolPanel .year-detail-grid.tax-detail{grid-template-columns:1fr}
+ #tools #revenueToolPanel .year-detail-top{align-items:start;flex-direction:column;gap:12px}
+ #tools #revenueToolPanel .year-detail-price small,#tools #revenueToolPanel .year-detail-price b{text-align:left}
+ #tools #revenueToolPanel #revYearStrip{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
 </style>
 <script>
 (async()=>{
@@ -1083,18 +1132,22 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div><span class="eyebrow">FATURAMENTO ANO A ANO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Receita bruta, tributos e faturamento líquido.</p></div>
       <div class="yearly-actions"><button id="exportRevenueExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
-     <div id="revYearStrip" class="year-price-strip"></div>
-     <div class="chart-card">
+     <div id="revYearStrip" class="year-price-strip" aria-label="Selecionar ano do faturamento"></div>
+     <div id="revYearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
+     <details class="revenue-chart-details calc-memory">
+      <summary><span>Gráfico da transição</span><small>Comparar tributos e créditos ao longo dos anos</small></summary>
+      <div class="chart-card">
       <div class="chart-head"><div><span class="eyebrow">VISUAL DA TRANSIÇÃO</span><h4>Tributos e créditos no faturamento</h4></div><small>Débito · crédito estimado · carga líquida</small></div>
       <div id="revenueTaxChart" class="tax-chart" role="img" aria-label="Gráfico da carga tributária do faturamento de 2026 a 2033"></div>
-     </div>
+      </div>
+     </details>
+     <div class="evolution-matrix-head"><div><b>Comparação anual</b><small>Faturamento bruto, tributos e líquido de cada ano</small></div></div>
      <div class="comparison-wrap yearly-wrap compact-yearly-wrap">
       <table class="comparison-table yearly-table compact-yearly-table revenue-year-table">
        <thead><tr><th>Ano</th><th>Faturamento bruto</th><th>Tributos</th><th>Carga</th><th>Faturamento líquido</th></tr></thead>
        <tbody id="revYearlyTable"></tbody>
       </table>
      </div>
-     <div id="revYearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <div id="revYearlyNote" class="rate-note yearly-note"></div>
     </section>
 
@@ -1146,6 +1199,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-rules.js?v=20260928-41"></script>
 <script src="tax-engine.js?v=20260929-64"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260929-64" defer></script>
+<script src="app-v2.js?v=20260930-65" defer></script>
 </body>
 </html>
