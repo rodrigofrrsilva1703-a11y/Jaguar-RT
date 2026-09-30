@@ -32,8 +32,8 @@ function go(id){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  $(id)?.classList.add('active');
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
- if(id==='modules'){renderModuleGrid();renderLearningPath('learningPath');}
- if(id==='home'){renderHomeResume();renderHomeDashboard();renderLearningPath('homeLearningPath');}
+ if(id==='modules') renderModuleGrid();
+ if(id==='home'){renderHomeResume();renderHomeDashboard();}
  window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
@@ -97,27 +97,6 @@ function renderModuleGrid(){
 }
 function filterStudyModules(filter){studyFilter=filter;renderModuleGrid();}
 
-const LEARNING_PHASES=Object.freeze([
- {label:'01 · FUNDAMENTOS',title:'Como o novo IVA funciona',modules:['01','02','03','04']},
- {label:'02 · CRÉDITOS',title:'Créditos e tratamentos',modules:['05','06','07','08']},
- {label:'03 · OPERAÇÕES',title:'Comércio exterior',modules:['09']},
- {label:'04 · TRANSIÇÃO',title:'Anos e regimes',modules:['10','11','12']},
- {label:'05 · APLICAÇÃO',title:'Preço e operação',modules:['13','14','15']},
- {label:'06 · ENTREGA',title:'Consultoria',modules:['16']}
-]);
-function renderLearningPath(id){
- const el=$(id);if(!el)return;
- el.innerHTML=LEARNING_PHASES.map(function(phase){
-  const mods=phase.modules.map(function(mid){return STUDY_MODULES.find(function(m){return m.id===mid;});}).filter(Boolean);
-  const done=mods.filter(function(m){return moduleStatus(m)==='Concluído';}).length;
-  const started=mods.some(function(m){return moduleStatus(m)==='Em andamento';});
-  const pctValue=mods.length?done/mods.length*100:0;
-  return '<article class="learning-phase '+(done===mods.length?'complete':started?'active':'')+'">'+
-   '<small>'+phase.label+'</small><b>'+phase.title+'</b>'+
-   '<span>'+phase.modules.map(Number).join(' · ')+' · '+done+'/'+mods.length+' concluídos</span>'+
-   '<div class="learning-phase-progress"><i style="width:'+pctValue+'%"></i></div></article>';
- }).join('');
-}
 function currentStudyTarget(){
  const active=STUDY_MODULES.find(function(m){return moduleStatus(m)==='Em andamento';});
  return active||STUDY_MODULES.find(function(m){return moduleStatus(m)!=='Concluído';})||STUDY_MODULES[STUDY_MODULES.length-1];
@@ -165,7 +144,6 @@ function courseText(value){
 function renderHome(){
  renderHomeResume();
  renderHomeDashboard();
- renderLearningPath('learningPath');
  if($('homeModules')) $('homeModules').innerHTML=STUDY_MODULES.slice(0,6).map(moduleCard).join('');
  renderModuleGrid();
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
