@@ -39,11 +39,44 @@ function go(id){
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 
 const STUDY_PROGRESS_KEY='jaguar-rtav-study-progress-v1';
+const COURSE_ORDER_VERSION=2;
+const COURSE_ID_MIGRATION=Object.freeze({
+ '01':'01','02':'02','03':'03','04':'04','05':'05','14':'06','06':'07','16':'08',
+ '15':'09','07':'10','09':'11','10':'12','08':'13','11':'14','12':'15','13':'16'
+});
+function remapCourseId(id){
+ if(id==='all'||id==null)return id;
+ const key=String(id).padStart(2,'0');
+ return COURSE_ID_MIGRATION[key]||key;
+}
+function migrateStudyState(raw){
+ if(!raw||typeof raw!=='object')return {__orderVersion:COURSE_ORDER_VERSION};
+ if(raw.__orderVersion===COURSE_ORDER_VERSION)return raw;
+ const next={__orderVersion:COURSE_ORDER_VERSION};
+ for(const [oldId,value] of Object.entries(raw)){
+  if(oldId.startsWith('__'))continue;
+  const newId=remapCourseId(oldId);
+  if(newId)next[newId]=value;
+ }
+ return next;
+}
 let studyFilter='all';
 let activeCourse=null;
 let courseAllVisible=false;
-function studyProgress(){try{return JSON.parse(localStorage.getItem(STUDY_PROGRESS_KEY))||{};}catch(e){return {};}}
-function saveStudyProgress(value){try{localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(value));window.JaguarAccount?.changed();}catch(e){}}
+function studyProgress(){
+ try{
+  const raw=JSON.parse(localStorage.getItem(STUDY_PROGRESS_KEY))||{};
+  const migrated=migrateStudyState(raw);
+  if(migrated!==raw){localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(migrated));window.JaguarAccount?.changed();}
+  return migrated;
+ }catch(e){return {__orderVersion:COURSE_ORDER_VERSION};}
+}
+function saveStudyProgress(value){
+ try{
+  const next={...value,__orderVersion:COURSE_ORDER_VERSION};
+  localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(next));window.JaguarAccount?.changed();
+ }catch(e){}
+}
 function moduleProgress(m){const saved=studyProgress()[m.id]||{};return {read:Array.isArray(saved.read)?saved.read.filter(i=>Number.isInteger(i)&&i>=0&&i<m.blocks.length):[],step:Math.min(Math.max(Number(saved.step)||0,0),m.blocks.length-1)};}
 function moduleStatus(m){const n=moduleProgress(m).read.length;return n===m.blocks.length?'Concluído':n?'Em andamento':'Começar';}
 function moduleCard(m){
@@ -94,8 +127,45 @@ function renderHome(){
 const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v2';
 const QUIZ_SESSION_KEY='jaguar-rtav-quiz-session-v3';
 let quizSession=null;
-function quizRead(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback;}catch(e){return fallback;}}
-function quizSave(key,value){try{localStorage.setItem(key,JSON.stringify(value));window.JaguarAccount?.changed();}catch(e){}}
+function remapQuestionId(id){
+ if(typeof id!=='string')return id;
+ return id.replace(/^(\d{2})(-[mcv]\d+)$/,(m,moduleId,suffix)=>remapCourseId(moduleId)+suffix);
+}
+function migrateQuizHistory(raw){
+ if(!raw||typeof raw!=='object')return raw;
+ if(raw.__orderVersion===COURSE_ORDER_VERSION)return raw;
+ const next={...raw,__orderVersion:COURSE_ORDER_VERSION};
+ if(raw.results&&typeof raw.results==='object'){
+  next.results={};
+  for(const [key,value] of Object.entries(raw.results))next.results[key==='all'?'all':remapCourseId(key)]=value;
+ }
+ if(raw.moduleCounts&&typeof raw.moduleCounts==='object'){
+  next.moduleCounts={};
+  for(const [key,value] of Object.entries(raw.moduleCounts))next.moduleCounts[remapCourseId(key)]=value;
+ }
+ if(Array.isArray(raw.seen))next.seen=raw.seen.map(remapQuestionId);
+ return next;
+}
+function migrateQuizSession(raw){
+ if(!raw||typeof raw!=='object'||raw.__orderVersion===COURSE_ORDER_VERSION)return raw;
+ const next={...raw,__orderVersion:COURSE_ORDER_VERSION,scope:raw.scope==='all'?'all':remapCourseId(raw.scope)};
+ if(Array.isArray(raw.questions))next.questions=raw.questions.map(q=>({...q,module:remapCourseId(q.module),id:remapQuestionId(q.id)}));
+ return next;
+}
+function quizRead(key,fallback){
+ try{
+  const raw=JSON.parse(localStorage.getItem(key))||fallback;
+  const migrated=key===QUIZ_HISTORY_KEY?migrateQuizHistory(raw):key===QUIZ_SESSION_KEY?migrateQuizSession(raw):raw;
+  if(migrated&&migrated!==raw){localStorage.setItem(key,JSON.stringify(migrated));window.JaguarAccount?.changed();}
+  return migrated||fallback;
+ }catch(e){return fallback;}
+}
+function quizSave(key,value){
+ try{
+  const next=value&&typeof value==='object'?{...value,__orderVersion:COURSE_ORDER_VERSION}:value;
+  localStorage.setItem(key,JSON.stringify(next));window.JaguarAccount?.changed();
+ }catch(e){}
+}
 function quizTitle(id){return id==='all'?'Todos os módulos':`Módulo ${id} · ${STUDY_MODULES.find(m=>m.id===id)?.title||''}`;}
 function updateQuizStats(){
  const el=$('quizStats');if(!el)return;
