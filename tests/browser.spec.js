@@ -42,7 +42,7 @@ test('módulos preservam leitura, retomam etapa e filtram o andamento',async({pa
  expect(moduleTitles[5]).toContain('Saldo Credor');
  expect(moduleTitles[7]).toContain('Regimes Específicos');
  expect(moduleTitles[8]).toContain('Comércio Exterior');
- expect(moduleTitles[15]).toContain('Consultoria Contábil');
+ expect(moduleTitles[15]).toContain('Consultoria, Automação e Plano de Ação');
  await page.locator('#moduleGrid .module-card').first().click();
  await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(1);
  await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 01 DE 07');
