@@ -332,6 +332,56 @@ function renderQuizResult(){
   <div class="quiz-actions"><button class="quiz-primary" onclick="startQuiz(true)">Refazer as mesmas perguntas</button><button onclick="startQuiz(false,'${s.scope}')">Gerar perguntas novas →</button></div>`;
 }
 
+const MODULE_TOOL_MAP=Object.freeze({
+ '05':['price','Simular custo e créditos','Aplique o conteúdo comparando custo efetivo e créditos por fornecedor.'],
+ '06':['diagnostic','Abrir diagnóstico','Identifique saldos, ajustes e pontos que precisam de validação no cliente.'],
+ '07':['diagnostic','Revisar enquadramento','Separe regra padrão, redução e tratamento especial antes de calcular.'],
+ '08':['diagnostic','Diagnosticar regime específico','Cheque se o setor exige abordagem específica antes da calculadora padrão.'],
+ '09':['diagnostic','Diagnosticar operação especial','Mapeie importação, exportação ou área incentivada antes da simulação.'],
+ '10':['revenue','Simular a transição','Veja como faturamento e tributos evoluem de 2026 a 2033.'],
+ '11':['price','Comparar impacto B2B','Veja como o regime do fornecedor altera o custo do comprador.'],
+ '12':['revenue','Simular faturamento','Projete a carga sobre a receita e complemente a análise de regime.'],
+ '13':['revenue','Testar formação de preço','Use a projeção de faturamento para aplicar a lógica do módulo.'],
+ '14':['diagnostic','Revisar prontidão fiscal','Cheque cadastros, documentos e preparação operacional.'],
+ '15':['revenue','Projetar impacto financeiro','Use a simulação para discutir caixa e transição.'],
+ '16':['diagnostic','Montar roteiro do cliente','Transforme o aprendizado em um plano de análise e ação.']
+});
+function openTool(which){
+ go('tools');
+ showTaxTool(which);
+ document.querySelector('#tools .tool-switcher')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function openDiagnostic(){openTool('diagnostic');}
+function modulePracticalSummary(m){
+ const practical=(m.blocks.find(function(b){return b.k==='JAGUAR NA PRÁTICA';})||{}).x||'';
+ const lines=practical.split('\n').filter(Boolean);
+ function clean(x){
+  return courseEscape(String(x||'')
+   .replace(/^Ao terminar este módulo, você deve saber:\s*/i,'')
+   .replace(/^Na prática:\s*/i,'')
+   .replace(/^Erro comum a evitar:\s*/i,''));
+ }
+ return {
+  learned:clean(lines[0])||'Compreender o conceito e reconhecer quando ele se aplica.',
+  action:clean(lines[1])||'Validar os dados da operação antes de aplicar a regra.',
+  error:clean(lines[2])||'Transformar uma premissa didática em regra universal.'
+ };
+}
+function moduleActionHtml(m){
+ const x=MODULE_TOOL_MAP[m.id];if(!x)return '';
+ return '<div class="module-apply"><div><span>APLIQUE AGORA</span><b>'+courseEscape(x[1])+'</b><p>'+courseEscape(x[2])+'</p></div><button type="button" onclick="openTool(\''+x[0]+'\')">Abrir ferramenta →</button></div>';
+}
+function moduleSummaryHtml(m,index){
+ const sum=modulePracticalSummary(m),next=STUDY_MODULES[index+1];
+ return '<section class="module-summary">'+
+  '<div class="module-summary-head"><div><span class="eyebrow">FECHAMENTO DO MÓDULO</span><h3>O que levar para o trabalho</h3></div><span class="module-no">'+(next?'PRÓXIMO · '+next.id:'TRILHA CONCLUÍDA')+'</span></div>'+
+  '<div class="module-summary-grid">'+
+   '<div class="module-summary-item"><small>VOCÊ APRENDEU</small><b>'+sum.learned+'</b></div>'+
+   '<div class="module-summary-item"><small>NA JAGUAR</small><b>'+sum.action+'</b></div>'+
+   '<div class="module-summary-item"><small>EVITE</small><b>'+sum.error+'</b></div>'+
+  '</div></section>';
+}
+
 function openModule(id){
  const m=STUDY_MODULES.find(x=>x.id===id);
  if(!m)return;
@@ -349,6 +399,8 @@ function openModule(id){
    <header class="course-hero"><span class="module-no">MÓDULO ${m.id} DE ${STUDY_MODULES.length}</span><h1 class="page-title">${courseEscape(m.title)}</h1><p class="page-lead">${courseEscape(m.subtitle)}</p><div class="course-hero-progress"><strong id="courseProgressLabel"></strong><span class="study-progress-track"><i id="courseProgressFill"></i></span></div></header>
    <div class="course-note"><b>Premissas dos exemplos</b><p>Os valores de CBS 9,21% e IBS 18,70% são parâmetros didáticos deste curso. A alíquota efetiva e os créditos dependem do ano, do destino, do regime, da operação e dos requisitos legais. Confira as regras vigentes antes de aplicar um exemplo a uma empresa.</p></div>
    <div class="course-layout"><nav class="course-toc" aria-label="Etapas da aula"><div class="course-toc-head"><b>Nesta aula</b><span>${m.blocks.length} etapas</span></div>${m.blocks.map((b,i)=>`<button type="button" data-course-step="${i}" onclick="showCourseStep(${i})"><span class="course-step-number">${String(i+1).padStart(2,'0')}</span><span>${courseEscape(b.t)}</span><span class="course-step-check" aria-hidden="true">✓</span></button>`).join('')}<button type="button" class="course-view-all" id="courseViewAll" onclick="toggleCourseView()">Ver aula inteira</button></nav><div class="course-main"><div class="course-stage-label" id="courseStageLabel"></div><div class="lesson-stack">${blocks}</div><div class="course-controls"><button type="button" id="coursePrev" onclick="moveCourseStep(-1)">← Etapa anterior</button><button type="button" class="course-next" id="courseNext" onclick="moveCourseStep(1)">Próxima etapa →</button></div></div></div>
+   ${moduleSummaryHtml(m,index)}
+   ${moduleActionHtml(m)}
    <div class="course-quiz-callout"><div><b>Concluiu a leitura?</b><span>Confira o que aprendeu em 10 perguntas deste módulo.</span></div><button class="quiz-primary" onclick="startModuleQuiz('${m.id}')">Fazer teste do módulo ${m.id} →</button></div>
    <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
   go('modulePage');
