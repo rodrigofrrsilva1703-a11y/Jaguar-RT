@@ -471,6 +471,7 @@ function applyRegimeUI({preset=true}={}){
 
 function applyYearPreset(){
  const y=Number($('priceYear')?.value||2027);
+ yearDetailSelected=y;
  const p=TRANSITION[y]||TRANSITION[2027];
  if($('rateMode')?.value==='rtav'){
   $('cbsRate').value=p.cbs;
@@ -786,7 +787,7 @@ function renderYearlyProjection(){
  // Navegação compacta por ano.
  $('yearlyPriceStrip').innerHTML=rows.map(function(row){
   const phase=row.year===2026?'Atual':'Reforma';
-  return '<button type="button" class="year-price-card '+(row.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+row.year+')" aria-label="Ver detalhes de '+row.year+'">'+
+  return '<button type="button" '+(row.year===2026?'disabled title="Base atual de comparação" ':'')+'class="year-price-card '+(row.year===yearDetailSelected?'active':'')+'" onclick="selectYearDetail('+row.year+')" aria-label="Ver detalhes de '+row.year+'">'+
    '<span class="year-nav-year">'+row.year+'</span>'+
    '<span class="year-nav-phase">'+phase+'</span>'+
   '</button>';
@@ -879,6 +880,7 @@ function revApplyUI(opts={}){
 
 function revApplyYearPreset(){
  const y=Number($('revYear')?.value||2027);
+ revYearDetailSelected=y;
  const p=TRANSITION[y]||TRANSITION[2027];
  const r=revRegime();
 
@@ -1063,7 +1065,7 @@ function revRenderYearly(){
  if(revYearDetailSelected===null||!rows.some(function(x){return x.year===revYearDetailSelected;})) revYearDetailSelected=selected;
 
  $('revYearStrip').innerHTML=rows.map(function(x){
-  return '<button type="button" class="year-price-card '+(x.year===revYearDetailSelected?'active':'')+'" onclick="revSelectYear('+x.year+')">'+
+  return '<button type="button" '+(x.year===2026?'disabled title="Base atual de comparação" ':'')+'class="year-price-card '+(x.year===revYearDetailSelected?'active':'')+'" onclick="revSelectYear('+x.year+')">'+
    '<span class="year-nav-year">'+x.year+'</span><span class="year-nav-phase">'+(x.year===2026?'Atual':'Reforma')+'</span></button>';
  }).join('');
 

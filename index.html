@@ -698,6 +698,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
  #tools #revenueToolPanel .year-detail-price small,#tools #revenueToolPanel .year-detail-price b{text-align:left}
  #tools #revenueToolPanel #revYearStrip{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
+#tools .tool-year-selector{background:#fff;border:1px solid var(--line);padding:16px 20px;margin:16px 0;border-radius:16px}
+#tools .tool-year-heading{display:flex;justify-content:space-between;gap:12px;align-items:center}
+#tools .tool-year-heading b{font-size:13px}#tools .tool-year-heading small{font-size:10px;color:#777}
+#tools .tool-year-selector .year-price-strip,#tools #revenueToolPanel .tool-year-selector #revYearStrip{margin:12px 0 0}
+#tools .year-price-card:disabled{cursor:default;background:#efefeb;color:#888;transform:none;border-color:#e5e4de}
+@media(max-width:650px){#tools .tool-year-heading{display:block}#tools .tool-year-heading small{display:block;margin-top:5px}}
 </style>
 <script>
 (async()=>{
@@ -846,6 +852,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     </div>
    </div>
 
+   <section class="tool-year-selector"><div class="tool-year-heading"><b>Ano da análise</b><small>2026 é a base de comparação · escolha de 2027 a 2033</small></div><div id="yearlyPriceStrip" class="year-price-strip" aria-label="Selecionar ano da compra"></div></section>
    <div class="scenario-strip">
     <div><small>SEGMENTO</small><b id="activeSegmentBadge">Comércio</b></div>
     <div><small>COMPRADOR</small><b id="activeBuyerBadge">Lucro Presumido</b></div>
@@ -960,7 +967,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div><span class="eyebrow">EVOLUÇÃO DO CUSTO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Selecione um ano para ver os quatro fornecedores. A matriz abaixo mostra a evolução completa sem repetir informação em vários cards.</p></div>
       <div class="yearly-actions"><button id="exportPriceExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
-     <div id="yearlyPriceStrip" class="year-price-strip" aria-label="Selecionar ano da evolução"></div>
      <div id="yearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <div class="evolution-matrix-head"><div><b>Evolução por fornecedor</b><small>Linhas = fornecedores · colunas = anos · valores = custo efetivo</small></div></div>
      <div class="compact-yearly-wrap">
@@ -990,6 +996,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     </div>
    </div>
 
+   <section class="tool-year-selector"><div class="tool-year-heading"><b>Ano da análise</b><small>2026 é a base de comparação · escolha de 2027 a 2033</small></div><div id="revYearStrip" class="year-price-strip" aria-label="Selecionar ano do faturamento"></div></section>
    <div class="scenario-strip">
     <div><small>REGIME</small><b id="revActiveRegimeBadge">Lucro Presumido</b></div>
     <div><small>ANO EM ANÁLISE</small><b id="revActiveYearBadge">2027</b></div>
@@ -1136,7 +1143,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
       <div><span class="eyebrow">FATURAMENTO ANO A ANO</span><h3>2026 → 2033</h3><p class="yearly-subtitle">Receita bruta, tributos e faturamento líquido.</p></div>
       <div class="yearly-actions"><button id="exportRevenueExcelBtn" class="export-btn" type="button"><span class="export-icon">↓</span> Exportar .xlsx</button></div>
      </div>
-     <div id="revYearStrip" class="year-price-strip" aria-label="Selecionar ano do faturamento"></div>
      <div id="revYearDetailPanel" class="year-detail-panel" aria-live="polite"></div>
      <details class="revenue-chart-details calc-memory">
       <summary><span>Gráfico da transição</span><small>Comparar tributos e créditos ao longo dos anos</small></summary>
@@ -1203,6 +1209,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-rules.js?v=20260928-41"></script>
 <script src="tax-engine.js?v=20260930-66"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260930-66" defer></script>
+<script src="app-v2.js?v=20260930-67" defer></script>
 </body>
 </html>
