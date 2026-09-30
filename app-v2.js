@@ -312,6 +312,7 @@ function finishQuiz(){
  window.JaguarAccount?.attempt(s);
  quizSave(QUIZ_SESSION_KEY,s);
  updateQuizResume();
+ renderHomeDashboard();
  renderQuizResult();
  window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -886,8 +887,21 @@ function calcIntegrated(){
  renderBuyerExample(y,input);
  $('resultSignal').textContent='4 FORNECEDORES';
  renderYearlyProjection();
+ renderPriceConsultive(y,input);
 }
 
+function renderPriceConsultive(year,input){
+ const el=$('priceConsultive');if(!el||!yearlyRows.length)return;
+ const current=yearlyRows.find(function(r){return r.year===2026;})||yearlyRows[0];
+ const future=yearlyRows.find(function(r){return r.year===Number(year);})||yearlyRows[yearlyRows.length-1];
+ const now=supplierCostStats(current),next=supplierCostStats(future);
+ const change=effectPct(now.min,next.min);
+ el.innerHTML=
+  '<article class="consultive-card"><small>HOJE · 2026</small><b>'+money(now.min)+' a '+money(now.max)+'</b><span>Faixa de custo efetivo entre os quatro fornecedores.</span></article>'+
+  '<article class="consultive-card dark"><small>COM A REFORMA · '+year+'</small><b>'+money(next.min)+' a '+money(next.max)+'</b><span>Mesmo comprador; varia apenas o regime do fornecedor.</span></article>'+
+  '<article class="consultive-card"><small>DIFERENÇA</small><b>'+effectText(change)+'</b><span>Comparação entre os menores custos dos dois cenários; não é recomendação de fornecedor.</span></article>'+
+  '<article class="consultive-card"><small>O QUE ANALISAR</small><b>Crédito + enquadramento</b><span>Confirme direito ao crédito, operação, fornecedor, alíquota e tratamento específico.</span></article>';
+}
 let yearDetailSelected=null;
 
 function selectYearDetail(year){
@@ -1224,10 +1238,20 @@ function revCalcIntegrated(){
  $('revFutureSummary').innerHTML=summaryRows(revFutureRows(future));
  const creditSentence=hasPurchaseCredit?' Considerando a base de aquisições informada, os créditos estimados de IBS/CBS são '+money(future.purchaseCredit)+', reduzindo a carga líquida para '+money(future.netTax)+'.':'';
  $('revExplanation').innerHTML='<b>Comparação do faturamento.</b><p>Em 2026, o faturamento líquido antes de créditos das aquisições é '+money(base.net)+'. Para preservar esse mesmo líquido em '+y+', o faturamento bruto projetado é <strong>'+money(future.revenue)+'</strong> ('+effectText(delta)+'). Se o faturamento bruto permanecesse em '+money(base.revenue)+', o líquido seria '+money(unchanged.net)+'.'+creditSentence+'</p>';
+ renderRevenueConsultive(base,future,unchanged,y,delta);
 
  revRenderYearly();
 }
 
+function renderRevenueConsultive(base,future,unchanged,year,delta){
+ const el=$('revenueConsultive');if(!el)return;
+ const credit=future.purchaseCredit||0;
+ el.innerHTML=
+  '<article class="consultive-card"><small>HOJE · 2026</small><b>'+money(base.net)+'</b><span>Faturamento líquido antes dos créditos das aquisições.</span></article>'+
+  '<article class="consultive-card dark"><small>COM A REFORMA · '+year+'</small><b>'+money(future.revenue)+'</b><span>Faturamento bruto projetado para preservar o líquido-base.</span></article>'+
+  '<article class="consultive-card"><small>DIFERENÇA</small><b>'+effectText(delta)+'</b><span>'+(credit?'Créditos estimados: '+money(credit)+'.':'Sem crédito de compras informado nesta simulação.')+'</span></article>'+
+  '<article class="consultive-card"><small>O QUE ANALISAR</small><b>Margem, créditos e preço</b><span>Compare também o cenário sem reajuste: líquido de '+money(unchanged.net)+'.</span></article>';
+}
 function revSelectYear(year){
  revYearDetailSelected=Number(year);
  if(year>=2027&&$('revYear')){
