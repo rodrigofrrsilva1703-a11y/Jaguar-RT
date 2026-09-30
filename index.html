@@ -704,6 +704,38 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 #tools .tool-year-selector .year-price-strip,#tools #revenueToolPanel .tool-year-selector #revYearStrip{margin:12px 0 0}
 #tools .year-price-card:disabled{cursor:default;background:#efefeb;color:#888;transform:none;border-color:#e5e4de}
 @media(max-width:650px){#tools .tool-year-heading{display:block}#tools .tool-year-heading small{display:block;margin-top:5px}}
+/* Início com abertura compacta e três caminhos em destaque. */
+#home .interactive-hero{display:block;min-height:0;padding:30px 36px;border-radius:22px;background:#111}
+#home .hero-status{border:0;background:transparent;padding:0;margin-bottom:12px;font-size:10px}
+#home .hero-status .status-dot{display:none}
+#home .interactive-hero h1{font-size:clamp(36px,4.1vw,52px);margin:12px 0;line-height:1.05;max-width:800px}
+#home .interactive-hero .hero-copy>p{font-size:14px;line-height:1.6;max-width:720px}
+#home .interactive-hero .hero-actions{margin-top:18px}
+#home .interactive-hero .hero-actions .primary-action{padding:11px 14px;font-size:11px}
+#home .home-resume button{margin-top:14px}
+#home .home-command{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:transparent;border:0;box-shadow:none;padding:0;margin:22px 0 0;border-radius:0}
+#home .command-top{grid-column:1/-1;margin:0;display:flex;justify-content:space-between}
+#home .command-top .eyebrow{color:#777;font-size:9px}#home .command-live{color:#777}
+#home .journey-card{background:#fff;color:#111;border:1px solid var(--line)!important;border-radius:15px;padding:20px 16px;grid-template-columns:28px 1fr 18px;gap:10px;min-height:110px}
+#home .journey-card:hover{background:#f9f9f6;border-color:#111!important;transform:translateY(-2px)}
+#home .journey-card b{font-size:17px;color:#111}
+#home .journey-card small{font-size:11px;color:#686868;line-height:1.5}
+#home .journey-no{color:#888}#home .journey-card i{color:#111}
+#home .interactive-search{padding:14px 0;border:0;background:transparent;box-shadow:none;margin-top:16px;display:grid;grid-template-columns:1fr 2fr;gap:10px 24px;align-items:center}
+#home .search-intro b{font-size:14px}#home .search-intro .eyebrow{font-size:8px}
+#home .quick-topics{grid-column:2;margin:0;gap:5px;flex-wrap:wrap}
+#home .quick-topics button{font-size:9px;padding:5px 8px}
+#home .interactive-transition{border:0;box-shadow:none;background:transparent;padding:20px 0 0;margin-top:8px;border-top:1px solid var(--line);border-radius:0}
+#home .interactive-transition .section-head{margin-bottom:12px}
+#home .interactive-transition .section-head h2{font-size:24px}
+#home .interactive-transition .year{min-height:58px;padding:9px}
+#home .interactive-transition .year b{font-size:14px}
+#home .interactive-transition .year small{font-size:8px}
+#home .interactive-transition .timeline-panel{background:#fff;grid-template-columns:110px minmax(0,1fr)}
+#home .transition-selected{padding:15px;background:#e9e9e3;color:#111}
+#home .transition-selected strong{font-size:32px}#home .transition-selected span{color:#686868;font-size:9px}
+#home .transition-summary{padding:15px 18px}#home .transition-summary h3{font-size:16px}#home .transition-summary p{font-size:11px}
+@media(max-width:760px){#home .home-command{grid-template-columns:1fr}#home .journey-card{min-height:85px;padding:16px}#home .interactive-search{grid-template-columns:1fr}#home .quick-topics{grid-column:1}#home .interactive-hero{padding:25px}#home .interactive-transition .timeline-panel{grid-template-columns:1fr}#home .transition-selected{flex-direction:row;justify-content:space-between;align-items:center}}
 </style>
 <script>
 (async()=>{
@@ -749,7 +781,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
    <div id="homeResume" class="home-resume"></div>
   </div>
 
-  <div class="home-command">
+ </div>
+
+ <div class="home-command">
    <div class="command-top"><span class="eyebrow">COMECE POR AQUI</span><span class="command-live">SEU PERCURSO</span></div>
    <button class="journey-card" onclick="go('modules')">
     <span class="journey-no">01</span>
@@ -763,12 +797,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
     <span class="journey-no">03</span>
     <div><b>Quero calcular</b><small>Projete preço, crédito, custo e resultado.</small></div><i>↗</i>
    </button>
-   <div class="command-stats">
-    <div><b>13</b><small>estudos</small></div>
-    <div><b>260</b><small>questões</small></div>
-    <div><b>26–33</b><small>transição</small></div>
-   </div>
-  </div>
  </div>
 
  <div class="home-search interactive-search">
