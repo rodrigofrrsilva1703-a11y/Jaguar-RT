@@ -22,7 +22,7 @@ function formatMoneyInput(el){
  el.value=value.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function formatPrimaryMoneyInputs(){
- ['priceNow','revCurrentRevenue','revManualCbsCredit','revManualIbsCredit'].forEach(function(id){
+ ['priceNow','revCurrentRevenue','revManualCbsCredit','revManualIbsCredit','diagRevenue'].forEach(function(id){
   if($(id)?.value.trim()) formatMoneyInput($(id));
  });
 }
@@ -1013,15 +1013,20 @@ function renderYearlyProjection(){
 }
 
 function showTaxTool(which){
- const price=which!=='revenue';
+ const active=['price','revenue','diagnostic'].includes(which)?which:'price';
+ const price=active==='price',revenue=active==='revenue',diagnostic=active==='diagnostic';
  $('priceToolPanel')?.classList.toggle('active',price);
- $('revenueToolPanel')?.classList.toggle('active',!price);
+ $('revenueToolPanel')?.classList.toggle('active',revenue);
+ $('diagnosticToolPanel')?.classList.toggle('active',diagnostic);
  $('priceToolTab')?.classList.toggle('active',price);
- $('revenueToolTab')?.classList.toggle('active',!price);
+ $('revenueToolTab')?.classList.toggle('active',revenue);
+ $('diagnosticToolTab')?.classList.toggle('active',diagnostic);
  $('priceToolTab')?.setAttribute('aria-selected',price?'true':'false');
- $('revenueToolTab')?.setAttribute('aria-selected',price?'false':'true');
- try{localStorage.setItem('jaguar-rtav-active-tool',price?'price':'revenue');}catch(e){}
- if(price) calcIntegrated(); else revCalcIntegrated();
+ $('revenueToolTab')?.setAttribute('aria-selected',revenue?'true':'false');
+ $('diagnosticToolTab')?.setAttribute('aria-selected',diagnostic?'true':'false');
+ try{localStorage.setItem('jaguar-rtav-active-tool',active);}catch(e){}
+ if(price) calcIntegrated();
+ if(revenue) revCalcIntegrated();
 }
 
 function revRegime(){return $('revTaxRegime')?.value||'presumido';}
@@ -1463,6 +1468,118 @@ function exportRevenueExcel(){
   ],
   RTAV_ENGINE.revenueMemory(revenueEngineInput(),Number($('revYear')?.value||2027))
  );
+}
+
+const DIAGNOSTIC_MODULE_LABELS={
+ '02':'Destino','05':'Créditos','08':'Regimes específicos','09':'Comércio exterior','10':'Transição',
+ '11':'Simples Nacional','12':'Presumido x Real','13':'Preço e DRE','14':'Conformidade','15':'Split Payment'
+};
+function diagnosticModuleButton(id){
+ return '<button type="button" onclick="openModule(\''+id+'\')">Módulo '+id+' · '+courseEscape(DIAGNOSTIC_MODULE_LABELS[id]||'Revisar')+'</button>';
+}
+function runDiagnostic(){
+ const company=$('diagCompany')?.value.trim()||'Cliente';
+ const segment=$('diagSegment')?.value||'comercio';
+ const regime=$('diagRegime')?.value||'presumido';
+ const revenue=parseMoneyInput($('diagRevenue')?.value||0);
+ const profile=$('diagCustomerProfile')?.value||'b2b';
+ const purchases=Math.max(0,Math.min(100,num('diagPurchases')));
+ const interstate=$('diagInterstate')?.value==='yes';
+ const special=$('diagSpecial')?.value||'no';
+ const pricing=$('diagPricing')?.value==='yes';
+ const systems=$('diagSystems')?.value||'no';
+ const attention=[],simulations=[],checklist=[],mods=new Set(['10']);
+
+ if(profile!=='b2c'){
+  attention.push('Créditos transferíveis e custo efetivo são relevantes nas relações B2B.');
+  simulations.push('Comparar custo da compra por tipo de fornecedor.');
+  mods.add('05');
+ }
+ if(profile!=='b2b'||pricing){
+  attention.push('Preço final e margem precisam ser testados porque parte dos clientes não aproveita créditos.');
+  simulations.push('Projetar faturamento e preço preservando a base econômica.');
+  mods.add('13');
+ }
+ if(purchases>=30){
+  attention.push('A proporção de compras/insumos torna a qualidade dos créditos especialmente relevante.');
+  checklist.push('Mapear compras creditáveis, vedações e percentual de aproveitamento.');
+  mods.add('05');
+ }
+ if(regime==='simples'){
+  attention.push('Avaliar separadamente Simples padrão e recolhimento regular de IBS/CBS, conforme regras e prazos vigentes.');
+  simulations.push('Comparar impacto B2B do Simples padrão e do IBS/CBS regular.');
+  mods.add('11');
+ }
+ if(regime==='presumido'||regime==='real'){
+  attention.push('A análise do consumo não substitui a comparação de IRPJ/CSLL e demais efeitos do regime de renda.');
+  checklist.push('Separar análise do IBS/CBS da análise completa de Presumido x Real.');
+  mods.add('12');
+ }
+ if(revenue>5000000&&regime==='presumido'){
+  attention.push('O faturamento informado exige atenção adicional às regras vigentes de presunção e à simulação completa de IRPJ/CSLL.');
+  mods.add('12');
+ }
+ if(interstate){
+  attention.push('O destino da operação pode alterar o IBS aplicável.');
+  checklist.push('Validar local de consumo/destino e cadastros de clientes.');
+  mods.add('02');
+ }
+ if(special!=='no'){
+  if(special==='import'||special==='export'||special==='zfm'){
+   attention.push('Há operação de comércio exterior ou área incentivada: não use a regra doméstica padrão sem enquadramento.');
+   mods.add('09');
+  }else{
+   attention.push('Há indicação de regime específico/setorial: valide a mecânica própria antes da calculadora padrão.');
+   mods.add('08');
+  }
+ }
+ if(segment==='especifico'){
+  attention.push('O segmento foi marcado como potencial regime específico; confirme base, deduções, documentação e eventual DeRE.');
+  mods.add('08');
+ }
+ if(segment==='misto'){
+  attention.push('Atividade mista deve ser separada por tipo de operação antes de simular ICMS/ISS e transição.');
+  checklist.push('Separar receitas de mercadorias e serviços em cenários distintos.');
+ }
+ if(systems!=='yes'){
+  attention.push('Cadastros e emissão fiscal ainda não estão totalmente revisados.');
+  checklist.push('Revisar NCM/NBS, CST, leiautes e eventos antes das datas obrigatórias.');
+  mods.add('14');
+ }
+ if(pricing){
+  checklist.push('Recalcular preço e margem com créditos efetivamente aproveitáveis.');
+  mods.add('13');
+ }
+ checklist.push('Projetar pelo menos 2027, 2029 e 2033 e documentar as premissas usadas.');
+ checklist.push('Registrar fonte legal, data da revisão e exceções do cliente.');
+ simulations.push('Rodar cenário de faturamento na transição 2026–2033.');
+
+ const el=$('diagnosticResult');if(!el)return;
+ el.innerHTML=
+  '<div class="diagnostic-head"><div><span class="eyebrow">DIAGNÓSTICO · '+courseEscape(company.toUpperCase())+'</span><h3>Roteiro de análise</h3><p>Este resultado organiza o trabalho a fazer. Não escolhe regime, fornecedor ou estratégia automaticamente.</p></div><div class="diagnostic-score"><small>ITENS PARA REVISAR</small><b>'+(attention.length+checklist.length)+'</b></div></div>'+
+  '<div class="diagnostic-columns">'+
+   '<article class="diagnostic-box"><h4>Pontos de atenção</h4><ul>'+attention.map(function(x){return '<li>'+courseEscape(x)+'</li>';}).join('')+'</ul></article>'+
+   '<article class="diagnostic-box"><h4>Simulações recomendadas</h4><ul>'+simulations.map(function(x){return '<li>'+courseEscape(x)+'</li>';}).join('')+'</ul></article>'+
+   '<article class="diagnostic-box"><h4>Checklist do atendimento</h4><ul>'+checklist.map(function(x){return '<li>'+courseEscape(x)+'</li>';}).join('')+'</ul></article>'+
+  '</div>'+
+  '<div class="diagnostic-next">'+Array.from(mods).sort().map(diagnosticModuleButton).join('')+
+   '<button type="button" onclick="openTool(\'price\')">Simular compra →</button><button type="button" onclick="openTool(\'revenue\')">Simular faturamento →</button></div>';
+ try{
+  localStorage.setItem('jaguar-rtav-last-diagnostic',JSON.stringify({company,segment,regime,revenue,profile,purchases,interstate,special,pricing,systems,updatedAt:new Date().toISOString()}));
+ }catch(e){}
+}
+function resetDiagnostic(){
+ if($('diagCompany'))$('diagCompany').value='';
+ if($('diagSegment'))$('diagSegment').value='comercio';
+ if($('diagRegime'))$('diagRegime').value='presumido';
+ if($('diagRevenue'))$('diagRevenue').value='1.200.000,00';
+ if($('diagCustomerProfile'))$('diagCustomerProfile').value='b2b';
+ if($('diagPurchases'))$('diagPurchases').value=40;
+ if($('diagInterstate'))$('diagInterstate').value='yes';
+ if($('diagSpecial'))$('diagSpecial').value='no';
+ if($('diagPricing'))$('diagPricing').value='yes';
+ if($('diagSystems'))$('diagSystems').value='no';
+ if($('diagnosticResult'))$('diagnosticResult').innerHTML='<div class="diagnostic-empty"><b>Preencha o perfil para começar.</b><span>O resultado será um roteiro de análise, não uma escolha automática de regime.</span></div>';
 }
 
 const QUICK_PRESETS={
@@ -1954,6 +2071,7 @@ $('revHybridRateMode')?.addEventListener('change',function(){
  $(id)?.addEventListener('input',revCalcIntegrated);
 });
 $('revCurrentRevenue')?.addEventListener('blur',function(){formatMoneyInput(this);revCalcIntegrated();});
+$('diagRevenue')?.addEventListener('blur',function(){formatMoneyInput(this);});
 
 
 ['lpRevenue','lpPresumption'].forEach(function(id){$(id)?.addEventListener('input',calcLP);});
@@ -1995,5 +2113,5 @@ renderScenarioOptions('revenue');
 
 let initialTool='price';
 try{initialTool=localStorage.getItem('jaguar-rtav-active-tool')||'price';}catch(e){}
-showTaxTool(initialTool==='revenue'?'revenue':'price');
+showTaxTool(['price','revenue','diagnostic'].includes(initialTool)?initialTool:'price');
 calcLP();
