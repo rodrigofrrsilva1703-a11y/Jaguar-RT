@@ -95,6 +95,40 @@ async function supplierValue(card,label){
  return brl(await card.locator('.supplier-line').filter({hasText:label}).locator('b').textContent());
 }
 
+test('home orienta o próximo passo e integra curso, trilha e diagnóstico',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=product-layer',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await expect(page.locator('#homeDashboard .home-dashboard-card')).toHaveCount(4);
+ await expect(page.locator('#homeLearningPath .learning-phase')).toHaveCount(6);
+ await expect(page.locator('.legislative-status')).toContainText('Base técnica revisada');
+ await expect(page.locator('#homeGreeting')).toContainText('Olá, Teste');
+
+ await page.locator('nav [data-go="modules"]').click();
+ await expect(page.locator('#learningPath .learning-phase')).toHaveCount(6);
+ await page.locator('#moduleGrid .module-card').nth(4).click();
+ await expect(page.locator('#modulePage .module-summary')).toBeVisible();
+ await expect(page.locator('#modulePage .module-apply')).toBeVisible();
+ await expect(page.locator('#modulePage .module-apply')).toContainText('Simular custo e créditos');
+
+ await page.evaluate(()=>openDiagnostic());
+ await expect(page.locator('#diagnosticToolPanel')).toHaveClass(/active/);
+ await expect(page.locator('#diagnosticToolTab')).toHaveAttribute('aria-selected','true');
+ await page.locator('#diagCompany').fill('Empresa Teste');
+ await page.locator('#diagRegime').selectOption('simples');
+ await page.locator('#diagSpecial').selectOption('import');
+ await page.getByRole('button',{name:'Gerar diagnóstico'}).click();
+ await expect(page.locator('#diagnosticResult .diagnostic-box')).toHaveCount(3);
+ await expect(page.locator('#diagnosticResult')).toContainText('Comércio exterior');
+ await expect(page.locator('#diagnosticResult')).toContainText('Simples Nacional');
+
+ await page.evaluate(()=>openTool('price'));
+ await expect(page.locator('#priceConsultive .consultive-card')).toHaveCount(4);
+ await expect(page.locator('#priceConsultive')).toContainText('O QUE ANALISAR');
+ await page.evaluate(()=>openTool('revenue'));
+ await expect(page.locator('#revenueConsultive .consultive-card')).toHaveCount(4);
+ await expect(page.locator('#revenueConsultive')).toContainText('COM A REFORMA');
+});
+
 test('um comprador compara quatro regimes de fornecedor sem conferência duplicada',async({page})=>{
  const errors=[];
  page.on('console',msg=>{if(msg.type()==='error') errors.push(msg.text());});
