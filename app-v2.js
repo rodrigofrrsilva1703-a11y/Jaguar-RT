@@ -22,7 +22,7 @@ function formatMoneyInput(el){
  el.value=value.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function formatPrimaryMoneyInputs(){
- ['priceNow','revCurrentRevenue'].forEach(function(id){
+ ['priceNow','revCurrentRevenue','revManualCbsCredit','revManualIbsCredit'].forEach(function(id){
   if($(id)?.value.trim()) formatMoneyInput($(id));
  });
 }
@@ -418,6 +418,20 @@ const PURCHASE_SUPPLIERS=['simples','presumido','real','simples_hybrid'];
 
 function purchaseSegment(){return $('priceSegment')?.value||'comercio';}
 function purchaseBuyerRegime(){return $('priceBuyerRegime')?.value||'presumido';}
+function purchaseCreditUsePct(){
+ const mode=$('priceCreditMode')?.value||'full';
+ if(mode==='none') return 0;
+ if(mode==='partial') return Math.max(0,Math.min(100,num('priceCreditUsePct')));
+ return 100;
+}
+function syncPriceCreditMode(){
+ const mode=$('priceCreditMode')?.value||'full';
+ if($('priceCreditUseWrap')) $('priceCreditUseWrap').style.display=mode==='partial'?'block':'none';
+ if($('priceCreditUsePct')){
+  if(mode==='full') $('priceCreditUsePct').value=100;
+  if(mode==='none') $('priceCreditUsePct').value=0;
+ }
+}
 
 function selectedOperationType(){
  const segment=purchaseSegment();
@@ -500,8 +514,9 @@ function priceEngineInput(){
   issRate:num('issRate'),
   ipiRate:num('ipiRate'),
   simple:{annex:snAnnex(),rbt12:num('snRbt12')},
-  future:{mode:$('rateMode')?.value||'rtav',reduction:num('rateReduction'),cbs:num('cbsRate'),ibs:num('ibsRate')},
-  purchaseGeneratesCredit:true
+  future:{mode:$('rateMode')?.value||'rtav',reduction:num('rateReduction'),cbs:num('cbsRate'),ibs:num('ibsRate'),selective:num('selectiveTaxRate')},
+  purchaseGeneratesCredit:purchaseCreditUsePct()>0,
+  creditUsePct:purchaseCreditUsePct()
  };
 }
 
@@ -859,6 +874,20 @@ function revUpdateSnSummary(){
  }
 }
 
+function syncRevenueCreditMode(){
+ const mode=$('revCreditMode')?.value||'estimate';
+ if($('revEstimatedCreditFields')) $('revEstimatedCreditFields').style.display=mode==='estimate'?'block':'none';
+ if($('revManualCreditFields')) $('revManualCreditFields').style.display=mode==='manual'?'block':'none';
+}
+function syncRevenueOperation(){
+ const op=$('revOperationType')?.value||'mercadoria';
+ if(op==='servico'){
+  if($('revIcmsRate')) $('revIcmsRate').value=0;
+  if($('revIpiRate')) $('revIpiRate').value=0;
+ }else{
+  if($('revIssRate')) $('revIssRate').value=0;
+ }
+}
 function revApplyUI(opts={}){
  const preset=opts.preset!==false;
  const r=revRegime(),simple=revIsSimple(r);
@@ -909,12 +938,14 @@ function revApplyYearPreset(){
 function revenueEngineInput(){
  return {
   regime:revRegime(),
+  operationType:$('revOperationType')?.value||'mercadoria',
   amount:Math.max(0,num('revCurrentRevenue')),
   currentRates:{pis:num('revPisRate'),cofins:num('revCofinsRate'),icms:num('revIcmsRate'),iss:num('revIssRate'),ipi:num('revIpiRate')},
   simple:{annex:revAnnex(),rbt12:revRbt12()},
-  future:{mode:$('revRateMode')?.value||'rtav',reduction:num('revRateReduction'),cbs:num('revCbsRate'),ibs:num('revIbsRate')},
-  hybridFuture:{mode:$('revHybridRateMode')?.value||'rtav',reduction:num('revHybridReduction'),cbs:num('revHybridCbsRate'),ibs:num('revHybridIbsRate')},
-  purchases:{creditablePct:num('revCreditablePurchasesPct'),usePct:num('revPurchaseCreditUsePct')}
+  future:{mode:$('revRateMode')?.value||'rtav',reduction:num('revRateReduction'),cbs:num('revCbsRate'),ibs:num('revIbsRate'),selective:num('revSelectiveTaxRate')},
+  hybridFuture:{mode:$('revHybridRateMode')?.value||'rtav',reduction:num('revHybridReduction'),cbs:num('revHybridCbsRate'),ibs:num('revHybridIbsRate'),selective:0},
+  purchases:{mode:$('revCreditMode')?.value||'estimate',creditablePct:num('revCreditablePurchasesPct'),usePct:num('revPurchaseCreditUsePct'),
+   cbsCredit:num('revManualCbsCredit'),ibsCredit:num('revManualIbsCredit')}
  };
 }
 
@@ -959,13 +990,16 @@ function revFutureRows(x){
   rows.push(['DAS total',signedMoney(x.taxes,'−')],['Faturamento líquido',money(x.net)]);
   return rows;
  }
+ if((x.selectiveTax||0)>0) rows.push(['Imposto Seletivo',signedMoney(x.selectiveTax,'−')]);
  if(x.cbs>0) rows.push(['CBS',signedMoney(x.cbs,'−')]);
  if(x.ibs>0) rows.push(['IBS',signedMoney(x.ibs,'−')]);
  if(x.remnant>0) rows.push([revenueRemnantLabel(x),signedMoney(x.remnant,'−')]);
  rows.push(['Total de tributos',signedMoney(x.taxes,'−')]);
  if((x.purchaseCredit||0)>0){
-  rows.push(['Créditos estimados das aquisições',money(x.purchaseCredit)]);
+  if((x.cbsCredit||0)>0) rows.push(['Crédito CBS',money(x.cbsCredit)]);
+  if((x.ibsCredit||0)>0) rows.push(['Crédito IBS',money(x.ibsCredit)]);
   rows.push(['Carga líquida após créditos',signedMoney(x.netTax,'−')]);
+  if((x.creditBalance||0)>0) rows.push(['Saldo credor remanescente',money(x.creditBalance)]);
   rows.push(['Líquido econômico após créditos',money(x.economicNet)]);
  }
  rows.push(['Faturamento líquido antes dos créditos',money(x.net)]);
@@ -1210,7 +1244,9 @@ function exportPriceExcel(){
    ['ICMS atual %',input.icmsRate],
    ['ISS atual %',input.issRate],
    ['IPI atual %',input.ipiRate],
-   ['Créditos','Automáticos conforme os regimes do comprador e do fornecedor'],
+   ['Imposto Seletivo %',input.future.selective||0],
+   ['Aproveitamento de créditos %',input.creditUsePct],
+   ['Créditos',input.creditUsePct>0?'Conforme regime e percentual aproveitável informado':'Aquisição marcada sem direito a crédito'],
    ['RBT12 fornecedores Simples',input.simple.rbt12],
    ['Anexo fornecedores Simples',input.simple.annex],
    ['Ano destacado',selectedYear],
@@ -1233,26 +1269,29 @@ function exportRevenueExcel(){
  }
  downloadSpreadsheet(
   'analise-faturamento-'+revRegime()+'-2026-2033.xlsx',
-  ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','CBS','IBS','Tipo do tributo remanescente','Tributo remanescente','Créditos estimados das aquisições','Carga líquida','Líquido após créditos','Base DAS residual','ICMS/ISS excluído da base CBS/IBS','Base CBS/IBS'],
+  ['Ano','Regime','Sistema','Faturamento bruto','Tributos brutos','Carga bruta %','Faturamento líquido antes dos créditos','Imposto Seletivo','CBS','IBS','Tipo do tributo remanescente','Tributo remanescente','Crédito CBS','Crédito IBS','Carga líquida','Saldo credor','Líquido após créditos','Base DAS residual','ICMS/ISS excluído da base CBS/IBS','Base CBS/IBS'],
   revenueYearlyRows.map(function(x){
-   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.cbs??0,x.ibs??0,revenueRemnantLabel(x),x.remnant,x.purchaseCredit??0,x.netTax??x.taxes,x.economicNet??x.net,x.residualBase??'',x.excludedTax??'',x.cleanBase??''];
+   return [x.year,REGIME_LABELS[x.regime],x.system,x.revenue,x.taxes,x.revenue?x.taxes/x.revenue*100:0,x.net,x.selectiveTax??0,x.cbs??0,x.ibs??0,revenueRemnantLabel(x),x.remnant,x.cbsCredit??0,x.ibsCredit??0,x.netTax??x.taxes,x.creditBalance??0,x.economicNet??x.net,x.residualBase??'',x.excludedTax??'',x.cleanBase??''];
   }),
   [
    ['Regime',REGIME_LABELS[revRegime()]],['Faturamento 2026',num('revCurrentRevenue')],
    ['Período',$('revRevenuePeriod')?.value||'mensal'],
+   ['Tipo da operação',$('revOperationType')?.value||'mercadoria'],
+   ['Modo dos créditos',$('revCreditMode')?.value||'estimate'],
    ['Base de aquisições creditáveis %',num('revCreditablePurchasesPct')],
    ['Aproveitamento estimado dos créditos %',num('revPurchaseCreditUsePct')],
+   ['Crédito CBS informado',num('revManualCbsCredit')],['Crédito IBS informado',num('revManualIbsCredit')],
    ['PIS %',num('revPisRate')],['Cofins %',num('revCofinsRate')],['ICMS %',num('revIcmsRate')],
-   ['ISS %',num('revIssRate')],['IPI %',num('revIpiRate')]
+   ['ISS %',num('revIssRate')],['IPI %',num('revIpiRate')],['Imposto Seletivo %',num('revSelectiveTaxRate')]
   ],
   RTAV_ENGINE.revenueMemory(revenueEngineInput(),Number($('revYear')?.value||2027))
  );
 }
 
 const QUICK_PRESETS={
- commerce_lp:{regime:'presumido',pis:.65,cofins:3,icms:18,iss:0,ipi:0},
- services_lp:{regime:'presumido',pis:.65,cofins:3,icms:0,iss:5,ipi:0},
- services_lr:{regime:'real',pis:1.65,cofins:7.6,icms:0,iss:5,ipi:0}
+ commerce_lp:{regime:'presumido',operation:'mercadoria',pis:.65,cofins:3,icms:18,iss:0,ipi:0},
+ services_lp:{regime:'presumido',operation:'servico',pis:.65,cofins:3,icms:0,iss:5,ipi:0},
+ services_lr:{regime:'real',operation:'servico',pis:1.65,cofins:7.6,icms:0,iss:5,ipi:0}
 };
 
 function applyQuickPreset(kind){
@@ -1268,6 +1307,7 @@ function applyQuickPreset(kind){
   : {pis:'revPisRate',cofins:'revCofinsRate',icms:'revIcmsRate',iss:'revIssRate',ipi:'revIpiRate'};
 
  $(regimeId).value=p.regime;
+ if(!price&&$('revOperationType')) $('revOperationType').value=p.operation||'mercadoria';
  for(const [tax,value] of Object.entries({pis:p.pis,cofins:p.cofins,icms:p.icms,iss:p.iss,ipi:p.ipi})){
   if($(ids[tax])) $(ids[tax]).value=value;
  }
@@ -1461,13 +1501,14 @@ function printTaxReport(kind){
 }
 
 const PRICE_STATE_IDS=[
- 'priceSegment','priceOperationType','priceBuyerRegime','priceNow','icmsRate','issRate','ipiRate',
- 'snRbt12','snAnnex','priceYear','rateMode','rateReduction','cbsRate','ibsRate','priceClientName'
+ 'priceSegment','priceOperationType','priceBuyerRegime','priceCreditMode','priceCreditUsePct','priceNow','icmsRate','issRate','ipiRate',
+ 'snRbt12','snAnnex','priceYear','rateMode','rateReduction','cbsRate','ibsRate','selectiveTaxRate','priceClientName'
 ];
 const REVENUE_STATE_IDS=[
- 'revTaxRegime','revCurrentRevenue','revRevenuePeriod','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate',
- 'revSnRbt12','revSnAnnex','revYear','revRateMode','revRateReduction','revCbsRate','revIbsRate','revHybridRateMode',
- 'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditablePurchasesPct','revPurchaseCreditUsePct','revenueQuickPreset','revenueClientName'
+ 'revTaxRegime','revOperationType','revCurrentRevenue','revRevenuePeriod','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate',
+ 'revSnRbt12','revSnAnnex','revYear','revRateMode','revRateReduction','revCbsRate','revIbsRate','revSelectiveTaxRate','revHybridRateMode',
+ 'revHybridReduction','revHybridCbsRate','revHybridIbsRate','revCreditMode','revCreditablePurchasesPct','revPurchaseCreditUsePct',
+ 'revManualCbsCredit','revManualIbsCredit','revenueQuickPreset','revenueClientName'
 ];
 
 function stateKey(kind){return 'jaguar-rtav-'+kind+'-simulation-'+(kind==='price'?'v7':'v1');}
@@ -1594,7 +1635,8 @@ function loadNamedScenario(kind){
 
 function numberFromState(data,id,fallback=0){
  const raw=data?.[id];
- const v=(id==='priceNow'||id==='revCurrentRevenue')?parseMoneyInput(raw):Number(raw);
+ const moneyIds=['priceNow','revCurrentRevenue','revManualCbsCredit','revManualIbsCredit'];
+ const v=moneyIds.includes(id)?parseMoneyInput(raw):Number(raw);
  return Number.isFinite(v)?v:fallback;
 }
 
@@ -1610,23 +1652,26 @@ function priceInputFromState(data){
   issRate:numberFromState(data,'issRate',5),
   ipiRate:numberFromState(data,'ipiRate',0),
   simple:{annex:data?.snAnnex||defaultSimpleAnnex(operationType),rbt12:numberFromState(data,'snRbt12')},
-  future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate')},
-  purchaseGeneratesCredit:true
+  future:{mode:data?.rateMode||'rtav',reduction:numberFromState(data,'rateReduction'),cbs:numberFromState(data,'cbsRate'),ibs:numberFromState(data,'ibsRate'),selective:numberFromState(data,'selectiveTaxRate')},
+  purchaseGeneratesCredit:(data?.priceCreditMode||'full')!=='none',
+  creditUsePct:(data?.priceCreditMode||'full')==='partial'?numberFromState(data,'priceCreditUsePct',100):(data?.priceCreditMode==='none'?0:100)
  };
 }
 
 function revenueInputFromState(data){
  return {
   regime:data?.revTaxRegime||'presumido',
+  operationType:data?.revOperationType||'mercadoria',
   amount:numberFromState(data,'revCurrentRevenue'),
   currentRates:{
    pis:numberFromState(data,'revPisRate'),cofins:numberFromState(data,'revCofinsRate'),
    icms:numberFromState(data,'revIcmsRate'),iss:numberFromState(data,'revIssRate'),ipi:numberFromState(data,'revIpiRate')
   },
   simple:{annex:data?.revSnAnnex||'III',rbt12:numberFromState(data,'revSnRbt12')},
-  future:{mode:data?.revRateMode||'rtav',reduction:numberFromState(data,'revRateReduction'),cbs:numberFromState(data,'revCbsRate'),ibs:numberFromState(data,'revIbsRate')},
-  hybridFuture:{mode:data?.revHybridRateMode||'rtav',reduction:numberFromState(data,'revHybridReduction'),cbs:numberFromState(data,'revHybridCbsRate'),ibs:numberFromState(data,'revHybridIbsRate')},
-  purchases:{creditablePct:numberFromState(data,'revCreditablePurchasesPct'),usePct:numberFromState(data,'revPurchaseCreditUsePct',100)}
+  future:{mode:data?.revRateMode||'rtav',reduction:numberFromState(data,'revRateReduction'),cbs:numberFromState(data,'revCbsRate'),ibs:numberFromState(data,'revIbsRate'),selective:numberFromState(data,'revSelectiveTaxRate')},
+  hybridFuture:{mode:data?.revHybridRateMode||'rtav',reduction:numberFromState(data,'revHybridReduction'),cbs:numberFromState(data,'revHybridCbsRate'),ibs:numberFromState(data,'revHybridIbsRate'),selective:0},
+  purchases:{mode:data?.revCreditMode||'estimate',creditablePct:numberFromState(data,'revCreditablePurchasesPct'),usePct:numberFromState(data,'revPurchaseCreditUsePct',100),
+   cbsCredit:numberFromState(data,'revManualCbsCredit'),ibsCredit:numberFromState(data,'revManualIbsCredit')}
  };
 }
 
@@ -1674,6 +1719,8 @@ function resetSimulation(kind){
 $('priceSegment')?.addEventListener('change',function(){syncSegmentFields();applyRegimeUI({preset:false});});
 $('priceOperationType')?.addEventListener('change',function(){syncSegmentFields();applyRegimeUI({preset:false});});
 $('priceBuyerRegime')?.addEventListener('change',calcIntegrated);
+$('priceCreditMode')?.addEventListener('change',function(){syncPriceCreditMode();calcIntegrated();});
+$('priceCreditUsePct')?.addEventListener('input',calcIntegrated);
 $('snAnnex')?.addEventListener('change',function(){updateSnSummary();calcIntegrated();});
 $('snRbt12')?.addEventListener('input',function(){updateSnSummary();calcIntegrated();});
 $('priceYear')?.addEventListener('change',applyYearPreset);
@@ -1691,12 +1738,18 @@ $('rateMode')?.addEventListener('change',function(){
  $('ibsRate').readOnly=!manual;
  applyYearPreset();
 });
-['priceNow','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate'].forEach(function(id){
+['priceNow','icmsRate','issRate','ipiRate','rateReduction','cbsRate','ibsRate','selectiveTaxRate'].forEach(function(id){
  $(id)?.addEventListener('input',calcIntegrated);
 });
 $('priceNow')?.addEventListener('blur',function(){formatMoneyInput(this);calcIntegrated();});
 
 $('revTaxRegime')?.addEventListener('change',function(){revApplyUI({preset:true});});
+$('revOperationType')?.addEventListener('change',function(){syncRevenueOperation();revCalcIntegrated();});
+$('revCreditMode')?.addEventListener('change',function(){syncRevenueCreditMode();revCalcIntegrated();});
+$('revManualCbsCredit')?.addEventListener('input',revCalcIntegrated);
+$('revManualIbsCredit')?.addEventListener('input',revCalcIntegrated);
+$('revManualCbsCredit')?.addEventListener('blur',function(){formatMoneyInput(this);revCalcIntegrated();});
+$('revManualIbsCredit')?.addEventListener('blur',function(){formatMoneyInput(this);revCalcIntegrated();});
 $('revSnAnnex')?.addEventListener('change',function(){revUpdateSnSummary();revCalcIntegrated();});
 $('revSnRbt12')?.addEventListener('input',function(){revUpdateSnSummary();revCalcIntegrated();});
 $('revYear')?.addEventListener('change',revApplyYearPreset);
@@ -1720,7 +1773,7 @@ $('revHybridRateMode')?.addEventListener('change',function(){
  const manual=$('revHybridRateMode').value==='manual';
  $('revHybridCbsRate').readOnly=!manual;$('revHybridIbsRate').readOnly=!manual;revApplyYearPreset();
 });
-['revCurrentRevenue','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate','revRateReduction','revCbsRate','revIbsRate','revHybridReduction','revHybridCbsRate','revHybridIbsRate'].forEach(function(id){
+['revCurrentRevenue','revPisRate','revCofinsRate','revIcmsRate','revIssRate','revIpiRate','revRateReduction','revCbsRate','revIbsRate','revSelectiveTaxRate','revHybridReduction','revHybridCbsRate','revHybridIbsRate'].forEach(function(id){
  $(id)?.addEventListener('input',revCalcIntegrated);
 });
 $('revCurrentRevenue')?.addEventListener('blur',function(){formatMoneyInput(this);revCalcIntegrated();});
@@ -1742,18 +1795,20 @@ initQuiz();
 searchModules('');
 
 updateSnSummary();
+syncPriceCreditMode();
 applyRegimeUI({preset:true});
 revUpdateSnSummary();
+syncRevenueCreditMode();
 revApplyUI({preset:true});
 
 const priceRestored=restoreSimulation('price');
 const revenueRestored=restoreSimulation('revenue');
 formatPrimaryMoneyInputs();
 
-if(priceRestored) applyRegimeUI({preset:false});
+if(priceRestored){syncPriceCreditMode();applyRegimeUI({preset:false});}
 else calcIntegrated();
 
-if(revenueRestored) revApplyUI({preset:false});
+if(revenueRestored){syncRevenueCreditMode();revApplyUI({preset:false});}
 else revCalcIntegrated();
 
 bindAutosave('price');
