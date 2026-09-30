@@ -202,8 +202,8 @@ const STUDY_MODULES = [
         "k": "EXEMPLO NUMÉRICO"
       },
       {
-        "t": "Conexão Estrutural com o Módulo 7",
-        "x": "O modelo padrão prevê a alíquota geral de 27,91% com crédito amplo. Contudo, o texto constitucional estabeleceu exceções materiais para resguardar a essencialidade pública e setores com características econômicas específicas: quais atividades operam com redução de alíquota e quais sofrem restrições ao direito de crédito? Esses tratamentos compõem o Módulo 7.",
+        "t": "Conexão Estrutural com o Módulo 6",
+        "x": "Depois de compreender como nasce o crédito, o passo seguinte é saber o que acontece quando ele supera os débitos, como funciona o ressarcimento, quais ajustes são exigidos em devoluções e como diferenciar crédito empresarial de cashback. Esse é o foco do Módulo 6.",
         "k": "PRÓXIMA ETAPA"
       },
       {
@@ -250,6 +250,11 @@ const STUDY_MODULES = [
         "k": "EXEMPLO NUMÉRICO"
       },
       {
+        "t": "Conexão Estrutural com o Módulo 7",
+        "x": "Com os créditos, saldos e ajustes compreendidos, a próxima etapa é identificar quando a operação deixa de seguir a alíquota padrão e passa a receber redução, alíquota zero, crédito presumido ou outro tratamento diferenciado. Isso é estudado no Módulo 7.",
+        "k": "PRÓXIMA ETAPA"
+      },
+      {
         "t": "O que o colaborador da Jaguar precisa fazer na prática",
         "x": "Separar saldos de CBS e IBS, conferir a origem documental de cada crédito, identificar devoluções e ajustes, acompanhar pedidos de ressarcimento e explicar ao cliente que cashback de pessoa física não é crédito empresarial.",
         "k": "JAGUAR NA PRÁTICA"
@@ -293,6 +298,11 @@ const STUDY_MODULES = [
         "k": "ALERTA"
       },
       {
+        "t": "Conexão Estrutural com o Módulo 8",
+        "x": "Depois de distinguir o regime padrão dos tratamentos diferenciados, é necessário aprofundar os setores cuja própria mecânica de apuração muda. O Módulo 8 trata dos regimes específicos, da DeRE e da tributação setorial.",
+        "k": "PRÓXIMA ETAPA"
+      },
+      {
         "t": "O que o colaborador da Jaguar precisa fazer na prática",
         "x": "Classificar a operação como regime padrão, diferenciado ou específico antes de aplicar redução de alíquota.",
         "k": "JAGUAR NA PRÁTICA"
@@ -331,6 +341,11 @@ const STUDY_MODULES = [
         "k": "INTEGRAÇÃO"
       },
       {
+        "t": "Conexão Estrutural com o Módulo 9",
+        "x": "Dominados os principais regimes específicos internos, o curso avança para operações internacionais e territoriais incentivadas. O Módulo 9 aborda importações, exportações, Duimp, ZFM, ALC e ZPE.",
+        "k": "PRÓXIMA ETAPA"
+      },
+      {
         "t": "O que o colaborador da Jaguar precisa fazer na prática",
         "x": "Identificar o setor antes do cálculo, verificar se há regime específico e DeRE, validar leiaute e obrigatoriedade por CNPJ raiz, separar receitas do regime específico das receitas regulares e documentar qualquer premissa usada na simulação.",
         "k": "JAGUAR NA PRÁTICA"
@@ -367,6 +382,11 @@ const STUDY_MODULES = [
         "t": "5. Exemplo Prático",
         "x": "Uma empresa importa mercadoria para revenda. Antes de calcular IBS/CBS, a equipe deve identificar o valor aduaneiro, os acréscimos que integram a base, o destino da operação, eventual Imposto Seletivo e o tratamento do produto no mercado interno. Se a operação estiver ligada à ZFM, ALC, ZPE ou regime aduaneiro especial, a regra geral deve ser suspensa até que o enquadramento específico seja validado.",
         "k": "CASO PRÁTICO"
+      },
+      {
+        "t": "Conexão Estrutural com o Módulo 10",
+        "x": "Com as exceções de comércio exterior e regimes territoriais identificadas, é possível enxergar como todas essas regras entram gradualmente em vigor. O Módulo 10 organiza a transição de 2026 a 2033.",
+        "k": "PRÓXIMA ETAPA"
       },
       {
         "t": "O que o colaborador da Jaguar precisa fazer na prática",
@@ -410,6 +430,11 @@ const STUDY_MODULES = [
         "t": "Zona Franca de Manaus durante a Transição",
         "x": "A redução do IPI a zero a partir de 2027 não é absoluta. A legislação preserva hipóteses ligadas à competitividade da Zona Franca de Manaus, e a LC 214/2025 contém tratamentos próprios de IBS/CBS para operações com a ZFM e Áreas de Livre Comércio. Portanto, em operações incentivadas, não se deve aplicar automaticamente a regra geral da transição sem verificar origem, destino, habilitação e finalidade do bem.",
         "k": "EXCEÇÃO RELEVANTE"
+      },
+      {
+        "t": "Conexão Estrutural com o Módulo 11",
+        "x": "Entendido o cronograma de transição, o próximo passo é aplicar essas mudanças ao regime mais comum entre pequenas empresas. O Módulo 11 mostra as escolhas do Simples Nacional, inclusive o recolhimento regular de IBS/CBS e os novos efeitos operacionais.",
+        "k": "PRÓXIMA ETAPA"
       },
       {
         "t": "O que o colaborador da Jaguar precisa fazer na prática",
@@ -493,8 +518,8 @@ const STUDY_MODULES = [
         "k": "EXEMPLO NUMÉRICO"
       },
       {
-        "t": "Conexão Estrutural com o Módulo 14",
-        "x": "Definido o posicionamento da empresa perante o regime tributário e as alíquotas aplicáveis, impõe-se a governança operacional: como essas informações são formalizadas eletronicamente perante o Fisco? Como operam os novos Documentos Fiscais Eletrônicos (DF-e) e a declaração de débitos gerada pelo próprio sistema fazendário (Apuração Assistida)? Essa engrenagem é apresentada no Módulo 14.",
+        "t": "Conexão Estrutural com o Módulo 13",
+        "x": "Depois de comparar Lucro Presumido e Lucro Real, a análise passa do regime tributário para a formação econômica da operação. O Módulo 13 mostra como transformar tributos, créditos e margem em preço e faturamento projetados.",
         "k": "PRÓXIMA ETAPA"
       },
       {
@@ -536,8 +561,8 @@ const STUDY_MODULES = [
         "k": "EXEMPLO NUMÉRICO"
       },
       {
-        "t": "Conexão Estrutural com o Módulo 11",
-        "x": "Ajustada a metodologia de formação de preços, a análise precisa voltar-se para o enquadramento estratégico das empresas segundo o seu regime de tributação. O ponto de partida obrigatório é a análise do Simples Nacional frente à opção híbrida e às novas restrições operacionais.",
+        "t": "Conexão Estrutural com o Módulo 14",
+        "x": "Depois de formar preços e projetar margens, é preciso garantir que a operação seja documentada e apurada corretamente. O Módulo 14 trata de DF-e, cadastros, leiautes e apuração assistida.",
         "k": "PRÓXIMA ETAPA"
       },
       {
@@ -628,7 +653,7 @@ const STUDY_MODULES = [
       },
       {
         "t": "Conexão Estrutural com o Módulo 16",
-        "x": "Uma vez dominada toda a estrutura normativa, da base constitucional até a retenção eletrônica no extrato bancário, impõe-se a aplicação prática: como estruturar esses conhecimentos em serviços consultivos de alto valor para clientes e como automatizar o processamento de dados contábeis no dia a dia do escritório? O Módulo 16 transforma esse conhecimento em consultoria e plano de ação; os Módulos 14 a 16 aprofundam ressarcimento/cashback, comércio exterior e regimes específicos.",
+        "x": "Com a emissão, apuração e liquidação financeira integradas, o último passo é transformar o conhecimento técnico em diagnóstico, planejamento e execução para os clientes. O Módulo 16 encerra a trilha com consultoria, automação e plano de ação.",
         "k": "PRÓXIMA ETAPA"
       },
       {
@@ -676,7 +701,7 @@ const STUDY_MODULES = [
       },
       {
         "t": "Quadro Didático 16: Checklist Executivo de Ações Imediatas",
-        "x": "Ações Estruturadas para Aplicação Imediata:\n* [ ] Ação 1 (Saneamento de Base): Auditar 100% dos cadastros de mercadorias (NCM) e serviços (NBS) da carteira de clientes;\n* [ ] Ação 2 (NFS-e Nacional): Adequar a emissão de notas de serviço dos optantes do Simples ao leiaute nacional até 01/11/2026;\n* [ ] Ação 3 (Janela de Opção do Simples): Concluir os estudos de viabilidade e, se for o caso, exercer até 30/10/2026 a opção pelo regime regular de IBS/CBS para o primeiro semestre de 2027, observando os prazos atualizados da Resolução CGSN nº 194/2026;\n* [ ] Ação 4 (Planejamento de Fluxo de Caixa): Preparar a área financeira para o fim do regime de caixa do Simples em 01/01/2027 e simular os efeitos do split payment conforme sua implementação gradual e aplicabilidade às operações do cliente;\n* [ ] Ação 5 (Automação Operacional): Integrar o sistema contábil (Domínio) com rotinas automatizadas de importação de extratos e conciliação tripla de adquirentes.\nFechamento do Bloco Consultivo: Até aqui, a trilha já permite estruturar diagnóstico, simulação e plano de ação. Os Módulos 14 a 16 completam o curso com saldo credor/cashback, comércio exterior e regimes específicos, ampliando a capacidade de reconhecer exceções antes de aplicar a regra geral.",
+        "x": "Conclusão Consolidada: A trilha integral dos 16 módulos do JAGUAR RT percorre a Reforma Tributária em uma sequência única: fundamentos e incidência, créditos e ressarcimento, tratamentos diferenciados e específicos, comércio exterior, transição, regimes empresariais, formação de preços, conformidade digital, split payment e, por fim, aplicação consultiva. A equipe deve sempre separar regra legal vigente, premissa didática e dado concreto do cliente antes de transformar uma simulação em recomendação.",
         "k": "EXEMPLO NUMÉRICO"
       },
       {
