@@ -781,13 +781,13 @@ const QUIZ_BANK = {
       [
         "Qual critério geral orienta o creditamento sob o princípio do crédito financeiro da LC 214/2025?",
         [
-          "Toda aquisição onerada pelo imposto, vinculada à atividade econômica e comprovada por documento fiscal idôneo gera crédito financeiro pleno.",
+          "Aquisições tributadas vinculadas à atividade econômica podem gerar crédito, observados os requisitos legais, a idoneidade documental e as vedações aplicáveis.",
           "Exclusivamente mercadorias e insumos que entrem em contato físico direto com a matéria fabril.",
           "Apenas compras autorizadas previamente pela Secretaria da Fazenda Estadual de origem.",
           "Créditos são restritos a compras efetuadas de microempresas do Simples Nacional."
         ],
         0,
-        "O crédito financeiro amplo abrange qualquer bem ou serviço vinculado à atividade da pessoa jurídica, superando o antigo crédito físico."
+        "A não cumulatividade é ampla, mas o crédito depende dos requisitos e vedações previstos na legislação; não é automático em toda compra."
       ],
       [
         "No modelo padrão unificado do Simples Nacional (recolhimento no DAS), como são tratados os créditos de suas aquisições?",
@@ -803,13 +803,13 @@ const QUIZ_BANK = {
       [
         "Qual efeito prático decorre da opção da pequena empresa pelo Simples Híbrido (regime regular de CBS e IBS do art. 41)?",
         [
-          "Passa a apurar CBS e IBS pelas regras gerais, apropriando créditos de compras e transferindo crédito integral de 27,91% aos clientes corporativos.",
+          "Passa a apurar CBS e IBS pelas regras do regime regular; em operações tributadas pela premissa padrão do curso, os créditos seguem as regras regulares aplicáveis.",
           "Perde automaticamente a opção pelo Simples Nacional para IRPJ, CSLL e folha de pagamento.",
           "Fica dispensada da emissão de notas fiscais eletrônicas em operações interestaduais.",
           "Recolhe CBS e IBS exclusivamente uma vez por ano no encerramento do exercício."
         ],
         0,
-        "A opção híbrida confere competitividade B2B: a pequena empresa opera no regime regular no consumo sem perder o Simples na renda e folha."
+        "A opção pelo regime regular de IBS/CBS pode alterar a competitividade B2B sem retirar, por si só, a empresa do Simples nas demais parcelas."
       ],
       [
         "Como se calcula o Custo Efetivo de Aquisição em operações sujeitas a créditos recuperáveis?",
@@ -860,7 +860,7 @@ const QUIZ_BANK = {
         "No Simples tradicional, o valor integral da nota fiscal é absorvido como custo de aquisição por ausência de crédito financeiro."
       ],
       [
-        "Uma indústria adquire insumos de fornecedor do Simples Nacional padrão por R$ 11.000,00. O crédito transferível admitido por lei é de R$ 422,40 (3,84% de fração de IBS/CBS contida no DAS).",
+        "Uma indústria adquire insumos de fornecedor do Simples Nacional padrão por R$ 11.000,00. Para esta hipótese didática, o crédito transferível informado é de R$ 422,40 (3,84%); na prática, deve-se usar a parcela de IBS/CBS efetivamente devida no Simples.",
         "Qual é o custo efetivo de aquisição suportado pela indústria compradora?",
         [
           "R$ 10.577,60 (R$ 11.000,00 pagos − R$ 422,40 de crédito transferível).",
@@ -918,9 +918,9 @@ const QUIZ_BANK = {
         "Sendo tributos com competências e entes credores distintos (União vs. Estados/Municípios), a segregação de saldos é obrigatória."
       ],
       [
-        "O montante do crédito tributário apropriável vincula-se ao imposto efetivamente destacado no documento fiscal idôneo da operação de aquisição.",
+        "O montante do crédito apropriável depende dos valores admitidos pela legislação e corretamente documentados na operação de aquisição.",
         true,
-        "O crédito corresponde ao valor destacado na nota fiscal do fornecedor, respeitadas eventuais reduções ou alíquotas diferenciadas da operação."
+        "O crédito deve respeitar os valores admitidos, as condições de apropriação, as reduções, as vedações e os demais requisitos aplicáveis à operação."
       ],
       [
         "A apropriação de créditos tributários recuperáveis reduz o custo efetivo de aquisição suportado pelo comprador no regime regular.",
@@ -945,7 +945,7 @@ const QUIZ_BANK = {
       [
         "A regra geral da lei vincula o crédito à extinção do débito da etapa anterior, sem prejuízo da regra transitória do art. 48.",
         true,
-        "O modelo geral exige a extinção do débito (pelo split payment ou pagamento), operando o art. 48 como dispensa provisória enquanto os sistemas eletrônicos são homologados."
+        "O modelo geral vincula o crédito à extinção do débito, e o art. 48 prevê dispensa do requisito enquanto nenhuma das modalidades ali indicadas estiver implementada."
       ]
     ],
     "contexts": {
@@ -1263,7 +1263,7 @@ const QUIZ_BANK = {
         "Uma empresa comercial projeta suas vendas para o exercício de 2029, marco inicial da etapa gradual de redução de ICMS e ISS.",
         "Quais componentes tributários de consumo devem ser apurados simultaneamente no ano de 2029?",
         [
-          "90% das alíquotas vigentes de ICMS e ISS, 10% da alíquota do IBS, a CBS federal plena (9,21%) e o Imposto Seletivo se incidente.",
+          "90% das alíquotas vigentes de ICMS e ISS, 10% da alíquota do IBS, a CBS federal e o Imposto Seletivo se incidente; no Jaguar-RTAV, 9,21% é a premissa didática adotada para a CBS.",
           "Apenas o IBS com alíquota de 10%, com extinção antecipada de todos os demais tributos.",
           "Exclusivamente o ICMS e o ISS integrais, sem cobrança de CBS ou IBS no período.",
           "Tributação direta sobre a receita bruta unificada no Comitê Gestor sem emissão de NF-e."
@@ -2145,7 +2145,7 @@ const QUIZ_BANK = {
           "Crédito automático de folha"
         ],
         0,
-        "O mecanismo vincula pagamento e recolhimento de IBS/CBS."
+        "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação."
       ],
       [
         "Quais três fontes aparecem na conciliação do módulo?",
@@ -2281,9 +2281,9 @@ const QUIZ_BANK = {
         "A reconciliação aritmética fecha."
       ],
       [
-        "A taxa do cartão é o mesmo valor da CBS.",
+        "O adquirente no regime regular é sempre obrigado a recolher IBS/CBS quando o instrumento de pagamento não permitir split payment.",
         false,
-        "São componentes distintos."
+        "Falso. O art. 36 prevê que, nas condições legais, o adquirente poderá optar pelo recolhimento; não é uma obrigação automática em toda operação."
       ],
       [
         "Diferenças de centavos na conciliação devem ser ignoradas sempre.",
