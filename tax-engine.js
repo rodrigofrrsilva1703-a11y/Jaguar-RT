@@ -532,7 +532,8 @@
    mode:input.future?.mode||'rtav',
    reduction:clamp(input.future?.reduction,0,100),
    cbs:clamp(input.future?.cbs,0,100),
-   ibs:clamp(input.future?.ibs,0,100)
+   ibs:clamp(input.future?.ibs,0,100),
+   selective:clamp(input.future?.selective,0,100)
   };
 
   let currentPisCofinsPct=0,currentPisCofins=0,currentIcms=0,currentIss=0,currentIpi=0;
