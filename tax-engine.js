@@ -508,7 +508,8 @@
    economicBase=Math.max(0,currentPrice-currentDas);
   }else{
    currentPisCofinsPct=supplierRegime==='real'?9.25:3.65;
-   currentPisCofins=currentPrice*currentPisCofinsPct/100;
+   // ICMS destacado não integra a base do débito de PIS/Cofins.
+   currentPisCofins=(currentPrice-(usesIcms?currentPrice*icmsPct/100:0))*currentPisCofinsPct/100;
    currentIcms=usesIcms?currentPrice*icmsPct/100:0;
    currentIss=usesIss?currentPrice*issPct/100:0;
    currentIpi=usesIpi?currentPrice*ipiPct/100:0;
@@ -517,8 +518,16 @@
   }
 
   const simpleSupplier=supplierRegime==='simples'||supplierRegime==='simples_hybrid';
-  const regularOldTaxCredit=creditable&&!simpleSupplier&&usesIcms?currentIcms:0;
-  const realPisCofinsCredit=creditable&&!simpleSupplier?currentPrice*.0925:0;
+  // Estimativa do ICMS transferível pelo Simples para revenda/industrialização.
+  // Usa o RBT12 informado como aproximação do enquadramento do mês anterior.
+  const simpleCurrent=snEffective(2026,simple.annex,simple.rbt12);
+  const simpleIcmsRate=usesIcms&&['I','II'].includes(simple.annex)
+   ?simpleCurrent.eff*(RULES.simpleTables[simple.annex].oldBase[simpleCurrent.band]||0)/100:0;
+  const simpleIcms=currentPrice*simpleIcmsRate;
+  const regularOldTaxCredit=creditable&&usesIcms?(simpleSupplier?simpleIcms:currentIcms):0;
+  // A aquisição elegível do Simples também gera crédito no regime não cumulativo.
+  const pisCreditBase=Math.max(0,currentPrice-(usesIcms?(simpleSupplier?simpleIcms:currentIcms):0));
+  const realPisCofinsCredit=creditable?pisCreditBase*.0925:0;
   const currentCredits={
    simples:{icms:0,iss:0,ipi:0,pisCofins:0,total:0},
    presumido:{icms:regularOldTaxCredit,iss:0,ipi:0,pisCofins:0,total:regularOldTaxCredit},
@@ -561,7 +570,9 @@
    oldTaxRemnant=futurePrice*futureOldTaxPct/100;
   }
 
-  const regularOldTaxFutureCredit=creditable&&!simpleSupplier&&usesIcms?oldTaxRemnant:0;
+  const simpleFutureIcms=simpleSupplier&&usesIcms&&['I','II'].includes(simple.annex)
+   ?(supplierRegime==='simples'?futurePrice:futurePrice-cbs-ibs)*(simpleShares?.oldEff||0):0;
+  const regularOldTaxFutureCredit=creditable&&usesIcms?(simpleSupplier?simpleFutureIcms:oldTaxRemnant):0;
   const futureCredits={
    simples:{icms:0,iss:0,cbs:0,ibs:0,total:0},
    presumido:{

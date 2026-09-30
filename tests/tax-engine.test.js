@@ -213,19 +213,19 @@ const commerceLRInput={
  purchaseGeneratesCredit:true
 };
 const commerce2027=engine.commercialPurchaseComparison(commerceLRInput,2027);
-close(commerce2027.currentPisCofins,9.25,1e-10,'Fornecedor LR: PIS/Cofins atuais');
+close(commerce2027.currentPisCofins,7.585,1e-10,'Fornecedor LR: PIS/Cofins atuais');
 close(commerce2027.currentIcms,18,1e-10,'Fornecedor LR: ICMS atual');
-close(commerce2027.economicBase,72.75,1e-10,'Base econômica comercial');
+close(commerce2027.economicBase,74.415,1e-10,'Base econômica comercial');
 close(commerce2027.buyers.simples.currentCost,100,1e-10,'Simples atual sem crédito');
 close(commerce2027.buyers.presumido.currentCost,82,1e-10,'LP atual toma ICMS');
-close(commerce2027.buyers.real.currentCost,72.75,1e-10,'LR atual toma ICMS + PIS/Cofins 9,25%');
+close(commerce2027.buyers.real.currentCost,74.415,1e-10,'LR atual toma ICMS + PIS/Cofins 9,25%');
 close(commerce2027.buyers.simples_hybrid.currentCost,100,1e-10,'Simples regular ainda é Simples no cenário atual');
-close(commerce2027.cbs,72.75*.0921,1e-10,'CBS por fora sobre a base econômica');
-close(commerce2027.ibs,72.75*.001,1e-10,'IBS por fora sobre a base econômica');
-close(commerce2027.futurePrice,(72.75+72.75*.0921+72.75*.001)/(1-.18),1e-10,'Preço 2027 com ICMS remanescente por dentro');
+close(commerce2027.cbs,74.415*.0921,1e-10,'CBS por fora sobre a base econômica');
+close(commerce2027.ibs,74.415*.001,1e-10,'IBS por fora sobre a base econômica');
+close(commerce2027.futurePrice,(74.415+74.415*.0921+74.415*.001)/(1-.18),1e-10,'Preço 2027 com ICMS remanescente por dentro');
 close(commerce2027.buyers.simples.futureCost,commerce2027.futurePrice,1e-10,'Simples padrão sem crédito pós-reforma');
-close(commerce2027.buyers.presumido.futureCost,72.75,1e-10,'LP toma ICMS + CBS/IBS');
-close(commerce2027.buyers.real.futureCost,72.75,1e-10,'LR toma ICMS + CBS/IBS');
+close(commerce2027.buyers.presumido.futureCost,74.415,1e-10,'LP toma ICMS + CBS/IBS');
+close(commerce2027.buyers.real.futureCost,74.415,1e-10,'LR toma ICMS + CBS/IBS');
 close(commerce2027.buyers.simples_hybrid.futureCost,commerce2027.futurePrice-commerce2027.cbs-commerce2027.ibs,1e-10,'Simples regular toma apenas CBS/IBS');
 
 const expectedIbs={2027:.1,2028:.1,2029:1.87,2030:3.74,2031:5.61,2032:7.48,2033:18.70};
@@ -234,13 +234,13 @@ for(let year=2027;year<=2033;year++){
  const x=engine.commercialPurchaseComparison(commerceLRInput,year);
  close(x.ibsPct,expectedIbs[year],1e-10,'IBS comercial '+year);
  close(x.futureIcmsPct,18*expectedOld[year],1e-10,'ICMS remanescente '+year);
- close(x.buyers.presumido.futureCost,72.75,1e-8,'LP preserva custo econômico '+year);
- close(x.buyers.real.futureCost,72.75,1e-8,'LR preserva custo econômico '+year);
- if(year===2033) close(x.buyers.simples_hybrid.futureCost,72.75,1e-8,'Simples regular chega à base econômica em 2033');
+ close(x.buyers.presumido.futureCost,74.415,1e-8,'LP preserva custo econômico '+year);
+ close(x.buyers.real.futureCost,74.415,1e-8,'LR preserva custo econômico '+year);
+ if(year===2033) close(x.buyers.simples_hybrid.futureCost,74.415,1e-8,'Simples regular chega à base econômica em 2033');
 }
 const commerceLP=engine.commercialPurchaseComparison({...commerceLRInput,supplierRegime:'presumido'},2027);
-close(commerceLP.currentPisCofins,3.65,1e-10,'Fornecedor LP: PIS/Cofins atuais');
-close(commerceLP.economicBase,78.35,1e-10,'Fornecedor LP: base econômica');
+close(commerceLP.currentPisCofins,2.993,1e-10,'Fornecedor LP: PIS/Cofins atuais');
+close(commerceLP.economicBase,79.007,1e-10,'Fornecedor LP: base econômica');
 assert.notEqual(commerceLP.futurePrice,commerce2027.futurePrice,'LP e LR fornecedores geram preços futuros diferentes');
 
 const commerceSN=engine.commercialPurchaseComparison({...commerceLRInput,supplierRegime:'simples'},2027);
@@ -252,6 +252,12 @@ for(const supplierRegime of ['simples','presumido','real','simples_hybrid']){
  close(comparison.buyers.simples.currentCredit,0,1e-10,'Simples padrão sem crédito atual de '+supplierRegime);
  close(comparison.buyers.simples.futureCredit,0,1e-10,'Simples padrão sem crédito futuro de '+supplierRegime);
 }
+
+// Regressões: créditos atuais de aquisição elegível de fornecedor do Simples.
+close(commerceSN.buyers.presumido.currentCredit,100*.0845*.335,1e-10,'ICMS limitado à parcela do Simples');
+close(commerceSN.buyers.real.currentCredits.pisCofins,(100-100*.0845*.335)*.0925,1e-10,'Crédito não cumulativo de aquisição do Simples');
+assert.ok(commerceSN.buyers.presumido.futureCredits.icms>0,'ICMS residual do fornecedor Simples em 2027');
+close(engine.commercialPurchaseComparison({...commerceLRInput,supplierRegime:'simples'},2033).buyers.real.futureCredits.icms,0,1e-10,'ICMS extinto em 2033');
 
 // Segmentos adicionais da ferramenta de compra.
 const service2027=engine.segmentedPurchaseComparison({
@@ -274,10 +280,10 @@ const industry2027=engine.segmentedPurchaseComparison({
 },2027);
 assert.equal(industry2027.oldTaxName,'ICMS');
 close(industry2027.currentIpi,10,1e-10,'Indústria: IPI atual opcional');
-close(industry2027.economicBase,62.75,1e-10,'Indústria: base econômica');
-close(industry2027.futurePrice,(62.75+62.75*.0921+62.75*.001)/(1-.18),1e-10,'Indústria: preço 2027');
+close(industry2027.economicBase,64.415,1e-10,'Indústria: base econômica');
+close(industry2027.futurePrice,(64.415+64.415*.0921+64.415*.001)/(1-.18),1e-10,'Indústria: preço 2027');
 close(industry2027.buyers.presumido.currentCost,82,1e-10,'Indústria LP: crédito atual de ICMS');
-close(industry2027.buyers.real.currentCost,72.75,1e-10,'Indústria LR: ICMS + PIS/Cofins');
+close(industry2027.buyers.real.currentCost,74.415,1e-10,'Indústria LR: ICMS + PIS/Cofins');
 
 const mixedService=engine.segmentedPurchaseComparison({
  amount:100,segment:'misto',operationType:'servico',supplierRegime:'real',issRate:5,
@@ -300,7 +306,7 @@ const commerceSNRegular=engine.segmentedPurchaseComparison({...commerceLRInput,s
 assert.equal(commerceSNRegular.supplierRegime,'simples_hybrid');
 close(commerceSNRegular.currentDas,commerceSN.currentDas,1e-8,'Simples regular parte do mesmo DAS atual');
 close(commerceSNRegular.economicBase,commerceSN.economicBase,1e-8,'Simples regular preserva a mesma base atual');
-close(commerceSNRegular.buyers.presumido.currentCost,100,1e-8,'Comprador LP não toma crédito atual do fornecedor Simples regular');
+close(commerceSNRegular.buyers.presumido.currentCost,97.16925,1e-8,'Comprador LP toma ICMS limitado do fornecedor Simples regular');
 assert.ok(commerceSNRegular.cbs+commerceSNRegular.ibs>0,'Simples regular destaca CBS/IBS na reforma');
 assert.ok(commerceSNRegular.buyers.presumido.futureCredit>0,'Comprador regular toma crédito do Simples regular');
 assert.notEqual(commerceSNRegular.futurePrice,commerceSN.futurePrice,'Simples padrão e Simples regular geram preços futuros diferentes');
