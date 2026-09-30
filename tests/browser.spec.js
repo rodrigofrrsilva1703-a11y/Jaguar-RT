@@ -1,5 +1,16 @@
 const {test,expect}=require('@playwright/test');
 
+// Backend isolado por teste: evita usar contas reais e permite validar retomada.
+test.beforeEach(async({page})=>{
+ let state={};
+ await page.addInitScript(()=>sessionStorage.setItem('jaguarrt-session','a'.repeat(64)));
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const b=route.request().postDataJSON();
+  if(b.action==='save')state=b.data;
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+});
+
 const brl=text=>{
  const raw=String(text||'').replace(/[^0-9,.-]/g,'').replace(/\./g,'').replace(',','.');
  return Number(raw)||0;
@@ -255,4 +266,16 @@ test('fornecedores do Simples compartilham parâmetros do segmento e faturamento
  await expect(page.locator('#printReport')).toContainText('937,48');
  await expect(page.locator('#printReport')).toContainText('DAS remanescente');
  await expect(page.locator('#printReport')).toContainText('101.327,38');
+});
+
+test('painel pessoal abre sem substituir a navegação',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=account');
+ await expect(page.locator('#loginGate')).toBeHidden();
+ await expect(page.locator('nav [data-go="tools"]')).toBeVisible();
+ await page.locator('#accountToggle').click();
+ await expect(page.locator('#accountDrawer')).toBeVisible();
+ await expect(page.locator('#accountEmail')).toHaveText('teste@jaguarcontabil.com.br');
+ await expect(page.locator('#adminSection')).toBeHidden();
+ await page.locator('#accountClose').click();
+ await expect(page.locator('#accountDrawer')).toBeHidden();
 });
