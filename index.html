@@ -735,6 +735,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 @media(max-width:920px){.home-dashboard{grid-template-columns:repeat(2,1fr)}.learning-path{grid-template-columns:repeat(3,1fr)}.diagnostic-form,.diagnostic-columns{grid-template-columns:repeat(2,1fr)}.consultive-result{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.legislative-status{padding:0 12px;align-items:flex-start}.legislative-status>div span:last-child{display:none}.home-dashboard,.home-tool-grid,.learning-path,.diagnostic-form,.diagnostic-columns,.consultive-result,.module-summary-grid,.reports-insights{grid-template-columns:1fr}.home-dashboard-card{min-height:105px}.home-tool-card{min-height:150px}.module-apply,.diagnostic-head{display:block}.module-apply button{margin-top:14px;width:100%}.tool-switcher{grid-template-columns:1fr!important}.diagnostic-score{margin-top:12px}.learning-phase{padding:12px}.home-path-section .section-head p{margin-top:5px}}
 
+
+/* ===== HOME MINIMAL ===== */
+#home .home-minimal{min-height:360px}
+#home .home-progress-panel{justify-content:flex-start;padding:18px}
+#home .compact-dashboard{display:grid;grid-template-columns:1fr;gap:0;margin:8px 0 0}
+#home .compact-dashboard .home-dashboard-card{min-height:0;border:0;border-top:1px solid #2b2b2b;border-radius:0;background:transparent;color:#fff;padding:14px 0}
+#home .compact-dashboard .home-dashboard-card:first-child{border-top:0;padding-top:6px}
+#home .compact-dashboard .home-dashboard-card.primary{background:transparent}
+#home .compact-dashboard .home-dashboard-card:nth-child(4){display:none}
+#home .compact-dashboard .home-dashboard-card small,
+#home .compact-dashboard .home-dashboard-card span{color:#aaa}
+#home .compact-dashboard .home-dashboard-card b{font-size:15px;margin:3px 0}
+#home .compact-dashboard .home-dashboard-card strong{font-size:22px}
+#home .compact-dashboard .home-dashboard-card button{display:none}
+#home .home-command-links{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:auto;padding-top:12px}
+#home .home-command-links button{border:1px solid #343434;background:#171717;color:#ddd;border-radius:9px;padding:9px 10px;font-size:9px;font-weight:850}
+#home .home-search-compact{margin-top:14px;padding:14px 16px}
+#home .home-search-compact .quick-topics{display:none}
+@media(max-width:650px){
+ #home .home-minimal{min-height:auto}
+ #home .home-progress-panel{padding:15px}
+ #home .home-search-compact{padding:12px}
+}
+
 </style>
 <script>
 (async()=>{
@@ -776,71 +800,34 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
 <main id="mainContent" tabindex="-1">
 <section id="home" class="view active">
- <div class="hero home-presentation interactive-hero">
+ <div class="hero home-presentation interactive-hero home-minimal">
   <div class="hero-copy">
    <div class="hero-status"><span class="status-dot"></span><span>JAGUAR RT</span></div>
-   <span class="eyebrow">CENTRAL DE ESTUDO · REFORMA TRIBUTÁRIA</span>
+   <span class="eyebrow">REFORMA TRIBUTÁRIA · TREINAMENTO INTERNO</span>
    <h1><span id="homeGreeting">Seu próximo passo</span><br><span>está aqui.</span></h1>
-   <p>Continue a trilha, teste o que aprendeu ou aplique o conteúdo em uma análise. A página inicial mostra o que merece sua atenção agora.</p>
+   <p>Continue sua trilha de onde parou. Quando precisar estudar outro tema, testar seu conhecimento ou fazer uma análise, use a navegação principal.</p>
    <div class="hero-actions">
     <button class="primary-action" id="homePrimaryAction" onclick="go('modules')">Continuar estudando <b>→</b></button>
-    <button onclick="openDiagnostic()">Diagnosticar um cliente</button>
    </div>
    <div id="homeResume" class="home-resume"></div>
   </div>
 
-  <div class="home-command">
-   <div class="command-top"><span class="eyebrow">COMECE POR AQUI</span><span class="command-live">SEU PERCURSO</span></div>
-   <button class="journey-card" onclick="go('modules')">
-    <span class="journey-no">01</span>
-    <div><b>Quero entender</b><small>Percorra os 16 módulos na ordem recomendada.</small></div><i>↗</i>
-   </button>
-   <button class="journey-card" onclick="go('quiz')">
-    <span class="journey-no">02</span>
-    <div><b>Quero testar</b><small>Responda 10 perguntas e acompanhe sua evolução.</small></div><i>↗</i>
-   </button>
-   <button class="journey-card" onclick="go('tools')">
-    <span class="journey-no">03</span>
-    <div><b>Quero calcular</b><small>Projete preço, crédito, custo e resultado.</small></div><i>↗</i>
-   </button>
-   <div class="command-stats">
-    <div><b>16</b><small>módulos</small></div>
-    <div><b>260</b><small>questões</small></div>
-    <div><b>26–33</b><small>transição</small></div>
+  <aside class="home-command home-progress-panel">
+   <div class="command-top"><span class="eyebrow">SEU PERCURSO</span><span class="command-live">ATUAL</span></div>
+   <div id="homeDashboard" class="home-dashboard compact-dashboard" aria-live="polite"></div>
+   <div class="home-command-links">
+    <button type="button" onclick="go('quiz')">Ir para testes</button>
+    <button type="button" onclick="go('tools')">Abrir ferramentas</button>
    </div>
-  </div>
+  </aside>
  </div>
 
- <div id="homeDashboard" class="home-dashboard" aria-live="polite"></div>
-
- <section class="section home-path-section">
-  <div class="section-head"><div><span class="eyebrow">TRILHA RECOMENDADA</span><h2>Do conceito à consultoria</h2></div><p>Os 16 módulos estão organizados em 6 fases de aprendizado.</p></div>
-  <div id="homeLearningPath" class="learning-path compact"></div>
- </section>
-
- <section class="section home-tools-section">
-  <div class="section-head"><div><span class="eyebrow">APLIQUE O CONTEÚDO</span><h2>Escolha sua próxima análise</h2></div><p>Aprenda, simule e transforme o resultado em ação.</p></div>
-  <div class="home-tool-grid">
-   <button onclick="openTool('price')" class="home-tool-card"><span>COMPRA</span><b>Custo efetivo por fornecedor</b><small>Compare preço, créditos e custo de 2026 a 2033.</small><i>→</i></button>
-   <button onclick="openTool('revenue')" class="home-tool-card"><span>FATURAMENTO</span><b>Receita e carga tributária</b><small>Projete faturamento, tributos e créditos ao longo da transição.</small><i>→</i></button>
-   <button onclick="openDiagnostic()" class="home-tool-card diagnostic"><span>DIAGNÓSTICO</span><b>O que analisar neste cliente?</b><small>Receba um roteiro de pontos de atenção e simulações recomendadas.</small><i>→</i></button>
-  </div>
- </section>
-
- <div class="home-search interactive-search">
-  <div class="search-intro"><span class="eyebrow">BUSCA RÁPIDA</span><b>O que você quer entender agora?</b></div>
+ <div class="home-search interactive-search home-search-compact">
+  <div class="search-intro"><span class="eyebrow">BUSCA RÁPIDA</span><b>O que você quer entender?</b></div>
   <div class="searchbar home-searchbar">
    <span class="search-icon">⌕</span>
-   <input id="heroSearch" placeholder="Digite um tema: CBS, IBS, Simples, crédito, preço...">
+   <input id="heroSearch" placeholder="CBS, IBS, Simples, crédito, preço...">
    <button type="button" onclick="runHeroSearch()">Buscar</button>
-  </div>
-  <div class="quick-topics">
-   <span>Atalhos:</span>
-   <button onclick="quickSearch('Simples Nacional')">Simples Nacional</button>
-   <button onclick="quickSearch('crédito')">Créditos</button>
-   <button onclick="quickSearch('preço')">Formação de preço</button>
-   <button onclick="quickSearch('fato gerador')">Fato gerador</button>
-   <button onclick="quickSearch('transição')">Transição</button>
   </div>
  </div>
 
@@ -1315,7 +1302,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20260930-82" defer></script>
+<script src="app-v2.js?v=20260930-83" defer></script>
 <script src="account.js?v=80" defer></script>
 </body>
 </html>
