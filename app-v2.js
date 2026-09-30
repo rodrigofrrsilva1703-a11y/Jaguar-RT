@@ -28,13 +28,24 @@ function formatPrimaryMoneyInputs(){
 }
 const signedMoney=(value,sign)=>sign+' '+money(value);
 
-function go(id){
+const NAVIGATION_KEY='jaguar-rtav-navigation-v1';
+function readNavigation(){
+ try{return JSON.parse(localStorage.getItem(NAVIGATION_KEY))||{view:'home'};}catch(e){return {view:'home'};}
+}
+function saveNavigation(patch){
+ try{
+  const current=readNavigation();
+  localStorage.setItem(NAVIGATION_KEY,JSON.stringify({...current,...patch,updatedAt:new Date().toISOString()}));
+ }catch(e){}
+}
+function go(id,options={}){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  $(id)?.classList.add('active');
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='modules') renderModuleGrid();
  if(id==='home'){renderHomeResume();renderHomeDashboard();}
- window.scrollTo({top:0,behavior:'smooth'});
+ if(options.persist!==false)saveNavigation({view:id});
+ if(options.scroll!==false)window.scrollTo({top:0,behavior:options.instant?'auto':'smooth'});
 }
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 
@@ -359,6 +370,7 @@ function moduleSummaryHtml(m,index){
 
 function openModule(id){
  const m=STUDY_MODULES.find(x=>x.id===id);
+ if(m)saveNavigation({view:'modulePage',moduleId:m.id});
  if(!m)return;
  if(m.fullCourse){
   const index=STUDY_MODULES.indexOf(m);
@@ -460,6 +472,7 @@ function moveYear(direction){
 
 function searchModules(q){
  q=(q||'').trim().toLowerCase();
+ if($('search')?.classList.contains('active'))saveNavigation({view:'search',search:q});
  const result=STUDY_MODULES.filter(m=>JSON.stringify(m).toLowerCase().includes(q));
  $('searchResults').innerHTML=result.length?result.map(moduleCard).join(''):'<div class="empty">Nenhum conteúdo encontrado.</div>';
 }
@@ -1013,6 +1026,7 @@ function showTaxTool(which){
  $('revenueToolTab')?.setAttribute('aria-selected',revenue?'true':'false');
  $('diagnosticToolTab')?.setAttribute('aria-selected',diagnostic?'true':'false');
  try{localStorage.setItem('jaguar-rtav-active-tool',active);}catch(e){}
+ if($('tools')?.classList.contains('active'))saveNavigation({view:'tools',tool:active});
  if(price) calcIntegrated();
  if(revenue) revCalcIntegrated();
 }
@@ -2082,6 +2096,61 @@ function calcLP(){
   '<div><small>Presunção sobre excedente</small><b>'+pct(newPres*100)+'</b></div>'+
   '<div class="main-result"><small>Base com LC 224</small><strong>'+money(after)+'</strong><span>Diferença: '+money(after-before)+' · análise simplificada da base.</span></div>';
 }
+
+function restoreAppNavigation(options={}){
+ const nav=readNavigation();
+ const allowed=new Set(['home','modules','modulePage','quiz','quizPage','tools','sources','search','teamReports']);
+ let view=allowed.has(nav.view)?nav.view:'home';
+
+ if(view==='modulePage'){
+  const moduleId=String(nav.moduleId||'').padStart(2,'0');
+  if(STUDY_MODULES.some(function(m){return m.id===moduleId;})){
+   openModule(moduleId);
+   return 'modulePage';
+  }
+  view='modules';
+ }
+
+ if(view==='quizPage'){
+  if(quizSession&&Array.isArray(quizSession.questions)&&quizSession.questions.length===10){
+   renderQuiz();
+   go('quizPage',{instant:true});
+   return 'quizPage';
+  }
+  view='quiz';
+ }
+
+ if(view==='tools'){
+  go('tools',{instant:true});
+  let tool=nav.tool;
+  if(!['price','revenue','diagnostic'].includes(tool)){
+   try{tool=localStorage.getItem('jaguar-rtav-active-tool')||'price';}catch(e){tool='price';}
+  }
+  showTaxTool(tool);
+  return 'tools';
+ }
+
+ if(view==='search'){
+  const q=String(nav.search||'');
+  if($('searchInput'))$('searchInput').value=q;
+  if($('heroSearch'))$('heroSearch').value=q;
+  searchModules(q);
+  go('search',{instant:true});
+  return 'search';
+ }
+
+ if(view==='teamReports'){
+  if(options.admin){
+   go('teamReports',{instant:true});
+   return 'teamReports';
+  }
+  view='home';
+ }
+
+ go(view,{instant:true});
+ return view;
+}
+window.JaguarRestoreNavigation=restoreAppNavigation;
 
 renderHome();
 initQuiz();
