@@ -95,13 +95,15 @@ async function supplierValue(card,label){
  return brl(await card.locator('.supplier-line').filter({hasText:label}).locator('b').textContent());
 }
 
-test('home orienta o próximo passo e integra curso, trilha e diagnóstico',async({page})=>{
+test('home orienta o próximo passo sem sobrecarregar a tela',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=product-layer',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#accountToggle')).toBeVisible();
- await expect(page.locator('#homeDashboard .home-dashboard-card')).toHaveCount(4);
- await expect(page.locator('#homeLearningPath .learning-phase')).toHaveCount(6);
+ await expect(page.locator('#homeDashboard .home-dashboard-card')).toHaveCount(3);
+ await expect(page.locator('#homeLearningPath')).toHaveCount(0);
+ await expect(page.locator('#home .home-tool-grid')).toHaveCount(0);
  await expect(page.locator('.legislative-status')).toContainText('Base técnica revisada');
  await expect(page.locator('#homeGreeting')).toContainText('Olá, Teste');
+ await expect(page.locator('#home .home-command-links button')).toHaveCount(2);
 
  await page.locator('nav [data-go="modules"]').click();
  await expect(page.locator('#learningPath .learning-phase')).toHaveCount(6);
