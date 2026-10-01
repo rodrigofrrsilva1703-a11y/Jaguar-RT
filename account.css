@@ -36,16 +36,26 @@
 .login-layout .login-note{margin-top:32px}.login-layout .login-note small{font-size:10px}
 @media(max-width:700px){.login-gate{padding:24px 16px}.login-layout{max-width:440px;grid-template-columns:1fr;border-radius:18px}.login-welcome{padding:25px 28px;border-right:0;border-bottom:1px solid #e1e1d9}.login-welcome-copy{margin:25px 0 0}.login-welcome .login-eyebrow,.login-welcome-copy p,.login-path{display:none}.login-welcome h2{font-size:25px;margin:0;line-height:1.2}.login-welcome h2 br{display:none}.login-layout .login-card{padding:28px}.login-layout .login-intro{margin-bottom:25px}.login-layout .login-card h1{font-size:23px}.login-layout .login-note{margin-top:25px}}
 /* Motion stays short and uses compositor-friendly properties. */
-.account-drawer:not([hidden]){animation:drawer-enter 260ms cubic-bezier(.22,1,.36,1) both}
+.account-drawer:not([hidden]){animation:drawer-enter 420ms cubic-bezier(.22,1,.36,1) both}
 .account-backdrop:not([hidden]){animation:backdrop-enter 180ms ease-out both}
-@keyframes drawer-enter{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes drawer-enter{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:translateX(0)}}
 @keyframes backdrop-enter{from{opacity:0}to{opacity:1}}
 @media(hover:hover) and (pointer:fine){
- .module-card,.journey-card{transition:transform 180ms ease-out,box-shadow 180ms ease-out,border-color 180ms ease-out}
- .module-card:hover,.journey-card:hover{transform:translateY(-2px)}
+ .module-card,.journey-card{transition:transform 280ms cubic-bezier(.22,1,.36,1),box-shadow 280ms ease,border-color 280ms ease}
+ .module-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px #1527190d;border-color:#9ca899}
+ .journey-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px #00000016}
+ .primary-action b,.account-chevron{transition:transform 280ms cubic-bezier(.22,1,.36,1)}
+ .primary-action:hover b,.account-toggle:hover .account-chevron{transform:translateX(3px)}
 }
+.module-card:active,.journey-card:active,.primary-action:active,.account-toggle:active{transform:scale(.985);transition:transform 120ms ease-out}
+.account-mini-track i,.study-progress-fill,.study-progress-track i,.module-card-progress i{transition:width 600ms cubic-bezier(.22,1,.36,1)}
+nav button,.bottom-nav button{transition:background 220ms ease,color 220ms ease}
+.login-layout{animation:login-enter 650ms cubic-bezier(.22,1,.36,1) both}
+@keyframes login-enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.account-drawer:not([hidden]){animation-duration:340ms}.login-layout{animation-duration:440ms}}
 @media(prefers-reduced-motion:reduce){
  html{scroll-behavior:auto!important}
- .account-drawer,.account-backdrop{animation:none!important}
- .module-card,.journey-card{transition:none!important;transform:none!important}
+ .account-drawer,.account-backdrop,.login-layout{animation:none!important}
+ .module-card,.journey-card,.primary-action,.account-toggle,.primary-action b,.account-chevron{transition:none!important;transform:none!important}
+ .account-mini-track i,.study-progress-fill,.study-progress-track i,.module-card-progress i,nav button,.bottom-nav button{transition:none!important}
 }

@@ -41,6 +41,13 @@ function saveNavigation(patch){
 let homeEntranceObserver=null;
 let homeEntranceAnimations=[];
 const homeRevealedElements=new WeakSet();
+let viewEntrance=null;
+function animateViewEntrance(id){
+ viewEntrance?.cancel();
+ if(id==='home'||$('siteShell')?.inert||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const view=$(id);if(!view)return;
+ viewEntrance=view.animate([{opacity:.3,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:380,easing:'cubic-bezier(.22,1,.36,1)'});
+}
 function stopHomeEntrance(){
  homeEntranceObserver?.disconnect();
  homeEntranceObserver=null;
@@ -59,13 +66,13 @@ function animateHomeEntrance(){
   const animation=el.animate(
    [{opacity:0,transform:`translateY(${card?8:12}px)`},
     {opacity:1,transform:'translateY(0)'}],
-   {duration:mobile?320:440,delay:Math.min(delay,mobile?100:160),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}
+   {duration:mobile?420:620,delay:Math.min(delay,mobile?180:260),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}
   );
   homeEntranceAnimations.push(animation);
   animation.finished.then(()=>{homeEntranceAnimations=homeEntranceAnimations.filter(a=>a!==animation);},()=>{});
  };
- home.querySelectorAll('.hero-copy > *').forEach((el,index)=>play(el,index*40));
- play(home.querySelector('.home-progress-panel'),100,true);
+ home.querySelectorAll('.hero-copy > *').forEach((el,index)=>play(el,index*65));
+ play(home.querySelector('.home-progress-panel'),mobile?160:220,true);
  const reveal=el=>{
   if(el.classList.contains('transition-home')){
    play(el.querySelector('.section-head'));
@@ -85,6 +92,7 @@ function go(id,options={}){
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='modules') renderModuleGrid();
  if(id==='home'){renderHomeResume();renderHomeDashboard();animateHomeEntrance();}
+ animateViewEntrance(id);
  if(options.persist!==false)saveNavigation({view:id});
  if(options.scroll!==false)window.scrollTo({top:0,behavior:options.instant?'auto':'smooth'});
 }
@@ -543,6 +551,10 @@ function pickYear(y){
  const years=Object.keys(TIMELINE);
  const idx=years.indexOf(String(y));
  $('timelinePanel').innerHTML=`<div class="transition-selected"><strong>${y}</strong><span>${courseEscape(info.phase)}</span></div><div class="transition-summary"><h3>${courseEscape(info.short)}</h3><p>${courseEscape(o.text)}</p>${Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">Os percentuais indicam a proporção da transição, não a alíquota final.</small>':''}<div class="transition-panel-actions"><button type="button" onclick="moveYear(-1)" ${idx===0?'disabled':''}>← Anterior</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Cronograma oficial ↗</a><button type="button" onclick="moveYear(1)" ${idx===years.length-1?'disabled':''}>Próximo →</button></div></div>`;
+ if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  const summary=$('timelinePanel').querySelector('.transition-summary');
+  summary?.animate([{opacity:.25,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:320,easing:'cubic-bezier(.22,1,.36,1)'});
+ }
 }
 
 function moveYear(direction){
