@@ -2,6 +2,7 @@
 'use strict';
 const ENDPOINT='https://dliycybiocnhvqilbrlj.supabase.co/functions/v1/jaguarrt';
 const TOKEN_KEY='jaguarrt-session';
+const PROFILE_KEY='jaguarrt-profile';
 const KEYS=['jaguar-rtav-study-progress-v1','jaguar-rtav-quiz-history-v2','jaguar-rtav-quiz-session-v3'];
 function savedToken(){
  try{return localStorage.getItem(TOKEN_KEY)||sessionStorage.getItem(TOKEN_KEY)||'';}catch(e){return sessionStorage.getItem(TOKEN_KEY)||'';}
@@ -15,6 +16,29 @@ const by=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}};
 async function api(action,data,extra={}){const r=await fetch(ENDPOINT,{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json'},body:JSON.stringify({action,token,data,...extra})});const x=await r.json();if(!r.ok||x.error)throw Error(x.error||'Não foi possível conectar.');return x;}
+function cacheProfile(){
+ try{localStorage.setItem(PROFILE_KEY,JSON.stringify({email:me.email,admin:!!me.admin,sessionPrefix:token.slice(0,12)}));}catch(e){}
+}
+function clearProfile(){try{localStorage.removeItem(PROFILE_KEY);}catch(e){}}
+function finishPreview(){document.documentElement.classList.remove('has-saved-session');}
+function showSessionPreview(){
+ // Cached identity only paints this browser's last view; the server still authorizes all requests.
+ const profile=read(PROFILE_KEY,null);
+ by('loginGate').hidden=true;
+ by('siteShell').hidden=false;
+ by('siteShell').inert=true;
+ if(profile?.email&&profile.sessionPrefix===token.slice(0,12)){
+  me={email:profile.email,admin:false,state:normalizeCourseState(snapshot()),attempts:[]};
+  render();by('accountToggle').hidden=false;
+  window.JaguarRestoreNavigation?.({admin:profile.admin===true});
+ }else{
+  // An existing session from an older site version has no cached profile yet.
+  let savedNavigation;
+  try{savedNavigation=localStorage.getItem('jaguar-rtav-navigation-v1');}catch(e){}
+  window.JaguarRestoreNavigation?.({admin:false});
+  if(savedNavigation){try{localStorage.setItem('jaguar-rtav-navigation-v1',savedNavigation);}catch(e){}}
+ }
+}
 function status(text){by('accountStatus').textContent=text;}
 function clearLocal(){KEYS.forEach(k=>localStorage.removeItem(k));quizSession=null;}
 function normalizeCourseState(state={}){
@@ -70,7 +94,7 @@ function attemptsHtml(attempts){return attempts.length?attempts.slice(0,30).map(
 function render(){if(!me)return;by('accountEmail').textContent=me.email;const p=progress(me.state);me.state=p.state;const name=me.email.split('@')[0].split(/[._-]+/).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');if(by('homeGreeting'))by('homeGreeting').textContent='Olá, '+name;by('accountName').textContent=name;by('drawerName').textContent=name;by('drawerAvatar').textContent=name.split(' ').map(w=>w[0]).slice(0,2).join('');by('accountAvatar').textContent=name.split(' ').map(w=>w[0]).slice(0,2).join('');by('accountProgress').textContent=p.pct+'%';by('accountMiniFill').style.width=p.pct+'%';by('accountToggle').setAttribute('aria-label',name+', '+p.pct+'% estudado. Abrir meu percurso');by('accountContent').innerHTML=`<div class="account-summary"><strong>${p.pct}<small>%</small></strong><span>Seu progresso<small>${p.done} de ${STUDY_MODULES.length} módulos concluídos</small></span></div><progress max="100" value="${p.pct}"></progress><h3>Seus módulos</h3><ul class="account-list">${STUDY_MODULES.map(m=>{const n=new Set(me.state?.study?.[m.id]?.read||[]).size;return `<li class="${n===m.blocks.length?'module-done':n?'module-started':''}"><button type="button" class="account-module" data-module="${m.id}" aria-label="Abrir Módulo ${Number(m.id)}: ${esc(m.title)}"><span><i>${n===m.blocks.length?'✓':String(Number(m.id)).padStart(2,'0')}</i>Módulo ${Number(m.id)}</span><b>${n}/${m.blocks.length}</b></button></li>`;}).join('')}</ul><details class="account-tests"><summary>Resultados dos testes · ${(me.attempts||[]).length}</summary><ul class="account-list">${attemptsHtml(me.attempts||[])}</ul></details>`;by('adminSection').hidden=!me.admin;renderHomeDashboard();}
 async function enter(x){token=x.token||token;persistToken(token);me=x;const pending=read(pendingKey(),null);const original=me.state||{};const remote=normalizeCourseState(original),local=pending?.state?normalizeCourseState(pending.state):null;
 if(local){for(const m of STUDY_MODULES){const old=remote.study?.[m.id],next=local.study?.[m.id];if(old||next)local.study[m.id]={...old,...next,read:[...new Set([...(old?.read||[]),...(next?.read||[])])]};}}
-const normalized=hydrate(local||remote);const migrated=JSON.stringify(normalized)!==JSON.stringify(original);me={...me,state:normalized};attemptQueue=pending?.attempts||readSessionAttempts(me.email);loaded=true;by('loginGate').hidden=true;if(by('authLoading'))by('authLoading').hidden=true;by('siteShell').inert=false;by('siteShell').hidden=false;by('accountToggle').hidden=false;render();const restored=window.JaguarRestoreNavigation?.({admin:!!me.admin})||'home';if(restored==='teamReports'&&me.admin)loadReports();status(migrated?'Progresso atualizado para a nova ordem':'Progresso sincronizado');if(migrated||pending||attemptQueue.length)schedule();}
+const normalized=hydrate(local||remote);const migrated=JSON.stringify(normalized)!==JSON.stringify(original);me={...me,state:normalized};attemptQueue=pending?.attempts||readSessionAttempts(me.email);loaded=true;cacheProfile();by('loginGate').hidden=true;finishPreview();by('siteShell').inert=false;by('siteShell').hidden=false;by('accountToggle').hidden=false;render();const restored=window.JaguarRestoreNavigation?.({admin:!!me.admin})||'home';if(restored==='teamReports'&&me.admin)loadReports();status(migrated?'Progresso atualizado para a nova ordem':'Progresso sincronizado');if(migrated||pending||attemptQueue.length)schedule();}
 by('loginForm').addEventListener('submit',async e=>{e.preventDefault();const button=by('loginSubmit');button.disabled=true;by('loginError').textContent='Entrando…';try{const x=await api('login',null,{email:by('loginEmail').value.trim(),password:by('loginPassword').value});by('loginPassword').value='';await enter(x);by('loginError').textContent='';}catch(e){by('loginError').textContent=e.message;}finally{button.disabled=false;}});
 by('accountContent').addEventListener('click',e=>{const button=e.target.closest('[data-module]');if(!button)return;close();openModule(button.dataset.module);});
 let priorFocus;
@@ -78,7 +102,7 @@ function close(){by('accountDrawer').hidden=true;by('accountBackdrop').hidden=tr
 by('accountToggle').onclick=async()=>{priorFocus=document.activeElement;by('accountDrawer').hidden=false;by('accountBackdrop').hidden=false;by('accountToggle').setAttribute('aria-expanded','true');by('accountClose').focus();await flush();};
 by('accountClose').onclick=close;by('accountBackdrop').onclick=close;
 by('accountDrawer').addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Tab'){const els=[...by('accountDrawer').querySelectorAll('button,input,a,summary,select')].filter(x=>!x.hidden&&x.offsetParent);if(e.shiftKey&&document.activeElement===els[0]){e.preventDefault();els.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===els.at(-1)){e.preventDefault();els[0].focus();}}});
-by('accountLogout').onclick=async()=>{await flush();try{await api('logout');}catch{status('Não foi possível encerrar no servidor. Tente novamente.');return;}loaded=false;token='';me=null;team=[];by('reportsList').innerHTML='';by('reportsSummary').innerHTML='';attemptQueue=[];persistToken('');try{localStorage.setItem('jaguar-rtav-navigation-v1',JSON.stringify({view:'home'}));}catch(e){}clearLocal();close();by('accountToggle').hidden=true;by('siteShell').hidden=true;by('siteShell').inert=true;by('loginGate').hidden=false;by('loginEmail').focus();};
+by('accountLogout').onclick=async()=>{await flush();try{await api('logout');}catch{status('Não foi possível encerrar no servidor. Tente novamente.');return;}loaded=false;token='';me=null;team=[];by('reportsList').innerHTML='';by('reportsSummary').innerHTML='';attemptQueue=[];persistToken('');clearProfile();finishPreview();try{localStorage.setItem('jaguar-rtav-navigation-v1',JSON.stringify({view:'home'}));}catch(e){}clearLocal();close();by('accountToggle').hidden=true;by('siteShell').hidden=true;by('siteShell').inert=true;by('loginGate').hidden=false;by('loginEmail').focus();};
 let team=[];
 function personName(email){return email.split('@')[0].split(/[._-]+/).map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');}
 function reportMetrics(a){
@@ -144,23 +168,22 @@ window.addEventListener('pagehide',()=>{if(loaded&&(read(pendingKey(),null)||att
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&loaded)flush();});
 (async()=>{
  by('siteShell').inert=true;
- by('siteShell').hidden=true;
- by('loginGate').hidden=true;
- const loading=by('authLoading');
- if(loading)loading.hidden=false;
  if(!token){
-  if(loading)loading.hidden=true;
+  finishPreview();
+  by('siteShell').hidden=true;
   by('loginGate').hidden=false;
   by('loginEmail').focus();
   return;
  }
+ showSessionPreview();
  try{
   await enter(await api('state'));
-  if(loading)loading.hidden=true;
  }catch(e){
-  token='';
-  persistToken('');
-  if(loading)loading.hidden=true;
+  token='';loaded=false;me=null;
+  persistToken('');clearProfile();finishPreview();
+  by('accountToggle').hidden=true;
+  by('siteShell').hidden=true;
+  by('siteShell').inert=true;
   by('loginGate').hidden=false;
   by('loginError').textContent=e.message;
   by('loginEmail').focus();

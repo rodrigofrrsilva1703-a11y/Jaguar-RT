@@ -511,3 +511,53 @@ test('um colaborador não recebe atalho administrativo',async({page})=>{
  await expect(page.locator('#adminSection')).toBeHidden();
 });
 
+test('recarregar mostra a última aula antes da validação da sessão, sem tela loading',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let state={study:{__orderVersion:2}},hold=false,release;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const b=route.request().postDataJSON();
+  if(b.action==='save')state=b.data;
+  if(b.action==='state'&&hold)await new Promise(resolve=>{release=resolve;});
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=no-loading');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>openModule('01'));
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#accountStatus')).toContainText('Progresso salvo');
+ hold=true;
+ await page.reload({waitUntil:'domcontentloaded'});
+ await expect(page.locator('#siteShell')).toBeVisible();
+ await expect(page.locator('#loginGate')).toBeHidden();
+ await expect(page.locator('#authLoading')).toHaveCount(0);
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await expect(page.locator('#accountName')).toHaveText('Teste');
+ expect(await page.locator('#siteShell').evaluate(el=>el.inert)).toBe(true);
+ await expect.poll(()=>typeof release).toBe('function');release();
+ await expect.poll(()=>page.locator('#siteShell').evaluate(el=>el.inert)).toBe(false);
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+});
+
+test('sessão expirada volta ao login após a validação, sem expor relatórios',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let expired=false;
+ await page.route('**/functions/v1/jaguarrt',route=>route.fulfill(expired?{status:401,json:{error:'Sessão expirada. Entre novamente.'}}:{json:{email:'teste@jaguarcontabil.com.br',admin:false,state:{study:{__orderVersion:2}},attempts:[]}}));
+ await page.goto('http://127.0.0.1:4173/?e2e=expired-session');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ expired=true;
+ await page.reload();
+ await expect(page.locator('#loginGate')).toBeVisible();
+ await expect(page.locator('#siteShell')).toBeHidden();
+ await expect(page.locator('#accountToggle')).toBeHidden();
+ await expect(page.locator('#loginError')).toContainText('Sessão expirada');
+});
+
+test('sem sessão salva abre diretamente o login, sem mostrar o conteúdo',async({page})=>{
+ await page.addInitScript(()=>{localStorage.removeItem('jaguarrt-session');sessionStorage.removeItem('jaguarrt-session');});
+ await page.goto('http://127.0.0.1:4173/?e2e=login-direct');
+ await expect(page.locator('#loginGate')).toBeVisible();
+ await expect(page.locator('#siteShell')).toBeHidden();
+ await expect(page.locator('#authLoading')).toHaveCount(0);
+ await expect(page.locator('#loginEmail')).toBeFocused();
+});
+
