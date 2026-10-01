@@ -374,33 +374,36 @@ function openTool(which){
  document.querySelector('#tools .tool-switcher')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function openDiagnostic(){openTool('diagnostic');}
-function modulePracticalSummary(m){
- const practical=(m.blocks.find(function(b){return b.k==='JAGUAR NA PRÁTICA';})||{}).x||'';
- const lines=practical.split('\n').filter(Boolean);
- function clean(x){
-  return courseEscape(String(x||'')
-   .replace(/^Ao terminar este módulo, você deve saber:\s*/i,'')
-   .replace(/^Na prática:\s*/i,'')
-   .replace(/^Erro comum a evitar:\s*/i,''));
- }
- return {
-  learned:clean(lines[0])||'Compreender o conceito e reconhecer quando ele se aplica.',
-  action:clean(lines[1])||'Validar os dados da operação antes de aplicar a regra.',
-  error:clean(lines[2])||'Transformar uma premissa didática em regra universal.'
- };
-}
+const MODULE_COMMON_MISTAKES=Object.freeze({
+ '01':'Tratar 9,21% e 18,70% como alíquotas universais definitivas.',
+ '02':'Usar automaticamente a sede do fornecedor como local do imposto.',
+ '03':'Confundir fim do regime de caixa do Simples com a regra de antecipação do IBS/CBS.',
+ '04':'Aplicar a alíquota sobre o valor errado ou incluir IBS/CBS na própria base.',
+ '05':'Assumir que toda compra gera crédito integral.',
+ '06':'Usar crédito de CBS/IBS automaticamente para quitar outros tributos.',
+ '07':'Resolver toda exceção usando apenas um campo genérico de redução.',
+ '08':'Usar a calculadora padrão sem verificar o setor.',
+ '09':'Tratar ZFM, ALC ou ZPE como operação doméstica comum.',
+ '10':'Usar a carga cheia de 2033 em todos os anos da transição.',
+ '11':'Escolher o regime apenas porque ele transfere mais crédito.',
+ '12':'Concluir que um regime é melhor olhando apenas a base presumida ou a margem contábil.',
+ '13':'Prometer que a Reforma sempre reduzirá preço ou manterá o mesmo lucro.',
+ '14':'Aceitar o valor pré-preenchido sem conferência.',
+ '15':'Presumir que toda venda em Pix, cartão ou boleto terá a mesma segregação imediatamente.',
+ '16':'Entregar uma simulação como recomendação definitiva sem registrar premissas e limitações.'
+});
+
 function moduleActionHtml(m){
  const x=MODULE_TOOL_MAP[m.id];if(!x)return '';
  return '<div class="module-apply"><div><span>APLIQUE AGORA</span><b>'+courseEscape(x[1])+'</b><p>'+courseEscape(x[2])+'</p></div><button type="button" onclick="openTool(\''+x[0]+'\')">Abrir ferramenta →</button></div>';
 }
 function moduleSummaryHtml(m,index){
- const sum=modulePracticalSummary(m),next=STUDY_MODULES[index+1];
+ const next=STUDY_MODULES[index+1];
  return '<section class="module-summary">'+
-  '<div class="module-summary-head"><div><span class="eyebrow">FECHAMENTO DO MÓDULO</span><h3>O que levar para o trabalho</h3></div><span class="module-no">'+(next?'PRÓXIMO · '+next.id:'TRILHA CONCLUÍDA')+'</span></div>'+
+  '<div class="module-summary-head"><div><span class="eyebrow">FECHAMENTO DO MÓDULO</span><h3>O essencial deste módulo</h3></div><span class="module-no">'+(next?'PRÓXIMO · '+next.id:'TRILHA CONCLUÍDA')+'</span></div>'+
   '<div class="module-summary-grid">'+
-   '<div class="module-summary-item"><small>VOCÊ APRENDEU</small><b>'+sum.learned+'</b></div>'+
-   '<div class="module-summary-item"><small>NA JAGUAR</small><b>'+sum.action+'</b></div>'+
-   '<div class="module-summary-item"><small>EVITE</small><b>'+sum.error+'</b></div>'+
+   '<div class="module-summary-item"><small>VOCÊ APRENDEU</small><b>'+courseEscape(m.subtitle)+'</b></div>'+
+   '<div class="module-summary-item"><small>EVITE</small><b>'+courseEscape(MODULE_COMMON_MISTAKES[m.id]||'Transformar uma premissa didática em regra universal.')+'</b></div>'+
   '</div></section>';
 }
 
