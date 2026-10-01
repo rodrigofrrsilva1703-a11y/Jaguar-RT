@@ -33,11 +33,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 2",
         "x": "Estabelecido que o IVA Dual incide exclusivamente sobre o valor adicionado de cada etapa, torna-se necessário definir a sua dimensão espacial: a qual jurisdição política pertence o produto da arrecadação e como se determina a alíquota aplicável em operações interestaduais ou municipais? Esse é o objeto do Princípio do Destino.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: explicar a diferença entre CBS, IBS e IS e identificar o que é premissa didática do RTAV.\nNa prática: registrar a fonte legal usada antes de orientar um cliente.\nErro comum a evitar: tratar 9,21% e 18,70% como alíquotas universais definitivas.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -76,11 +71,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 3",
         "x": "Uma vez compreendidos os critérios espaciais e a fixação das alíquotas no destino, impõe-se a análise temporal: em qual momento jurídico exato a obrigação tributária se aperfeiçoa? Como a legislação disciplina adiantamentos financeiros e contratos continuados? Essas questões são respondidas no estudo do Fato Gerador e Temporalidade.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: identificar corretamente o destino da operação.\nNa prática: validar local, destinatário e regra aplicável antes do cálculo do IBS.\nErro comum a evitar: usar automaticamente a sede do fornecedor como local do imposto.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -119,11 +109,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 4",
         "x": "Identificado o momento em que a incidência ocorre, surge a questão quantitativa: sobre qual grandeza numérica a alíquota de 27,91% é aplicada? Como se compõe a base de cálculo, como são tratadas as despesas acessórias e qual o efeito da inclusão do Imposto Seletivo? Esse é o foco do estudo da Base de Cálculo.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: distinguir fornecimento, pagamento antecipado e operação continuada.\nNa prática: conferir contrato, documento e data do pagamento antes de reconhecer o débito.\nErro comum a evitar: confundir fim do regime de caixa do Simples com a regra de antecipação do IBS/CBS.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -162,11 +147,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 5",
         "x": "Compreendida a mensuração do débito gerado na emissão do documento fiscal, é fundamental examinar a contrapartida da operação: como o comprador apropria esses R$ 3.162,20 como crédito tributário? Quais os requisitos para o creditamento e como isso impacta o custo econômico das empresas? Essas regras estruturam o Módulo 5.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: montar a base de cálculo antes de aplicar a alíquota.\nNa prática: separar preço, frete, descontos, IS e tributos excluídos da base.\nErro comum a evitar: aplicar a alíquota sobre o valor errado ou incluir IBS/CBS na própria base.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -210,11 +190,6 @@ const STUDY_MODULES = [
         "t": "Saldo Credor, Compensação e Ressarcimento",
         "x": "Quando os créditos de IBS ou CBS superarem os débitos do período, o excesso não deve ser tratado como perda nem como autorização para compensar qualquer tributo. O saldo a recuperar permanece segregado por tributo e pode ser utilizado em períodos posteriores ou ser objeto de pedido de ressarcimento, observadas as regras, os controles e os prazos aplicáveis. A LC 214/2025 prevê que o contribuinte pode solicitar ressarcimento integral ou parcial; o valor não solicitado permanece como crédito para compensação ou ressarcimento futuro.\nNa prática, o escritório precisa conciliar o saldo fiscal com os documentos que deram origem aos créditos, acompanhar pedidos e evitar utilizar crédito de CBS para reduzir ICMS/ISS remanescente ou Imposto Seletivo.",
         "k": "APLICAÇÃO PRÁTICA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: identificar se a aquisição é creditável e quanto do crédito pode ser aproveitado.\nNa prática: conciliar documento, requisito legal e valor de CBS/IBS antes de apropriar.\nErro comum a evitar: assumir que toda compra gera crédito integral.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -253,11 +228,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 7",
         "x": "Com os créditos, saldos e ajustes compreendidos, a próxima etapa é identificar quando a operação deixa de seguir a alíquota padrão e passa a receber redução, alíquota zero, crédito presumido ou outro tratamento diferenciado. Isso é estudado no Módulo 7.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: diferenciar saldo credor, ressarcimento, restituição e cashback.\nNa prática: manter CBS e IBS segregados e rastrear a origem documental do saldo.\nErro comum a evitar: usar crédito de CBS/IBS automaticamente para quitar outros tributos.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -301,11 +271,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 8",
         "x": "Depois de distinguir o regime padrão dos tratamentos diferenciados, é necessário aprofundar os setores cuja própria mecânica de apuração muda. O Módulo 8 trata dos regimes específicos, da DeRE e da tributação setorial.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: distinguir regra padrão, redução, alíquota zero e tratamento diferenciado.\nNa prática: confirmar o enquadramento antes de aplicar qualquer percentual reduzido.\nErro comum a evitar: resolver toda exceção usando apenas um campo genérico de redução.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -344,11 +309,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 9",
         "x": "Dominados os principais regimes específicos internos, o curso avança para operações internacionais e territoriais incentivadas. O Módulo 9 aborda importações, exportações, Duimp, ZFM, ALC e ZPE.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: reconhecer quando a atividade está em regime específico e pode exigir DeRE.\nNa prática: separar receitas regulares das receitas submetidas a regras setoriais.\nErro comum a evitar: usar a calculadora padrão sem verificar o setor.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -387,11 +347,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 10",
         "x": "Com as exceções de comércio exterior e regimes territoriais identificadas, é possível enxergar como todas essas regras entram gradualmente em vigor. O Módulo 10 organiza a transição de 2026 a 2033.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: identificar importação, exportação e regimes territoriais incentivados.\nNa prática: validar destino, documentação aduaneira e enquadramento especial antes da simulação.\nErro comum a evitar: tratar ZFM, ALC ou ZPE como operação doméstica comum.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -435,11 +390,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 11",
         "x": "Entendido o cronograma de transição, o próximo passo é aplicar essas mudanças ao regime mais comum entre pequenas empresas. O Módulo 11 mostra as escolhas do Simples Nacional, inclusive o recolhimento regular de IBS/CBS e os novos efeitos operacionais.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: localizar cada ano da transição e saber quais tributos ainda convivem.\nNa prática: parametrizar a simulação conforme o ano e revisar premissas periodicamente.\nErro comum a evitar: usar a carga cheia de 2033 em todos os anos da transição.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -478,11 +428,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 12",
         "x": "Analisada a estratégia da micro e pequena empresa, torna-se necessário examinar as médias e grandes empresas: como se posicionam as organizações fora do Simples? Como fica o duelo histórico entre Lucro Presumido e Lucro Real sem o PIS/Cofins cumulativo e diante das novas regras da Lei Complementar nº 224/2025? Esse é o foco do Módulo 12.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: comparar Simples padrão e IBS/CBS no regime regular.\nNa prática: simular efeito no DAS, créditos, clientes B2B e prazos de opção.\nErro comum a evitar: escolher o regime apenas porque ele transfere mais crédito.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -521,11 +466,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 13",
         "x": "Depois de comparar Lucro Presumido e Lucro Real, a análise passa do regime tributário para a formação econômica da operação. O Módulo 13 mostra como transformar tributos, créditos e margem em preço e faturamento projetados.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: comparar Presumido e Real com uma simulação completa.\nNa prática: considerar IRPJ, adicional, CSLL, margem, despesas e ajustes fiscais.\nErro comum a evitar: concluir que um regime é melhor olhando apenas a base presumida ou a margem contábil.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -564,11 +504,6 @@ const STUDY_MODULES = [
         "t": "Próximo passo: Módulo 14",
         "x": "Depois de formar preços e projetar margens, é preciso garantir que a operação seja documentada e apurada corretamente. O Módulo 14 trata de DF-e, cadastros, leiautes e apuração assistida.",
         "k": "PRÓXIMA ETAPA"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: distinguir receita líquida-alvo, custo, crédito e preço faturado.\nNa prática: usar a ferramenta com premissas explícitas e testar sensibilidade de custos e margem.\nErro comum a evitar: prometer que a Reforma sempre reduzirá preço ou manterá o mesmo lucro.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -612,11 +547,6 @@ const STUDY_MODULES = [
         "t": "Cronograma dos Novos Documentos e Declarações",
         "x": "A implantação dos documentos da Reforma é escalonada. Em 2026 e 2027 entram ou são adaptados diferentes DF-e e declarações, entre eles NFS-e, NFCom, DIR, DeRE, BP-e, NF-e de alienação de bens imóveis, NFAg, documentos do Simples, Duimp, NF-e de importação e NF-e de combustíveis monofásicos. O cronograma oficial deve ser acompanhado porque leiautes e datas podem ser atualizados.\nA equipe fiscal deve controlar versão de leiaute, CST, classificação tributária, campos de IBS/CBS e eventos de ajuste antes de considerar um documento apto à apuração assistida.",
         "k": "CONFORMIDADE"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: entender como cadastro e DF-e alimentam a apuração.\nNa prática: revisar NCM/NBS, CST, leiaute, documentos e divergências antes do fechamento.\nErro comum a evitar: aceitar o valor pré-preenchido sem conferência.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -660,11 +590,6 @@ const STUDY_MODULES = [
         "t": "Split Payment, Créditos e Saldo Credor",
         "x": "O split payment não elimina a necessidade de apuração. A segregação financeira é uma forma de extinção do débito quando aplicável, enquanto o direito ao crédito, o saldo credor e eventual ressarcimento seguem regras próprias. A conciliação deve vincular documento fiscal, liquidação, valor segregado, débito apurado e crédito do adquirente.\nUm erro comum seria concluir que valor retido pelo banco encerra qualquer obrigação do período. A empresa ainda precisa conferir documentos, ajustes, devoluções, créditos e diferenças entre a informação fiscal e financeira.",
         "k": "CONCILIAÇÃO"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: explicar split payment sem confundi-lo com fato gerador.\nNa prática: conciliar DF-e, relatório do meio de pagamento, valores segregados e extrato bancário.\nErro comum a evitar: presumir que toda venda em Pix, cartão ou boleto terá a mesma segregação imediatamente.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
@@ -708,11 +633,6 @@ const STUDY_MODULES = [
         "t": "Padrão de Entrega Jaguar",
         "x": "Toda análise entregue ao cliente deve separar: regra legal vigente, premissa da simulação, dado fornecido pelo cliente e conclusão condicionada. O relatório deve registrar a data da legislação consultada, a origem dos dados, as exceções identificadas e as ações recomendadas.\nNo JAGUAR RT, CBS de 9,21% e IBS cheio de 18,70% permanecem premissas didáticas temporárias. Antes de uma decisão contratual ou tributária real, a equipe deve substituir a premissa pela alíquota efetivamente aplicável à operação e ao período.",
         "k": "PADRÃO JAGUAR"
-      },
-      {
-        "t": "O que o colaborador da Jaguar precisa fazer na prática",
-        "x": "Ao terminar este módulo, você deve saber: transformar diagnóstico em um plano executável.\nNa prática: definir responsável, prazo, evidência e revisão legal para cada ação.\nErro comum a evitar: entregar uma simulação como recomendação definitiva sem registrar premissas e limitações.",
-        "k": "JAGUAR NA PRÁTICA"
       }
     ],
     "fullCourse": true
