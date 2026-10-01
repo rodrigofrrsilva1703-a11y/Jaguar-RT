@@ -13,7 +13,9 @@
   return Object.entries(bank).flatMap(([module,group])=>[
    ...(group.m||[]).map((row,i)=>({id:`${module}-m${i}`,module,kind:'case',context:group.contexts?.m?.[i],prompt:row[0],choices:row[1],answer:row[2],explanation:row[3]})),
    ...(group.c||[]).map((row,i)=>({id:`${module}-c${i}`,module,kind:'case',context:row[0],prompt:row[1],choices:row[2],answer:row[3],explanation:row[4]})),
-   ...(group.v||[]).map((row,i)=>({id:`${module}-v${i}`,module,kind:'concept',context:group.contexts?.v?.[i],prompt:`Avalie a afirmação: ${row[0]}`,choices:['Verdadeiro','Falso'],answer:row[1]?0:1,explanation:row[2]}))
+   ...(group.p||[]).map((row,i)=>({id:`${module}-p${i}`,module,kind:'case',context:row[0],prompt:row[1],choices:row[2],answer:row[3],explanation:row[4]})),
+   ...(group.v||[]).map((row,i)=>({id:`${module}-v${i}`,module,kind:'concept',context:group.contexts?.v?.[i],prompt:`Avalie a afirmação: ${row[0]}`,choices:['Verdadeiro','Falso'],answer:row[1]?0:1,explanation:row[2]})),
+   ...(group.i||[]).map((row,i)=>({id:`${module}-i${i}`,module,kind:'concept',context:row[0],prompt:row[1],choices:row[2],answer:row[3],explanation:row[4]}))
   ]);
  }
 
