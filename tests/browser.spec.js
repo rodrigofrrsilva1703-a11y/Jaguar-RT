@@ -59,6 +59,25 @@ test('módulos preservam leitura, retomam etapa e filtram o andamento',async({pa
  await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
 });
 
+test('aba de testes apresenta seleção, desempenho e retomada sem excesso',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=quiz-hub',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#siteShell')).toBeVisible();
+ await page.locator('nav [data-go="quiz"]').click();
+
+ await expect(page.locator('#quiz .quiz-format>div')).toHaveCount(3);
+ await expect(page.locator('#quiz .quiz-workspace')).toBeVisible();
+ await expect(page.locator('#quizModule')).toBeVisible();
+ await expect(page.locator('#quizStats')).toContainText('Ainda sem tentativas');
+ await expect(page.locator('#quiz .quiz-start-button')).toBeVisible();
+
+ await page.locator('#quizModule').selectOption('05');
+ await page.locator('#quiz .quiz-start-button').click();
+ await expect(page.locator('#quizPage .quiz-question')).toHaveCount(10);
+ await page.locator('#quizPage .back').click();
+ await expect(page.locator('#quizResume')).toContainText('TESTE EM ANDAMENTO');
+ await expect(page.locator('#quizResume')).toContainText('0 de 10 questões respondidas');
+});
+
 test('teste por módulo corrige, refaz e troca perguntas; teste geral mistura módulos',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=quiz',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#accountToggle')).toBeVisible();
