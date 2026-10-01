@@ -16,6 +16,100 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
+test('retornar ao celular busca progresso de outro aparelho sem sobrescrever o servidor',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.unroute('**/functions/v1/jaguarrt');
+ let state={study:{__orderVersion:2}},saves=0;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const b=route.request().postDataJSON();
+  if(b.action==='save'){state=b.data;saves++;}
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=two-devices',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ await page.evaluate(()=>openModule('01'));
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#accountStatus')).toContainText('Progresso salvo');
+ await page.waitForTimeout(750); // Allow the pending debounce from the study click to finish.
+ const saved=saves;
+ state.study['02']={read:[0,1,2]};
+ await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('jaguar-rtav-study-progress-v1'))['02']?.read)).toEqual([0,1,2]);
+ expect(saves).toBe(saved);
+ await page.locator('#courseNext').click();
+ await expect.poll(()=>state.study['01']?.read).toEqual([0,1]);
+ expect(state.study['02'].read).toEqual([0,1,2]);
+});
+
+test('sessão vencida durante o estudo pede login e recupera alterações após entrar',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let state={study:{__orderVersion:2}},expired=false;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const b=route.request().postDataJSON();
+  if(b.action==='login')expired=false;
+  if(expired)return route.fulfill({status:401,json:{error:'Sessão expirada. Entre novamente.'}});
+  if(b.action==='save')state=b.data;
+  await route.fulfill({json:{token:'a'.repeat(64),email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=expire-active',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ await expect.poll(()=>page.evaluate(()=>localStorage.getItem('jaguarrt-unsynced:teste@jaguarcontabil.com.br'))).toBeNull();
+ expired=true;
+ await page.evaluate(()=>openModule('01'));
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#loginGate')).toBeVisible();
+ await expect(page.locator('#loginError')).toContainText('Sessão expirada');
+ expect(await page.evaluate(()=>localStorage.getItem('jaguarrt-session'))).toBeNull();
+ await page.locator('#loginEmail').fill('teste@jaguarcontabil.com.br');
+ await page.locator('#loginPassword').fill('senha-teste');
+ await page.locator('#loginSubmit').click();
+ await expect(page.locator('#loginGate')).toBeHidden();
+ await expect.poll(()=>state.study['01']?.read).toEqual([0]);
+});
+
+test('sair sem conexão encerra acesso local imediatamente e preserva estudo pendente',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let offline=false;
+ await page.route('**/functions/v1/jaguarrt',route=>offline?route.abort():route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state:{study:{__orderVersion:2}},attempts:[]}}));
+ await page.goto('http://127.0.0.1:4173/?e2e=offline-logout',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ offline=true;
+ await page.evaluate(()=>openModule('01'));
+ await page.locator('#courseNext').click();
+ await page.locator('#accountToggle').click();
+ await page.locator('#accountLogout').click();
+ await expect(page.locator('#loginGate')).toBeVisible();
+ await expect(page.locator('#siteShell')).toBeHidden();
+ await expect(page.locator('#accountDrawer')).toBeHidden();
+ expect(await page.evaluate(()=>localStorage.getItem('jaguarrt-session'))).toBeNull();
+ expect(await page.evaluate(()=>sessionStorage.getItem('jaguarrt-session'))).toBeNull();
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('jaguarrt-unsynced:teste@jaguarcontabil.com.br')).state.study['01'].read)).toEqual([0]);
+});
+
+test('sair durante uma reconexão lenta não reabre a conta',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let mode='ok',release;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const action=route.request().postDataJSON().action;
+  if(mode==='offline'||action==='logout')return route.abort();
+  if(mode==='hold'&&action==='state')await new Promise(resolve=>{release=resolve;});
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state:{study:{__orderVersion:2}},attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=logout-reconnect',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ mode='offline';await page.reload({waitUntil:'domcontentloaded'});
+ await expect(page.locator('#sessionNotice')).toBeVisible();
+ mode='hold';await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+ await expect.poll(()=>typeof release).toBe('function');
+ await page.locator('#accountToggle').click();
+ await page.locator('#accountLogout').click();
+ const response=page.waitForResponse(r=>r.url().includes('/functions/v1/jaguarrt')&&r.request().postDataJSON().action==='state');
+ release();await response;
+ await expect(page.locator('#loginGate')).toBeVisible();
+ await expect(page.locator('#siteShell')).toBeHidden();
+ expect(await page.evaluate(()=>localStorage.getItem('jaguarrt-session'))).toBeNull();
+});
+
 test('linha do tempo resume cada ano sem poluir a página inicial',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=timeline',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#accountToggle')).toBeVisible();
@@ -479,13 +573,13 @@ test('progresso sem conexão sobrevive ao recarregamento e volta ao servidor',as
  await page.locator('#courseNext').click();
  await expect(page.locator('#accountStatus')).toContainText('aguardando sincronização');
  await page.reload();
- await expect(page.locator('#courseProgressLabel')).toContainText('1 de 7');
+ await expect(page.locator('#courseProgressLabel')).toContainText('1 de 6');
  await expect(page.locator('#accountStatus')).toContainText('aguardando sincronização');
  // Another device advanced module 2 while this browser was disconnected.
  state.study['02']={read:[0],step:1};
  offline=false;
  await page.reload();
- await expect(page.locator('#courseProgressLabel')).toContainText('1 de 7');
+ await expect(page.locator('#courseProgressLabel')).toContainText('1 de 6');
  await expect.poll(()=>state.study?.['01']?.read).toEqual([0]);
  expect(state.study['02'].read).toEqual([0]);
  await expect.poll(()=>page.evaluate(()=>localStorage.getItem('jaguarrt-unsynced:teste@jaguarcontabil.com.br'))).toBeNull();
@@ -510,13 +604,13 @@ test('um envio lento não apaga alterações feitas durante a sincronização',a
  await page.locator('#courseNext').click();
  release();
  await expect.poll(()=>state.study?.['01']?.read).toEqual([0,1]);
- await expect(page.locator('#courseProgressLabel')).toContainText('2 de 7');
+ await expect(page.locator('#courseProgressLabel')).toContainText('2 de 6');
 });
 
 test('relatórios filtram desempenho e módulo; Excel inclui só o resultado filtrado',async({page})=>{
  await page.unroute('**/functions/v1/jaguarrt');
  const accounts=[
-  {email:'ana@jaguarcontabil.com.br',state:{study:{__orderVersion:2,'01':{read:[0,1,2,3,4,5,6]}}},attempts:[{score:5,scope:'01',created_at:'2026-09-30T12:00:00Z'}]},
+  {email:'ana@jaguarcontabil.com.br',state:{study:{__orderVersion:2,'01':{read:[0,1,2,3,4,5]}}},attempts:[{score:5,scope:'01',created_at:'2026-09-30T12:00:00Z'}]},
   {email:'bia@jaguarcontabil.com.br',state:{study:{__orderVersion:2}},attempts:[{score:9,scope:'02',created_at:'2026-09-30T12:00:00Z'}]},
   {email:'caio@jaguarcontabil.com.br',state:{study:{__orderVersion:2}},attempts:[]}
  ];
@@ -623,13 +717,13 @@ test('celular mantém o login ao recarregar sem conexão e sincroniza o estudo a
  await expect(page.locator('#siteShell')).toBeVisible();
  expect(await page.evaluate(()=>localStorage.getItem('jaguarrt-session'))).toBe('a'.repeat(64));
  await page.locator('#courseNext').click();
- await expect(page.locator('#courseProgressLabel')).toContainText('2 de 7');
+ await expect(page.locator('#courseProgressLabel')).toContainText('2 de 6');
  offline=false;
  await page.evaluate(()=>window.dispatchEvent(new Event('online')));
  await expect(page.locator('#sessionNotice')).toBeHidden();
  await expect.poll(()=>state.study?.['01']?.read).toEqual([0,1]);
  await page.reload();
- await expect(page.locator('#courseProgressLabel')).toContainText('2 de 7');
+ await expect(page.locator('#courseProgressLabel')).toContainText('2 de 6');
  await expect(page.locator('#loginGate')).toBeHidden();
 });
 
@@ -672,4 +766,3 @@ test('resposta inválida de rede mantém a sessão e reconecta ao voltar para o 
  await expect(page.locator('#sessionNotice')).toBeHidden();
  await expect(page.locator('#accountName')).toHaveText('Teste');
 });
-

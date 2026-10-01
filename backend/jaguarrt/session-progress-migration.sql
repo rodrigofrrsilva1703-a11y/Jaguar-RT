@@ -1,19 +1,3 @@
-create schema if not exists jaguarrt;
-revoke all on schema jaguarrt from public, anon, authenticated;
-grant usage on schema jaguarrt to service_role;
-create table jaguarrt.settings (id boolean primary key default true check(id), password_hash text not null, admin_password_hash text);
-create table jaguarrt.accounts (email text primary key, created_at timestamptz not null default now(), last_seen timestamptz, state jsonb not null default '{}');
-create table jaguarrt.sessions (token_hash text primary key, email text not null references jaguarrt.accounts(email), expires_at timestamptz not null default now()+interval '12 hours', last_seen timestamptz not null default now(), admin_until timestamptz);
-create table jaguarrt.attempts (id uuid primary key, email text not null references jaguarrt.accounts(email), scope text not null, score integer not null check(score between 0 and 10), details jsonb not null, order_version integer not null default 2, created_at timestamptz not null default now());
-create table jaguarrt.login_limits (key text primary key, count integer not null default 0, started_at timestamptz not null default now());
-alter table jaguarrt.settings enable row level security;
-alter table jaguarrt.accounts enable row level security;
-alter table jaguarrt.sessions enable row level security;
-alter table jaguarrt.attempts enable row level security;
-alter table jaguarrt.login_limits enable row level security;
-grant all on all tables in schema jaguarrt to service_role;
-create index on jaguarrt.sessions(email);
-create index on jaguarrt.attempts(email,created_at desc);
 create or replace function jaguarrt.merge_progress(previous jsonb,incoming jsonb) returns jsonb
 language plpgsql immutable security invoker set search_path=pg_catalog as $$
 declare merged jsonb:=incoming; study jsonb:=coalesce(previous->'study','{}')||coalesce(incoming->'study','{}'); item record; a jsonb; b jsonb; steps jsonb;
@@ -31,7 +15,7 @@ begin
 end $$;
 revoke all on function jaguarrt.merge_progress(jsonb,jsonb) from public,anon,authenticated;
 grant execute on function jaguarrt.merge_progress(jsonb,jsonb) to service_role;
-create function public.jaguarrt_gateway(p_action text, p_token text default '', p_email text default '', p_password text default '', p_data jsonb default '{}') returns jsonb language plpgsql security invoker set search_path = pg_catalog,jaguarrt,extensions as $$
+create or replace function public.jaguarrt_gateway(p_action text, p_token text default '', p_email text default '', p_password text default '', p_data jsonb default '{}') returns jsonb language plpgsql security invoker set search_path = pg_catalog,jaguarrt,extensions as $$
 declare v_email text; v_admin boolean; v_result jsonb; v_count int;
 begin
  if p_action='login' then

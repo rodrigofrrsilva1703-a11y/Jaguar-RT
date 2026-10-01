@@ -17,10 +17,17 @@ const by=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}};
 async function api(action,data,extra={}){
+ const requestToken=extra.token||token;
  const r=await fetch(ENDPOINT,{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json'},body:JSON.stringify({action,token,data,...extra})});
  let x;
- try{x=await r.json();}catch(e){throw Object.assign(Error('Não foi possível conectar. Tente novamente.'),{status:r.status});}
- if(!r.ok||x.error)throw Object.assign(Error(x.error||'Não foi possível conectar.'),{status:r.status});
+ try{x=await r.json();}catch(e){
+  if(r.status===401&&requestToken===token&&action!=='login'&&action!=='logout')endExpiredSession('Sessão expirada. Entre novamente.');
+  throw Object.assign(Error('Não foi possível conectar. Tente novamente.'),{status:r.status});
+ }
+ if(!r.ok||x.error){
+  if(r.status===401&&requestToken===token&&action!=='login'&&action!=='logout')endExpiredSession(x.error||'Sessão expirada. Entre novamente.');
+  throw Object.assign(Error(x.error||'Não foi possível conectar.'),{status:r.status});
+ }
  return x;
 }
 function cacheProfile(){
@@ -65,6 +72,20 @@ function hydrate(state){
  renderModuleGrid();updateQuizStats();updateQuizResume();renderHomeResume();renderHomeDashboard();
  return normalized;
 }
+function mergeState(remote,local){
+ const old=normalizeCourseState(remote||{}),next=normalizeCourseState(local||{});
+ const study={...old.study,...next.study};
+ for(const m of STUDY_MODULES){const a=old.study?.[m.id],b=next.study?.[m.id];if(a||b)study[m.id]={...a,...b,read:[...new Set([...(a?.read||[]),...(b?.read||[])])].sort((a,b)=>a-b)};}
+ const history={...old.history,...next.history,seen:[...new Set([...(old.history?.seen||[]),...(next.history?.seen||[])])],results:{...old.history?.results},moduleCounts:{...old.history?.moduleCounts}};
+ for(const [id,b] of Object.entries(next.history?.results||{})){const a=history.results[id]||{};history.results[id]={...a,...b,attempts:Math.max(a.attempts||0,b.attempts||0),best:Math.max(a.best||0,b.best||0)};}
+ for(const [id,n] of Object.entries(next.history?.moduleCounts||{}))history.moduleCounts[id]=Math.max(history.moduleCounts[id]||0,n);
+ return {...old,...next,study,history};
+}
+async function refreshState(){
+ const owner=me?.email,sessionToken=token,x=await api('state');
+ if(!loaded||me?.email!==owner||token!==sessionToken)return;
+ const state=hydrate(mergeState(x.state,snapshot()));me={...x,state};render();
+}
 function snapshot(){return {study:read(KEYS[0],{}),history:read(KEYS[1],{}),quiz:read(KEYS[2],null)};}
 function pendingKey(){return 'jaguarrt-unsynced:'+me.email;}
 function preservePending(){
@@ -78,20 +99,25 @@ async function flush(){
  const owner=me.email,sessionToken=token,key=pendingKey();
  saveChain=saveChain.catch(()=>{}).then(async()=>{
   if(!loaded||me?.email!==owner||token!==sessionToken)return;
-  const data=snapshot(),revision=read(key,null)?.revision;
+  const pending=read(key,null),revision=pending?.revision;
   try{
+   if(!pending&&!attemptQueue.length){await refreshState();return;}
+   const remote=await api('state');
+   if(!loaded||me?.email!==owner||token!==sessionToken)return;
+   const data=mergeState(remote.state,snapshot());
    for(const attempt of [...attemptQueue]){
     await api('attempt',attempt);
+    if(!loaded||me?.email!==owner||token!==sessionToken)return;
     attemptQueue=attemptQueue.filter(x=>x.id!==attempt.id);
     sessionStorage.setItem('jaguarrt-pending:'+owner,JSON.stringify(attemptQueue));
     const pending=read(key,null);if(pending){pending.attempts=attemptQueue;localStorage.setItem(key,JSON.stringify(pending));}
    }
    const result=await api('save',data);
    if(me?.email!==owner||token!==sessionToken)return;
-   me={...result,state:snapshot()};
+   me={...result,state:hydrate(mergeState(result.state,snapshot()))};
    if(read(key,null)?.revision===revision)localStorage.removeItem(key);
    status(read(key,null)?'Alterações aguardando sincronização':'Progresso salvo');render();
-  }catch(e){status(e.message+' · alterações aguardando sincronização');}
+  }catch(e){if(e.status!==401&&loaded&&token===sessionToken)status(e.message+' · alterações aguardando sincronização');}
  });return saveChain;
 }
 window.JaguarAccount={changed:schedule,attempt(s){if(!loaded&&!offlinePreview)return;attemptQueue.push({id:crypto.randomUUID(),scope:s.scope,questions:s.questions.map(q=>({id:q.id,options:q.options})),answers:s.answers});sessionStorage.setItem('jaguarrt-pending:'+me.email,JSON.stringify(attemptQueue));schedule();}};
@@ -101,8 +127,7 @@ function progress(state){const normalized=normalizeCourseState(state||{});let re
 function attemptsHtml(attempts){return attempts.length?attempts.slice(0,30).map(a=>`<li><span>${esc(a.scope==='all'?'Todos os módulos':'Módulo '+a.scope)}<small>${date(a.created_at)}</small></span><b>${a.score}/10</b></li>`).join(''):'<li>Nenhum teste finalizado.</li>';}
 function render(){if(!me)return;by('accountEmail').textContent=me.email;const p=progress(me.state);me.state=p.state;const name=me.email.split('@')[0].split(/[._-]+/).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');if(by('homeGreeting'))by('homeGreeting').textContent='Olá, '+name;by('accountName').textContent=name;by('drawerName').textContent=name;by('drawerAvatar').textContent=name.split(' ').map(w=>w[0]).slice(0,2).join('');by('accountAvatar').textContent=name.split(' ').map(w=>w[0]).slice(0,2).join('');by('accountProgress').textContent=p.pct+'%';by('accountMiniFill').style.width=p.pct+'%';by('accountToggle').setAttribute('aria-label',name+', '+p.pct+'% estudado. Abrir meu percurso');by('accountContent').innerHTML=`<div class="account-summary"><strong>${p.pct}<small>%</small></strong><span>Seu progresso<small>${p.done} de ${STUDY_MODULES.length} módulos concluídos</small></span></div><progress max="100" value="${p.pct}"></progress><h3>Seus módulos</h3><ul class="account-list">${STUDY_MODULES.map(m=>{const n=new Set(me.state?.study?.[m.id]?.read||[]).size;return `<li class="${n===m.blocks.length?'module-done':n?'module-started':''}"><button type="button" class="account-module" data-module="${m.id}" aria-label="Abrir Módulo ${Number(m.id)}: ${esc(m.title)}"><span><i>${n===m.blocks.length?'✓':String(Number(m.id)).padStart(2,'0')}</i>Módulo ${Number(m.id)}</span><b>${n}/${m.blocks.length}</b></button></li>`;}).join('')}</ul><details class="account-tests"><summary>Resultados dos testes · ${(me.attempts||[]).length}</summary><ul class="account-list">${attemptsHtml(me.attempts||[])}</ul></details>`;by('adminSection').hidden=!me.admin;renderHomeDashboard();}
 async function enter(x){token=x.token||token;persistToken(token);me=x;const pending=read(pendingKey(),null);const original=me.state||{};const remote=normalizeCourseState(original),local=pending?.state?normalizeCourseState(pending.state):null;
-if(local){for(const m of STUDY_MODULES){const old=remote.study?.[m.id],next=local.study?.[m.id];if(old||next)local.study[m.id]={...old,...next,read:[...new Set([...(old?.read||[]),...(next?.read||[])])]};}}
-const normalized=hydrate(local||remote);const migrated=JSON.stringify(normalized)!==JSON.stringify(original);me={...me,state:normalized};attemptQueue=pending?.attempts||readSessionAttempts(me.email);loaded=true;offlinePreview=false;by('sessionNotice').hidden=true;clearTimeout(recoveryTimer);recoveryAttempt=0;cacheProfile();by('loginGate').hidden=true;finishPreview();by('siteShell').inert=false;by('siteShell').hidden=false;by('accountToggle').hidden=false;render();const restored=window.JaguarRestoreNavigation?.({admin:!!me.admin})||'home';if(restored==='teamReports'&&me.admin)loadReports();status(migrated?'Progresso atualizado para a nova ordem':'Progresso sincronizado');if(migrated||pending||attemptQueue.length)schedule();}
+const normalized=hydrate(local?mergeState(remote,local):remote);const migrated=JSON.stringify(normalized)!==JSON.stringify(original);me={...me,state:normalized};attemptQueue=pending?.attempts||readSessionAttempts(me.email);loaded=true;offlinePreview=false;by('sessionNotice').hidden=true;clearTimeout(recoveryTimer);recoveryAttempt=0;cacheProfile();by('loginGate').hidden=true;finishPreview();by('siteShell').inert=false;by('siteShell').hidden=false;by('accountToggle').hidden=false;render();const restored=window.JaguarRestoreNavigation?.({admin:!!me.admin})||'home';if(restored==='teamReports'&&me.admin)loadReports();status(migrated?'Progresso atualizado para a nova ordem':'Progresso sincronizado');if(migrated||pending||attemptQueue.length)schedule();}
 by('loginForm').addEventListener('submit',async e=>{e.preventDefault();const button=by('loginSubmit');button.disabled=true;by('loginError').textContent='Entrando…';try{const x=await api('login',null,{email:by('loginEmail').value.trim(),password:by('loginPassword').value});by('loginPassword').value='';await enter(x);by('loginError').textContent='';}catch(e){by('loginError').textContent=e.message;}finally{button.disabled=false;}});
 by('accountContent').addEventListener('click',e=>{const button=e.target.closest('[data-module]');if(!button)return;close();openModule(button.dataset.module);});
 let priorFocus;
@@ -110,7 +135,18 @@ function close(){by('accountDrawer').hidden=true;by('accountBackdrop').hidden=tr
 by('accountToggle').onclick=async()=>{priorFocus=document.activeElement;by('accountDrawer').hidden=false;by('accountBackdrop').hidden=false;by('accountToggle').setAttribute('aria-expanded','true');by('accountClose').focus();await flush();};
 by('accountClose').onclick=close;by('accountBackdrop').onclick=close;
 by('accountDrawer').addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Tab'){const els=[...by('accountDrawer').querySelectorAll('button,input,a,summary,select')].filter(x=>!x.hidden&&x.offsetParent);if(e.shiftKey&&document.activeElement===els[0]){e.preventDefault();els.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===els.at(-1)){e.preventDefault();els[0].focus();}}});
-by('accountLogout').onclick=async()=>{await flush();try{await api('logout');}catch{status('Não foi possível encerrar no servidor. Tente novamente.');return;}loaded=false;offlinePreview=false;clearTimeout(recoveryTimer);token='';me=null;team=[];by('reportsList').innerHTML='';by('reportsSummary').innerHTML='';attemptQueue=[];persistToken('');clearProfile();finishPreview();try{localStorage.setItem('jaguar-rtav-navigation-v1',JSON.stringify({view:'home'}));}catch(e){}clearLocal();close();by('accountToggle').hidden=true;by('siteShell').hidden=true;by('siteShell').inert=true;by('loginGate').hidden=false;by('loginEmail').focus();};
+by('accountLogout').onclick=()=>{
+ const oldToken=token;
+ // Keep unsent work under this account, but always end access on this device immediately.
+ preservePending();
+ loaded=false;offlinePreview=false;clearTimeout(timer);clearTimeout(recoveryTimer);
+ token='';me=null;team=[];by('reportsList').innerHTML='';by('reportsSummary').innerHTML='';attemptQueue=[];
+ persistToken('');clearProfile();finishPreview();by('sessionNotice').hidden=true;
+ try{localStorage.setItem('jaguar-rtav-navigation-v1',JSON.stringify({view:'home'}));}catch(e){}
+ clearLocal();close();by('accountToggle').hidden=true;by('siteShell').hidden=true;by('siteShell').inert=true;
+ by('loginGate').hidden=false;by('loginEmail').focus();
+ api('logout',null,{token:oldToken}).catch(()=>{});
+};
 let team=[];
 function personName(email){return email.split('@')[0].split(/[._-]+/).map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');}
 function reportMetrics(a){
@@ -170,15 +206,16 @@ by('reportsModule').innerHTML='<option value="all">Todos os módulos</option>'+S
 by('reportsModule').addEventListener('change',renderReports);
 by('reportsPerformance').addEventListener('change',renderReports);
 by('reportsExport').onclick=exportReports;
-setInterval(async()=>{if(!loaded||document.hidden)return;try{if(attemptQueue.length||read(pendingKey(),null)){await flush();return;}me=await api('state');render();}catch(e){status(e.message);}},60000);
+setInterval(async()=>{if(!loaded||document.hidden)return;try{if(attemptQueue.length||read(pendingKey(),null)){await flush();return;}await refreshState();}catch(e){status(e.message);}},60000);
 window.addEventListener('online',()=>{if(loaded)flush();else if(token)restoreSession();});
 window.addEventListener('pagehide',()=>{if((loaded||offlinePreview)&&(read(pendingKey(),null)||attemptQueue.length))preservePending();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)return;if(loaded)flush();else if(token)restoreSession();});
 window.addEventListener('pageshow',e=>{if(e.persisted&&!loaded&&token)restoreSession();});
 function endExpiredSession(message){
- if(offlinePreview)preservePending();
- clearTimeout(recoveryTimer);
- token='';loaded=false;offlinePreview=false;me=null;
+ if(loaded||offlinePreview)preservePending();
+ clearTimeout(timer);clearTimeout(recoveryTimer);
+ token='';loaded=false;offlinePreview=false;me=null;team=[];attemptQueue=[];
+ by('reportsList').innerHTML='';by('reportsSummary').innerHTML='';close();by('sessionNotice').hidden=true;
  persistToken('');clearProfile();finishPreview();
  by('accountToggle').hidden=true;
  by('siteShell').hidden=true;by('siteShell').inert=true;
@@ -187,10 +224,14 @@ function endExpiredSession(message){
 }
 async function restoreSession(){
  if(restoring||!token)return;
+ const requestedSession=token;
  restoring=true;clearTimeout(recoveryTimer);
  try{
-  await enter(await api('state'));
+  const x=await api('state');
+  if(token!==requestedSession)return;
+  await enter(x);
  }catch(e){
+  if(token!==requestedSession)return;
   if(e.status===401){endExpiredSession(e.message);return;}
   // An interrupted mobile connection is not evidence that the saved session expired.
   loaded=false;offlinePreview=!!me;
@@ -214,4 +255,3 @@ async function restoreSession(){
  await restoreSession();
 })();
 })();
-
