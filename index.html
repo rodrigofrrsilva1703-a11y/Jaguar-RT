@@ -775,7 +775,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   }catch(e){}
 })();
 </script>
-<link rel="stylesheet" href="account.css?v=20261001-91">
+<link rel="stylesheet" href="account.css?v=20261001-92">
 <style>
 /* Paint the saved session's page before the background session check completes. */
 html.has-saved-session #siteShell[hidden]{display:block!important}
@@ -793,15 +793,21 @@ try{
 <body>
 
 <section id="loginGate" class="login-gate">
- <form id="loginForm" class="login-card">
+ <div class="login-layout">
+ <aside class="login-welcome" aria-label="JAGUAR RT">
   <div class="login-brand"><div class="mark">J</div><div><b>JAGUAR RT</b><small>Reforma Tributária</small></div></div>
-  <div class="login-intro"><span class="login-eyebrow">ACESSO INTERNO</span><h1>Seu espaço de estudo</h1><p>Entre para estudar e acompanhar seu progresso.</p></div>
+  <div class="login-welcome-copy"><span class="login-eyebrow">CONHECIMENTO QUE FAZ A DIFERENÇA</span><h2>Entenda a reforma.<br>Avance na prática.</h2><p>Um espaço para aprender, testar seus conhecimentos e acompanhar sua evolução.</p></div>
+  <div class="login-path" aria-hidden="true"><span>Estude</span><i></i><span>Teste</span><i></i><span>Evolua</span></div>
+ </aside>
+ <form id="loginForm" class="login-card">
+  <div class="login-intro"><span class="login-eyebrow">ACESSO INTERNO</span><h1>Bem-vindo de volta</h1><p>Acesse com seu e-mail corporativo.</p></div>
   <label for="loginEmail">E-mail corporativo</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="nome@jaguarcontabil.com.br">
   <label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Digite sua senha">
   <button id="loginSubmit" type="submit">Entrar <span aria-hidden="true">→</span></button>
   <p id="loginError" class="account-error" role="alert"></p>
   <div class="login-note"><span class="login-note-icon" aria-hidden="true">◇</span><small>Exclusivo para colaboradores Jaguar. Seu progresso e resultados ficam disponíveis ao administrador.</small></div>
  </form>
+ </div>
 </section>
 <div id="siteShell" hidden inert>
 <p id="sessionNotice" class="session-notice" role="status" hidden></p>
