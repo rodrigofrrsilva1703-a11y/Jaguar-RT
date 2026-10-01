@@ -38,18 +38,43 @@ function saveNavigation(patch){
   localStorage.setItem(NAVIGATION_KEY,JSON.stringify({...current,...patch,updatedAt:new Date().toISOString()}));
  }catch(e){}
 }
+let homeEntranceObserver=null;
+let homeEntranceAnimations=[];
+function stopHomeEntrance(){
+ homeEntranceObserver?.disconnect();
+ homeEntranceObserver=null;
+ homeEntranceAnimations.forEach(animation=>animation.cancel());
+ homeEntranceAnimations=[];
+}
 function animateHomeEntrance(){
+ stopHomeEntrance();
  const home=$('home');
  if(!home||!home.classList.contains('active')||$('siteShell')?.hidden)return;
- const elements=home.querySelectorAll('.hero-copy > *, .home-progress-panel, .home-search, .transition-home');
- elements.forEach(el=>el.getAnimations().forEach(animation=>animation.cancel()));
  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- elements.forEach((el,index)=>el.animate(
-  [{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],
-  {duration:480,delay:Math.min(index*45,315),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}
- ));
+ const play=(el,delay=0,card=false)=>{
+  if(!el)return;
+  homeEntranceAnimations.push(el.animate(
+   [{opacity:0,transform:card?'translateY(20px) scale(.985)':'translateY(20px)'},
+    {opacity:1,transform:card?'translateY(0) scale(1)':'translateY(0)'}],
+   {duration:650,delay,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'}
+  ));
+ };
+ home.querySelectorAll('.hero-copy > *').forEach((el,index)=>play(el,index*65));
+ play(home.querySelector('.home-progress-panel'),160,true);
+ const reveal=el=>{
+  if(el.classList.contains('transition-home')){
+   play(el.querySelector('.section-head'));
+   el.querySelectorAll('.year').forEach((year,index)=>play(year,70+index*35,true));
+   play(el.querySelector('.timeline-panel'),200,true);
+  }else play(el,0,true);
+ };
+ homeEntranceObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  if(entry.isIntersecting){reveal(entry.target);homeEntranceObserver.unobserve(entry.target);}
+ }),{threshold:.12});
+ home.querySelectorAll('.home-search, .transition-home').forEach(el=>homeEntranceObserver.observe(el));
 }
 function go(id,options={}){
+ stopHomeEntrance();
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  $(id)?.classList.add('active');
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
