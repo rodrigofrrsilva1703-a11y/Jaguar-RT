@@ -262,11 +262,27 @@ function updateQuizStats(){
  const el=$('quizStats');if(!el)return;
  const key=$('quizModule')?.value||'all';
  const stats=quizRead(QUIZ_HISTORY_KEY,{results:{}}).results?.[key];
- el.textContent=stats?`${stats.attempts} tentativa${stats.attempts===1?'':'s'} · última nota ${stats.last}/10 · melhor nota ${stats.best}/10`:'Primeiro teste deste conteúdo · seu desempenho aparecerá aqui.';
+ if(!stats){
+  el.innerHTML='<div class="quiz-stat-empty"><b>Ainda sem tentativas</b><span>Faça o primeiro teste deste conteúdo para acompanhar sua evolução.</span></div>';
+  return;
+ }
+ el.innerHTML='<div class="quiz-stat-grid">'+
+  '<div><small>TENTATIVAS</small><b>'+stats.attempts+'</b></div>'+
+  '<div><small>ÚLTIMA</small><b>'+stats.last+'/10</b></div>'+
+  '<div><small>MELHOR</small><b>'+stats.best+'/10</b></div>'+
+ '</div>';
 }
 function updateQuizResume(){
- if(!quizSession||!$('quizResume'))return;
- $('quizResume').innerHTML=`<button type="button" onclick="resumeQuiz()">${quizSession.finished?'Rever resultado':'Continuar teste'} · ${courseEscape(quizTitle(quizSession.scope))} →</button>`;
+ const el=$('quizResume');if(!el)return;
+ if(!quizSession){el.innerHTML='';return;}
+ const answered=Array.isArray(quizSession.answers)?quizSession.answers.filter(x=>x!==null).length:0;
+ const status=quizSession.finished?'ÚLTIMO RESULTADO':'TESTE EM ANDAMENTO';
+ const detail=quizSession.finished?'Veja novamente a correção comentada.':answered+' de 10 questões respondidas.';
+ el.innerHTML='<button type="button" onclick="resumeQuiz()">'+
+  '<small>'+status+'</small>'+
+  '<b>'+courseEscape(quizTitle(quizSession.scope))+'</b>'+
+  '<span>'+detail+' &nbsp; →</span>'+
+ '</button>';
 }
 
 function initQuiz(){
@@ -297,6 +313,7 @@ function startQuiz(same=false,scope){
   $('quizModule').value=selected;
  }
  quizSave(QUIZ_SESSION_KEY,quizSession);
+ updateQuizStats();
  updateQuizResume();
  renderQuiz();
  go('quizPage');
