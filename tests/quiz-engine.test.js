@@ -6,13 +6,17 @@ const pool=quiz.pool(bank);
 assert.match(pool.find(q=>q.id==='01-m0').context,/indústria química estabelecida em Paulínia/);
 assert.match(pool.find(q=>q.id==='07-m0').prompt,/serviços educacionais/);
 assert.equal(Object.keys(bank).length,16);
-assert.equal(pool.length,320);
-assert.equal(new Set(pool.map(q=>q.id)).size,320);
+assert.equal(pool.length,640);
+assert.equal(new Set(pool.map(q=>q.id)).size,640);
 for(const [module,group] of Object.entries(bank)){
- assert.equal(group.m.length+group.c.length+group.v.length,20,`Módulo ${module}`);
- assert.equal(group.c.length,5,`Casos novos do módulo ${module}`);
+ assert.equal(group.m.length+group.c.length+group.p.length+group.v.length+group.i.length,40,`Módulo ${module}`);
+ assert.equal(group.c.length,5,`Casos originais do módulo ${module}`);
+ assert.equal(group.p.length,10,`Novas aplicações do módulo ${module}`);
+ assert.equal(group.i.length,10,`Novas interpretações do módulo ${module}`);
  assert.equal(group.contexts.m.length,group.m.length,`Contextos de múltipla escolha ${module}`);
  assert.equal(group.contexts.v.length,group.v.length,`Contextos de verdadeiro/falso ${module}`);
+ assert.equal(pool.filter(x=>x.module===module&&x.kind==='case').length,20,`20 questões práticas no módulo ${module}`);
+ assert.equal(pool.filter(x=>x.module===module&&x.kind==='concept').length,20,`20 questões conceituais no módulo ${module}`);
  for(const q of pool.filter(x=>x.module===module)){
   assert.ok(q.prompt&&q.explanation&&q.context?.length>45,`Contexto específico em ${q.id}`);
   assert.notEqual(q.context,q.prompt);
