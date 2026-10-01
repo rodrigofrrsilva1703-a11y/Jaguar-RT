@@ -45,18 +45,18 @@ test('módulos preservam leitura, retomam etapa e filtram o andamento',async({pa
  expect(moduleTitles[15]).toContain('Consultoria, Automação e Plano de Ação');
  await page.locator('#moduleGrid .module-card').first().click();
  await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(1);
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 01 DE 07');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 01 DE 06');
  await page.locator('#courseNext').click();
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
- await expect(page.locator('#courseProgressLabel')).toHaveText('1 de 7 etapas lidas');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
+ await expect(page.locator('#courseProgressLabel')).toHaveText('1 de 6 etapas lidas');
  await page.locator('#courseViewAll').click();
- await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(7);
+ await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(6);
  await page.locator('#courseViewAll').click();
  await page.locator('#modulePage .back').click();
  await page.locator('[data-study-filter="started"]').click();
  await expect(page.locator('#moduleGrid .module-card')).toHaveCount(1);
  await page.locator('#moduleGrid .module-card').click();
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
 });
 
 test('teste por módulo corrige, refaz e troca perguntas; teste geral mistura módulos',async({page})=>{
@@ -108,6 +108,9 @@ test('home orienta o próximo passo sem sobrecarregar a tela',async({page})=>{
  await page.locator('nav [data-go="modules"]').click();
  await page.locator('#moduleGrid .module-card').nth(4).click();
  await expect(page.locator('#modulePage .module-summary')).toBeVisible();
+ await expect(page.locator('#modulePage .module-summary-item')).toHaveCount(2);
+ await expect(page.locator('#modulePage .module-summary')).not.toContainText('NA JAGUAR');
+ await expect(page.locator('#modulePage')).not.toContainText('O que o colaborador da Jaguar precisa fazer na prática');
  await expect(page.locator('#modulePage .module-apply')).toBeVisible();
  await expect(page.locator('#modulePage .module-apply')).toContainText('Simular custo e créditos');
 
@@ -320,13 +323,13 @@ test('recarregar preserva o módulo e a etapa em que o usuário estava',async({p
  await page.locator('#moduleGrid .module-card').nth(4).click();
  await expect(page.locator('#modulePage')).toHaveClass(/active/);
  await page.locator('#courseNext').click();
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 08');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
  await page.waitForTimeout(800);
 
  await page.reload({waitUntil:'domcontentloaded'});
  await expect(page.locator('#modulePage')).toHaveClass(/active/);
  await expect(page.locator('#modulePage .page-title')).toContainText('Créditos de IBS/CBS');
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 08');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
 });
 
 test('recarregar preserva a ferramenta e a aba selecionada',async({page})=>{
@@ -530,12 +533,12 @@ test('recarregar mostra a última aula antes da validação da sessão, sem tela
  await expect(page.locator('#siteShell')).toBeVisible();
  await expect(page.locator('#loginGate')).toBeHidden();
  await expect(page.locator('#authLoading')).toHaveCount(0);
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
  await expect(page.locator('#accountName')).toHaveText('Teste');
  expect(await page.locator('#siteShell').evaluate(el=>el.inert)).toBe(true);
  await expect.poll(()=>typeof release).toBe('function');release();
  await expect.poll(()=>page.locator('#siteShell').evaluate(el=>el.inert)).toBe(false);
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
 });
 
 test('sessão expirada volta ao login após a validação, sem expor relatórios',async({page})=>{
