@@ -124,7 +124,22 @@ function saveStudyProgress(value){
   localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(next));window.JaguarAccount?.changed();
  }catch(e){}
 }
-function moduleProgress(m){const saved=studyProgress()[m.id]||{};return {read:Array.isArray(saved.read)?saved.read.filter(i=>Number.isInteger(i)&&i>=0&&i<m.blocks.length):[],step:Math.min(Math.max(Number(saved.step)||0,0),m.blocks.length-1)};}
+function moduleProgress(m){
+ const saved=studyProgress()[m.id]||{};
+ const read=Array.isArray(saved.read)?[...new Set(saved.read.filter(i=>Number.isInteger(i)&&i>=0&&i<m.blocks.length))].sort((a,b)=>a-b):[];
+ let step=Number.isInteger(Number(saved.step))?Number(saved.step):0;
+ if(read.length===0){
+  step=0;
+ }else if(step<0||step>=m.blocks.length){
+  const firstUnread=m.blocks.findIndex((_,i)=>!read.includes(i));
+  step=firstUnread>=0?firstUnread:m.blocks.length-1;
+ }else if(read.includes(step)&&read.length<m.blocks.length){
+  const firstUnreadAfter=m.blocks.findIndex((_,i)=>i>=step&&!read.includes(i));
+  if(firstUnreadAfter>=0)step=firstUnreadAfter;
+ }
+ step=Math.min(Math.max(step,0),m.blocks.length-1);
+ return {read,step};
+}
 function moduleStatus(m){const n=moduleProgress(m).read.length;return n===m.blocks.length?'Concluído':n?'Em andamento':'Começar';}
 function moduleCard(m){
  const progress=moduleProgress(m), count=progress.read.length, status=moduleStatus(m);
@@ -429,8 +444,12 @@ function openModule(id){
    ${moduleActionHtml(m)}
    <div class="course-quiz-callout"><div><b>Concluiu a leitura?</b><span>Confira o que aprendeu em 10 perguntas deste módulo.</span></div><button class="quiz-primary" onclick="startModuleQuiz('${m.id}')">Fazer teste do módulo ${m.id} →</button></div>
    <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
-  go('modulePage');
+  go('modulePage',{instant:true});
   showCourseStep(progress.step,false);
+  requestAnimationFrame(()=>{
+   const target=document.querySelector('#modulePage .course-block:not([hidden])');
+   (target||document.querySelector('#modulePage .course-layout'))?.scrollIntoView({behavior:'auto',block:'start'});
+  });
   return;
  }
  const blocks=m.blocks.map((b,i)=>`<section class="lesson-block">
@@ -471,7 +490,10 @@ function showCourseStep(index,scroll=true){
  $('courseNext').textContent=step===m.blocks.length-1?(progress.read.includes(step)?'Etapa concluída ✓':'Concluir módulo ✓'):'Marcar como lida e avançar →';
  $('courseNext').disabled=step===m.blocks.length-1&&progress.read.includes(step);
  $('courseViewAll').textContent=courseAllVisible?'Voltar à leitura por etapas':'Ver aula inteira';
- if(scroll)document.querySelector('.course-layout')?.scrollIntoView({behavior:'smooth',block:'start'});
+ if(scroll){
+  const target=document.querySelector('#modulePage .course-block:not([hidden])');
+  (target||document.querySelector('.course-layout'))?.scrollIntoView({behavior:'smooth',block:'start'});
+ }
 }
 function moveCourseStep(direction){
  const m=activeCourse;if(!m)return;
