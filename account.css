@@ -35,3 +35,17 @@
 .login-layout .login-intro{margin:0 0 32px}.login-layout .login-card h1{font-size:26px}.login-layout .login-card input{height:48px}.login-layout .login-card #loginSubmit{height:48px;margin-top:28px}
 .login-layout .login-note{margin-top:32px}.login-layout .login-note small{font-size:10px}
 @media(max-width:700px){.login-gate{padding:24px 16px}.login-layout{max-width:440px;grid-template-columns:1fr;border-radius:18px}.login-welcome{padding:25px 28px;border-right:0;border-bottom:1px solid #e1e1d9}.login-welcome-copy{margin:25px 0 0}.login-welcome .login-eyebrow,.login-welcome-copy p,.login-path{display:none}.login-welcome h2{font-size:25px;margin:0;line-height:1.2}.login-welcome h2 br{display:none}.login-layout .login-card{padding:28px}.login-layout .login-intro{margin-bottom:25px}.login-layout .login-card h1{font-size:23px}.login-layout .login-note{margin-top:25px}}
+/* Motion stays short and uses compositor-friendly properties. */
+.account-drawer:not([hidden]){animation:drawer-enter 260ms cubic-bezier(.22,1,.36,1) both}
+.account-backdrop:not([hidden]){animation:backdrop-enter 180ms ease-out both}
+@keyframes drawer-enter{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes backdrop-enter{from{opacity:0}to{opacity:1}}
+@media(hover:hover) and (pointer:fine){
+ .module-card,.journey-card{transition:transform 180ms ease-out,box-shadow 180ms ease-out,border-color 180ms ease-out}
+ .module-card:hover,.journey-card:hover{transform:translateY(-2px)}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ .account-drawer,.account-backdrop{animation:none!important}
+ .module-card,.journey-card{transition:none!important;transform:none!important}
+}

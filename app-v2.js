@@ -40,6 +40,7 @@ function saveNavigation(patch){
 }
 let homeEntranceObserver=null;
 let homeEntranceAnimations=[];
+const homeRevealedElements=new WeakSet();
 function stopHomeEntrance(){
  homeEntranceObserver?.disconnect();
  homeEntranceObserver=null;
@@ -49,23 +50,27 @@ function stopHomeEntrance(){
 function animateHomeEntrance(){
  stopHomeEntrance();
  const home=$('home');
- if(!home||!home.classList.contains('active')||$('siteShell')?.hidden)return;
+ if(!home||!home.classList.contains('active')||$('siteShell')?.hidden||$('siteShell')?.inert)return;
  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const mobile=window.matchMedia('(max-width:760px)').matches;
  const play=(el,delay=0,card=false)=>{
-  if(!el)return;
-  homeEntranceAnimations.push(el.animate(
-   [{opacity:0,transform:card?'translateY(20px) scale(.985)':'translateY(20px)'},
-    {opacity:1,transform:card?'translateY(0) scale(1)':'translateY(0)'}],
-   {duration:650,delay,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'}
-  ));
+  if(!el||homeRevealedElements.has(el))return;
+  homeRevealedElements.add(el);
+  const animation=el.animate(
+   [{opacity:0,transform:`translateY(${card?8:12}px)`},
+    {opacity:1,transform:'translateY(0)'}],
+   {duration:mobile?320:440,delay:Math.min(delay,mobile?100:160),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}
+  );
+  homeEntranceAnimations.push(animation);
+  animation.finished.then(()=>{homeEntranceAnimations=homeEntranceAnimations.filter(a=>a!==animation);},()=>{});
  };
- home.querySelectorAll('.hero-copy > *').forEach((el,index)=>play(el,index*65));
- play(home.querySelector('.home-progress-panel'),160,true);
+ home.querySelectorAll('.hero-copy > *').forEach((el,index)=>play(el,index*40));
+ play(home.querySelector('.home-progress-panel'),100,true);
  const reveal=el=>{
   if(el.classList.contains('transition-home')){
    play(el.querySelector('.section-head'));
-   el.querySelectorAll('.year').forEach((year,index)=>play(year,70+index*35,true));
-   play(el.querySelector('.timeline-panel'),200,true);
+   el.querySelectorAll('.year').forEach((year,index)=>play(year,30+index*18,true));
+   play(el.querySelector('.timeline-panel'),120,true);
   }else play(el,0,true);
  };
  homeEntranceObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
