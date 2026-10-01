@@ -27,7 +27,16 @@ for(const [module,group] of Object.entries(bank)){
 }
 
 for(const module of Object.keys(bank)){
- const first=quiz.build(module,bank);
+ const rounds=[];
+ let seen=[];
+ for(let r=0;r<4;r++){
+  const round=quiz.build(module,bank,seen,{},r?rounds[r-1].map(q=>q.id):[]);
+  rounds.push(round);
+  seen=[...seen,...round.map(q=>q.id)];
+ }
+ assert.equal(new Set(rounds.flat().map(q=>q.id)).size,40,`Quatro testes sem repetição no módulo ${module}`);
+
+ const first=rounds[0];
  assert.equal(first.length,10);
  assert.ok(first.every(q=>q.module===module));
  assert.equal(first.filter(q=>q.kind==='case').length,5);
