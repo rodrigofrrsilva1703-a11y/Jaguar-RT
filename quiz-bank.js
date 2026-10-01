@@ -2836,15 +2836,15 @@ const QUIZ_BANK = {
       ],
       "v": [
         "O analista compara redução de alíquota e regime específico.",
-        "Um banco possui receitas e deduções próprias.",
+        "A equipe fiscal de um banco revisa as receitas e as deduções próprias da atividade financeira antes da apuração.",
         "Uma operação imobiliária entra no planejamento.",
         "O cadastro contém combustíveis sujeitos a tratamento específico.",
-        "O sistema recebe eventos da DeRE.",
+        "O sistema de uma empresa recebe eventos da DeRE e a equipe precisa conferir sua utilização na apuração dos tributos.",
         "A empresa possui também receitas fora do regime específico.",
-        "O arquivo da DeRE consolida dados da empresa.",
+        "A matriz de uma empresa com várias filiais prepara o arquivo da DeRE e confere quais dados estão consolidados.",
         "O usuário tenta resolver um regime específico com apenas um percentual de redução.",
         "A área fiscal cruza DeRE e apuração assistida.",
-        "A Receita publica nova versão de leiaute."
+        "A equipe fiscal recebe a notícia de uma nova versão do leiaute publicada pela Receita e revisa a configuração do sistema."
       ]
     },
     "c": [
@@ -3029,7 +3029,7 @@ const QUIZ_BANK = {
         "A equipe fiscal está parametrizando a integração da Duimp."
       ],
       "v": [
-        "O escritório revisa a base de uma importação.",
+        "Um escritório contábil revisa os documentos e a base de cálculo de uma operação de importação realizada por seu cliente.",
         "O cliente considera somente o valor aduaneiro.",
         "A equipe compara o produto importado ao equivalente nacional.",
         "O exportador não consegue comprovar uma operação.",
@@ -3037,7 +3037,7 @@ const QUIZ_BANK = {
         "Uma operação envolve empresa habilitada na ZFM.",
         "O cliente assume que qualquer bem recebe o mesmo incentivo.",
         "O cadastro mantém IPI zerado para todos os produtos sem exceção.",
-        "O ERP começa a importar dados novos da Duimp.",
+        "O ERP de uma empresa importadora passa a receber novos campos da Duimp e a equipe confere os dados de cada item.",
         "O usuário tenta simular uma ZPE como operação doméstica comum."
       ]
     },
@@ -3106,3 +3106,4 @@ const QUIZ_BANK = {
   }
 };
 if(typeof module!=='undefined'&&module.exports)module.exports=QUIZ_BANK;
+

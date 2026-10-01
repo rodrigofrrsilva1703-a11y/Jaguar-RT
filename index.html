@@ -775,7 +775,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   }catch(e){}
 })();
 </script>
-<link rel="stylesheet" href="account.css?v=78">
+<link rel="stylesheet" href="account.css?v=20260930-87">
 </head>
 <body>
 <section id="authLoading" class="login-gate auth-loading"><div class="auth-loading-card"><div class="mark">J</div><b>JAGUAR RT</b><span>Carregando seu acesso…</span></div></section>
@@ -1280,7 +1280,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 </section>
 
 <div class="footer">JAGUAR RT · Material educacional interno · revisão 30/09/2026. Premissas e simulações não substituem a legislação e o enquadramento aplicável à operação.</div>
-<section id="teamReports" class="view"><button id="reportsBack" class="back">← Voltar ao início</button><div class="reports-heading"><div><span class="eyebrow">ADMINISTRAÇÃO</span><h1 class="page-title">Relatórios da equipe</h1><p class="page-lead">Acompanhe o estudo, o desempenho e os acessos dos colaboradores.</p></div><button id="reportsRefresh" class="export-btn">Atualizar dados</button></div><p id="reportsStatus" class="account-status" role="status"></p><div id="reportsSummary" class="reports-summary"></div><div class="reports-filters"><label>Buscar colaborador<input id="reportsSearch" type="search" placeholder="Nome ou e-mail"></label><label>Atividade<select id="reportsFilter"><option value="all">Todos</option><option value="online">Ativos recentemente</option><option value="started">Com estudo iniciado</option><option value="unstarted">Sem estudo iniciado</option></select></label></div><div id="reportsList" class="reports-list"></div></section>
+<section id="teamReports" class="view"><button id="reportsBack" class="back">← Voltar ao início</button><div class="reports-heading"><div><span class="eyebrow">ADMINISTRAÇÃO</span><h1 class="page-title">Relatórios da equipe</h1><p class="page-lead">Acompanhe o estudo, o desempenho e os acessos dos colaboradores.</p></div><div class="reports-actions"><button id="reportsRefresh" class="export-btn">Atualizar dados</button><button id="reportsExport" class="export-btn" disabled>Exportar Excel</button></div></div><p id="reportsStatus" class="account-status" role="status"></p><div id="reportsSummary" class="reports-summary"></div><div class="reports-filters"><label>Buscar colaborador<input id="reportsSearch" type="search" placeholder="Nome ou e-mail"></label><label>Atividade<select id="reportsFilter"><option value="all">Todos</option><option value="online">Ativos recentemente</option><option value="started">Com estudo iniciado</option><option value="unstarted">Sem estudo iniciado</option></select></label><label>Módulo<select id="reportsModule"></select></label><label>Desempenho<select id="reportsPerformance"><option value="all">Todos</option><option value="help">Média abaixo de 7</option><option value="good">Média a partir de 7</option><option value="untested">Sem testes finalizados</option></select></label></div><p id="reportsCount" class="account-status" role="status"></p><div id="reportsList" class="reports-list"></div></section>
 </main>
 
 <div id="printReport" class="print-report" aria-hidden="true"></div>
@@ -1298,12 +1298,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <div id="accountBackdrop" class="account-backdrop" hidden></div>
 <aside id="accountDrawer" class="account-drawer" role="dialog" aria-modal="true" aria-labelledby="accountTitle" hidden><div class="account-head"><div><span class="drawer-eyebrow">ESPAÇO PESSOAL</span><h2 id="accountTitle">Meu percurso</h2></div><button id="accountClose" aria-label="Fechar painel">✕</button></div><div class="drawer-profile"><span id="drawerAvatar" class="drawer-avatar"></span><div><b id="drawerName"></b><p id="accountEmail" class="account-email"></p></div></div><p id="accountStatus" class="account-status" role="status"></p><div id="accountContent"></div><section id="adminSection" class="account-admin" hidden><button id="reportsOpen" class="reports-open">Relatórios dos colaboradores →</button></section><p><button id="accountLogout">Sair da conta</button></p></aside>
 <script src="content-v2.js?v=20260930-80"></script>
-<script src="quiz-bank.js?v=20260930-77"></script>
+<script src="quiz-bank.js?v=20260930-87"></script>
 <script src="quiz-engine.js?v=20260930-77"></script>
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
 <script src="app-v2.js?v=20260930-86" defer></script>
-<script src="account.js?v=83" defer></script>
+<script src="account.js?v=20260930-87" defer></script>
 </body>
 </html>
+

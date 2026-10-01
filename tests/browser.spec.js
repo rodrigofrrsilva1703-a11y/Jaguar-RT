@@ -320,13 +320,13 @@ test('recarregar preserva o módulo e a etapa em que o usuário estava',async({p
  await page.locator('#moduleGrid .module-card').nth(4).click();
  await expect(page.locator('#modulePage')).toHaveClass(/active/);
  await page.locator('#courseNext').click();
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 08');
  await page.waitForTimeout(800);
 
  await page.reload({waitUntil:'domcontentloaded'});
  await expect(page.locator('#modulePage')).toHaveClass(/active/);
  await expect(page.locator('#modulePage .page-title')).toContainText('Créditos de IBS/CBS');
- await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 08');
 });
 
 test('recarregar preserva a ferramenta e a aba selecionada',async({page})=>{
@@ -409,3 +409,105 @@ test('lateral compacta no celular e relatórios em tela própria',async({page})=
  await page.locator('#reportsBack').click();
  await expect(page.locator('#home')).toBeVisible();
 });
+
+test('painel pessoal abre um módulo diretamente no celular',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('http://127.0.0.1:4173/?e2e=drawer');
+ await page.locator('#accountToggle').click();
+ const box=await page.locator('#accountDrawer').boundingBox();
+ expect(box.width).toBeLessThan(390);
+ await expect(page.locator('#accountDrawer [data-module]')).toHaveCount(16);
+ await page.locator('#accountDrawer [data-module="06"]').click();
+ await expect(page.locator('#accountDrawer')).toBeHidden();
+ await expect(page.locator('#modulePage .page-title')).toContainText('Saldo Credor');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test('progresso sem conexão sobrevive ao recarregamento e volta ao servidor',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let state={study:{__orderVersion:2}},offline=false;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const b=route.request().postDataJSON();
+  if(offline&&b.action==='save'){await route.abort('failed');return;}
+  if(b.action==='save')state=b.data;
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=offline');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ offline=true;
+ await page.evaluate(()=>openModule('01'));
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#accountStatus')).toContainText('aguardando sincronização');
+ await page.reload();
+ await expect(page.locator('#courseProgressLabel')).toContainText('1 de 7');
+ await expect(page.locator('#accountStatus')).toContainText('aguardando sincronização');
+ // Another device advanced module 2 while this browser was disconnected.
+ state.study['02']={read:[0],step:1};
+ offline=false;
+ await page.reload();
+ await expect(page.locator('#courseProgressLabel')).toContainText('1 de 7');
+ await expect.poll(()=>state.study?.['01']?.read).toEqual([0]);
+ expect(state.study['02'].read).toEqual([0]);
+ await expect.poll(()=>page.evaluate(()=>localStorage.getItem('jaguarrt-unsynced:teste@jaguarcontabil.com.br'))).toBeNull();
+});
+
+test('um envio lento não apaga alterações feitas durante a sincronização',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let state={study:{__orderVersion:2}},release,waiting=false;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const b=route.request().postDataJSON();
+  if(b.action==='save'){
+   if(!waiting){waiting=true;await new Promise(resolve=>{release=resolve;});}
+   state=b.data;
+  }
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=slow-save');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>openModule('01'));
+ await page.locator('#courseNext').click();
+ await expect.poll(()=>waiting).toBeTruthy();
+ await page.locator('#courseNext').click();
+ release();
+ await expect.poll(()=>state.study?.['01']?.read).toEqual([0,1]);
+ await expect(page.locator('#courseProgressLabel')).toContainText('2 de 7');
+});
+
+test('relatórios filtram desempenho e módulo; Excel inclui só o resultado filtrado',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ const accounts=[
+  {email:'ana@jaguarcontabil.com.br',state:{study:{__orderVersion:2,'01':{read:[0,1,2,3,4,5,6]}}},attempts:[{score:5,scope:'01',created_at:'2026-09-30T12:00:00Z'}]},
+  {email:'bia@jaguarcontabil.com.br',state:{study:{__orderVersion:2}},attempts:[{score:9,scope:'02',created_at:'2026-09-30T12:00:00Z'}]},
+  {email:'caio@jaguarcontabil.com.br',state:{study:{__orderVersion:2}},attempts:[]}
+ ];
+ await page.route('**/functions/v1/jaguarrt',route=>route.fulfill({json:route.request().postDataJSON().action==='admin'?{accounts}:{email:'rodrigo.silva@jaguarcontabil.com.br',admin:true,state:{study:{__orderVersion:2}},attempts:[]}}));
+ await page.goto('http://127.0.0.1:4173/?e2e=reports');
+ await page.locator('#accountToggle').click();
+ await page.locator('#reportsOpen').click();
+ await expect(page.locator('.report-person')).toHaveCount(3);
+ await page.locator('#reportsPerformance').selectOption('help');
+ await expect(page.locator('.report-person')).toHaveCount(1);
+ await expect(page.locator('.report-person')).toContainText('Ana');
+ await page.locator('#reportsModule').selectOption('01');
+ await expect(page.locator('.report-person')).toHaveCount(1);
+ await page.waitForFunction(()=>!!window.XLSX);
+ const download=page.waitForEvent('download');
+ await page.locator('#reportsExport').click();
+ const file=await download;
+ const base64=require('node:fs').readFileSync(await file.path()).toString('base64');
+ const book=await page.evaluate(base64=>{const b=XLSX.read(base64,{type:'base64'});return {names:b.SheetNames,rows:XLSX.utils.sheet_to_json(b.Sheets.Colaboradores),modules:XLSX.utils.sheet_to_json(b.Sheets['Módulos'])};},base64);
+ expect(book.names).toEqual(['Colaboradores','Módulos','Testes']);
+ const rows=book.rows;
+ expect(rows).toHaveLength(1);expect(rows[0]['E-mail']).toBe('ana@jaguarcontabil.com.br');
+ expect(book.modules).toHaveLength(16);
+ await page.locator('#reportsPerformance').selectOption('untested');
+ await expect(page.locator('.report-person')).toHaveCount(0);
+ await expect(page.locator('#reportsExport')).toBeDisabled();
+});
+
+test('um colaborador não recebe atalho administrativo',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=admin-access');
+ await page.locator('#accountToggle').click();
+ await expect(page.locator('#adminSection')).toBeHidden();
+});
+

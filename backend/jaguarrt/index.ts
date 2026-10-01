@@ -1,8 +1,6 @@
 import bank from './bank.ts';
 const URL=Deno.env.get('SUPABASE_URL')!;
 const KEY=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const SITE='https://rodrigofrrsilva1703-a11y.github.io/Jaguar-RTAV/';
-const ADMIN='rodrigo.silva@jaguarcontabil.com.br';
 const headers={'Content-Type':'application/json','Access-Control-Allow-Origin':'https://rodrigofrrsilva1703-a11y.github.io','Access-Control-Allow-Headers':'content-type, authorization','Access-Control-Allow-Methods':'POST, OPTIONS','Cache-Control':'no-store'};
 async function rpc(args:unknown){const r=await fetch(URL+'/rest/v1/rpc/jaguarrt_gateway',{method:'POST',headers:{'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+KEY},body:JSON.stringify(args)});if(!r.ok) throw Error('Não foi possível salvar os dados. Tente novamente.');return r.json();}
 Deno.serve(async(req)=>{
@@ -38,8 +36,9 @@ Deno.serve(async(req)=>{
    return {id:q.id,module:match[1],selected,correct:choices[answer],ok:selected===choices[answer]};
   });
   if(data.scope!=='all'&&details.some((q:any)=>q.module!==data.scope))throw Error('Módulo inválido');
-  data={id:data.id,scope:data.scope,score:details.filter((q:any)=>q.ok).length,details};
+  data={id:data.id,scope:data.scope,score:details.filter((q:any)=>q.ok).length,details,orderVersion:2};
  }
  const result=await rpc({p_action:b.action,p_token:token,p_data:data});return reply(result,result.error?403:200);
  }catch(e){return reply({error:e instanceof Error?e.message:'Erro inesperado'},400);}
 });
+

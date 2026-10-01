@@ -4,7 +4,7 @@ Plataforma estática da Jaguar Assessoria Contábil para estudo, simulação e a
 
 ## O que existe hoje
 
-- 13 módulos de estudo técnico e didático
+- 16 módulos de estudo técnico e didático
 - testes de 10 perguntas por módulo ou mistos, com casos práticos, interpretação, correção e revisão
 - linha do tempo 2026–2033
 - calculadora de preço de venda
@@ -64,3 +64,12 @@ O site é estático e publicado pelo GitHub Pages a partir da branch `main`.
 ## Observação
 
 A plataforma é ferramenta de estudo, planejamento e simulação. Operações reais devem ser validadas de acordo com o regime, período, destino, enquadramento, documentação e legislação aplicável.
+
+## Contas e relatórios
+
+- Colaboradores usam a senha da equipe. A conta administrativa tem uma senha exclusiva armazenada como hash no schema privado do banco.
+- Alterações não sincronizadas ficam separadas por e-mail no navegador e são reenviadas ao reconectar ou entrar novamente.
+- Relatórios permitem filtrar por atividade, módulo concluído e desempenho. Média abaixo de 7 indica necessidade de acompanhamento.
+- A exportação Excel respeita os filtros atuais e inclui colaboradores, módulos e testes.
+- Os módulos no painel Meu percurso são atalhos para retomar o estudo.
+

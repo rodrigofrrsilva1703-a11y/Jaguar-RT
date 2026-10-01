@@ -4,10 +4,10 @@ const quiz=require('../quiz-engine.js');
 
 const pool=quiz.pool(bank);
 assert.match(pool.find(q=>q.id==='01-m0').context,/indústria química estabelecida em Paulínia/);
-assert.match(pool.find(q=>q.id==='06-m0').prompt,/serviços educacionais/);
-assert.equal(Object.keys(bank).length,13);
-assert.equal(pool.length,260);
-assert.equal(new Set(pool.map(q=>q.id)).size,260);
+assert.match(pool.find(q=>q.id==='07-m0').prompt,/serviços educacionais/);
+assert.equal(Object.keys(bank).length,16);
+assert.equal(pool.length,320);
+assert.equal(new Set(pool.map(q=>q.id)).size,320);
 for(const [module,group] of Object.entries(bank)){
  assert.equal(group.m.length+group.c.length+group.v.length,20,`Módulo ${module}`);
  assert.equal(group.c.length,5,`Casos novos do módulo ${module}`);
@@ -44,4 +44,9 @@ const counts=Object.fromEntries(mixed.map(q=>[q.module,1]));
 const next=quiz.build('all',bank,mixed.map(q=>q.id),counts,mixed.map(q=>q.id));
 assert.equal(next.length,10);
 assert.ok(next.some(q=>!counts[q.module]),'Próximo teste geral inclui módulos não selecionados');
+const fs=require('node:fs');
+const serverSource=fs.readFileSync(require('node:path').join(__dirname,'../backend/jaguarrt/bank.ts'),'utf8');
+const serverBank=JSON.parse(serverSource.slice(serverSource.indexOf('{'),serverSource.lastIndexOf(';\nexport default')));
+assert.deepEqual(serverBank,bank,'O gabarito publicado deve corresponder ao banco do navegador');
 console.log('✓ quiz-engine: banco, seleção, renovação e correção validados');
+

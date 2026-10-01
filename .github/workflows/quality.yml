@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: node tests/tax-engine.test.js
+      - run: npm test
 
   browser:
     runs-on: ubuntu-latest
@@ -23,10 +23,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: Start local site
         run: |
           python3 -m http.server 4173 >/tmp/rtav-http.log 2>&1 &
           sleep 2
       - run: npx playwright test
+
