@@ -561,3 +561,75 @@ test('sem sessão salva abre diretamente o login, sem mostrar o conteúdo',async
  await expect(page.locator('#loginEmail')).toBeFocused();
 });
 
+test('celular mantém o login ao recarregar sem conexão e sincroniza o estudo ao voltar',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.unroute('**/functions/v1/jaguarrt');
+ let state={study:{__orderVersion:2}},offline=false;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const b=route.request().postDataJSON();
+  if(offline){await route.abort('failed');return;}
+  if(b.action==='save')state=b.data;
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=mobile-disconnection');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>openModule('01'));
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#accountStatus')).toContainText('Progresso salvo');
+ offline=true;
+ await page.reload();
+ await expect(page.locator('#sessionNotice')).toBeVisible();
+ await expect(page.locator('#loginGate')).toBeHidden();
+ await expect(page.locator('#siteShell')).toBeVisible();
+ expect(await page.evaluate(()=>localStorage.getItem('jaguarrt-session'))).toBe('a'.repeat(64));
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#courseProgressLabel')).toContainText('2 de 7');
+ offline=false;
+ await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+ await expect(page.locator('#sessionNotice')).toBeHidden();
+ await expect.poll(()=>state.study?.['01']?.read).toEqual([0,1]);
+ await page.reload();
+ await expect(page.locator('#courseProgressLabel')).toContainText('2 de 7');
+ await expect(page.locator('#loginGate')).toBeHidden();
+});
+
+test('falha temporária do servidor no celular tenta novamente sem apagar a sessão',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.unroute('**/functions/v1/jaguarrt');
+ let failNext=false,retries=0;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  if(failNext){failNext=false;retries++;await route.fulfill({status:503,json:{error:'Servidor indisponível'}});return;}
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state:{study:{__orderVersion:2}},attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=mobile-server-retry');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ failNext=true;
+ await page.reload();
+ await expect(page.locator('#sessionNotice')).toBeVisible();
+ await expect(page.locator('#loginGate')).toBeHidden();
+ expect(await page.evaluate(()=>localStorage.getItem('jaguarrt-session'))).toBe('a'.repeat(64));
+ await expect(page.locator('#sessionNotice')).toBeHidden();
+ expect(retries).toBe(1);
+ await expect.poll(()=>page.locator('#siteShell').evaluate(el=>el.inert)).toBe(false);
+ await expect(page.locator('#loginGate')).toBeHidden();
+});
+
+test('resposta inválida de rede mantém a sessão e reconecta ao voltar para o celular',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.unroute('**/functions/v1/jaguarrt');
+ let badResponse=false;
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  if(badResponse){await route.fulfill({status:502,contentType:'text/html',body:'Bad gateway'});return;}
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state:{study:{__orderVersion:2}},attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=mobile-bad-gateway');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ badResponse=true;await page.reload();
+ await expect(page.locator('#sessionNotice')).toBeVisible();
+ await expect(page.locator('#loginGate')).toBeHidden();
+ badResponse=false;
+ await page.evaluate(()=>document.dispatchEvent(new Event('visibilitychange')));
+ await expect(page.locator('#sessionNotice')).toBeHidden();
+ await expect(page.locator('#accountName')).toHaveText('Teste');
+});
+

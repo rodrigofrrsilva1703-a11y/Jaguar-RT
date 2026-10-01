@@ -11,11 +11,18 @@ function persistToken(value){
  try{if(value)localStorage.setItem(TOKEN_KEY,value);else localStorage.removeItem(TOKEN_KEY);}catch(e){}
  try{if(value)sessionStorage.setItem(TOKEN_KEY,value);else sessionStorage.removeItem(TOKEN_KEY);}catch(e){}
 }
-let token=savedToken(),me=null,loaded=false,timer,attemptQueue=[],saveChain=Promise.resolve();
+let token=savedToken(),me=null,loaded=false,offlinePreview=false,timer,attemptQueue=[],saveChain=Promise.resolve();
+let restoring=false,recoveryTimer,recoveryAttempt=0;
 const by=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}};
-async function api(action,data,extra={}){const r=await fetch(ENDPOINT,{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json'},body:JSON.stringify({action,token,data,...extra})});const x=await r.json();if(!r.ok||x.error)throw Error(x.error||'Não foi possível conectar.');return x;}
+async function api(action,data,extra={}){
+ const r=await fetch(ENDPOINT,{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json'},body:JSON.stringify({action,token,data,...extra})});
+ let x;
+ try{x=await r.json();}catch(e){throw Object.assign(Error('Não foi possível conectar. Tente novamente.'),{status:r.status});}
+ if(!r.ok||x.error)throw Object.assign(Error(x.error||'Não foi possível conectar.'),{status:r.status});
+ return x;
+}
 function cacheProfile(){
  try{localStorage.setItem(PROFILE_KEY,JSON.stringify({email:me.email,admin:!!me.admin,sessionPrefix:token.slice(0,12)}));}catch(e){}
 }
@@ -29,6 +36,7 @@ function showSessionPreview(){
  by('siteShell').inert=true;
  if(profile?.email&&profile.sessionPrefix===token.slice(0,12)){
   me={email:profile.email,admin:false,state:normalizeCourseState(snapshot()),attempts:[]};
+  attemptQueue=read(pendingKey(),null)?.attempts||readSessionAttempts(me.email);
   render();by('accountToggle').hidden=false;
   window.JaguarRestoreNavigation?.({admin:profile.admin===true});
  }else{
@@ -60,11 +68,11 @@ function hydrate(state){
 function snapshot(){return {study:read(KEYS[0],{}),history:read(KEYS[1],{}),quiz:read(KEYS[2],null)};}
 function pendingKey(){return 'jaguarrt-unsynced:'+me.email;}
 function preservePending(){
- if(!loaded||!me)return;
+ if((!loaded&&!offlinePreview)||!me)return;
  try{localStorage.setItem(pendingKey(),JSON.stringify({state:snapshot(),attempts:attemptQueue,revision:crypto.randomUUID()}));}
  catch(e){status('Não foi possível guardar o progresso neste navegador. Mantenha a página aberta até sincronizar.');}
 }
-function schedule(){if(!loaded)return;me.state=snapshot();preservePending();render();clearTimeout(timer);timer=setTimeout(()=>flush(),600);}
+function schedule(){if(!loaded&&!offlinePreview)return;me.state=snapshot();preservePending();render();if(!loaded)return;clearTimeout(timer);timer=setTimeout(()=>flush(),600);}
 async function flush(){
  if(!loaded||!me)return;
  const owner=me.email,sessionToken=token,key=pendingKey();
@@ -86,7 +94,7 @@ async function flush(){
   }catch(e){status(e.message+' · alterações aguardando sincronização');}
  });return saveChain;
 }
-window.JaguarAccount={changed:schedule,attempt(s){if(!loaded)return;attemptQueue.push({id:crypto.randomUUID(),scope:s.scope,questions:s.questions.map(q=>({id:q.id,options:q.options})),answers:s.answers});sessionStorage.setItem('jaguarrt-pending:'+me.email,JSON.stringify(attemptQueue));schedule();}};
+window.JaguarAccount={changed:schedule,attempt(s){if(!loaded&&!offlinePreview)return;attemptQueue.push({id:crypto.randomUUID(),scope:s.scope,questions:s.questions.map(q=>({id:q.id,options:q.options})),answers:s.answers});sessionStorage.setItem('jaguarrt-pending:'+me.email,JSON.stringify(attemptQueue));schedule();}};
 function readSessionAttempts(email){try{return JSON.parse(sessionStorage.getItem('jaguarrt-pending:'+email)||'[]');}catch{return [];}}
 function date(v){return v?new Date(v).toLocaleString('pt-BR'):'—';}
 function progress(state){const normalized=normalizeCourseState(state||{});let read=0,total=0,done=0;for(const m of STUDY_MODULES){const steps=new Set((normalized?.study?.[m.id]?.read||[]).filter(i=>Number.isInteger(i)&&i>=0&&i<m.blocks.length));read+=steps.size;total+=m.blocks.length;if(steps.size===m.blocks.length)done++;}return {pct:total?Math.round(read/total*100):0,done,state:normalized};}
@@ -94,7 +102,7 @@ function attemptsHtml(attempts){return attempts.length?attempts.slice(0,30).map(
 function render(){if(!me)return;by('accountEmail').textContent=me.email;const p=progress(me.state);me.state=p.state;const name=me.email.split('@')[0].split(/[._-]+/).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');if(by('homeGreeting'))by('homeGreeting').textContent='Olá, '+name;by('accountName').textContent=name;by('drawerName').textContent=name;by('drawerAvatar').textContent=name.split(' ').map(w=>w[0]).slice(0,2).join('');by('accountAvatar').textContent=name.split(' ').map(w=>w[0]).slice(0,2).join('');by('accountProgress').textContent=p.pct+'%';by('accountMiniFill').style.width=p.pct+'%';by('accountToggle').setAttribute('aria-label',name+', '+p.pct+'% estudado. Abrir meu percurso');by('accountContent').innerHTML=`<div class="account-summary"><strong>${p.pct}<small>%</small></strong><span>Seu progresso<small>${p.done} de ${STUDY_MODULES.length} módulos concluídos</small></span></div><progress max="100" value="${p.pct}"></progress><h3>Seus módulos</h3><ul class="account-list">${STUDY_MODULES.map(m=>{const n=new Set(me.state?.study?.[m.id]?.read||[]).size;return `<li class="${n===m.blocks.length?'module-done':n?'module-started':''}"><button type="button" class="account-module" data-module="${m.id}" aria-label="Abrir Módulo ${Number(m.id)}: ${esc(m.title)}"><span><i>${n===m.blocks.length?'✓':String(Number(m.id)).padStart(2,'0')}</i>Módulo ${Number(m.id)}</span><b>${n}/${m.blocks.length}</b></button></li>`;}).join('')}</ul><details class="account-tests"><summary>Resultados dos testes · ${(me.attempts||[]).length}</summary><ul class="account-list">${attemptsHtml(me.attempts||[])}</ul></details>`;by('adminSection').hidden=!me.admin;renderHomeDashboard();}
 async function enter(x){token=x.token||token;persistToken(token);me=x;const pending=read(pendingKey(),null);const original=me.state||{};const remote=normalizeCourseState(original),local=pending?.state?normalizeCourseState(pending.state):null;
 if(local){for(const m of STUDY_MODULES){const old=remote.study?.[m.id],next=local.study?.[m.id];if(old||next)local.study[m.id]={...old,...next,read:[...new Set([...(old?.read||[]),...(next?.read||[])])]};}}
-const normalized=hydrate(local||remote);const migrated=JSON.stringify(normalized)!==JSON.stringify(original);me={...me,state:normalized};attemptQueue=pending?.attempts||readSessionAttempts(me.email);loaded=true;cacheProfile();by('loginGate').hidden=true;finishPreview();by('siteShell').inert=false;by('siteShell').hidden=false;by('accountToggle').hidden=false;render();const restored=window.JaguarRestoreNavigation?.({admin:!!me.admin})||'home';if(restored==='teamReports'&&me.admin)loadReports();status(migrated?'Progresso atualizado para a nova ordem':'Progresso sincronizado');if(migrated||pending||attemptQueue.length)schedule();}
+const normalized=hydrate(local||remote);const migrated=JSON.stringify(normalized)!==JSON.stringify(original);me={...me,state:normalized};attemptQueue=pending?.attempts||readSessionAttempts(me.email);loaded=true;offlinePreview=false;by('sessionNotice').hidden=true;clearTimeout(recoveryTimer);recoveryAttempt=0;cacheProfile();by('loginGate').hidden=true;finishPreview();by('siteShell').inert=false;by('siteShell').hidden=false;by('accountToggle').hidden=false;render();const restored=window.JaguarRestoreNavigation?.({admin:!!me.admin})||'home';if(restored==='teamReports'&&me.admin)loadReports();status(migrated?'Progresso atualizado para a nova ordem':'Progresso sincronizado');if(migrated||pending||attemptQueue.length)schedule();}
 by('loginForm').addEventListener('submit',async e=>{e.preventDefault();const button=by('loginSubmit');button.disabled=true;by('loginError').textContent='Entrando…';try{const x=await api('login',null,{email:by('loginEmail').value.trim(),password:by('loginPassword').value});by('loginPassword').value='';await enter(x);by('loginError').textContent='';}catch(e){by('loginError').textContent=e.message;}finally{button.disabled=false;}});
 by('accountContent').addEventListener('click',e=>{const button=e.target.closest('[data-module]');if(!button)return;close();openModule(button.dataset.module);});
 let priorFocus;
@@ -102,7 +110,7 @@ function close(){by('accountDrawer').hidden=true;by('accountBackdrop').hidden=tr
 by('accountToggle').onclick=async()=>{priorFocus=document.activeElement;by('accountDrawer').hidden=false;by('accountBackdrop').hidden=false;by('accountToggle').setAttribute('aria-expanded','true');by('accountClose').focus();await flush();};
 by('accountClose').onclick=close;by('accountBackdrop').onclick=close;
 by('accountDrawer').addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Tab'){const els=[...by('accountDrawer').querySelectorAll('button,input,a,summary,select')].filter(x=>!x.hidden&&x.offsetParent);if(e.shiftKey&&document.activeElement===els[0]){e.preventDefault();els.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===els.at(-1)){e.preventDefault();els[0].focus();}}});
-by('accountLogout').onclick=async()=>{await flush();try{await api('logout');}catch{status('Não foi possível encerrar no servidor. Tente novamente.');return;}loaded=false;token='';me=null;team=[];by('reportsList').innerHTML='';by('reportsSummary').innerHTML='';attemptQueue=[];persistToken('');clearProfile();finishPreview();try{localStorage.setItem('jaguar-rtav-navigation-v1',JSON.stringify({view:'home'}));}catch(e){}clearLocal();close();by('accountToggle').hidden=true;by('siteShell').hidden=true;by('siteShell').inert=true;by('loginGate').hidden=false;by('loginEmail').focus();};
+by('accountLogout').onclick=async()=>{await flush();try{await api('logout');}catch{status('Não foi possível encerrar no servidor. Tente novamente.');return;}loaded=false;offlinePreview=false;clearTimeout(recoveryTimer);token='';me=null;team=[];by('reportsList').innerHTML='';by('reportsSummary').innerHTML='';attemptQueue=[];persistToken('');clearProfile();finishPreview();try{localStorage.setItem('jaguar-rtav-navigation-v1',JSON.stringify({view:'home'}));}catch(e){}clearLocal();close();by('accountToggle').hidden=true;by('siteShell').hidden=true;by('siteShell').inert=true;by('loginGate').hidden=false;by('loginEmail').focus();};
 let team=[];
 function personName(email){return email.split('@')[0].split(/[._-]+/).map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');}
 function reportMetrics(a){
@@ -163,31 +171,47 @@ by('reportsModule').addEventListener('change',renderReports);
 by('reportsPerformance').addEventListener('change',renderReports);
 by('reportsExport').onclick=exportReports;
 setInterval(async()=>{if(!loaded||document.hidden)return;try{if(attemptQueue.length||read(pendingKey(),null)){await flush();return;}me=await api('state');render();}catch(e){status(e.message);}},60000);
-window.addEventListener('online',()=>{if(loaded)flush();});
-window.addEventListener('pagehide',()=>{if(loaded&&(read(pendingKey(),null)||attemptQueue.length))preservePending();});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&loaded)flush();});
-(async()=>{
- by('siteShell').inert=true;
- if(!token){
-  finishPreview();
-  by('siteShell').hidden=true;
-  by('loginGate').hidden=false;
-  by('loginEmail').focus();
-  return;
- }
- showSessionPreview();
+window.addEventListener('online',()=>{if(loaded)flush();else if(token)restoreSession();});
+window.addEventListener('pagehide',()=>{if((loaded||offlinePreview)&&(read(pendingKey(),null)||attemptQueue.length))preservePending();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)return;if(loaded)flush();else if(token)restoreSession();});
+window.addEventListener('pageshow',e=>{if(e.persisted&&!loaded&&token)restoreSession();});
+function endExpiredSession(message){
+ if(offlinePreview)preservePending();
+ clearTimeout(recoveryTimer);
+ token='';loaded=false;offlinePreview=false;me=null;
+ persistToken('');clearProfile();finishPreview();
+ by('accountToggle').hidden=true;
+ by('siteShell').hidden=true;by('siteShell').inert=true;
+ by('loginGate').hidden=false;by('loginError').textContent=message;
+ by('loginEmail').focus();
+}
+async function restoreSession(){
+ if(restoring||!token)return;
+ restoring=true;clearTimeout(recoveryTimer);
  try{
   await enter(await api('state'));
  }catch(e){
-  token='';loaded=false;me=null;
-  persistToken('');clearProfile();finishPreview();
-  by('accountToggle').hidden=true;
-  by('siteShell').hidden=true;
-  by('siteShell').inert=true;
-  by('loginGate').hidden=false;
-  by('loginError').textContent=e.message;
-  by('loginEmail').focus();
- }
+  if(e.status===401){endExpiredSession(e.message);return;}
+  // An interrupted mobile connection is not evidence that the saved session expired.
+  loaded=false;offlinePreview=!!me;
+  by('loginGate').hidden=true;by('siteShell').hidden=false;
+  by('siteShell').inert=!offlinePreview;
+  status('Sem conexão com o servidor. Seu acesso foi mantido; tentando reconectar.');
+  if(offlinePreview){
+   by('sessionNotice').textContent='Sem conexão. Você pode continuar o estudo; o progresso será sincronizado ao reconectar.';
+  }else{
+   by('sessionNotice').textContent='Conexão interrompida. Seu acesso salvo foi mantido; tentando reconectar.';
+  }
+  by('sessionNotice').hidden=false;
+  const delays=[2000,5000,10000,30000];
+  recoveryTimer=setTimeout(()=>{if(!document.hidden)restoreSession();},delays[Math.min(recoveryAttempt++,delays.length-1)]);
+ }finally{restoring=false;}
+}
+(async()=>{
+ by('siteShell').inert=true;
+ if(!token){finishPreview();by('siteShell').hidden=true;by('loginGate').hidden=false;by('loginEmail').focus();return;}
+ showSessionPreview();
+ await restoreSession();
 })();
 })();
 
