@@ -316,6 +316,24 @@ test('fornecedores do Simples compartilham parâmetros do segmento e faturamento
  await expect(page.locator('#printReport')).toContainText('101.327,38');
 });
 
+test('módulo novo abre no primeiro bloco e módulo iniciado volta ao ponto salvo',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=module-resume',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#siteShell')).toBeVisible();
+
+ await page.locator('nav [data-go="modules"]').click();
+ await page.locator('#moduleGrid .module-card').first().click();
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 01 DE 06');
+ await expect(page.locator('#modulePage .course-block:visible')).toHaveCount(1);
+ await expect(page.locator('#modulePage .course-block:visible .step-no')).toHaveText('01');
+
+ await page.locator('#courseNext').click();
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
+ await page.locator('#modulePage .back').click();
+ await page.locator('#moduleGrid .module-card').first().click();
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 06');
+ await expect(page.locator('#modulePage .course-block:visible .step-no')).toHaveText('02');
+});
+
 test('recarregar preserva o módulo e a etapa em que o usuário estava',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=reload-module',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#siteShell')).toBeVisible();
