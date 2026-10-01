@@ -192,7 +192,251 @@ const QUIZ_BANK = {
         "Um participante confunde as competências do Imposto Seletivo com as do imposto sobre a renda.",
         "Uma indústria compara compras corporativas idênticas efetuadas em 2027, 2030 e 2033."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Em qual ano do cronograma constitucional tem início a redução gradual e progressiva das alíquotas do ICMS e do ISS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 130 do ADCT (incluído pela EC 132/2023) fixa o início da transição federativa subnacional em 2029.",
+          "Em 2033 encerra-se a fase de transição: ICMS e ISS deixam de existir e o IVA Dual opera plenamente em todo o território nacional.",
+          "Em 2027 são extintos apenas PIS, Cofins e quase a totalidade do IPI; ICMS e ISS permanecem em transição até sua extinção em 2033.",
+          "9,21% e 18,70% são referências padrão adotadas para exercícios e simulações didáticas; no caso concreto, aplicam-se as normas e leis de cada jurisdição e período."
+        ],
+        0,
+        "O art. 130 do ADCT (incluído pela EC 132/2023) fixa o início da transição federativa subnacional em 2029."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é a disciplina oficial aplicável ao ano de 2026 no cronograma da Reforma Tributária?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A gangorra anual (90/10, 80/20, 70/30 e 60/40) altera ano a ano a participação de ICMS/ISS e IBS, impedindo a aplicação de uma taxa uniforme.",
+          "A alíquota do IBS em 2027 e 2028 é de 0,1%; a cobrança progressiva do IBS com desoneração do ICMS/ISS tem início somente em 2029.",
+          "O art. 130 do ADCT (incluído pela EC 132/2023) fixa o início da transição federativa subnacional em 2029.",
+          "2026 constitui ano de homologação tecnológica do Fisco e contribuintes, operando com alíquotas simbólicas compensáveis com tributos federais."
+        ],
+        3,
+        "2026 constitui ano de homologação tecnológica do Fisco e contribuintes, operando com alíquotas simbólicas compensáveis com tributos federais."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o status jurídico e a alíquota aplicável do IBS durante o biênio 2027–2028?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Cada ano da transição possui uma cesta tributária distinta: 2027 (CBS plena + ICMS/ISS integrais); 2029 (90% ICMS/ISS + 10% IBS); 2033 (IVA pleno sem tributos antigos).",
+          "O ano de 2029 opera na coexistência: cobra-se 90% do tributo antigo e 10% do IBS subnacional, ao lado da CBS federal e do Imposto Seletivo já vigentes.",
+          "Durante 2027 e 2028, a transição concentra-se na entrada da CBS federal; o IBS mantém-se na alíquota residual de 0,1% para teste operacional.",
+          "2026 constitui ano de homologação tecnológica do Fisco e contribuintes, operando com alíquotas simbólicas compensáveis com tributos federais."
+        ],
+        2,
+        "Durante 2027 e 2028, a transição concentra-se na entrada da CBS federal; o IBS mantém-se na alíquota residual de 0,1% para teste operacional."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o marco temporal constitucional definitivo que consolida a vigência plena do novo modelo e a extinção de ICMS e ISS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Em 2027 são extintos apenas PIS, Cofins e quase a totalidade do IPI; ICMS e ISS permanecem em transição até sua extinção em 2033.",
+          "Em 2033 encerra-se a fase de transição: ICMS e ISS deixam de existir e o IVA Dual opera plenamente em todo o território nacional.",
+          "9,21% e 18,70% são referências padrão adotadas para exercícios e simulações didáticas; no caso concreto, aplicam-se as normas e leis de cada jurisdição e período.",
+          "Durante 2027 e 2028, a transição concentra-se na entrada da CBS federal; o IBS mantém-se na alíquota residual de 0,1% para teste operacional."
+        ],
+        1,
+        "Em 2033 encerra-se a fase de transição: ICMS e ISS deixam de existir e o IVA Dual opera plenamente em todo o território nacional."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que as projeções tributárias plurianuais exigem modelagem ano a ano durante a transição?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A gangorra anual (90/10, 80/20, 70/30 e 60/40) altera ano a ano a participação de ICMS/ISS e IBS, impedindo a aplicação de uma taxa uniforme.",
+          "A alíquota do IBS em 2027 e 2028 é de 0,1%; a cobrança progressiva do IBS com desoneração do ICMS/ISS tem início somente em 2029.",
+          "O art. 130 do ADCT (incluído pela EC 132/2023) fixa o início da transição federativa subnacional em 2029.",
+          "Em 2033 encerra-se a fase de transição: ICMS e ISS deixam de existir e o IVA Dual opera plenamente em todo o território nacional."
+        ],
+        0,
+        "A gangorra anual (90/10, 80/20, 70/30 e 60/40) altera ano a ano a participação de ICMS/ISS e IBS, impedindo a aplicação de uma taxa uniforme."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual erro conceitual e metodológico invalida as conclusões dessa simulação?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O ano de 2029 opera na coexistência: cobra-se 90% do tributo antigo e 10% do IBS subnacional, ao lado da CBS federal e do Imposto Seletivo já vigentes.",
+          "2026 constitui ano de homologação tecnológica do Fisco e contribuintes, operando com alíquotas simbólicas compensáveis com tributos federais.",
+          "A gangorra anual (90/10, 80/20, 70/30 e 60/40) altera ano a ano a participação de ICMS/ISS e IBS, impedindo a aplicação de uma taxa uniforme.",
+          "Cada ano da transição possui uma cesta tributária distinta: 2027 (CBS plena + ICMS/ISS integrais); 2029 (90% ICMS/ISS + 10% IBS); 2033 (IVA pleno sem tributos antigos)."
+        ],
+        3,
+        "Cada ano da transição possui uma cesta tributária distinta: 2027 (CBS plena + ICMS/ISS integrais); 2029 (90% ICMS/ISS + 10% IBS); 2033 (IVA pleno sem tributos antigos)."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual ano marca a extinção formal e integral do ICMS e do ISS na Constituição?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "9,21% e 18,70% são referências padrão adotadas para exercícios e simulações didáticas; no caso concreto, aplicam-se as normas e leis de cada jurisdição e período.",
+          "Durante 2027 e 2028, a transição concentra-se na entrada da CBS federal; o IBS mantém-se na alíquota residual de 0,1% para teste operacional.",
+          "Em 2027 são extintos apenas PIS, Cofins e quase a totalidade do IPI; ICMS e ISS permanecem em transição até sua extinção em 2033.",
+          "Cada ano da transição possui uma cesta tributária distinta: 2027 (CBS plena + ICMS/ISS integrais); 2029 (90% ICMS/ISS + 10% IBS); 2033 (IVA pleno sem tributos antigos)."
+        ],
+        2,
+        "Em 2027 são extintos apenas PIS, Cofins e quase a totalidade do IPI; ICMS e ISS permanecem em transição até sua extinção em 2033."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual correção de parametrização fiscal deve ser executada para o período de 2027–2028?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 130 do ADCT (incluído pela EC 132/2023) fixa o início da transição federativa subnacional em 2029.",
+          "A alíquota do IBS em 2027 e 2028 é de 0,1%; a cobrança progressiva do IBS com desoneração do ICMS/ISS tem início somente em 2029.",
+          "Em 2033 encerra-se a fase de transição: ICMS e ISS deixam de existir e o IVA Dual opera plenamente em todo o território nacional.",
+          "Em 2027 são extintos apenas PIS, Cofins e quase a totalidade do IPI; ICMS e ISS permanecem em transição até sua extinção em 2033."
+        ],
+        1,
+        "A alíquota do IBS em 2027 e 2028 é de 0,1%; a cobrança progressiva do IBS com desoneração do ICMS/ISS tem início somente em 2029."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Quais componentes tributários de consumo devem ser apurados simultaneamente no ano de 2029?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O ano de 2029 opera na coexistência: cobra-se 90% do tributo antigo e 10% do IBS subnacional, ao lado da CBS federal e do Imposto Seletivo já vigentes.",
+          "2026 constitui ano de homologação tecnológica do Fisco e contribuintes, operando com alíquotas simbólicas compensáveis com tributos federais.",
+          "A gangorra anual (90/10, 80/20, 70/30 e 60/40) altera ano a ano a participação de ICMS/ISS e IBS, impedindo a aplicação de uma taxa uniforme.",
+          "A alíquota do IBS em 2027 e 2028 é de 0,1%; a cobrança progressiva do IBS com desoneração do ICMS/ISS tem início somente em 2029."
+        ],
+        0,
+        "O ano de 2029 opera na coexistência: cobra-se 90% do tributo antigo e 10% do IBS subnacional, ao lado da CBS federal e do Imposto Seletivo já vigentes."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 10, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual ajuste de governança e transparência é necessário na apresentação desses relatórios?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Durante 2027 e 2028, a transição concentra-se na entrada da CBS federal; o IBS mantém-se na alíquota residual de 0,1% para teste operacional.",
+          "Cada ano da transição possui uma cesta tributária distinta: 2027 (CBS plena + ICMS/ISS integrais); 2029 (90% ICMS/ISS + 10% IBS); 2033 (IVA pleno sem tributos antigos).",
+          "O ano de 2029 opera na coexistência: cobra-se 90% do tributo antigo e 10% do IBS subnacional, ao lado da CBS federal e do Imposto Seletivo já vigentes.",
+          "9,21% e 18,70% são referências padrão adotadas para exercícios e simulações didáticas; no caso concreto, aplicam-se as normas e leis de cada jurisdição e período."
+        ],
+        3,
+        "9,21% e 18,70% são referências padrão adotadas para exercícios e simulações didáticas; no caso concreto, aplicam-se as normas e leis de cada jurisdição e período."
+      ]
+    ],
+    "p": [
+      [
+        "Uma empresa no regime regular cumpre obrigações acessórias de emissão de NF-e e apuração em 2026. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O ano de 2026 constitui fase de testes da CBS (0,9%) e do IBS (0,1%), com previsão legal de compensação ou dispensa do recolhimento mediante cumprimento de obrigações acessórias.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Disposição expressa da disciplina de transição da EC 132/2023 para homologação dos sistemas fazendários."
+      ],
+      [
+        "Um comerciante afirma que não precisará mais calcular ICMS ou emitir guias estaduais em 2027. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O ICMS estadual e o ISS municipal deixam de ser exigíveis e são completamente extintos a partir de 1º de janeiro de 2027.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Em 2027 são extintos apenas PIS e Cofins; ICMS e ISS continuam vigentes até o início da redução gradual em 2029 e término em 2032."
+      ],
+      [
+        "A controladoria monta a linha do tempo da redução escalonada dos tributos estaduais. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O cronograma constitucional estabelece o ano de 2029 como o marco inaugural da redução gradual das alíquotas de ICMS e ISS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A partir de 2029 ocorre o decréscimo anual de 10 pontos percentuais na proporção de ICMS e ISS (90% em 2029 até 60% em 2032)."
+      ],
+      [
+        "Uma simulação orçamentária adota a alíquota cheia subnacional de 18,70% de IBS para 2027. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O IBS subnacional entra em vigor com sua alíquota de referência plena definitiva de 18,70% logo em janeiro de 2027.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Em 2027 o IBS vigora com alíquota inicial simbólica de 0,1%; a cobrança progressiva escalonada inicia-se apenas em 2029."
+      ],
+      [
+        "O plano de negócios da empresa mapeia o primeiro ano fiscal sem coexistência de tributos antigos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “No ano de 2033 encerra-se integralmente a transição, operando o modelo pleno do IVA Dual sem remanescentes de ICMS ou ISS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Em 2033 atinge-se 100% da nova estrutura tributária do consumo com a extinção total dos tributos legados."
+      ],
+      [
+        "O analista fiscal projeta os anos de 2029 a 2032 repetindo a mesma carga tributária de 2027. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma projeção tributária consistente da transição pode replicar as mesmas proporções de tributos de 2027 para todos os anos até 2033.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A participação de ICMS/ISS e IBS muda ano a ano (90/10, 80/20, 70/30 e 60/40), exigindo cálculos individualizados por competência."
+      ],
+      [
+        "Um contrato de prestação continuada de serviços tem vigência de 2028 a 2030. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O ano de 2029 combina a exigibilidade residual de tributos antigos (ICMS e ISS) com o avanço gradual da participação do IBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O ano de 2029 aplica formalmente a proporção de 90% do tributo antigo e 10% da transição do IBS."
+      ],
+      [
+        "O relatório de governança fiscal separa as normas positivadas em lei das premissas de estudo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Simulações fiscais devem distinguir claramente o texto da legislação positivada das premissas didáticas e estimativas de alíquotas.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Premissas de aula (como 27,91%) servem à modelagem didática, exigindo validação fática perante as regras vigentes na data da operação."
+      ],
+      [
+        "Um participante confunde as competências do Imposto Seletivo com as do imposto sobre a renda. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O Imposto Seletivo (IS) federal substitui o Imposto de Renda das Pessoas Jurídicas (IRPJ) a partir de 2027.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O Imposto Seletivo é tributo extrafiscal sobre o consumo de bens nocivos; o IRPJ tributa o lucro e a renda, permanecendo intocado por essa substituição."
+      ],
+      [
+        "Uma indústria compara compras corporativas idênticas efetuadas em 2027, 2030 e 2033. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O ano de competência da operação influencia o custo efetivo de aquisição em razão da variação da composição de tributos e créditos aproveitáveis.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A proporção entre créditos de ICMS antigo e créditos plenos de IBS/CBS altera o volume de recursos recuperáveis ano a ano ao longo da transição."
+      ]
+    ]
   },
   "11": {
     "m": [
@@ -386,7 +630,251 @@ const QUIZ_BANK = {
         "A decisão envolve anexo, faturamento, compras e perfil do comprador.",
         "Uma pequena empresa pergunta se continuará optante do Simples no híbrido."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual alternativa descreve a opção híbrida do Simples?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A opção separa IBS/CBS das demais parcelas do Simples.",
+          "A decisão depende da cadeia de compras e vendas.",
+          "O Simples padrão não apropria créditos de compra como o regime regular.",
+          "A escolha depende da cadeia e do resultado econômico."
+        ],
+        0,
+        "A opção separa IBS/CBS das demais parcelas do Simples."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “No Simples padrão, a empresa compradora toma crédito pleno de suas aquisições?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O crédito transferível tem limite específico.",
+          "1.000 − 30 = 970.",
+          "A opção separa IBS/CBS das demais parcelas do Simples.",
+          "O Simples padrão não usa os créditos de compra do regime regular."
+        ],
+        3,
+        "O Simples padrão não usa os créditos de compra do regime regular."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que a opção híbrida pode importar em vendas B2B?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O perfil B2B pode mudar a competitividade das alternativas.",
+          "A opção híbrida separa IBS/CBS do recolhimento unificado.",
+          "O fluxo de créditos muda a comparação comercial.",
+          "O Simples padrão não usa os créditos de compra do regime regular."
+        ],
+        2,
+        "O fluxo de créditos muda a comparação comercial."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual comparação é necessária antes de optar?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O Simples padrão não apropria créditos de compra como o regime regular.",
+          "A decisão depende da cadeia de compras e vendas.",
+          "A escolha depende da cadeia e do resultado econômico.",
+          "O fluxo de créditos muda a comparação comercial."
+        ],
+        1,
+        "A decisão depende da cadeia de compras e vendas."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “O cliente regular de fornecedor no Simples padrão pode ter qual crédito?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O crédito transferível tem limite específico.",
+          "1.000 − 30 = 970.",
+          "A opção separa IBS/CBS das demais parcelas do Simples.",
+          "A decisão depende da cadeia de compras e vendas."
+        ],
+        0,
+        "O crédito transferível tem limite específico."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual alternativa merece comparação detalhada?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A opção híbrida separa IBS/CBS do recolhimento unificado.",
+          "O Simples padrão não usa os créditos de compra do regime regular.",
+          "O crédito transferível tem limite específico.",
+          "O perfil B2B pode mudar a competitividade das alternativas."
+        ],
+        3,
+        "O perfil B2B pode mudar a competitividade das alternativas."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual cuidado ao estimar seu custo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A escolha depende da cadeia e do resultado econômico.",
+          "O fluxo de créditos muda a comparação comercial.",
+          "O Simples padrão não apropria créditos de compra como o regime regular.",
+          "O perfil B2B pode mudar a competitividade das alternativas."
+        ],
+        2,
+        "O Simples padrão não apropria créditos de compra como o regime regular."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual custo efetivo do comprador?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A opção separa IBS/CBS das demais parcelas do Simples.",
+          "1.000 − 30 = 970.",
+          "A decisão depende da cadeia de compras e vendas.",
+          "O Simples padrão não apropria créditos de compra como o regime regular."
+        ],
+        1,
+        "1.000 − 30 = 970."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual configuração de apuração corresponde à escolha?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A opção híbrida separa IBS/CBS do recolhimento unificado.",
+          "O Simples padrão não usa os créditos de compra do regime regular.",
+          "O crédito transferível tem limite específico.",
+          "1.000 − 30 = 970."
+        ],
+        0,
+        "A opção híbrida separa IBS/CBS do recolhimento unificado."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 11, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual comparação ajuda a decidir?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O fluxo de créditos muda a comparação comercial.",
+          "O perfil B2B pode mudar a competitividade das alternativas.",
+          "A opção híbrida separa IBS/CBS do recolhimento unificado.",
+          "A escolha depende da cadeia e do resultado econômico."
+        ],
+        3,
+        "A escolha depende da cadeia e do resultado econômico."
+      ]
+    ],
+    "p": [
+      [
+        "Duas empresas do Simples escolhem formas diferentes de apurar IBS/CBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Simples padrão e Simples híbrido têm o mesmo tratamento de crédito de compras.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "No híbrido, IBS/CBS seguem o regime regular."
+      ],
+      [
+        "O comércio avalia o perfil dos clientes antes de exercer a opção. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A escolha pelo regime regular de IBS/CBS deve considerar a carteira de clientes.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O efeito B2B pode ser relevante."
+      ],
+      [
+        "O sócio interpreta a opção híbrida como saída completa do Simples. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “No híbrido, todos os tributos saem obrigatoriamente do DAS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A separação é de IBS/CBS."
+      ],
+      [
+        "Um fornecedor no DAS promete crédito cheio aos clientes corporativos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O fornecedor do Simples padrão transfere sempre crédito integral da alíquota regular.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A transferência é limitada à parcela devida no Simples."
+      ],
+      [
+        "A equipe registra a apuração separada do IBS e da CBS no híbrido. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A opção híbrida altera a apuração de IBS/CBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Eles passam a seguir o regime regular."
+      ],
+      [
+        "O consultor compara só o valor mensal do DAS das duas alternativas. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Comparar apenas o valor do DAS basta para escolher a melhor opção.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Créditos e preços também importam."
+      ],
+      [
+        "A carteira tem uma parcela grande de vendas para empresas. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A natureza B2B ou B2C da clientela pode mudar a decisão.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Os créditos afetam a cadeia empresarial."
+      ],
+      [
+        "Uma optante padrão tenta registrar crédito regular em suas compras. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Um optante padrão apropria créditos cheios das compras no DAS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Essa apropriação não ocorre no regime padrão."
+      ],
+      [
+        "A decisão envolve anexo, faturamento, compras e perfil do comprador. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A opção do Simples precisa ser avaliada com dados da operação concreta.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Faturamento, anexo, compras e clientes importam."
+      ],
+      [
+        "Uma pequena empresa pergunta se continuará optante do Simples no híbrido. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O Simples Nacional deixa de existir por causa da opção híbrida.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O Simples permanece para as demais parcelas."
+      ]
+    ]
   },
   "12": {
     "m": [
@@ -580,7 +1068,251 @@ const QUIZ_BANK = {
         "Uma empresa escolhe Lucro Real sem examinar margem e créditos.",
         "Um prestador no Presumido pergunta sobre créditos de IBS/CBS."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual tributo continua relevante na comparação Lucro Presumido x Real?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O regime de renda ainda diferencia as opções.",
+          "A escolha de regime não se resume à CBS/IBS.",
+          "A escolha requer análise econômica e fiscal ampla.",
+          "A comparação de regimes precisa incluir tributos sobre renda."
+        ],
+        0,
+        "O regime de renda ainda diferencia as opções."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “No regime regular de consumo, LP e LR seguem qual lógica geral?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O módulo discute os reflexos na base presumida.",
+          "A presunção depende do enquadramento legal da atividade.",
+          "O regime de renda ainda diferencia as opções.",
+          "A diferença de IRPJ/CSLL permanece separada."
+        ],
+        3,
+        "A diferença de IRPJ/CSLL permanece separada."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual base é usada no exemplo de presunção do Lucro Presumido?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Tributos sobre renda não são substituídos pelo IVA dual.",
+          "A forma de apurar IRPJ não elimina por si a lógica regular de IBS/CBS.",
+          "A base presumida depende da atividade e regras legais.",
+          "A diferença de IRPJ/CSLL permanece separada."
+        ],
+        2,
+        "A base presumida depende da atividade e regras legais."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que deve ser separado em uma comparação de regimes?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A escolha requer análise econômica e fiscal ampla.",
+          "A escolha de regime não se resume à CBS/IBS.",
+          "A comparação de regimes precisa incluir tributos sobre renda.",
+          "A base presumida depende da atividade e regras legais."
+        ],
+        1,
+        "A escolha de regime não se resume à CBS/IBS."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “A LC 224 é examinada no curso por qual possível efeito?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O módulo discute os reflexos na base presumida.",
+          "A presunção depende do enquadramento legal da atividade.",
+          "O regime de renda ainda diferencia as opções.",
+          "A escolha de regime não se resume à CBS/IBS."
+        ],
+        0,
+        "O módulo discute os reflexos na base presumida."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual resposta orienta a análise?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A forma de apurar IRPJ não elimina por si a lógica regular de IBS/CBS.",
+          "A diferença de IRPJ/CSLL permanece separada.",
+          "O módulo discute os reflexos na base presumida.",
+          "Tributos sobre renda não são substituídos pelo IVA dual."
+        ],
+        3,
+        "Tributos sobre renda não são substituídos pelo IVA dual."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “Que informação é essencial na comparação?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A comparação de regimes precisa incluir tributos sobre renda.",
+          "A base presumida depende da atividade e regras legais.",
+          "A escolha requer análise econômica e fiscal ampla.",
+          "Tributos sobre renda não são substituídos pelo IVA dual."
+        ],
+        2,
+        "A escolha requer análise econômica e fiscal ampla."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual revisão é necessária?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O regime de renda ainda diferencia as opções.",
+          "A presunção depende do enquadramento legal da atividade.",
+          "A escolha de regime não se resume à CBS/IBS.",
+          "A escolha requer análise econômica e fiscal ampla."
+        ],
+        1,
+        "A presunção depende do enquadramento legal da atividade."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual ideia não deve ser confundida?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A forma de apurar IRPJ não elimina por si a lógica regular de IBS/CBS.",
+          "A diferença de IRPJ/CSLL permanece separada.",
+          "O módulo discute os reflexos na base presumida.",
+          "A presunção depende do enquadramento legal da atividade."
+        ],
+        0,
+        "A forma de apurar IRPJ não elimina por si a lógica regular de IBS/CBS."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 12, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual dimensão foi omitida?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A base presumida depende da atividade e regras legais.",
+          "Tributos sobre renda não são substituídos pelo IVA dual.",
+          "A forma de apurar IRPJ não elimina por si a lógica regular de IBS/CBS.",
+          "A comparação de regimes precisa incluir tributos sobre renda."
+        ],
+        3,
+        "A comparação de regimes precisa incluir tributos sobre renda."
+      ]
+    ],
+    "p": [
+      [
+        "Uma diretoria compara os dois regimes para IRPJ e CSLL. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O Lucro Presumido e o Lucro Real são idênticos em IRPJ/CSLL.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "As formas de apuração de renda diferem."
+      ],
+      [
+        "O cliente analisa uma DRE junto à apuração de IBS/CBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O tratamento de IBS/CBS deve ser separado da apuração de IRPJ/CSLL.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "São dimensões tributárias diferentes."
+      ],
+      [
+        "Uma empresa tem margem diferente da presumida e precisa simular alternativas. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A escolha entre LP e LR pode depender de margem efetiva e créditos aplicáveis.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A análise econômica é integrada."
+      ],
+      [
+        "O analista usa um percentual de presunção único para serviços e comércio. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O percentual de presunção é sempre o mesmo para toda atividade.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Depende da atividade e regra legal."
+      ],
+      [
+        "Uma nova regra pode mudar a base de cálculo em situações específicas. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma mudança legal na presunção deve ser considerada na simulação.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O módulo discute essa hipótese."
+      ],
+      [
+        "O comercial sugere descontar CBS como se fosse IRPJ. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A CBS substitui diretamente o IRPJ no Lucro Presumido.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "CBS é tributo de consumo, IRPJ de renda."
+      ],
+      [
+        "O contador prepara cenários de apuração de renda. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “É útil comparar bases e carga de IRPJ/CSLL de ambos regimes.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A escolha não se resolve apenas pelo IVA."
+      ],
+      [
+        "O cliente afirma que basta comparar as alíquotas do IVA. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Lucro Real é sempre mais barato independentemente dos dados.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A resposta depende das condições da empresa."
+      ],
+      [
+        "Uma empresa escolhe Lucro Real sem examinar margem e créditos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Lucro Presumido impede toda apropriação de crédito no regime regular de IBS/CBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A lógica de crédito de consumo pode se aplicar."
+      ],
+      [
+        "Um prestador no Presumido pergunta sobre créditos de IBS/CBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A receita e o enquadramento da atividade influenciam a base presumida.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "São dados essenciais do cálculo."
+      ]
+    ]
   },
   "13": {
     "m": [
@@ -774,7 +1506,251 @@ const QUIZ_BANK = {
         "Um relatório exibe 38% de margem sem dizer sobre qual receita calculou.",
         "O curso usa taxas didáticas para comparar dois cenários de preço."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual objetivo do exemplo de reprecificação do módulo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O exemplo compara preço e líquido sob a transição.",
+          "Preço bruto e resultado líquido são grandezas diferentes.",
+          "72.750 − 45.000 = 27.750.",
+          "Percentuais precisam de denominador definido."
+        ],
+        0,
+        "O exemplo compara preço e líquido sob a transição."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “Na análise da DRE, o que não deve ser confundido?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A leitura econômica depende dessas premissas.",
+          "O crédito recuperável reduz o custo econômico.",
+          "O exemplo compara preço e líquido sob a transição.",
+          "Essas distinções importam; a alternativa reúne as três."
+        ],
+        3,
+        "Essas distinções importam; a alternativa reúne as três."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual efeito um crédito aproveitável de compra pode ter?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "100.000 − 27.250 = 72.750.",
+          "Lucro bruto = receita líquida − custos.",
+          "O crédito pertence à análise econômica do adquirente.",
+          "Essas distinções importam; a alternativa reúne as três."
+        ],
+        2,
+        "O crédito pertence à análise econômica do adquirente."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “O preço da nota pode mudar sem alterar a margem no exemplo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "72.750 − 45.000 = 27.750.",
+          "Preço bruto e resultado líquido são grandezas diferentes.",
+          "Percentuais precisam de denominador definido.",
+          "O crédito pertence à análise econômica do adquirente."
+        ],
+        1,
+        "Preço bruto e resultado líquido são grandezas diferentes."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que deve acompanhar uma simulação de preços?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A leitura econômica depende dessas premissas.",
+          "O crédito recuperável reduz o custo econômico.",
+          "O exemplo compara preço e líquido sob a transição.",
+          "Preço bruto e resultado líquido são grandezas diferentes."
+        ],
+        0,
+        "A leitura econômica depende dessas premissas."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual receita líquida de referência no exercício?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Lucro bruto = receita líquida − custos.",
+          "Essas distinções importam; a alternativa reúne as três.",
+          "A leitura econômica depende dessas premissas.",
+          "100.000 − 27.250 = 72.750."
+        ],
+        3,
+        "100.000 − 27.250 = 72.750."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual lucro bruto do exercício?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Percentuais precisam de denominador definido.",
+          "O crédito pertence à análise econômica do adquirente.",
+          "72.750 − 45.000 = 27.750.",
+          "100.000 − 27.250 = 72.750."
+        ],
+        2,
+        "72.750 − 45.000 = 27.750."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual custo efetivo para a compradora?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O exemplo compara preço e líquido sob a transição.",
+          "O crédito recuperável reduz o custo econômico.",
+          "Preço bruto e resultado líquido são grandezas diferentes.",
+          "72.750 − 45.000 = 27.750."
+        ],
+        1,
+        "O crédito recuperável reduz o custo econômico."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que se pode concluir sobre o lucro bruto do exemplo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Lucro bruto = receita líquida − custos.",
+          "Essas distinções importam; a alternativa reúne as três.",
+          "A leitura econômica depende dessas premissas.",
+          "O crédito recuperável reduz o custo econômico."
+        ],
+        0,
+        "Lucro bruto = receita líquida − custos."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 13, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual dado falta para interpretar o percentual?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O crédito pertence à análise econômica do adquirente.",
+          "100.000 − 27.250 = 72.750.",
+          "Lucro bruto = receita líquida − custos.",
+          "Percentuais precisam de denominador definido."
+        ],
+        3,
+        "Percentuais precisam de denominador definido."
+      ]
+    ],
+    "p": [
+      [
+        "O cliente vê na nota um valor diferente daquele que permanece após tributos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Preço bruto e receita líquida são sempre iguais.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Tributos e demais deduções criam diferenças."
+      ],
+      [
+        "Uma proposta reduz o preço bruto e o dono teme perda automática de lucro. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma redução do preço bruto não prova queda do lucro.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "É preciso olhar receita líquida, custos e margem."
+      ],
+      [
+        "Duas cotações têm valores de nota parecidos, porém créditos distintos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O crédito de compra pode reduzir o custo efetivo do adquirente.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Quando aproveitável, é recuperável economicamente."
+      ],
+      [
+        "Uma planilha simplesmente adiciona um percentual ao preço atual. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Basta somar uma taxa didática ao preço antigo para preservar margem.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A formação depende de bases e tributos remanescentes."
+      ],
+      [
+        "O contador apresenta uma DRE de antes e depois da transição. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A DRE ajuda a comparar cenários antes e depois.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Mostra receita, deduções, custos e resultado."
+      ],
+      [
+        "O comercial supõe que qualquer aumento de custo será aceito pelo cliente. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todo repasse tributário ao cliente é garantido pelo mercado.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Aceitação comercial é uma premissa separada."
+      ],
+      [
+        "Uma aquisição pode dar crédito recuperável ao comprador. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Custo efetivo de aquisição e preço da nota podem diferir.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O crédito recuperável explica parte da diferença."
+      ],
+      [
+        "A equipe etiqueta cada coluna de projeção pelo ano e pelo regime. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Simulações devem indicar claramente ano e regime.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Ambos mudam o cálculo."
+      ],
+      [
+        "Um relatório exibe 38% de margem sem dizer sobre qual receita calculou. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A margem pode ser calculada sem escolher uma base de comparação.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "É preciso definir receita e custos usados."
+      ],
+      [
+        "O curso usa taxas didáticas para comparar dois cenários de preço. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Alíquota didática não substitui a aplicável à operação real.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Confirme enquadramento, ano e destino."
+      ]
+    ]
   },
   "14": {
     "m": [
@@ -968,7 +1944,251 @@ const QUIZ_BANK = {
         "O ERP sugere tratamento idêntico para itens de regimes distintos.",
         "O escritório acompanha comunicados de leiaute e prazos oficiais."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é a função central do DF-e na reforma?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O documento alimenta a apuração e a conferência.",
+          "A qualidade da origem dos dados é decisiva.",
+          "A classificação fiscal afeta o enquadramento.",
+          "O cruzamento revela divergências da apuração assistida."
+        ],
+        0,
+        "O documento alimenta a apuração e a conferência."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que é apuração assistida?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A conferência continua necessária.",
+          "A proposta deve ser conferida pelo contribuinte.",
+          "O documento alimenta a apuração e a conferência.",
+          "O contribuinte precisa revisar os dados."
+        ],
+        3,
+        "O contribuinte precisa revisar os dados."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que revisar NCM/NBS e cadastros?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A qualidade do documento é requisito da apuração.",
+          "Corrigir os dados na origem melhora a apuração.",
+          "Classificação interfere em alíquota e enquadramento.",
+          "O contribuinte precisa revisar os dados."
+        ],
+        2,
+        "Classificação interfere em alíquota e enquadramento."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual rotina reduz divergências na apuração assistida?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A classificação fiscal afeta o enquadramento.",
+          "A qualidade da origem dos dados é decisiva.",
+          "O cruzamento revela divergências da apuração assistida.",
+          "Classificação interfere em alíquota e enquadramento."
+        ],
+        1,
+        "A qualidade da origem dos dados é decisiva."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “A apuração proposta pelo Fisco dispensa o contribuinte de revisão?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A conferência continua necessária.",
+          "A proposta deve ser conferida pelo contribuinte.",
+          "O documento alimenta a apuração e a conferência.",
+          "A qualidade da origem dos dados é decisiva."
+        ],
+        0,
+        "A conferência continua necessária."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual passo deve preceder o uso do documento na conferência de créditos?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Corrigir os dados na origem melhora a apuração.",
+          "O contribuinte precisa revisar os dados.",
+          "A conferência continua necessária.",
+          "A qualidade do documento é requisito da apuração."
+        ],
+        3,
+        "A qualidade do documento é requisito da apuração."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual risco a equipe deve avaliar?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O cruzamento revela divergências da apuração assistida.",
+          "Classificação interfere em alíquota e enquadramento.",
+          "A classificação fiscal afeta o enquadramento.",
+          "A qualidade do documento é requisito da apuração."
+        ],
+        2,
+        "A classificação fiscal afeta o enquadramento."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual ação é mais adequada?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O documento alimenta a apuração e a conferência.",
+          "A proposta deve ser conferida pelo contribuinte.",
+          "A qualidade da origem dos dados é decisiva.",
+          "A classificação fiscal afeta o enquadramento."
+        ],
+        1,
+        "A proposta deve ser conferida pelo contribuinte."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual melhoria previne erros futuros?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Corrigir os dados na origem melhora a apuração.",
+          "O contribuinte precisa revisar os dados.",
+          "A conferência continua necessária.",
+          "A proposta deve ser conferida pelo contribuinte."
+        ],
+        0,
+        "Corrigir os dados na origem melhora a apuração."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 14, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual controle simples é útil?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Classificação interfere em alíquota e enquadramento.",
+          "A qualidade do documento é requisito da apuração.",
+          "Corrigir os dados na origem melhora a apuração.",
+          "O cruzamento revela divergências da apuração assistida."
+        ],
+        3,
+        "O cruzamento revela divergências da apuração assistida."
+      ]
+    ],
+    "p": [
+      [
+        "Uma empresa confere uma nota autorizada antes de registrar o crédito. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Documento fiscal eletrônico confiável é importante para débito e crédito.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Os dados alimentam a apuração."
+      ],
+      [
+        "Um item foi cadastrado na classificação errada. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Erro de cadastro pode levar a alíquota ou tratamento incorreto.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A classificação fiscal é relevante."
+      ],
+      [
+        "O sistema oferece apuração assistida, e o gerente cogita não conferir nada. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Apuração assistida elimina a necessidade de auditoria pelo contribuinte.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A revisão é essencial."
+      ],
+      [
+        "A tesouraria possui extrato bancário, mas não localiza alguns XMLs. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Apenas o extrato bancário substitui integralmente o XML fiscal.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "As informações têm funções distintas."
+      ],
+      [
+        "O setor fiscal revisa classificações de mercadorias e serviços. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “NCM e NBS podem ser relevantes no enquadramento de itens.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Servem à classificação da operação."
+      ],
+      [
+        "Um fornecedor enviou arquivo fiscal cuja autorização ainda não foi confirmada. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma nota rejeitada deve ser tratada como documento autorizado sem revisão.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A autorização precisa ser verificada."
+      ],
+      [
+        "A equipe saneia cadastros antes de transmitir novos documentos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Saneamento de cadastro antes da emissão pode prevenir divergências.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "É uma medida de conformidade."
+      ],
+      [
+        "O responsável compara o conjunto de notas de entrada e saída. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A conferência pode comparar documentos emitidos e recebidos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O cruzamento revela inconsistências."
+      ],
+      [
+        "O ERP sugere tratamento idêntico para itens de regimes distintos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todos os itens têm sempre alíquota idêntica independentemente da classificação.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Há regimes e reduções específicos."
+      ],
+      [
+        "O escritório acompanha comunicados de leiaute e prazos oficiais. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “É preciso acompanhar leiautes e cronogramas oficiais dos documentos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Regras operacionais podem mudar."
+      ]
+    ]
   },
   "15": {
     "m": [
@@ -1162,7 +2382,251 @@ const QUIZ_BANK = {
         "O gerente acha que retenção financeira elimina qualquer conferência tributária.",
         "Uma implantação do split payment será feita por etapas e regras aplicáveis."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que descreve o split payment?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação.",
+          "A disponibilidade imediata de caixa pode mudar.",
+          "A retenção e a taxa têm naturezas diferentes.",
+          "É preciso decompor o valor bruto até o crédito bancário."
+        ],
+        0,
+        "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Quais três fontes aparecem na conciliação do módulo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A trilha financeira precisa fechar.",
+          "A conciliação tripla localiza a diferença.",
+          "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação.",
+          "A conciliação cruza obrigação, retenção/taxa e caixa."
+        ],
+        3,
+        "A conciliação cruza obrigação, retenção/taxa e caixa."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Uma venda de R$ 12.791 com tributos de R$ 2.791 e taxa de R$ 255,82 gera qual líquido, no exemplo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O recebível liga a nota à liquidação futura.",
+          "A conciliação cruza obrigação, retenção/taxa e caixa.",
+          "12.791 − 2.791 − 255,82 = 9.744,18.",
+          "A trilha financeira precisa fechar."
+        ],
+        2,
+        "12.791 − 2.791 − 255,82 = 9.744,18."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que a empresa precisa revisar seu fluxo de caixa?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A retenção e a taxa têm naturezas diferentes.",
+          "A disponibilidade imediata de caixa pode mudar.",
+          "É preciso decompor o valor bruto até o crédito bancário.",
+          "12.791 − 2.791 − 255,82 = 9.744,18."
+        ],
+        1,
+        "A disponibilidade imediata de caixa pode mudar."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual divergência deve ser investigada?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A trilha financeira precisa fechar.",
+          "A conciliação tripla localiza a diferença.",
+          "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação.",
+          "A disponibilidade imediata de caixa pode mudar."
+        ],
+        0,
+        "A trilha financeira precisa fechar."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Quanto deve aparecer como crédito líquido no banco?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O recebível liga a nota à liquidação futura.",
+          "A conciliação cruza obrigação, retenção/taxa e caixa.",
+          "A trilha financeira precisa fechar.",
+          "12.791 − 2.791 − 255,82 = 9.744,18."
+        ],
+        3,
+        "12.791 − 2.791 − 255,82 = 9.744,18."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como a contabilidade deve tratar esses valores?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "É preciso decompor o valor bruto até o crédito bancário.",
+          "12.791 − 2.791 − 255,82 = 9.744,18.",
+          "A retenção e a taxa têm naturezas diferentes.",
+          "O recebível liga a nota à liquidação futura."
+        ],
+        2,
+        "A retenção e a taxa têm naturezas diferentes."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual ação vem primeiro?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O mecanismo permite a segregação de IBS/CBS na liquidação financeira quando estiver implementado e for aplicável à operação.",
+          "A conciliação tripla localiza a diferença.",
+          "A disponibilidade imediata de caixa pode mudar.",
+          "A retenção e a taxa têm naturezas diferentes."
+        ],
+        1,
+        "A conciliação tripla localiza a diferença."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual conta ajuda a acompanhar o intervalo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O recebível liga a nota à liquidação futura.",
+          "A conciliação cruza obrigação, retenção/taxa e caixa.",
+          "A trilha financeira precisa fechar.",
+          "A conciliação tripla localiza a diferença."
+        ],
+        0,
+        "O recebível liga a nota à liquidação futura."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 15, a equipe precisa justificar tecnicamente a conclusão para a questão: “Que relatório explica o fluxo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "12.791 − 2.791 − 255,82 = 9.744,18.",
+          "O recebível liga a nota à liquidação futura.",
+          "A conciliação cruza obrigação, retenção/taxa e caixa.",
+          "É preciso decompor o valor bruto até o crédito bancário."
+        ],
+        3,
+        "É preciso decompor o valor bruto até o crédito bancário."
+      ]
+    ],
+    "p": [
+      [
+        "Um cliente acompanha o valor que realmente entrou na conta após a venda. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Split payment pode alterar o valor líquido que entra no banco.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Tributos podem ser segregados na liquidação."
+      ],
+      [
+        "A adquirente apresenta retenção tributária e taxa de serviço em linhas próprias. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O relatório da adquirente pode incluir taxas além da retenção tributária.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Esses componentes precisam ser separados."
+      ],
+      [
+        "A equipe olha apenas o crédito bancário, sem consultar a nota. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O extrato bancário isolado demonstra todos os valores da nota.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "É necessário conciliar com documento e relatório financeiro."
+      ],
+      [
+        "Após uma retenção na liquidação, o passivo fiscal precisa ser conferido. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma retenção de IBS/CBS pode requerer baixa do passivo correspondente.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A contabilidade deve acompanhar a liquidação."
+      ],
+      [
+        "O exemplo do módulo mostra nota, tributos, taxa e valor líquido no banco. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “No exemplo do curso, R$ 12.791 menos R$ 2.791 menos R$ 255,82 é R$ 9.744,18.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A reconciliação aritmética fecha."
+      ],
+      [
+        "O financeiro registra uma taxa de cartão e uma CBS da mesma venda. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O adquirente no regime regular é sempre obrigado a recolher IBS/CBS quando o instrumento de pagamento não permitir split payment.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Falso. O art. 36 prevê que, nas condições legais, o adquirente poderá optar pelo recolhimento; não é uma obrigação automática em toda operação."
+      ],
+      [
+        "Ao fechar o mês, há diferença de centavos no relatório da adquirente. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Diferenças de centavos na conciliação devem ser ignoradas sempre.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Precisam ser identificadas e tratadas."
+      ],
+      [
+        "A emissão da nota e o pagamento do cliente ocorrem em dias diferentes. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A nota fiscal e a liquidação podem ocorrer em momentos diferentes.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Por isso há controle de valores a receber."
+      ],
+      [
+        "O gerente acha que retenção financeira elimina qualquer conferência tributária. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O mecanismo de split payment dispensa toda apuração de IBS/CBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A apuração e conciliação continuam necessárias."
+      ],
+      [
+        "Uma implantação do split payment será feita por etapas e regras aplicáveis. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A implantação exige acompanhar as regras e o cronograma aplicável.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O mecanismo não deve ser presumido idêntico para toda operação."
+      ]
+    ]
   },
   "16": {
     "m": [
@@ -1356,7 +2820,251 @@ const QUIZ_BANK = {
         "Há erros recorrentes nos cadastros de produtos.",
         "A diretoria escolhe regime tributário com base em uma única taxa nominal."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o primeiro passo de uma consultoria tributária baseada em dados?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "É preciso conhecer operações, compras, vendas e enquadramentos.",
+          "O plano transforma diagnóstico em execução.",
+          "A automação reduz retrabalho, mas não substitui julgamento.",
+          "Cenários educacionais precisam de enquadramento antes do uso prático."
+        ],
+        0,
+        "É preciso conhecer operações, compras, vendas e enquadramentos."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual benefício da automação em dados fiscais?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A transparência permite revisão e decisão informada.",
+          "O impacto depende das cadeias de aquisição e venda.",
+          "É preciso conhecer operações, compras, vendas e enquadramentos.",
+          "Automação ajuda na conferência, sob supervisão."
+        ],
+        3,
+        "Automação ajuda na conferência, sob supervisão."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual indicador ajuda a medir impacto da reforma?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O diagnóstico precede a recomendação.",
+          "Execução requer dono, prazo e evidência.",
+          "Créditos, preços e margem conectam regra e negócio.",
+          "Automação ajuda na conferência, sob supervisão."
+        ],
+        2,
+        "Créditos, preços e margem conectam regra e negócio."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que deve constar de um plano de ação para clientes?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A automação reduz retrabalho, mas não substitui julgamento.",
+          "O plano transforma diagnóstico em execução.",
+          "Cenários educacionais precisam de enquadramento antes do uso prático.",
+          "Créditos, preços e margem conectam regra e negócio."
+        ],
+        1,
+        "O plano transforma diagnóstico em execução."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como apresentar uma simulação ao cliente?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A transparência permite revisão e decisão informada.",
+          "O impacto depende das cadeias de aquisição e venda.",
+          "É preciso conhecer operações, compras, vendas e enquadramentos.",
+          "O plano transforma diagnóstico em execução."
+        ],
+        0,
+        "A transparência permite revisão e decisão informada."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual diagnóstico inicial é mais útil?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Execução requer dono, prazo e evidência.",
+          "Automação ajuda na conferência, sob supervisão.",
+          "A transparência permite revisão e decisão informada.",
+          "O diagnóstico precede a recomendação."
+        ],
+        3,
+        "O diagnóstico precede a recomendação."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual papel adequado da automação?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Cenários educacionais precisam de enquadramento antes do uso prático.",
+          "Créditos, preços e margem conectam regra e negócio.",
+          "A automação reduz retrabalho, mas não substitui julgamento.",
+          "O diagnóstico precede a recomendação."
+        ],
+        2,
+        "A automação reduz retrabalho, mas não substitui julgamento."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual indicador ajuda a segmentar a análise?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "É preciso conhecer operações, compras, vendas e enquadramentos.",
+          "O impacto depende das cadeias de aquisição e venda.",
+          "O plano transforma diagnóstico em execução.",
+          "A automação reduz retrabalho, mas não substitui julgamento."
+        ],
+        1,
+        "O impacto depende das cadeias de aquisição e venda."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que falta no plano de ação?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Execução requer dono, prazo e evidência.",
+          "Automação ajuda na conferência, sob supervisão.",
+          "A transparência permite revisão e decisão informada.",
+          "O impacto depende das cadeias de aquisição e venda."
+        ],
+        0,
+        "Execução requer dono, prazo e evidência."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 16, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que o contador deve explicitar?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Créditos, preços e margem conectam regra e negócio.",
+          "O diagnóstico precede a recomendação.",
+          "Execução requer dono, prazo e evidência.",
+          "Cenários educacionais precisam de enquadramento antes do uso prático."
+        ],
+        3,
+        "Cenários educacionais precisam de enquadramento antes do uso prático."
+      ]
+    ],
+    "p": [
+      [
+        "Antes de propor medidas, o contador recebe documentos de compras e vendas. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Um diagnóstico deve mapear compras, vendas, regime e documentos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "São insumos da análise consultiva."
+      ],
+      [
+        "Uma rotina automática identifica operações classificadas como exceção. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Automação dispensa a revisão humana de exceções fiscais.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A supervisão continua necessária."
+      ],
+      [
+        "O escritório busca ordenar o atendimento por possível impacto econômico. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Comparar custo efetivo e margem ajuda a priorizar clientes.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Mostra onde o impacto pode ser maior."
+      ],
+      [
+        "Uma apresentação pretende aplicar a mesma solução a toda a carteira. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todo cliente deve receber a mesma conclusão sem examinar seus dados.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "As operações e enquadramentos variam."
+      ],
+      [
+        "O gestor monta cronograma para saneamento de cadastros e simulações. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Um plano de ação útil contém responsáveis e prazos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Isso torna as tarefas executáveis."
+      ],
+      [
+        "A planilha contém percentuais usados em cenários de estudo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Premissas da simulação devem ser documentadas.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Permite auditoria e atualização."
+      ],
+      [
+        "O relatório inclui premissas que podem mudar no futuro. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O relatório final deve omitir limitações para parecer mais seguro.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Limitações precisam ser claras."
+      ],
+      [
+        "Um consultor revisa um documento antes de entregá-lo ao cliente. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A conferência de dados cadastrais faz parte da preparação.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Qualidade de origem afeta os resultados."
+      ],
+      [
+        "Há erros recorrentes nos cadastros de produtos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A decisão sobre regime pode ser tomada só pela alíquota nominal.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Créditos, margem, atividade e clientes importam."
+      ],
+      [
+        "A diretoria escolhe regime tributário com base em uma única taxa nominal. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O contador pode usar cenários para discutir efeitos com o cliente.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Cenários apoiam planejamento fundamentado."
+      ]
+    ]
   },
   "01": {
     "m": [
@@ -1550,7 +3258,251 @@ const QUIZ_BANK = {
         "Ao projetar a extinção do ICMS e do ISS, examina-se a transição para o IBS.",
         "Uma microempresa teme ser desenquadrada compulsoriamente do regime unificado em virtude da reforma."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “No modelo de IVA Dual da Reforma Tributária, o que significa a coexistência de CBS e IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A CBS pertence à União e o IBS reúne Estados, DF e Municípios, operando sob uma legislação comum harmonizada pela LC 214/2025.",
+          "A arquitetura é dual: competências distintas (União vs. Estados/Municípios) disciplinadas de forma coordenada e harmônica pela mesma lei complementar nacional.",
+          "O modelo é dual e coordenado: a CBS pertence à União e o IBS é compartilhado entre Estados, DF e Municípios, somando-se ao Imposto Seletivo monofásico.",
+          "O percentual de 27,91% é premissa de exercício; na prática, deve-se considerar o período da transição (2026 a 2032), reduções de alíquota (saúde, cesta básica) e alíquotas subnacionais."
+        ],
+        0,
+        "A CBS pertence à União e o IBS reúne Estados, DF e Municípios, operando sob uma legislação comum harmonizada pela LC 214/2025."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual tributo instituído pela EC 132/2023 possui finalidade marcadamente extrafiscal sobre bens prejudiciais à saúde ou ao meio ambiente?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "As alíquotas de 9,21% (CBS) e 18,70% (IBS) constituem premissas didáticas de referência média; no caso real, a alíquota depende do local de destino, vigência anual e regimes especiais aplicáveis.",
+          "A neutralidade associada ao princípio do destino extingue a guerra fiscal, pois a arrecadação pertence ao local de consumo, tornando inócuo buscar incentivos de origem.",
+          "A CBS pertence à União e o IBS reúne Estados, DF e Municípios, operando sob uma legislação comum harmonizada pela LC 214/2025.",
+          "O Imposto Seletivo é um tributo federal monofásico extrafiscal incidente sobre itens nocivos à saúde ou ao meio ambiente (art. 153, VIII, da CF/88)."
+        ],
+        3,
+        "O Imposto Seletivo é um tributo federal monofásico extrafiscal incidente sobre itens nocivos à saúde ou ao meio ambiente (art. 153, VIII, da CF/88)."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual princípio estrutural da Reforma Tributária busca assegurar que as decisões empresariais de localização e investimentos sejam pautadas na eficiência econômica real, e não em renúncias fiscais artificiais?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Base líquida de R$ 1.000,00 + CBS (9,21% = R$ 92,10) + IBS (18,70% = R$ 187,00) = R$ 1.279,10 faturados na NF-e.",
+          "Produtos fumígenos enquadram-se na hipótese de incidência do Imposto Seletivo, exigindo apuração e destaque específico além do IVA Dual.",
+          "A neutralidade tributária busca evitar que o tributo interfira nas decisões de consumo, produção e organização das empresas, encerrando a guerra fiscal de ICMS.",
+          "O Imposto Seletivo é um tributo federal monofásico extrafiscal incidente sobre itens nocivos à saúde ou ao meio ambiente (art. 153, VIII, da CF/88)."
+        ],
+        2,
+        "A neutralidade tributária busca evitar que o tributo interfira nas decisões de consumo, produção e organização das empresas, encerrando a guerra fiscal de ICMS."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como se relacionam a CBS e o IBS no ordenamento jurídico nacional?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O modelo é dual e coordenado: a CBS pertence à União e o IBS é compartilhado entre Estados, DF e Municípios, somando-se ao Imposto Seletivo monofásico.",
+          "A arquitetura é dual: competências distintas (União vs. Estados/Municípios) disciplinadas de forma coordenada e harmônica pela mesma lei complementar nacional.",
+          "O percentual de 27,91% é premissa de exercício; na prática, deve-se considerar o período da transição (2026 a 2032), reduções de alíquota (saúde, cesta básica) e alíquotas subnacionais.",
+          "A neutralidade tributária busca evitar que o tributo interfira nas decisões de consumo, produção e organização das empresas, encerrando a guerra fiscal de ICMS."
+        ],
+        1,
+        "A arquitetura é dual: competências distintas (União vs. Estados/Municípios) disciplinadas de forma coordenada e harmônica pela mesma lei complementar nacional."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que a equipe tributária deve verificar antes de aplicar as alíquotas de um exercício simulado a um caso real de cliente?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "As alíquotas de 9,21% (CBS) e 18,70% (IBS) constituem premissas didáticas de referência média; no caso real, a alíquota depende do local de destino, vigência anual e regimes especiais aplicáveis.",
+          "A neutralidade associada ao princípio do destino extingue a guerra fiscal, pois a arrecadação pertence ao local de consumo, tornando inócuo buscar incentivos de origem.",
+          "A CBS pertence à União e o IBS reúne Estados, DF e Municípios, operando sob uma legislação comum harmonizada pela LC 214/2025.",
+          "A arquitetura é dual: competências distintas (União vs. Estados/Municípios) disciplinadas de forma coordenada e harmônica pela mesma lei complementar nacional."
+        ],
+        0,
+        "As alíquotas de 9,21% (CBS) e 18,70% (IBS) constituem premissas didáticas de referência média; no caso real, a alíquota depende do local de destino, vigência anual e regimes especiais aplicáveis."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o valor total faturado da nota fiscal eletrônica sob essas premissas?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Produtos fumígenos enquadram-se na hipótese de incidência do Imposto Seletivo, exigindo apuração e destaque específico além do IVA Dual.",
+          "O Imposto Seletivo é um tributo federal monofásico extrafiscal incidente sobre itens nocivos à saúde ou ao meio ambiente (art. 153, VIII, da CF/88).",
+          "As alíquotas de 9,21% (CBS) e 18,70% (IBS) constituem premissas didáticas de referência média; no caso real, a alíquota depende do local de destino, vigência anual e regimes especiais aplicáveis.",
+          "Base líquida de R$ 1.000,00 + CBS (9,21% = R$ 92,10) + IBS (18,70% = R$ 187,00) = R$ 1.279,10 faturados na NF-e."
+        ],
+        3,
+        "Base líquida de R$ 1.000,00 + CBS (9,21% = R$ 92,10) + IBS (18,70% = R$ 187,00) = R$ 1.279,10 faturados na NF-e."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual esclarecimento técnico corrige adequadamente a compreensão do cliente sobre a nova arquitetura tributária?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O percentual de 27,91% é premissa de exercício; na prática, deve-se considerar o período da transição (2026 a 2032), reduções de alíquota (saúde, cesta básica) e alíquotas subnacionais.",
+          "A neutralidade tributária busca evitar que o tributo interfira nas decisões de consumo, produção e organização das empresas, encerrando a guerra fiscal de ICMS.",
+          "O modelo é dual e coordenado: a CBS pertence à União e o IBS é compartilhado entre Estados, DF e Municípios, somando-se ao Imposto Seletivo monofásico.",
+          "Base líquida de R$ 1.000,00 + CBS (9,21% = R$ 92,10) + IBS (18,70% = R$ 187,00) = R$ 1.279,10 faturados na NF-e."
+        ],
+        2,
+        "O modelo é dual e coordenado: a CBS pertence à União e o IBS é compartilhado entre Estados, DF e Municípios, somando-se ao Imposto Seletivo monofásico."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “Sob a nova sistemática da Reforma Tributária, qual princípio e regra impedem a manutenção dessa vantagem artificial?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A CBS pertence à União e o IBS reúne Estados, DF e Municípios, operando sob uma legislação comum harmonizada pela LC 214/2025.",
+          "A neutralidade associada ao princípio do destino extingue a guerra fiscal, pois a arrecadação pertence ao local de consumo, tornando inócuo buscar incentivos de origem.",
+          "A arquitetura é dual: competências distintas (União vs. Estados/Municípios) disciplinadas de forma coordenada e harmônica pela mesma lei complementar nacional.",
+          "O modelo é dual e coordenado: a CBS pertence à União e o IBS é compartilhado entre Estados, DF e Municípios, somando-se ao Imposto Seletivo monofásico."
+        ],
+        1,
+        "A neutralidade associada ao princípio do destino extingue a guerra fiscal, pois a arrecadação pertence ao local de consumo, tornando inócuo buscar incentivos de origem."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que o departamento fiscal deve verificar adicionalmente na classificação tributária do produto?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Produtos fumígenos enquadram-se na hipótese de incidência do Imposto Seletivo, exigindo apuração e destaque específico além do IVA Dual.",
+          "O Imposto Seletivo é um tributo federal monofásico extrafiscal incidente sobre itens nocivos à saúde ou ao meio ambiente (art. 153, VIII, da CF/88).",
+          "As alíquotas de 9,21% (CBS) e 18,70% (IBS) constituem premissas didáticas de referência média; no caso real, a alíquota depende do local de destino, vigência anual e regimes especiais aplicáveis.",
+          "A neutralidade associada ao princípio do destino extingue a guerra fiscal, pois a arrecadação pertence ao local de consumo, tornando inócuo buscar incentivos de origem."
+        ],
+        0,
+        "Produtos fumígenos enquadram-se na hipótese de incidência do Imposto Seletivo, exigindo apuração e destaque específico além do IVA Dual."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 01, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual revisão metodológica é necessária antes de apresentar o relatório ao cliente?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A neutralidade tributária busca evitar que o tributo interfira nas decisões de consumo, produção e organização das empresas, encerrando a guerra fiscal de ICMS.",
+          "Base líquida de R$ 1.000,00 + CBS (9,21% = R$ 92,10) + IBS (18,70% = R$ 187,00) = R$ 1.279,10 faturados na NF-e.",
+          "Produtos fumígenos enquadram-se na hipótese de incidência do Imposto Seletivo, exigindo apuração e destaque específico além do IVA Dual.",
+          "O percentual de 27,91% é premissa de exercício; na prática, deve-se considerar o período da transição (2026 a 2032), reduções de alíquota (saúde, cesta básica) e alíquotas subnacionais."
+        ],
+        3,
+        "O percentual de 27,91% é premissa de exercício; na prática, deve-se considerar o período da transição (2026 a 2032), reduções de alíquota (saúde, cesta básica) e alíquotas subnacionais."
+      ]
+    ],
+    "p": [
+      [
+        "A controladoria organiza as contas contábeis do passivo tributário conforme as esferas federativas. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A CBS (Contribuição sobre Bens e Serviços) é tributo de competência exclusiva da União.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A CBS pertence à União Federal e substitui tributos como PIS e Cofins."
+      ],
+      [
+        "O setor de contas a pagar analisa a destinação dos recolhimentos de IBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O IBS (Imposto sobre Bens e Serviços) é um tributo de competência exclusivamente municipal.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O IBS reúne competências estaduais, distritais e municipais de forma compartilhada sob gestão do CGIBS."
+      ],
+      [
+        "A equipe de TI está mapeando os códigos de tributo no emissor fiscal. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O Imposto Seletivo constitui uma subdivisão do IBS gerida pelos Estados.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O Imposto Seletivo é tributo federal autônomo, não se confundindo com o IBS subnacional."
+      ],
+      [
+        "Em debate sobre preços, questiona-se se a neutralidade impede tratamentos diferenciados. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O Princípio da Neutralidade Tributária impede a existência de qualquer alíquota reduzida ou regime diferenciado na legislação.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A neutralidade é princípio geral, mas convive com exceções constitucionais expressas (saúde, educação, agropecuária, cesta básica)."
+      ],
+      [
+        "Ao comparar o sistema legado com o novo modelo, examina-se a fragmentação anterior. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “No modelo tributário anterior à reforma, PIS, Cofins, IPI, ICMS e ISS possuíam legislações, fatos geradores e critérios de crédito autônomos e descoordenados.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A fragmentação e cumulatividade eram a marca central do modelo anterior."
+      ],
+      [
+        "Um analista fiscal pretende aplicar a alíquota padrão de 27,91% para todos os clientes sem distinção de localidade ou produto. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A alíquota combinada de 27,91% constitui uma taxa jurídica universal obrigatória para qualquer operação no Brasil.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "É uma premissa de referência de aula; cada operação depende da legislação vigente, ano da transição e alíquotas fixadas pelo ente de destino."
+      ],
+      [
+        "Um parecer aborda a governança e o funcionamento das esferas do IVA Dual. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O modelo do IVA Dual opera com duas competências tributárias coordenadas, compartilhando o mesmo fato gerador e base de cálculo.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "CBS e IBS possuem competências distintas, mas harmonia técnica total disciplinada pela LC 214/2025."
+      ],
+      [
+        "O setor comercial solicita enquadrar serviços de hotelaria e restaurantes na regra geral do IVA. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A apuração do imposto em uma operação pode desconsiderar regimes específicos setoriais expressamente previstos em lei.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Regimes específicos (como combustíveis, bares, restaurantes e hotelaria) possuem regras próprias de alíquota, base e crédito."
+      ],
+      [
+        "Ao projetar a extinção do ICMS e do ISS, examina-se a transição para o IBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A substituição do ICMS e do ISS pelo IBS ocorre de forma gradual entre 2029 e 2032, completando-se em 2033.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A transição federativa subnacional opera no modelo de substituição progressiva decenal."
+      ],
+      [
+        "Uma microempresa teme ser desenquadrada compulsoriamente do regime unificado em virtude da reforma. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A promulgação da Reforma Tributária do Consumo extingue automaticamente o regime simplificado do Simples Nacional.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O Simples Nacional permanece assegurado constitucionalmente, passando a admitir a opção pelo regime regular para CBS e IBS."
+      ]
+    ]
   },
   "02": {
     "m": [
@@ -1744,7 +3696,251 @@ const QUIZ_BANK = {
         "Um estudo econômico analisa o término dos benefícios estaduais de ICMS.",
         "Um analista tributário sustenta que apenas o endereço do vendedor é necessário na emissão fiscal."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Conforme o princípio do destino, qual jurisdição orienta a cobrança e arrecadação do IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 11, I, da LC 214/2025 estabelece a entrega ao destinatário como critério de localização para bens móveis.",
+          "A alíquota total resulta da CBS (federal) somada ao IBS estadual e municipal fixados pelos entes de destino.",
+          "A situação física do imóvel prevalece sobre qualquer sede ou domicílio corporativo das partes.",
+          "A alíquota municipal do IBS compõe o tributo; informar destino incorreto distorce o recolhimento e a partilha federativa."
+        ],
+        0,
+        "O art. 11, I, da LC 214/2025 estabelece a entrega ao destinatário como critério de localização para bens móveis."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “No fornecimento de bens imóveis e serviços de engenharia civil conexos, qual é o critério espacial definidor do IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O IBS pertence ao destino; dados incorretos geram recolhimento incorreto para o Estado e Município credores.",
+          "O transporte de passageiros adota o início da prestação como marco espacial legal.",
+          "O art. 11, I, da LC 214/2025 estabelece a entrega ao destinatário como critério de localização para bens móveis.",
+          "Para bens imóveis e serviços executados fisicamente sobre eles, o local é onde o imóvel se situa (art. 11, II)."
+        ],
+        3,
+        "Para bens imóveis e serviços executados fisicamente sobre eles, o local é onde o imóvel se situa (art. 11, II)."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “No transporte intermunicipal e interestadual de passageiros, qual critério espacial fixa o local da operação de IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 11 da LC 214/2025 estabelece expressamente a entrega ao destinatário como fato determinante da jurisdição.",
+          "Na regra residual para bens imateriais/digitais fornecidos a PJ, considera-se o estabelecimento tomador efetivo do serviço.",
+          "O art. 11 da LC 214/2025 fixa o início da viagem como local da operação no transporte de passageiros.",
+          "Para bens imóveis e serviços executados fisicamente sobre eles, o local é onde o imóvel se situa (art. 11, II)."
+        ],
+        2,
+        "O art. 11 da LC 214/2025 fixa o início da viagem como local da operação no transporte de passageiros."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como é formada tecnicamente a alíquota da operação no destino sujeito à alíquota padrão?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A situação física do imóvel prevalece sobre qualquer sede ou domicílio corporativo das partes.",
+          "A alíquota total resulta da CBS (federal) somada ao IBS estadual e municipal fixados pelos entes de destino.",
+          "A alíquota municipal do IBS compõe o tributo; informar destino incorreto distorce o recolhimento e a partilha federativa.",
+          "O art. 11 da LC 214/2025 fixa o início da viagem como local da operação no transporte de passageiros."
+        ],
+        1,
+        "A alíquota total resulta da CBS (federal) somada ao IBS estadual e municipal fixados pelos entes de destino."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que o saneamento cadastral do adquirente é determinante no IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O IBS pertence ao destino; dados incorretos geram recolhimento incorreto para o Estado e Município credores.",
+          "O transporte de passageiros adota o início da prestação como marco espacial legal.",
+          "O art. 11, I, da LC 214/2025 estabelece a entrega ao destinatário como critério de localização para bens móveis.",
+          "A alíquota total resulta da CBS (federal) somada ao IBS estadual e municipal fixados pelos entes de destino."
+        ],
+        0,
+        "O IBS pertence ao destino; dados incorretos geram recolhimento incorreto para o Estado e Município credores."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual local deve ser examinado pelo emissor para aplicar o IBS na operação com bem móvel?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Na regra residual para bens imateriais/digitais fornecidos a PJ, considera-se o estabelecimento tomador efetivo do serviço.",
+          "Para bens imóveis e serviços executados fisicamente sobre eles, o local é onde o imóvel se situa (art. 11, II).",
+          "O IBS pertence ao destino; dados incorretos geram recolhimento incorreto para o Estado e Município credores.",
+          "O art. 11 da LC 214/2025 estabelece expressamente a entrega ao destinatário como fato determinante da jurisdição."
+        ],
+        3,
+        "O art. 11 da LC 214/2025 estabelece expressamente a entrega ao destinatário como fato determinante da jurisdição."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual localização geográfica define a competência e alíquotas do IBS da transação?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A alíquota municipal do IBS compõe o tributo; informar destino incorreto distorce o recolhimento e a partilha federativa.",
+          "O art. 11 da LC 214/2025 fixa o início da viagem como local da operação no transporte de passageiros.",
+          "A situação física do imóvel prevalece sobre qualquer sede ou domicílio corporativo das partes.",
+          "O art. 11 da LC 214/2025 estabelece expressamente a entrega ao destinatário como fato determinante da jurisdição."
+        ],
+        2,
+        "A situação física do imóvel prevalece sobre qualquer sede ou domicílio corporativo das partes."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual ponto geográfico deve ser verificado para a exigibilidade do IBS no transporte de pessoas?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 11, I, da LC 214/2025 estabelece a entrega ao destinatário como critério de localização para bens móveis.",
+          "O transporte de passageiros adota o início da prestação como marco espacial legal.",
+          "A alíquota total resulta da CBS (federal) somada ao IBS estadual e municipal fixados pelos entes de destino.",
+          "A situação física do imóvel prevalece sobre qualquer sede ou domicílio corporativo das partes."
+        ],
+        1,
+        "O transporte de passageiros adota o início da prestação como marco espacial legal."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual parâmetro espacial deve ser validado para a apuração da parcela subnacional do IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Na regra residual para bens imateriais/digitais fornecidos a PJ, considera-se o estabelecimento tomador efetivo do serviço.",
+          "Para bens imóveis e serviços executados fisicamente sobre eles, o local é onde o imóvel se situa (art. 11, II).",
+          "O IBS pertence ao destino; dados incorretos geram recolhimento incorreto para o Estado e Município credores.",
+          "O transporte de passageiros adota o início da prestação como marco espacial legal."
+        ],
+        0,
+        "Na regra residual para bens imateriais/digitais fornecidos a PJ, considera-se o estabelecimento tomador efetivo do serviço."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 02, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o risco direto dessa falha cadastral para a apuração do imposto?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 11 da LC 214/2025 fixa o início da viagem como local da operação no transporte de passageiros.",
+          "O art. 11 da LC 214/2025 estabelece expressamente a entrega ao destinatário como fato determinante da jurisdição.",
+          "Na regra residual para bens imateriais/digitais fornecidos a PJ, considera-se o estabelecimento tomador efetivo do serviço.",
+          "A alíquota municipal do IBS compõe o tributo; informar destino incorreto distorce o recolhimento e a partilha federativa."
+        ],
+        3,
+        "A alíquota municipal do IBS compõe o tributo; informar destino incorreto distorce o recolhimento e a partilha federativa."
+      ]
+    ],
+    "p": [
+      [
+        "O setor de auditoria fiscal analisa fornecimentos com bens corpóreos, imóveis e serviços remotos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O local da operação deve ser identificado conforme a natureza do fornecimento estipulada no art. 11 da LC 214/2025.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A lei estabelece critérios próprios conforme a modalidade (bens corpóreos, imóveis, serviços presenciais, transporte, etc.)."
+      ],
+      [
+        "Um prestador de serviços defende que todo serviço deve ser tributado sempre no município de sua sede administrativa. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todo serviço prestado sob a vigência do IBS é tributado no município onde se localiza o estabelecimento prestador.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O princípio geral é o destino; serviços presenciais tributam no local da prestação e serviços imateriais no domicílio do adquirente."
+      ],
+      [
+        "Um contrato de compra e venda de imóvel foi assinado em cartório de cidade distinta da localização do terreno. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A localização física do imóvel define a competência e alíquotas do IBS nas operações imobiliárias.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Trata-se de regra legal vinculada à situação territorial do imóvel."
+      ],
+      [
+        "Uma indústria alega direito de recolher o IBS para o Estado onde mantém sua planta fabril. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A arrecadação do IBS em operações com mercadorias pertence com exclusividade ao Estado de origem onde a fábrica foi instalada.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O IBS segue o princípio do destino pleno, pertencendo ao local de consumo final."
+      ],
+      [
+        "Uma viação de transporte interestadual de passageiros analisa bilhetes emitidos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O transporte interestadual de passageiros adota o local de início da viagem como referência espacial de incidência do IBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Critério legal expressamente positivado no art. 11 da LC 214/2025."
+      ],
+      [
+        "O setor de TI atualiza cadastros de clientes com endereço e geolocalização. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A apuração do IBS exige cadastros confiáveis de identificação do adquirente e destino do fornecimento.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Sem dados corretos de destino, os motores de cálculo não conseguem determinar as alíquotas aplicáveis."
+      ],
+      [
+        "Um grupo varejista compara a carga tributária em capitais com leis municipais próprias de IBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “As alíquotas municipais do IBS são compulsoriamente idênticas em todos os mais de 5.500 municípios brasileiros.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Cada Município possui competência para fixar sua alíquota própria por lei específica, utilizando-se a alíquota de referência na ausência de lei local."
+      ],
+      [
+        "Uma mesma operação envolve fornecimento de materiais de construção e locação de imóvel. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Bens móveis corpóreos e bens imóveis seguem rigorosamente o mesmo critério espacial de localização no art. 11 da LC 214/2025.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Bem móvel corpóreo usa o local da entrega ao destinatário; bem imóvel usa o local da situação física do imóvel."
+      ],
+      [
+        "Um estudo econômico analisa o término dos benefícios estaduais de ICMS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O princípio do destino reduz e desestimula a escolha artificial de localizações produtivas baseadas em guerras fiscais de incentivos tributários.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Como o tributo pertence ao destino, renúncias na origem não afetam o preço final ao consumidor nem a carga tributária da cadeia."
+      ],
+      [
+        "Um analista tributário sustenta que apenas o endereço do vendedor é necessário na emissão fiscal. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O endereço do fornecedor emissor é suficiente para resolver integralmente a localização da operação no IBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "É indispensável classificar a operação e identificar o destino e o adquirente."
+      ]
+    ]
   },
   "03": {
     "m": [
@@ -1938,7 +4134,251 @@ const QUIZ_BANK = {
         "Uma venda com sinal antecipado foi distratada e cancelada formalmente.",
         "A gestão fiscal monitora o vencimento correto de débitos na escrituração."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o marco temporal geral do fato gerador de IBS e CBS para bens móveis corpóreos?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A regra geral da lei vincula o nascimento da obrigação ao fornecimento do bem ou serviço.",
+          "O imposto definitivo apurado na entrega física abate os valores pagos antecipadamente.",
+          "A base da antecipação é o valor da parcela recebida: R$ 3.000,00 × 27,91% = R$ 837,30.",
+          "Não deduzir a antecipação na entrega final gera duplicidade de débito fiscal sobre a mesma parcela de riqueza."
+        ],
+        0,
+        "A regra geral da lei vincula o nascimento da obrigação ao fornecimento do bem ou serviço."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como a legislação da Reforma Tributária disciplina pagamentos antecipados antes do fornecimento?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A contratação preliminar sem entrega e sem pagamento antecipado não dispara o fato gerador do tributo.",
+          "O ajuste final desconta o imposto antecipado: R$ 2.791,00 − R$ 837,30 = R$ 1.953,70.",
+          "A regra geral da lei vincula o nascimento da obrigação ao fornecimento do bem ou serviço.",
+          "O art. 10 da LC 214/2025 prevê antecipação tributária sobre a parcela paga com confronto final no fornecimento."
+        ],
+        3,
+        "O art. 10 da LC 214/2025 prevê antecipação tributária sobre a parcela paga com confronto final no fornecimento."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que operações de execução continuada exigem atenção temporal diferenciada?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A regra geral do fato gerador coincide com o fornecimento do bem (tradição).",
+          "Nas operações continuadas, o fato gerador ocorre a cada período de exigibilidade ou pagamento (art. 10, § 3º).",
+          "O art. 10, § 3º, traz regra específica vinculando o fato gerador à exigibilidade periódica ou ao pagamento.",
+          "O art. 10 da LC 214/2025 prevê antecipação tributária sobre a parcela paga com confronto final no fornecimento."
+        ],
+        2,
+        "O art. 10, § 3º, traz regra específica vinculando o fato gerador à exigibilidade periódica ou ao pagamento."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Ao finalizar uma operação que teve recolhimento prévio por antecipação, qual conciliação é mandatória?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A base da antecipação é o valor da parcela recebida: R$ 3.000,00 × 27,91% = R$ 837,30.",
+          "O imposto definitivo apurado na entrega física abate os valores pagos antecipadamente.",
+          "Não deduzir a antecipação na entrega final gera duplicidade de débito fiscal sobre a mesma parcela de riqueza.",
+          "O art. 10, § 3º, traz regra específica vinculando o fato gerador à exigibilidade periódica ou ao pagamento."
+        ],
+        1,
+        "O imposto definitivo apurado na entrega física abate os valores pagos antecipadamente."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual evento jurídico não se confunde necessariamente com a ocorrência do fato gerador?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A contratação preliminar sem entrega e sem pagamento antecipado não dispara o fato gerador do tributo.",
+          "O ajuste final desconta o imposto antecipado: R$ 2.791,00 − R$ 837,30 = R$ 1.953,70.",
+          "A regra geral da lei vincula o nascimento da obrigação ao fornecimento do bem ou serviço.",
+          "O imposto definitivo apurado na entrega física abate os valores pagos antecipadamente."
+        ],
+        0,
+        "A contratação preliminar sem entrega e sem pagamento antecipado não dispara o fato gerador do tributo."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Em qual marco temporal ocorreu o fato gerador de CBS e IBS da operação?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Nas operações continuadas, o fato gerador ocorre a cada período de exigibilidade ou pagamento (art. 10, § 3º).",
+          "O art. 10 da LC 214/2025 prevê antecipação tributária sobre a parcela paga com confronto final no fornecimento.",
+          "A contratação preliminar sem entrega e sem pagamento antecipado não dispara o fato gerador do tributo.",
+          "A regra geral do fato gerador coincide com o fornecimento do bem (tradição)."
+        ],
+        3,
+        "A regra geral do fato gerador coincide com o fornecimento do bem (tradição)."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual valor deve ser recolhido a título de antecipação tributária sobre essa parcela adiantada?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Não deduzir a antecipação na entrega final gera duplicidade de débito fiscal sobre a mesma parcela de riqueza.",
+          "O art. 10, § 3º, traz regra específica vinculando o fato gerador à exigibilidade periódica ou ao pagamento.",
+          "A base da antecipação é o valor da parcela recebida: R$ 3.000,00 × 27,91% = R$ 837,30.",
+          "A regra geral do fato gerador coincide com o fornecimento do bem (tradição)."
+        ],
+        2,
+        "A base da antecipação é o valor da parcela recebida: R$ 3.000,00 × 27,91% = R$ 837,30."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual saldo devedor remanescente deve ser recolhido no ajuste final do fornecimento?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A regra geral da lei vincula o nascimento da obrigação ao fornecimento do bem ou serviço.",
+          "O ajuste final desconta o imposto antecipado: R$ 2.791,00 − R$ 837,30 = R$ 1.953,70.",
+          "O imposto definitivo apurado na entrega física abate os valores pagos antecipadamente.",
+          "A base da antecipação é o valor da parcela recebida: R$ 3.000,00 × 27,91% = R$ 837,30."
+        ],
+        1,
+        "O ajuste final desconta o imposto antecipado: R$ 2.791,00 − R$ 837,30 = R$ 1.953,70."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual rotina contábil e fiscal assegura a correta apuração do fato gerador?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Nas operações continuadas, o fato gerador ocorre a cada período de exigibilidade ou pagamento (art. 10, § 3º).",
+          "O art. 10 da LC 214/2025 prevê antecipação tributária sobre a parcela paga com confronto final no fornecimento.",
+          "A contratação preliminar sem entrega e sem pagamento antecipado não dispara o fato gerador do tributo.",
+          "O ajuste final desconta o imposto antecipado: R$ 2.791,00 − R$ 837,30 = R$ 1.953,70."
+        ],
+        0,
+        "Nas operações continuadas, o fato gerador ocorre a cada período de exigibilidade ou pagamento (art. 10, § 3º)."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 03, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual inconsistência tributária ocorreu nessa operação?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 10, § 3º, traz regra específica vinculando o fato gerador à exigibilidade periódica ou ao pagamento.",
+          "A regra geral do fato gerador coincide com o fornecimento do bem (tradição).",
+          "Nas operações continuadas, o fato gerador ocorre a cada período de exigibilidade ou pagamento (art. 10, § 3º).",
+          "Não deduzir a antecipação na entrega final gera duplicidade de débito fiscal sobre a mesma parcela de riqueza."
+        ],
+        3,
+        "Não deduzir a antecipação na entrega final gera duplicidade de débito fiscal sobre a mesma parcela de riqueza."
+      ]
+    ],
+    "p": [
+      [
+        "Um comprador transfere um adiantamento financeiro referente a um pedido de compras fabris. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O recebimento de pagamento parcial ou integral antes do fornecimento do bem ou serviço gera antecipação tributária de CBS e IBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Regra expressa do art. 10, § 4º, da LC 214/2025."
+      ],
+      [
+        "O departamento fiscal encerra a operação no fornecimento definitivo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “No momento do fornecimento, o imposto antecipado anteriormente deve ser somado novamente sem direito a abatimento.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O valor antecipado é abatido do montante total definitivo apurado."
+      ],
+      [
+        "A área de auditoria compara o cronograma físico de entrega com as remessas bancárias. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A assinatura do contrato, o pagamento financeiro e o fornecimento do bem podem ocorrer em momentos temporais distintos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Daí a relevância das regras de temporalidade do art. 10 da LC 214/2025."
+      ],
+      [
+        "O setor comercial celebra uma proposta preliminar não vinculante. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A simples celebração de um contrato de prestação de serviços constitui compulsoriamente o fato gerador integral da CBS e do IBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O fato gerador geral vincula-se ao fornecimento ou, havendo sinal, à parcela antecipada."
+      ],
+      [
+        "A contabilidade concilia os recibos de adiantamentos recebidos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A emissão regular de documento fiscal eletrônico no recebimento de adiantamentos viabiliza a reconciliação e evita autuações fiscais.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O DF-e de adiantamento registra a antecipação formalmente no Ambiente Nacional do Fisco."
+      ],
+      [
+        "Um contrato de licença contínua de software com renovação mensal pós-paga está em vigor. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A disciplina temporal do fato gerador é irrelevante em contratos de fornecimento contínuo ou fracionado.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O art. 10, § 3º, disciplina marcos temporais específicos de exigibilidade para essas operações."
+      ],
+      [
+        "Ao examinar uma venda com entrega imediata e pagamento a prazo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Na regra geral de fornecimento de mercadorias, o fato gerador ocorre no momento da entrega ou disponibilização do bem.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A tradição do bem móvel é o marco central geral da incidência."
+      ],
+      [
+        "Em vendas a prazo com duplicatas mercantis para 30, 60 e 90 dias. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A liquidação financeira e o fornecimento físico da mercadoria coincidem compulsoriamente no mesmo dia.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A entrega física antecede os pagamentos a prazo, operando o fato gerador na data do fornecimento."
+      ],
+      [
+        "Uma venda com sinal antecipado foi distratada e cancelada formalmente. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Caso o fornecimento do bem não ocorra após o recolhimento de antecipação tributária, aplicam-se as regras de cancelamento e restituição previstas em lei.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Previsto no art. 10, § 6º, para assegurar o estorno do imposto em caso de distrato."
+      ],
+      [
+        "A gestão fiscal monitora o vencimento correto de débitos na escrituração. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A identificação precisa do momento do fato gerador impede a antecipação prematura ou a postergação irregular do recolhimento tributário.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Garante conformidade fiscal e evita encargos moratórios por recolhimento a destempo."
+      ]
+    ]
   },
   "04": {
     "m": [
@@ -2132,7 +4572,251 @@ const QUIZ_BANK = {
         "Um fornecedor emite nota com desconto concedido no ato sem condições.",
         "A contabilidade tenta apurar a base de IBS pelo lucro apurado na DRE."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Na sistemática \"por fora\" do art. 12 da LC 214/2025, como é calculada a base de CBS e IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A base de incidência é o valor da operação sem o embutimento dos próprios tributos (art. 12 da LC 214/2025).",
+          "No cálculo por fora, a alíquota incide limpa sobre a base líquida: 100 × (1 + 0,20) = R$ 120,00.",
+          "O IS (R$ 1.030,00) integra o valor da operação: Base IBS/CBS = R$ 10.300 + R$ 1.030 = R$ 11.330,00.",
+          "A técnica \"por fora\" veda que o tributo integre sua própria base de incidência."
+        ],
+        0,
+        "A base de incidência é o valor da operação sem o embutimento dos próprios tributos (art. 12 da LC 214/2025)."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual modalidade de desconto reduz a base de cálculo de CBS e IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 12 determina que fretes, seguros e encargos cobrados do adquirente integram o valor da operação.",
+          "Por fora: 2.000 × 1,10 = R$ 2.200,00 faturados na nota fiscal.",
+          "A base de incidência é o valor da operação sem o embutimento dos próprios tributos (art. 12 da LC 214/2025).",
+          "Apenas descontos concedidos no ato e destacados na nota (incondicionais) não integram a base de cálculo."
+        ],
+        3,
+        "Apenas descontos concedidos no ato e destacados na nota (incondicionais) não integram a base de cálculo."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “De que forma o valor do Imposto Seletivo afeta a base de cálculo do IBS e da CBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Base = Produtos (R$ 10.000) + Frete (R$ 800) − Desconto Incondicional (R$ 500) = R$ 10.300,00.",
+          "Descontos condicionais integram a base de cálculo e não podem ser deduzidos na emissão.",
+          "O IS integra a base de cálculo do IBS e da CBS por compor o valor cobrado do adquirente sem constar nas exclusões legais.",
+          "Apenas descontos concedidos no ato e destacados na nota (incondicionais) não integram a base de cálculo."
+        ],
+        2,
+        "O IS integra a base de cálculo do IBS e da CBS por compor o valor cobrado do adquirente sem constar nas exclusões legais."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual valor total será faturado na nota fiscal eletrônica?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O IS (R$ 1.030,00) integra o valor da operação: Base IBS/CBS = R$ 10.300 + R$ 1.030 = R$ 11.330,00.",
+          "No cálculo por fora, a alíquota incide limpa sobre a base líquida: 100 × (1 + 0,20) = R$ 120,00.",
+          "A técnica \"por fora\" veda que o tributo integre sua própria base de incidência.",
+          "O IS integra a base de cálculo do IBS e da CBS por compor o valor cobrado do adquirente sem constar nas exclusões legais."
+        ],
+        1,
+        "No cálculo por fora, a alíquota incide limpa sobre a base líquida: 100 × (1 + 0,20) = R$ 120,00."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “As despesas acessórias de transporte cobradas do adquirente integram a base de CBS e IBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 12 determina que fretes, seguros e encargos cobrados do adquirente integram o valor da operação.",
+          "Por fora: 2.000 × 1,10 = R$ 2.200,00 faturados na nota fiscal.",
+          "A base de incidência é o valor da operação sem o embutimento dos próprios tributos (art. 12 da LC 214/2025).",
+          "No cálculo por fora, a alíquota incide limpa sobre a base líquida: 100 × (1 + 0,20) = R$ 120,00."
+        ],
+        0,
+        "O art. 12 determina que fretes, seguros e encargos cobrados do adquirente integram o valor da operação."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é a base de cálculo líquida apurada antes de outros tributos?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Descontos condicionais integram a base de cálculo e não podem ser deduzidos na emissão.",
+          "Apenas descontos concedidos no ato e destacados na nota (incondicionais) não integram a base de cálculo.",
+          "O art. 12 determina que fretes, seguros e encargos cobrados do adquirente integram o valor da operação.",
+          "Base = Produtos (R$ 10.000) + Frete (R$ 800) − Desconto Incondicional (R$ 500) = R$ 10.300,00."
+        ],
+        3,
+        "Base = Produtos (R$ 10.000) + Frete (R$ 800) − Desconto Incondicional (R$ 500) = R$ 10.300,00."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é a base de cálculo do IBS e da CBS após a inclusão do Seletivo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A técnica \"por fora\" veda que o tributo integre sua própria base de incidência.",
+          "O IS integra a base de cálculo do IBS e da CBS por compor o valor cobrado do adquirente sem constar nas exclusões legais.",
+          "O IS (R$ 1.030,00) integra o valor da operação: Base IBS/CBS = R$ 10.300 + R$ 1.030 = R$ 11.330,00.",
+          "Base = Produtos (R$ 10.000) + Frete (R$ 800) − Desconto Incondicional (R$ 500) = R$ 10.300,00."
+        ],
+        2,
+        "O IS (R$ 1.030,00) integra o valor da operação: Base IBS/CBS = R$ 10.300 + R$ 1.030 = R$ 11.330,00."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o valor total faturado no documento fiscal?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A base de incidência é o valor da operação sem o embutimento dos próprios tributos (art. 12 da LC 214/2025).",
+          "Por fora: 2.000 × 1,10 = R$ 2.200,00 faturados na nota fiscal.",
+          "No cálculo por fora, a alíquota incide limpa sobre a base líquida: 100 × (1 + 0,20) = R$ 120,00.",
+          "O IS (R$ 1.030,00) integra o valor da operação: Base IBS/CBS = R$ 10.300 + R$ 1.030 = R$ 11.330,00."
+        ],
+        1,
+        "Por fora: 2.000 × 1,10 = R$ 2.200,00 faturados na nota fiscal."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o tratamento fiscal desse desconto na emissão do documento fiscal?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Descontos condicionais integram a base de cálculo e não podem ser deduzidos na emissão.",
+          "Apenas descontos concedidos no ato e destacados na nota (incondicionais) não integram a base de cálculo.",
+          "O art. 12 determina que fretes, seguros e encargos cobrados do adquirente integram o valor da operação.",
+          "Por fora: 2.000 × 1,10 = R$ 2.200,00 faturados na nota fiscal."
+        ],
+        0,
+        "Descontos condicionais integram a base de cálculo e não podem ser deduzidos na emissão."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 04, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual correção restabelece a metodologia por fora da LC 214/2025?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O IS integra a base de cálculo do IBS e da CBS por compor o valor cobrado do adquirente sem constar nas exclusões legais.",
+          "Base = Produtos (R$ 10.000) + Frete (R$ 800) − Desconto Incondicional (R$ 500) = R$ 10.300,00.",
+          "Descontos condicionais integram a base de cálculo e não podem ser deduzidos na emissão.",
+          "A técnica \"por fora\" veda que o tributo integre sua própria base de incidência."
+        ],
+        3,
+        "A técnica \"por fora\" veda que o tributo integre sua própria base de incidência."
+      ]
+    ],
+    "p": [
+      [
+        "A escrita fiscal confere as deduções legais da base do imposto. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O IBS e a CBS não integram as suas próprias bases de cálculo.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Regra expressa do art. 12, § 2º, I, da LC 214/2025."
+      ],
+      [
+        "A área comercial compara alíquotas nominais antigas e novas. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma alíquota de 20% calculada por fora resulta em preço idêntico ao de uma alíquota de 20% calculada por dentro sobre a mesma base líquida.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Por fora resulta em R$ 120,00; por dentro resulta em R$ 125,00 devido à cumulatividade interna."
+      ],
+      [
+        "Uma nota fiscal discrimina frete CIF debitado ao adquirente. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O frete cobrado do comprador integra a base de cálculo de CBS e IBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Despesas acessórias cobradas do adquirente compõem o valor tributável da operação."
+      ],
+      [
+        "A empresa oferece desconto financeiro condicionado à pontualidade futura. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todo desconto financeiro, mesmo condicionado a evento futuro, reduz a base de cálculo na emissão da NF-e.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Apenas descontos incondicionais reduzem a base tributável."
+      ],
+      [
+        "A operação envolve mercadorias sujeitas ao Imposto Seletivo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O montante devido a título de Imposto Seletivo integra a base de cálculo do IBS e da CBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O IS compõe o valor da operação e não figura no rol de exclusões legais da base do IVA Dual."
+      ],
+      [
+        "Um assistente fiscal adiciona o valor de IBS na base de cálculo da CBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O valor destacado de IBS integra a base de cálculo da CBS e vice-versa.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "CBS e IBS excluem-se reciprocamente de suas bases de cálculo."
+      ],
+      [
+        "A empresa fatura encargos financeiros por mora contratual. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Juros e acréscimos moratórios cobrados do adquirente compõem a base de cálculo do imposto.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Conforme o art. 12 da LC 214/2025, encargos contratuais compõem o valor da operação."
+      ],
+      [
+        "O setor de custos estuda a transição de fórmulas matemáticas de formação de preço. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O cálculo por fora simplifica a formação de preços ao eliminar a fórmula de gross-up utilizada no sistema antigo.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Elimina a divisão pelo fator (1 − t), aplicando-se a alíquota diretamente sobre o valor líquido."
+      ],
+      [
+        "Um fornecedor emite nota com desconto concedido no ato sem condições. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O desconto incondicional exige destaque formal no documento fiscal para legitimar a exclusão da base de cálculo.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O destaque documental é requisito probatório indispensável."
+      ],
+      [
+        "A contabilidade tenta apurar a base de IBS pelo lucro apurado na DRE. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A base de cálculo de CBS e IBS é o lucro contábil da pessoa jurídica.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A base tributável é o valor de cada operação mercantil ou prestação de serviço individualizada."
+      ]
+    ]
   },
   "05": {
     "m": [
@@ -2326,7 +5010,251 @@ const QUIZ_BANK = {
         "Uma microempresa no DAS tradicional assegura ao cliente corporativo que sua nota gera crédito cheio de 27,91%.",
         "O setor jurídico analisa as condições de creditamento disciplinadas pela LC 214/2025."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual critério geral orienta o creditamento sob o princípio do crédito financeiro da LC 214/2025?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A não cumulatividade é ampla, mas o crédito depende dos requisitos e vedações previstos na legislação; não é automático em toda compra.",
+          "O custo contábil e econômico real é o desembolso líquido, deduzido do tributo que será aproveitado como crédito compensável.",
+          "No Simples tradicional, o valor integral da nota fiscal é absorvido como custo de aquisição por ausência de crédito financeiro.",
+          "Não há compensação cruzada entre CBS e IBS; a empresa recolhe integralmente o IBS devido e acumula o crédito federal de CBS."
+        ],
+        0,
+        "A não cumulatividade é ampla, mas o crédito depende dos requisitos e vedações previstos na legislação; não é automático em toda compra."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “No modelo padrão unificado do Simples Nacional (recolhimento no DAS), como são tratados os créditos de suas aquisições?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 47 da LC 214/2025 veda expressamente a compensação cruzada: CBS só quita CBS; IBS só quita IBS.",
+          "Custo Efetivo = R$ 11.000,00 − R$ 422,40 = R$ 10.577,60. O crédito limitado torna a compra economicamente superior ao valor de R$ 10.000,00 da proposta do regime regular.",
+          "A não cumulatividade é ampla, mas o crédito depende dos requisitos e vedações previstos na legislação; não é automático em toda compra.",
+          "No Simples Nacional padrão (DAS), a apuração unificada favorecida dispensa o mecanismo de débito e crédito nas compras."
+        ],
+        3,
+        "No Simples Nacional padrão (DAS), a apuração unificada favorecida dispensa o mecanismo de débito e crédito nas compras."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual efeito prático decorre da opção da pequena empresa pelo Simples Híbrido (regime regular de CBS e IBS do art. 41)?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Custo Efetivo = Preço Pago (R$ 12.791,00) − Crédito Recuperável (R$ 2.791,00) = R$ 10.000,00 de custo líquido contábil.",
+          "A opção híbrida é o veículo legal que autoriza a apropriação e transferência de créditos integrais de 27,91% no Simples Nacional.",
+          "A opção pelo regime regular de IBS/CBS pode alterar a competitividade B2B sem retirar, por si só, a empresa do Simples nas demais parcelas.",
+          "No Simples Nacional padrão (DAS), a apuração unificada favorecida dispensa o mecanismo de débito e crédito nas compras."
+        ],
+        2,
+        "A opção pelo regime regular de IBS/CBS pode alterar a competitividade B2B sem retirar, por si só, a empresa do Simples nas demais parcelas."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como se calcula o Custo Efetivo de Aquisição em operações sujeitas a créditos recuperáveis?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "No Simples tradicional, o valor integral da nota fiscal é absorvido como custo de aquisição por ausência de crédito financeiro.",
+          "O custo contábil e econômico real é o desembolso líquido, deduzido do tributo que será aproveitado como crédito compensável.",
+          "Não há compensação cruzada entre CBS e IBS; a empresa recolhe integralmente o IBS devido e acumula o crédito federal de CBS.",
+          "A opção pelo regime regular de IBS/CBS pode alterar a competitividade B2B sem retirar, por si só, a empresa do Simples nas demais parcelas."
+        ],
+        1,
+        "O custo contábil e econômico real é o desembolso líquido, deduzido do tributo que será aproveitado como crédito compensável."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “O crédito apurado de CBS federal pode ser utilizado para abater diretamente o débito de IBS subnacional?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O art. 47 da LC 214/2025 veda expressamente a compensação cruzada: CBS só quita CBS; IBS só quita IBS.",
+          "Custo Efetivo = R$ 11.000,00 − R$ 422,40 = R$ 10.577,60. O crédito limitado torna a compra economicamente superior ao valor de R$ 10.000,00 da proposta do regime regular.",
+          "A não cumulatividade é ampla, mas o crédito depende dos requisitos e vedações previstos na legislação; não é automático em toda compra.",
+          "O custo contábil e econômico real é o desembolso líquido, deduzido do tributo que será aproveitado como crédito compensável."
+        ],
+        0,
+        "O art. 47 da LC 214/2025 veda expressamente a compensação cruzada: CBS só quita CBS; IBS só quita IBS."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o custo efetivo real dessa compra para a indústria?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A opção híbrida é o veículo legal que autoriza a apropriação e transferência de créditos integrais de 27,91% no Simples Nacional.",
+          "No Simples Nacional padrão (DAS), a apuração unificada favorecida dispensa o mecanismo de débito e crédito nas compras.",
+          "O art. 47 da LC 214/2025 veda expressamente a compensação cruzada: CBS só quita CBS; IBS só quita IBS.",
+          "Custo Efetivo = Preço Pago (R$ 12.791,00) − Crédito Recuperável (R$ 2.791,00) = R$ 10.000,00 de custo líquido contábil."
+        ],
+        3,
+        "Custo Efetivo = Preço Pago (R$ 12.791,00) − Crédito Recuperável (R$ 2.791,00) = R$ 10.000,00 de custo líquido contábil."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o custo de aquisição dessa mercadoria para o optante do Simples padrão?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Não há compensação cruzada entre CBS e IBS; a empresa recolhe integralmente o IBS devido e acumula o crédito federal de CBS.",
+          "A opção pelo regime regular de IBS/CBS pode alterar a competitividade B2B sem retirar, por si só, a empresa do Simples nas demais parcelas.",
+          "No Simples tradicional, o valor integral da nota fiscal é absorvido como custo de aquisição por ausência de crédito financeiro.",
+          "Custo Efetivo = Preço Pago (R$ 12.791,00) − Crédito Recuperável (R$ 2.791,00) = R$ 10.000,00 de custo líquido contábil."
+        ],
+        2,
+        "No Simples tradicional, o valor integral da nota fiscal é absorvido como custo de aquisição por ausência de crédito financeiro."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o custo efetivo de aquisição suportado pela indústria compradora?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A não cumulatividade é ampla, mas o crédito depende dos requisitos e vedações previstos na legislação; não é automático em toda compra.",
+          "Custo Efetivo = R$ 11.000,00 − R$ 422,40 = R$ 10.577,60. O crédito limitado torna a compra economicamente superior ao valor de R$ 10.000,00 da proposta do regime regular.",
+          "O custo contábil e econômico real é o desembolso líquido, deduzido do tributo que será aproveitado como crédito compensável.",
+          "No Simples tradicional, o valor integral da nota fiscal é absorvido como custo de aquisição por ausência de crédito financeiro."
+        ],
+        1,
+        "Custo Efetivo = R$ 11.000,00 − R$ 422,40 = R$ 10.577,60. O crédito limitado torna a compra economicamente superior ao valor de R$ 10.000,00 da proposta do regime regular."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual providência deve ser adotada pela administração perante o comitê gestor?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A opção híbrida é o veículo legal que autoriza a apropriação e transferência de créditos integrais de 27,91% no Simples Nacional.",
+          "No Simples Nacional padrão (DAS), a apuração unificada favorecida dispensa o mecanismo de débito e crédito nas compras.",
+          "O art. 47 da LC 214/2025 veda expressamente a compensação cruzada: CBS só quita CBS; IBS só quita IBS.",
+          "Custo Efetivo = R$ 11.000,00 − R$ 422,40 = R$ 10.577,60. O crédito limitado torna a compra economicamente superior ao valor de R$ 10.000,00 da proposta do regime regular."
+        ],
+        0,
+        "A opção híbrida é o veículo legal que autoriza a apropriação e transferência de créditos integrais de 27,91% no Simples Nacional."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 05, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual regra legal impede a unificação dos pagamentos em guia líquida única?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A opção pelo regime regular de IBS/CBS pode alterar a competitividade B2B sem retirar, por si só, a empresa do Simples nas demais parcelas.",
+          "Custo Efetivo = Preço Pago (R$ 12.791,00) − Crédito Recuperável (R$ 2.791,00) = R$ 10.000,00 de custo líquido contábil.",
+          "A opção híbrida é o veículo legal que autoriza a apropriação e transferência de créditos integrais de 27,91% no Simples Nacional.",
+          "Não há compensação cruzada entre CBS e IBS; a empresa recolhe integralmente o IBS devido e acumula o crédito federal de CBS."
+        ],
+        3,
+        "Não há compensação cruzada entre CBS e IBS; a empresa recolhe integralmente o IBS devido e acumula o crédito federal de CBS."
+      ]
+    ],
+    "p": [
+      [
+        "Uma empresa comercial no Simples padrão analisa notas de compras com destaque de CBS e IBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A empresa enquadrada no regime padrão do Simples Nacional pode utilizar os créditos destacados nas notas fiscais de compras para abater o valor mensal apurado no DAS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O recolhimento unificado no DAS padrão não se submete à sistemática regular de crédito de aquisições de insumos e mercadorias."
+      ],
+      [
+        "Uma empresa estuda migrar para o modelo híbrido de apuração de CBS e IBS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A opção pelo Simples Híbrido submete a apuração de IBS e CBS do contribuinte às regras gerais de débito e crédito aplicáveis às médias e grandes empresas.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O contribuinte do Simples híbrido passa a operar no regime regular de não cumulatividade plena para esses dois tributos."
+      ],
+      [
+        "O administrador lança a compra de eletrodomésticos destinados à sua residência pessoal como custo operacional da empresa. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Despesas e aquisições destinadas ao uso ou consumo pessoal de sócios e dirigentes conferem direito imediato a crédito tributário de CBS e IBS no regime regular.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Há vedação expressa no art. 41 da LC 214/2025 para despesas de uso ou consumo pessoal."
+      ],
+      [
+        "A escrita fiscal estrutura as contas de controle do ativo circulante tributário. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A apuração e escrituração de créditos de CBS e IBS exigem controles contábeis rigorosamente segregados em livros fiscais distintos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Sendo tributos com competências e entes credores distintos (União vs. Estados/Municípios), a segregação de saldos é obrigatória."
+      ],
+      [
+        "Um analista projeta créditos tributários aplicando 27,91% de forma idêntica em todas as compras. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O montante do crédito apropriável depende dos valores admitidos pela legislação e corretamente documentados na operação de aquisição.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O crédito deve respeitar os valores admitidos, as condições de apropriação, as reduções, as vedações e os demais requisitos aplicáveis à operação."
+      ],
+      [
+        "O setor de compras compara cotações avaliando o preço líquido de impostos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A apropriação de créditos tributários recuperáveis reduz o custo efetivo de aquisição suportado pelo comprador no regime regular.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O crédito financeiro abate débitos futuros de vendas, desonerando o custo contábil dos insumos adquiridos."
+      ],
+      [
+        "O setor fiscal detecta documento eletrônico cancelado ou rejeitado na SEFAZ. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma nota fiscal desprovida de autorização regular de uso na base fazendária gera direito pleno a crédito de CBS e IBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Documento fiscal inidôneo ou sem autorização válida impede a apropriação legítima de créditos e enseja penalidades."
+      ],
+      [
+        "Uma indústria adquire insumos de fornecedor que recolhe pelo Simples Nacional padrão. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O adquirente no regime regular tem direito a apropriar crédito de IBS e CBS em montante equivalente ao imposto efetivamente devido pelo fornecedor do Simples padrão.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O adquirente corporativo apropria crédito proporcional à parcela de IBS e CBS contida na partilha do DAS do fornecedor."
+      ],
+      [
+        "Uma microempresa no DAS tradicional assegura ao cliente corporativo que sua nota gera crédito cheio de 27,91%. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todo fornecedor enquadrado no Simples Nacional transfere compulsoriamente crédito integral de 27,91% a seus clientes B2B.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O fornecedor do Simples padrão transfere apenas a fração reduzida do DAS; o crédito cheio de 27,91% exige a adesão formal à opção híbrida."
+      ],
+      [
+        "O setor jurídico analisa as condições de creditamento disciplinadas pela LC 214/2025. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A regra geral da lei vincula o crédito à extinção do débito da etapa anterior, sem prejuízo da regra transitória do art. 48.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "O modelo geral vincula o crédito à extinção do débito, e o art. 48 prevê dispensa do requisito enquanto nenhuma das modalidades ali indicadas estiver implementada."
+      ]
+    ]
   },
   "06": {
     "m": [
@@ -2519,6 +5447,250 @@ const QUIZ_BANK = {
         ],
         0,
         "Rastreabilidade documental sustenta a formação do saldo a recuperar."
+      ]
+    ],
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “Ao final do período, uma empresa apura mais créditos de CBS do que débitos. Qual tratamento é compatível com a LC 214/2025?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A LC 214/2025 permite ressarcimento integral ou parcial; o valor não pedido permanece como crédito para utilização posterior.",
+          "O cashback é destinado a pessoas físicas integrantes de famílias de baixa renda conforme os requisitos da LC 214/2025.",
+          "CBS e IBS possuem controles próprios; não se presume compensação cruzada.",
+          "Rastreabilidade documental sustenta a formação do saldo a recuperar."
+        ],
+        0,
+        "A LC 214/2025 permite ressarcimento integral ou parcial; o valor não pedido permanece como crédito para utilização posterior."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual diferença básica existe entre ressarcimento e restituição?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Créditos de CBS não devem ser usados indiscriminadamente para extinguir tributos de natureza distinta.",
+          "O ajuste deve partir da operação e do documento fiscal que geraram os efeitos originais.",
+          "A LC 214/2025 permite ressarcimento integral ou parcial; o valor não pedido permanece como crédito para utilização posterior.",
+          "A origem do valor define o procedimento. Saldo credor de apuração e pagamento indevido não são a mesma situação."
+        ],
+        3,
+        "A origem do valor define o procedimento. Saldo credor de apuração e pagamento indevido não são a mesma situação."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que deve ocorrer quando uma devolução comercial altera uma operação que já gerou débito e crédito?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Créditos menos débitos resultam em saldo credor de R$ 6.000.",
+          "São mecanismos com destinatários e fundamentos diferentes.",
+          "Devoluções e cancelamentos podem exigir ajustes fiscais e devem permanecer vinculados ao documento original.",
+          "A origem do valor define o procedimento. Saldo credor de apuração e pagamento indevido não são a mesma situação."
+        ],
+        2,
+        "Devoluções e cancelamentos podem exigir ajustes fiscais e devem permanecer vinculados ao documento original."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “O cashback de IBS/CBS criado pela Reforma é, principalmente:”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "CBS e IBS possuem controles próprios; não se presume compensação cruzada.",
+          "O cashback é destinado a pessoas físicas integrantes de famílias de baixa renda conforme os requisitos da LC 214/2025.",
+          "Rastreabilidade documental sustenta a formação do saldo a recuperar.",
+          "Devoluções e cancelamentos podem exigir ajustes fiscais e devem permanecer vinculados ao documento original."
+        ],
+        1,
+        "O cashback é destinado a pessoas físicas integrantes de famílias de baixa renda conforme os requisitos da LC 214/2025."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “Uma empresa possui R$ 12.000 de saldo credor de CBS. Qual atitude é inadequada?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Créditos de CBS não devem ser usados indiscriminadamente para extinguir tributos de natureza distinta.",
+          "O ajuste deve partir da operação e do documento fiscal que geraram os efeitos originais.",
+          "A LC 214/2025 permite ressarcimento integral ou parcial; o valor não pedido permanece como crédito para utilização posterior.",
+          "O cashback é destinado a pessoas físicas integrantes de famílias de baixa renda conforme os requisitos da LC 214/2025."
+        ],
+        0,
+        "Créditos de CBS não devem ser usados indiscriminadamente para extinguir tributos de natureza distinta."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o saldo de CBS antes de eventual ressarcimento?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "São mecanismos com destinatários e fundamentos diferentes.",
+          "A origem do valor define o procedimento. Saldo credor de apuração e pagamento indevido não são a mesma situação.",
+          "Créditos de CBS não devem ser usados indiscriminadamente para extinguir tributos de natureza distinta.",
+          "Créditos menos débitos resultam em saldo credor de R$ 6.000."
+        ],
+        3,
+        "Créditos menos débitos resultam em saldo credor de R$ 6.000."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual procedimento é mais correto?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Rastreabilidade documental sustenta a formação do saldo a recuperar.",
+          "Devoluções e cancelamentos podem exigir ajustes fiscais e devem permanecer vinculados ao documento original.",
+          "CBS e IBS possuem controles próprios; não se presume compensação cruzada.",
+          "Créditos menos débitos resultam em saldo credor de R$ 6.000."
+        ],
+        2,
+        "CBS e IBS possuem controles próprios; não se presume compensação cruzada."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que a equipe fiscal deve fazer primeiro?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A LC 214/2025 permite ressarcimento integral ou parcial; o valor não pedido permanece como crédito para utilização posterior.",
+          "O ajuste deve partir da operação e do documento fiscal que geraram os efeitos originais.",
+          "O cashback é destinado a pessoas físicas integrantes de famílias de baixa renda conforme os requisitos da LC 214/2025.",
+          "CBS e IBS possuem controles próprios; não se presume compensação cruzada."
+        ],
+        1,
+        "O ajuste deve partir da operação e do documento fiscal que geraram os efeitos originais."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual explicação é correta?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "São mecanismos com destinatários e fundamentos diferentes.",
+          "A origem do valor define o procedimento. Saldo credor de apuração e pagamento indevido não são a mesma situação.",
+          "Créditos de CBS não devem ser usados indiscriminadamente para extinguir tributos de natureza distinta.",
+          "O ajuste deve partir da operação e do documento fiscal que geraram os efeitos originais."
+        ],
+        0,
+        "São mecanismos com destinatários e fundamentos diferentes."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 06, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual controle aumenta a segurança do pedido?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Devoluções e cancelamentos podem exigir ajustes fiscais e devem permanecer vinculados ao documento original.",
+          "Créditos menos débitos resultam em saldo credor de R$ 6.000.",
+          "São mecanismos com destinatários e fundamentos diferentes.",
+          "Rastreabilidade documental sustenta a formação do saldo a recuperar."
+        ],
+        3,
+        "Rastreabilidade documental sustenta a formação do saldo a recuperar."
+      ]
+    ],
+    "p": [
+      [
+        "A equipe confere contas de CBS e IBS no fechamento. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Saldo credor de CBS e saldo credor de IBS devem ser controlados separadamente.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A apuração e o controle dos dois tributos possuem contas próprias."
+      ],
+      [
+        "O cliente quer receber todo crédito no mesmo dia. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todo saldo credor precisa ser obrigatoriamente ressarcido em dinheiro no mesmo mês.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O contribuinte pode manter saldo para períodos seguintes, conforme as regras."
+      ],
+      [
+        "O pedido foi feito apenas sobre parte do saldo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Um pedido de ressarcimento pode ser integral ou parcial.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A LC 214/2025 admite as duas possibilidades."
+      ],
+      [
+        "A empresa pagou valor que entende ser indevido. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Restituição e ressarcimento são sempre sinônimos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A origem do valor e o fundamento do pedido são diferentes."
+      ],
+      [
+        "Uma nota de devolução foi emitida no mês seguinte. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Devoluções e cancelamentos podem exigir ajuste do crédito do adquirente.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A operação posterior pode modificar os efeitos fiscais da operação original."
+      ],
+      [
+        "Uma pessoa confunde cashback com crédito da empresa. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Cashback é crédito empresarial de IBS/CBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "É mecanismo de devolução voltado ao beneficiário pessoa física de baixa renda."
+      ],
+      [
+        "O sistema cadastral identifica o responsável familiar. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O responsável pela unidade familiar deve atender às condições legais do cashback.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A LC 214/2025 estabelece requisitos para o destinatário da devolução."
+      ],
+      [
+        "A empresa possui saldo credor e também débito de IS. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Saldo credor de CBS pode ser usado automaticamente para quitar Imposto Seletivo.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Não existe compensação automática entre esses tributos."
+      ],
+      [
+        "O contador revisa XMLs que originaram créditos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A origem documental dos créditos deve ser conciliada antes de solicitar ressarcimento.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Rastreabilidade é essencial para justificar o saldo."
+      ],
+      [
+        "O financeiro estornou uma venda, mas o fiscal ainda não tratou o documento. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Um cancelamento fiscal pode ser tratado apenas como movimento bancário, sem reflexo na apuração.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Documento, débito e crédito precisam ser avaliados em conjunto."
       ]
     ]
   },
@@ -2714,7 +5886,251 @@ const QUIZ_BANK = {
         "Uma empresa fornece equipamentos para produção rural e para uso residencial.",
         "Um empresário altera manualmente a alíquota do seu emissor fiscal para a menor taxa possível sem suporte documental."
       ]
-    }
+    },
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “Conforme a disciplina do art. 130 da LC 214/2025, qual é a alíquota efetiva apurada sobre serviços educacionais beneficiados com redução de 60%?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Redução de 60% significa pagar 40% da alíquota de referência: 27,91% × 0,40 = 11,164% (CBS 9,21% × 0,40 = 3,684%; IBS 18,70% × 0,40 = 7,480%).",
+          "A concessão do benefício fiscal é automatizada pela chave do documento eletrônico; a ausência de classificação adequada atrai a tributação à alíquota padrão integral.",
+          "A redução de 30% aplica o fator 0,70 sobre a alíquota base: 20% × 0,70 = 14,00%.",
+          "A LC 214/2025 proíbe o aproveitamento de créditos pelo adquirente em operações sob o regime específico de bares e restaurantes."
+        ],
+        0,
+        "Redução de 60% significa pagar 40% da alíquota de referência: 27,91% × 0,40 = 11,164% (CBS 9,21% × 0,40 = 3,684%; IBS 18,70% × 0,40 = 7,480%)."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que a equipe de planejamento fiscal deve auditar para legitimar a aplicação de reduções setoriais de alíquota?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Os regimes específicos (como combustíveis, serviços financeiros e hotelaria) possuem arquitetura própria fixada em lei complementar, afastando a regra geral de débito e crédito.",
+          "A apuração do imposto é itemizada no documento fiscal eletrônico, aplicando-se a cada produto a regra e alíquota correspondente à sua NCM.",
+          "Redução de 60% significa pagar 40% da alíquota de referência: 27,91% × 0,40 = 11,164% (CBS 9,21% × 0,40 = 3,684%; IBS 18,70% × 0,40 = 7,480%).",
+          "As reduções vinculam-se estritamente à classificação fiscal de NCM/NBS e à natureza do item listado em lei complementar, e não ao CNAE genérico da entidade."
+        ],
+        3,
+        "As reduções vinculam-se estritamente à classificação fiscal de NCM/NBS e à natureza do item listado em lei complementar, e não ao CNAE genérico da entidade."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual distinção jurídica existe entre a Alíquota Zero legal e a Imunidade Constitucional?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A redução de 60% impõe que a alíquota final corresponda a 40% da alíquota aplicável: 20% × 0,40 = 8,00%.",
+          "Desonerações fiscais possuem regras distintas quanto ao direito de manutenção ou dever de estorno de créditos da cadeia anterior, exigindo exame da previsão legal específica.",
+          "Imunidades têm assento constitucional originário; alíquota zero e isenções dependem de disciplina em lei complementar regulamentadora.",
+          "As reduções vinculam-se estritamente à classificação fiscal de NCM/NBS e à natureza do item listado em lei complementar, e não ao CNAE genérico da entidade."
+        ],
+        2,
+        "Imunidades têm assento constitucional originário; alíquota zero e isenções dependem de disciplina em lei complementar regulamentadora."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual procedimento técnico viabiliza o correto enquadramento e comprovação da alíquota reduzida perante o Fisco?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A redução de 30% aplica o fator 0,70 sobre a alíquota base: 20% × 0,70 = 14,00%.",
+          "A concessão do benefício fiscal é automatizada pela chave do documento eletrônico; a ausência de classificação adequada atrai a tributação à alíquota padrão integral.",
+          "A LC 214/2025 proíbe o aproveitamento de créditos pelo adquirente em operações sob o regime específico de bares e restaurantes.",
+          "Imunidades têm assento constitucional originário; alíquota zero e isenções dependem de disciplina em lei complementar regulamentadora."
+        ],
+        1,
+        "A concessão do benefício fiscal é automatizada pela chave do documento eletrônico; a ausência de classificação adequada atrai a tributação à alíquota padrão integral."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “O enquadramento em regime específico de tributação autoriza a aplicação automática das regras gerais de débito e crédito?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Os regimes específicos (como combustíveis, serviços financeiros e hotelaria) possuem arquitetura própria fixada em lei complementar, afastando a regra geral de débito e crédito.",
+          "A apuração do imposto é itemizada no documento fiscal eletrônico, aplicando-se a cada produto a regra e alíquota correspondente à sua NCM.",
+          "Redução de 60% significa pagar 40% da alíquota de referência: 27,91% × 0,40 = 11,164% (CBS 9,21% × 0,40 = 3,684%; IBS 18,70% × 0,40 = 7,480%).",
+          "A concessão do benefício fiscal é automatizada pela chave do documento eletrônico; a ausência de classificação adequada atrai a tributação à alíquota padrão integral."
+        ],
+        0,
+        "Os regimes específicos (como combustíveis, serviços financeiros e hotelaria) possuem arquitetura própria fixada em lei complementar, afastando a regra geral de débito e crédito."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual alíquota efetiva resulta da aplicação da regra de cálculo do benefício?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Desonerações fiscais possuem regras distintas quanto ao direito de manutenção ou dever de estorno de créditos da cadeia anterior, exigindo exame da previsão legal específica.",
+          "As reduções vinculam-se estritamente à classificação fiscal de NCM/NBS e à natureza do item listado em lei complementar, e não ao CNAE genérico da entidade.",
+          "Os regimes específicos (como combustíveis, serviços financeiros e hotelaria) possuem arquitetura própria fixada em lei complementar, afastando a regra geral de débito e crédito.",
+          "A redução de 60% impõe que a alíquota final corresponda a 40% da alíquota aplicável: 20% × 0,40 = 8,00%."
+        ],
+        3,
+        "A redução de 60% impõe que a alíquota final corresponda a 40% da alíquota aplicável: 20% × 0,40 = 8,00%."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “Tomando como base de simulação a alíquota didática de 20%, qual percentual efetivo de IVA incidirá sobre seus honorários?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A LC 214/2025 proíbe o aproveitamento de créditos pelo adquirente em operações sob o regime específico de bares e restaurantes.",
+          "Imunidades têm assento constitucional originário; alíquota zero e isenções dependem de disciplina em lei complementar regulamentadora.",
+          "A redução de 30% aplica o fator 0,70 sobre a alíquota base: 20% × 0,70 = 14,00%.",
+          "A redução de 60% impõe que a alíquota final corresponda a 40% da alíquota aplicável: 20% × 0,40 = 8,00%."
+        ],
+        2,
+        "A redução de 30% aplica o fator 0,70 sobre a alíquota base: 20% × 0,70 = 14,00%."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual procedimento deve ser adotado na parametrização fiscal dos itens da venda?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Redução de 60% significa pagar 40% da alíquota de referência: 27,91% × 0,40 = 11,164% (CBS 9,21% × 0,40 = 3,684%; IBS 18,70% × 0,40 = 7,480%).",
+          "A apuração do imposto é itemizada no documento fiscal eletrônico, aplicando-se a cada produto a regra e alíquota correspondente à sua NCM.",
+          "A concessão do benefício fiscal é automatizada pela chave do documento eletrônico; a ausência de classificação adequada atrai a tributação à alíquota padrão integral.",
+          "A redução de 30% aplica o fator 0,70 sobre a alíquota base: 20% × 0,70 = 14,00%."
+        ],
+        1,
+        "A apuração do imposto é itemizada no documento fiscal eletrônico, aplicando-se a cada produto a regra e alíquota correspondente à sua NCM."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual conclusão jurídica assegura a correta estruturação dos créditos de aquisição?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Desonerações fiscais possuem regras distintas quanto ao direito de manutenção ou dever de estorno de créditos da cadeia anterior, exigindo exame da previsão legal específica.",
+          "As reduções vinculam-se estritamente à classificação fiscal de NCM/NBS e à natureza do item listado em lei complementar, e não ao CNAE genérico da entidade.",
+          "Os regimes específicos (como combustíveis, serviços financeiros e hotelaria) possuem arquitetura própria fixada em lei complementar, afastando a regra geral de débito e crédito.",
+          "A apuração do imposto é itemizada no documento fiscal eletrônico, aplicando-se a cada produto a regra e alíquota correspondente à sua NCM."
+        ],
+        0,
+        "Desonerações fiscais possuem regras distintas quanto ao direito de manutenção ou dever de estorno de créditos da cadeia anterior, exigindo exame da previsão legal específica."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 07, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que a multinacional tomadora deve fazer antes de tentar se creditar dessas notas fiscais?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Imunidades têm assento constitucional originário; alíquota zero e isenções dependem de disciplina em lei complementar regulamentadora.",
+          "A redução de 60% impõe que a alíquota final corresponda a 40% da alíquota aplicável: 20% × 0,40 = 8,00%.",
+          "Desonerações fiscais possuem regras distintas quanto ao direito de manutenção ou dever de estorno de créditos da cadeia anterior, exigindo exame da previsão legal específica.",
+          "A LC 214/2025 proíbe o aproveitamento de créditos pelo adquirente em operações sob o regime específico de bares e restaurantes."
+        ],
+        3,
+        "A LC 214/2025 proíbe o aproveitamento de créditos pelo adquirente em operações sob o regime específico de bares e restaurantes."
+      ]
+    ],
+    "p": [
+      [
+        "Uma clínica médica fatura serviços com o benefício de 60% de desoneração. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A redução de 60% de alíquota significa que o contribuinte aplicará 40% da alíquota de referência aplicável sobre a base da operação.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Trata-se de redução percentual relativa [Alíquota × (1 − 0,60)], e não de decote linear de pontos percentuais."
+      ],
+      [
+        "Um supermercado tenta aplicar a alíquota reduzida da cesta básica a todos os alimentos industrializados do estoque. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Todos os gêneros alimentícios e bebidas comercializados no país usufruem compulsoriamente de alíquota zero de IBS e CBS.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A alíquota zero restringe-se estritamente aos itens essenciais definidos nos anexos da Cesta Básica Nacional de Alimentos."
+      ],
+      [
+        "Uma indústria exportadora vende com alíquota zero e acumula saldos credores de compras de matéria-prima. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Operações desoneradas com alíquota zero exigem análise da previsão legal de manutenção e ressarcimento de créditos da cadeia anterior.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A desoneração na saída pode admitir manutenção de crédito (como nas exportações) ou exigir estorno, conforme determinação legal."
+      ],
+      [
+        "Um software de frente de caixa cadastra itens com a descrição \"medicamento diverso\" sem código NCM. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A simples descrição comercial informal de uma mercadoria no documento fiscal legitima o enquadramento na redução de 60% de alíquota.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A classificação fiscal pela NCM é requisito de validade jurídica para a aplicação do tratamento diferenciado."
+      ],
+      [
+        "A contabilidade analisa operações com derivados de petróleo e serviços financeiros. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Os regimes específicos instituídos pela LC 214/2025 podem estabelecer regras próprias de base, alíquota e apropriação de créditos.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Os regimes específicos afastam o modelo padrão e adotam regras setoriais autorizadas constitucionalmente."
+      ],
+      [
+        "Um laudo de planejamento tributário utiliza a alíquota combinada de 27,91% como hipótese de cálculo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O percentual de 27,91% constitui parâmetro didático de referência, variando a carga real conforme o destino, ano e hipóteses de desoneração.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A alíquota efetiva real depende da ponderação da transição, das leis subnacionais e das reduções aplicáveis."
+      ],
+      [
+        "Em um treinamento prático, simula-se a aplicação da redução de 30% do art. 127 sobre alíquota didática de 20%. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A redução de 30% sobre uma alíquota de 20% resulta na alíquota efetiva de 14%.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "20% × (1 − 0,30) = 20% × 0,70 = 14%."
+      ],
+      [
+        "O instrutor propõe calcular a redução de 60% sobre a alíquota base de 20%. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma redução de 60% aplicada sobre uma alíquota de 20% resulta em alíquota final de 0%.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A alíquota resultante é de 8% (20% × 0,40), e não alíquota zero."
+      ],
+      [
+        "Uma empresa fornece equipamentos para produção rural e para uso residencial. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A destinação do bem e a natureza da operação influenciam decisivamente o direito ao benefício de alíquota reduzida.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Diversos benefícios exigem comprovação de destinação (ex.: insumos agropecuários ou dispositivos de uso médico exclusivo)."
+      ],
+      [
+        "Um empresário altera manualmente a alíquota do seu emissor fiscal para a menor taxa possível sem suporte documental. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A opção pela menor alíquota na emissão fiscal independe de previsão legal expressa e enquadramento cadastral formal.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Benefícios fiscais exigem estrita legalidade; a autotributação incorreta enseja cobrança de diferenças com juros e multas de ofício."
+      ]
+    ]
   },
   "08": {
     "m": [
@@ -2907,6 +6323,250 @@ const QUIZ_BANK = {
         ],
         0,
         "Receitas com tratamentos distintos precisam ser separadas para apuração correta."
+      ]
+    ],
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é a principal característica de um regime específico de IBS/CBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Regimes específicos não podem ser reduzidos a um campo genérico de redução percentual.",
+          "A orientação oficial prevê arquivo consolidado pelo CNPJ raiz.",
+          "A orientação vigente trabalha com entrega consolidada pelo CNPJ raiz.",
+          "Receitas com tratamentos distintos precisam ser separadas para apuração correta."
+        ],
+        0,
+        "Regimes específicos não podem ser reduzidos a um campo genérico de redução percentual."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Para que serve a DeRE?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O enquadramento setorial é anterior ao cálculo.",
+          "O enquadramento setorial deve preceder o cálculo do IBS/CBS.",
+          "Regimes específicos não podem ser reduzidos a um campo genérico de redução percentual.",
+          "A DeRE foi criada para suportar particularidades de setores com bases e deduções específicas."
+        ],
+        3,
+        "A DeRE foi criada para suportar particularidades de setores com bases e deduções específicas."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Na implementação divulgada em 2026, quem está entre os obrigados à DeRE?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Serviços financeiros possuem disciplina própria e não devem ser tratados como operação padrão sem enquadramento.",
+          "Conformidade tecnológica exige acompanhar versões e regras técnicas.",
+          "As FAQs oficiais da Receita listam esses grupos no escopo obrigatório da DeRE.",
+          "A DeRE foi criada para suportar particularidades de setores com bases e deduções específicas."
+        ],
+        2,
+        "As FAQs oficiais da Receita listam esses grupos no escopo obrigatório da DeRE."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como é feita a entrega da DeRE para contribuinte obrigado com matriz e filiais?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A orientação vigente trabalha com entrega consolidada pelo CNPJ raiz.",
+          "A orientação oficial prevê arquivo consolidado pelo CNPJ raiz.",
+          "Receitas com tratamentos distintos precisam ser separadas para apuração correta.",
+          "As FAQs oficiais da Receita listam esses grupos no escopo obrigatório da DeRE."
+        ],
+        1,
+        "A orientação oficial prevê arquivo consolidado pelo CNPJ raiz."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual conduta é mais segura antes de usar uma calculadora padrão de IBS/CBS?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "O enquadramento setorial é anterior ao cálculo.",
+          "O enquadramento setorial deve preceder o cálculo do IBS/CBS.",
+          "Regimes específicos não podem ser reduzidos a um campo genérico de redução percentual.",
+          "A orientação oficial prevê arquivo consolidado pelo CNPJ raiz."
+        ],
+        0,
+        "O enquadramento setorial é anterior ao cálculo."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual é o primeiro passo correto?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Conformidade tecnológica exige acompanhar versões e regras técnicas.",
+          "A DeRE foi criada para suportar particularidades de setores com bases e deduções específicas.",
+          "O enquadramento setorial é anterior ao cálculo.",
+          "Serviços financeiros possuem disciplina própria e não devem ser tratados como operação padrão sem enquadramento."
+        ],
+        3,
+        "Serviços financeiros possuem disciplina própria e não devem ser tratados como operação padrão sem enquadramento."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como os dados devem ser organizados segundo a orientação atual?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Receitas com tratamentos distintos precisam ser separadas para apuração correta.",
+          "As FAQs oficiais da Receita listam esses grupos no escopo obrigatório da DeRE.",
+          "A orientação vigente trabalha com entrega consolidada pelo CNPJ raiz.",
+          "Serviços financeiros possuem disciplina própria e não devem ser tratados como operação padrão sem enquadramento."
+        ],
+        2,
+        "A orientação vigente trabalha com entrega consolidada pelo CNPJ raiz."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual risco existe?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Regimes específicos não podem ser reduzidos a um campo genérico de redução percentual.",
+          "O enquadramento setorial deve preceder o cálculo do IBS/CBS.",
+          "A orientação oficial prevê arquivo consolidado pelo CNPJ raiz.",
+          "A orientação vigente trabalha com entrega consolidada pelo CNPJ raiz."
+        ],
+        1,
+        "O enquadramento setorial deve preceder o cálculo do IBS/CBS."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “O que o escritório deve fazer?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Conformidade tecnológica exige acompanhar versões e regras técnicas.",
+          "A DeRE foi criada para suportar particularidades de setores com bases e deduções específicas.",
+          "O enquadramento setorial é anterior ao cálculo.",
+          "O enquadramento setorial deve preceder o cálculo do IBS/CBS."
+        ],
+        0,
+        "Conformidade tecnológica exige acompanhar versões e regras técnicas."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 08, a equipe precisa justificar tecnicamente a conclusão para a questão: “Como tratar?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "As FAQs oficiais da Receita listam esses grupos no escopo obrigatório da DeRE.",
+          "Serviços financeiros possuem disciplina própria e não devem ser tratados como operação padrão sem enquadramento.",
+          "Conformidade tecnológica exige acompanhar versões e regras técnicas.",
+          "Receitas com tratamentos distintos precisam ser separadas para apuração correta."
+        ],
+        3,
+        "Receitas com tratamentos distintos precisam ser separadas para apuração correta."
+      ]
+    ],
+    "p": [
+      [
+        "O analista compara redução de alíquota e regime específico. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Regime diferenciado e regime específico são necessariamente a mesma coisa.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O primeiro pode preservar a estrutura geral com tratamento reduzido; o específico pode alterar a própria mecânica de apuração."
+      ],
+      [
+        "A equipe fiscal de um banco revisa as receitas e as deduções próprias da atividade financeira antes da apuração. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Serviços financeiros podem possuir base e deduções próprias.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A LC 214 contém disciplina específica para o setor."
+      ],
+      [
+        "Uma operação imobiliária entra no planejamento. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Bens imóveis possuem tratamento setorial próprio na Reforma.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A lei prevê regime específico e obrigações relacionadas."
+      ],
+      [
+        "O cadastro contém combustíveis sujeitos a tratamento específico. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Combustíveis podem estar sujeitos a tributação monofásica.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Há regime específico para determinadas operações com combustíveis."
+      ],
+      [
+        "O sistema de uma empresa recebe eventos da DeRE e a equipe precisa conferir sua utilização na apuração dos tributos. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A DeRE alimenta a apuração assistida.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Os dados declarados são usados pelo motor de cálculo dos novos tributos."
+      ],
+      [
+        "A empresa possui também receitas fora do regime específico. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A DeRE elimina toda e qualquer emissão de documento fiscal para qualquer receita do contribuinte.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Receitas fora do regime específico e obrigações de outros tributos podem continuar exigindo documentos."
+      ],
+      [
+        "A matriz de uma empresa com várias filiais prepara o arquivo da DeRE e confere quais dados estão consolidados. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A entrega da DeRE é, segundo a orientação atual, consolidada pelo CNPJ raiz.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A matriz agrega os dados das filiais abrangidas."
+      ],
+      [
+        "O usuário tenta resolver um regime específico com apenas um percentual de redução. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma redução genérica de alíquota é suficiente para representar qualquer regime específico.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Muitos regimes alteram base, deduções, documentos e créditos."
+      ],
+      [
+        "A área fiscal cruza DeRE e apuração assistida. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A documentação oficial da DeRE relaciona seus dados à operacionalização do cashback.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A DeRE integra o ecossistema de apuração e informações usado nesses processos."
+      ],
+      [
+        "A equipe fiscal recebe a notícia de uma nova versão do leiaute publicada pela Receita e revisa a configuração do sistema. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Antes de parametrizar um cliente de regime específico, é dispensável conferir o leiaute vigente.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Leiautes e regras técnicas são parte essencial da conformidade."
       ]
     ]
   },
@@ -3101,6 +6761,250 @@ const QUIZ_BANK = {
         ],
         0,
         "Regimes territoriais e aduaneiros especiais devem ser enquadrados antes do cálculo."
+      ]
+    ],
+    "i": [
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Na importação de bens materiais, a base do IBS/CBS pode incluir:”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A LC 214/2025 estabelece uma base própria para importações, formada pelo valor aduaneiro acrescido das parcelas legalmente previstas.",
+          "A LC 214/2025 preserva tratamentos próprios para a ZFM e exige análise do enquadramento concreto.",
+          "Tratamentos suspensivos ou desonerados dependem do cumprimento das condições legais.",
+          "Regimes territoriais e aduaneiros especiais devem ser enquadrados antes do cálculo."
+        ],
+        0,
+        "A LC 214/2025 estabelece uma base própria para importações, formada pelo valor aduaneiro acrescido das parcelas legalmente previstas."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Em regra, as alíquotas de IBS/CBS na importação de um bem material:”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A Receita adaptou a Duimp para suportar os novos tributos e informações necessárias à tributação no destino.",
+          "O regime da ZFM contém condições e mecanismos próprios.",
+          "A LC 214/2025 estabelece uma base própria para importações, formada pelo valor aduaneiro acrescido das parcelas legalmente previstas.",
+          "A lei busca neutralidade entre o produto importado e o equivalente adquirido internamente, ressalvados tratamentos específicos."
+        ],
+        3,
+        "A lei busca neutralidade entre o produto importado e o equivalente adquirido internamente, ressalvados tratamentos específicos."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual afirmação descreve melhor o tratamento das exportações?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A base da importação pode incluir outras parcelas além do valor comercial.",
+          "A Reforma reforça a tributação no destino e a Duimp foi adaptada para registrar dados necessários ao cálculo.",
+          "A desoneração das exportações convive com requisitos de comprovação, documentação e controle de créditos.",
+          "A lei busca neutralidade entre o produto importado e o equivalente adquirido internamente, ressalvados tratamentos específicos."
+        ],
+        2,
+        "A desoneração das exportações convive com requisitos de comprovação, documentação e controle de créditos."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que uma operação com Zona Franca de Manaus não deve ser calculada automaticamente pela regra doméstica padrão?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Tratamentos suspensivos ou desonerados dependem do cumprimento das condições legais.",
+          "A LC 214/2025 preserva tratamentos próprios para a ZFM e exige análise do enquadramento concreto.",
+          "Regimes territoriais e aduaneiros especiais devem ser enquadrados antes do cálculo.",
+          "A desoneração das exportações convive com requisitos de comprovação, documentação e controle de créditos."
+        ],
+        1,
+        "A LC 214/2025 preserva tratamentos próprios para a ZFM e exige análise do enquadramento concreto."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual informação ganhou relevância na Duimp adaptada à Reforma?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A Receita adaptou a Duimp para suportar os novos tributos e informações necessárias à tributação no destino.",
+          "O regime da ZFM contém condições e mecanismos próprios.",
+          "A LC 214/2025 estabelece uma base própria para importações, formada pelo valor aduaneiro acrescido das parcelas legalmente previstas.",
+          "A LC 214/2025 preserva tratamentos próprios para a ZFM e exige análise do enquadramento concreto."
+        ],
+        0,
+        "A Receita adaptou a Duimp para suportar os novos tributos e informações necessárias à tributação no destino."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual revisão é necessária?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A Reforma reforça a tributação no destino e a Duimp foi adaptada para registrar dados necessários ao cálculo.",
+          "A lei busca neutralidade entre o produto importado e o equivalente adquirido internamente, ressalvados tratamentos específicos.",
+          "A Receita adaptou a Duimp para suportar os novos tributos e informações necessárias à tributação no destino.",
+          "A base da importação pode incluir outras parcelas além do valor comercial."
+        ],
+        3,
+        "A base da importação pode incluir outras parcelas além do valor comercial."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual cuidado é essencial?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "Regimes territoriais e aduaneiros especiais devem ser enquadrados antes do cálculo.",
+          "A desoneração das exportações convive com requisitos de comprovação, documentação e controle de créditos.",
+          "Tratamentos suspensivos ou desonerados dependem do cumprimento das condições legais.",
+          "A base da importação pode incluir outras parcelas além do valor comercial."
+        ],
+        2,
+        "Tratamentos suspensivos ou desonerados dependem do cumprimento das condições legais."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual procedimento deve anteceder o cálculo?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A LC 214/2025 estabelece uma base própria para importações, formada pelo valor aduaneiro acrescido das parcelas legalmente previstas.",
+          "O regime da ZFM contém condições e mecanismos próprios.",
+          "A LC 214/2025 preserva tratamentos próprios para a ZFM e exige análise do enquadramento concreto.",
+          "Tratamentos suspensivos ou desonerados dependem do cumprimento das condições legais."
+        ],
+        1,
+        "O regime da ZFM contém condições e mecanismos próprios."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Por que isso importa?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A Reforma reforça a tributação no destino e a Duimp foi adaptada para registrar dados necessários ao cálculo.",
+          "A lei busca neutralidade entre o produto importado e o equivalente adquirido internamente, ressalvados tratamentos específicos.",
+          "A Receita adaptou a Duimp para suportar os novos tributos e informações necessárias à tributação no destino.",
+          "O regime da ZFM contém condições e mecanismos próprios."
+        ],
+        0,
+        "A Reforma reforça a tributação no destino e a Duimp foi adaptada para registrar dados necessários ao cálculo."
+      ],
+      [
+        "Em uma revisão de conhecimento do Módulo 09, a equipe precisa justificar tecnicamente a conclusão para a questão: “Qual resposta técnica é adequada?”. O objetivo é identificar o fundamento que sustenta a resposta correta, e não apenas memorizar o gabarito.",
+        "Qual justificativa técnica sustenta melhor a conclusão correta nesse caso?",
+        [
+          "A desoneração das exportações convive com requisitos de comprovação, documentação e controle de créditos.",
+          "A base da importação pode incluir outras parcelas além do valor comercial.",
+          "A Reforma reforça a tributação no destino e a Duimp foi adaptada para registrar dados necessários ao cálculo.",
+          "Regimes territoriais e aduaneiros especiais devem ser enquadrados antes do cálculo."
+        ],
+        3,
+        "Regimes territoriais e aduaneiros especiais devem ser enquadrados antes do cálculo."
+      ]
+    ],
+    "p": [
+      [
+        "Um escritório contábil revisa os documentos e a base de cálculo de uma operação de importação realizada por seu cliente. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Importação de bens materiais possui regras próprias de base de cálculo na LC 214/2025.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A lei disciplina local, base, alíquota e sujeitos da importação."
+      ],
+      [
+        "O cliente considera somente o valor aduaneiro. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O valor aduaneiro é sempre a única parcela da base do IBS/CBS na importação.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A base pode incorporar outros tributos e encargos previstos em lei."
+      ],
+      [
+        "A equipe compara o produto importado ao equivalente nacional. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A alíquota da importação pode depender do tratamento do bem equivalente no mercado interno.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "Essa é a lógica geral prevista na lei."
+      ],
+      [
+        "O exportador não consegue comprovar uma operação. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Exportações devem ser analisadas sem qualquer documento aduaneiro.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "A comprovação é relevante para a aplicação dos tratamentos legais."
+      ],
+      [
+        "Há mercadoria destinada diretamente à exportação. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Em hipóteses de fornecimento com fim específico de exportação, podem existir suspensões condicionadas.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A LC 214 prevê hipóteses específicas com requisitos."
+      ],
+      [
+        "Uma operação envolve empresa habilitada na ZFM. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Toda operação com a Zona Franca de Manaus recebe o mesmo benefício.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O tratamento depende de bem, operação, habilitação e condições."
+      ],
+      [
+        "O cliente assume que qualquer bem recebe o mesmo incentivo. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A ZFM pode envolver créditos presumidos e alíquota zero em situações previstas em lei.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A legislação contém diferentes mecanismos de preservação do regime."
+      ],
+      [
+        "O cadastro mantém IPI zerado para todos os produtos sem exceção. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “O IPI é necessariamente zerado para qualquer produto, sem exceção ligada à ZFM.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "Há hipóteses residuais voltadas à preservação da competitividade da ZFM."
+      ],
+      [
+        "O ERP de uma empresa importadora passa a receber novos campos da Duimp e a equipe confere os dados de cada item. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “A Duimp faz parte da adaptação tecnológica do comércio exterior à Reforma.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        0,
+        "A Receita incorporou novos campos e cálculo por item."
+      ],
+      [
+        "O usuário tenta simular uma ZPE como operação doméstica comum. Antes de concluir o procedimento, a equipe registra a seguinte premissa: “Uma empresa deve aplicar a calculadora padrão antes de verificar se a operação está em ZFM, ALC ou ZPE.”",
+        "Qual decisão é tecnicamente mais adequada antes de usar essa premissa no procedimento?",
+        [
+          "Aceitar a premissa como compatível com a regra estudada.",
+          "Rejeitar a premissa como incompatível com a regra estudada.",
+          "Ignorar a premissa porque ela não interfere em nenhuma análise tributária.",
+          "Aplicar a premissa somente quando os percentuais didáticos do JAGUAR RT coincidirem com o caso real."
+        ],
+        1,
+        "O enquadramento especial deve ser validado antes do cálculo."
       ]
     ]
   }
