@@ -38,12 +38,23 @@ function saveNavigation(patch){
   localStorage.setItem(NAVIGATION_KEY,JSON.stringify({...current,...patch,updatedAt:new Date().toISOString()}));
  }catch(e){}
 }
+function animateHomeEntrance(){
+ const home=$('home');
+ if(!home||!home.classList.contains('active')||$('siteShell')?.hidden)return;
+ const elements=home.querySelectorAll('.hero-copy > *, .home-progress-panel, .home-search, .transition-home');
+ elements.forEach(el=>el.getAnimations().forEach(animation=>animation.cancel()));
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ elements.forEach((el,index)=>el.animate(
+  [{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],
+  {duration:480,delay:Math.min(index*45,315),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}
+ ));
+}
 function go(id,options={}){
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  $(id)?.classList.add('active');
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='modules') renderModuleGrid();
- if(id==='home'){renderHomeResume();renderHomeDashboard();}
+ if(id==='home'){renderHomeResume();renderHomeDashboard();animateHomeEntrance();}
  if(options.persist!==false)saveNavigation({view:id});
  if(options.scroll!==false)window.scrollTo({top:0,behavior:options.instant?'auto':'smooth'});
 }
