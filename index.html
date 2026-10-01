@@ -760,6 +760,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
 .auth-loading-card{display:flex;flex-direction:column;align-items:center;gap:8px;color:#111}.auth-loading-card .mark{margin-bottom:7px}.auth-loading-card b{font-size:13px;letter-spacing:.08em}.auth-loading-card span{font-size:11px;color:#777}
 
+
+/* ===== TESTES · HUB 2026-10 ===== */
+.quiz-hub-head{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:24px}
+.quiz-hub-head .page-title{margin:6px 0 8px}.quiz-hub-head .page-lead{max-width:690px;margin:0}
+.quiz-format{display:grid;grid-template-columns:repeat(3,1fr);min-width:330px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}
+.quiz-format>div{padding:15px 16px;border-left:1px solid var(--line)}.quiz-format>div:first-child{border-left:0}
+.quiz-format b,.quiz-format small{display:block}.quiz-format b{font-size:22px;letter-spacing:-.03em}.quiz-format small{font-size:9px;color:#777;margin-top:3px}
+.quiz-workspace{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.75fr);gap:12px;max-width:1020px;align-items:stretch}
+.quiz-start-card,.quiz-performance-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px}
+.quiz-start-card{min-height:300px;display:flex;flex-direction:column}.quiz-card-head{display:flex;justify-content:space-between;align-items:center}.quiz-card-head>span:last-child{font-size:10px;color:#999;font-weight:900}
+.quiz-start-card h2{font-size:27px;letter-spacing:-.035em;margin:26px 0 6px}.quiz-start-card>p{margin:0 0 24px;color:#666;font-size:12px;line-height:1.6}
+.quiz-start-card label{display:block;font-size:10px;font-weight:900;letter-spacing:.05em;margin-bottom:7px}.quiz-start-card select{width:100%;border:1px solid var(--line);border-radius:11px;padding:13px 14px;background:#fafafa;font:inherit}
+.quiz-start-button{margin-top:10px;width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left}
+.quiz-side{display:grid;gap:12px}.quiz-performance-card{min-height:166px}.quiz-stats{margin:18px 0 0;max-width:none}
+.quiz-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.quiz-stat-grid>div{background:#f3f3ef;border-radius:11px;padding:12px 10px}
+.quiz-stat-grid small,.quiz-stat-grid b{display:block}.quiz-stat-grid small{font-size:7px;letter-spacing:.08em;color:#888;font-weight:900}.quiz-stat-grid b{font-size:20px;margin-top:5px;letter-spacing:-.03em}
+.quiz-stat-empty{padding:12px 0;color:#666;font-size:11px;line-height:1.55}.quiz-stat-empty b{display:block;color:#111;font-size:14px;margin-bottom:4px}
+.quiz-resume{margin:0;max-width:none}.quiz-resume:empty{display:none}.quiz-resume button{height:100%;min-height:122px;background:#111;color:#fff;border:1px solid #111;border-radius:20px;padding:20px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between}
+.quiz-resume button small,.quiz-resume button b,.quiz-resume button span{display:block}.quiz-resume button small{font-size:8px;color:#aaa;letter-spacing:.1em}.quiz-resume button b{font-size:16px;line-height:1.3;margin:8px 0}.quiz-resume button span{font-size:10px;color:#ccc}
+.quiz-pool-note{max-width:1020px;margin-top:12px;border:1px solid var(--line);border-radius:13px;background:#fff;color:#666;font-size:11px;line-height:1.55}
+.quiz-pool-note summary{cursor:pointer;padding:13px 15px;font-weight:800;color:#444}.quiz-pool-note p{margin:0;padding:0 15px 15px}
+@media(max-width:800px){.quiz-hub-head{display:block}.quiz-format{min-width:0;margin-top:16px}.quiz-workspace{grid-template-columns:1fr}.quiz-side{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.quiz-format{grid-template-columns:1fr 1fr 1fr}.quiz-format>div{padding:12px 9px}.quiz-format b{font-size:18px}.quiz-format small{font-size:7px}.quiz-side{grid-template-columns:1fr}.quiz-start-card,.quiz-performance-card{padding:17px}.quiz-start-card{min-height:0}.quiz-start-card h2{font-size:22px;margin-top:20px}}
+
 </style>
 <script>
 (async()=>{
@@ -883,16 +907,42 @@ try{
 <section id="modulePage" class="view"></section>
 
 <section id="quiz" class="view">
- <div class="section-head"><div><span class="eyebrow">TESTE SEU CONHECIMENTO</span><h2>Escolha o que estudar</h2></div><p>10 perguntas por teste · correção comentada.</p></div>
- <p class="page-lead quiz-lead">Cada teste combina cinco casos práticos e cinco questões de interpretação. Você pode refazer exatamente as mesmas perguntas ou gerar uma nova seleção, priorizando as questões ainda não respondidas.</p>
- <div class="quiz-picker">
-  <label for="quizModule">Conteúdo do teste</label>
-  <select id="quizModule"><option value="all">Todos os módulos · 10 perguntas mistas</option></select>
-  <button class="quiz-primary" type="button" onclick="startQuiz(false)">Começar teste →</button>
+ <div class="quiz-hub-head">
+  <div>
+   <span class="eyebrow">TESTE SEU CONHECIMENTO</span>
+   <h1 class="page-title">Testes</h1>
+   <p class="page-lead">Escolha um módulo ou faça uma revisão geral. Cada teste tem correção comentada e novas perguntas podem ser geradas a cada tentativa.</p>
+  </div>
+  <div class="quiz-format" aria-label="Formato do teste">
+   <div><b>10</b><small>questões</small></div>
+   <div><b>5</b><small>casos práticos</small></div>
+   <div><b>5</b><small>interpretação</small></div>
+  </div>
  </div>
- <div id="quizStats" class="quiz-stats"></div>
- <div id="quizResume" class="quiz-resume"></div>
- <div class="quiz-pool-note">Banco de 320 questões: 20 por módulo. O teste geral traz 10 módulos distintos por rodada e alterna os módulos nas próximas tentativas. Quando acabar as perguntas inéditas, o sistema volta a trazer questões anteriores para revisão. Seu histórico fica salvo neste navegador.</div>
+
+ <div class="quiz-workspace">
+  <article class="quiz-start-card">
+   <div class="quiz-card-head"><span class="eyebrow">NOVO TESTE</span><span>01</span></div>
+   <h2>O que você quer revisar?</h2>
+   <p>Escolha um módulo específico ou misture conteúdos de toda a trilha.</p>
+   <label for="quizModule">Conteúdo do teste</label>
+   <select id="quizModule"><option value="all">Todos os módulos · 10 perguntas mistas</option></select>
+   <button class="quiz-primary quiz-start-button" type="button" onclick="startQuiz(false)">Começar teste <b>→</b></button>
+  </article>
+
+  <aside class="quiz-side">
+   <section class="quiz-performance-card">
+    <div class="quiz-card-head"><span class="eyebrow">SEU DESEMPENHO</span><span>02</span></div>
+    <div id="quizStats" class="quiz-stats"></div>
+   </section>
+   <div id="quizResume" class="quiz-resume"></div>
+  </aside>
+ </div>
+
+ <details class="quiz-pool-note">
+  <summary>Como as perguntas são escolhidas?</summary>
+  <p>O banco tem 320 questões, 20 por módulo. O teste geral mistura 10 módulos distintos por rodada e prioriza questões ainda não respondidas. Depois, questões anteriores voltam para revisão. Seu histórico fica salvo na sua conta.</p>
+ </details>
 </section>
 
 <section id="quizPage" class="view" aria-live="polite"></section>
@@ -1333,7 +1383,7 @@ try{
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20261001-02" defer></script>
+<script src="app-v2.js?v=20261001-03" defer></script>
 <script src="account.js?v=20260930-90" defer></script>
 </body>
 </html>
