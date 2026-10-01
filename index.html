@@ -775,7 +775,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
   }catch(e){}
 })();
 </script>
-<link rel="stylesheet" href="account.css?v=20260930-90">
+<link rel="stylesheet" href="account.css?v=20261001-91">
 <style>
 /* Paint the saved session's page before the background session check completes. */
 html.has-saved-session #siteShell[hidden]{display:block!important}
@@ -792,7 +792,17 @@ try{
 </head>
 <body>
 
-<section id="loginGate" class="login-gate"><form id="loginForm" class="login-card"><div class="mark">J</div><small>JAGUAR RT</small><h1>Seu espaço de estudo</h1><p>Acesse com seu e-mail Jaguar para acompanhar sua evolução.</p><label for="loginEmail">E-mail corporativo</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="nome@jaguarcontabil.com.br"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required><button id="loginSubmit" type="submit">Entrar →</button><p id="loginError" class="account-error" role="alert"></p><small>Acesso exclusivo aos colaboradores. Seu progresso e resultados ficam associados ao e-mail informado e disponíveis ao administrador.</small></form></section>
+<section id="loginGate" class="login-gate">
+ <form id="loginForm" class="login-card">
+  <div class="login-brand"><div class="mark">J</div><div><b>JAGUAR RT</b><small>Reforma Tributária</small></div></div>
+  <div class="login-intro"><span class="login-eyebrow">ACESSO INTERNO</span><h1>Seu espaço de estudo</h1><p>Entre para estudar e acompanhar seu progresso.</p></div>
+  <label for="loginEmail">E-mail corporativo</label><input id="loginEmail" type="email" autocomplete="username" required placeholder="nome@jaguarcontabil.com.br">
+  <label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Digite sua senha">
+  <button id="loginSubmit" type="submit">Entrar <span aria-hidden="true">→</span></button>
+  <p id="loginError" class="account-error" role="alert"></p>
+  <div class="login-note"><span class="login-note-icon" aria-hidden="true">◇</span><small>Exclusivo para colaboradores Jaguar. Seu progresso e resultados ficam disponíveis ao administrador.</small></div>
+ </form>
+</section>
 <div id="siteShell" hidden inert>
 <p id="sessionNotice" class="session-notice" role="status" hidden></p>
 <a class="skip-link" href="#mainContent">Pular para o conteúdo</a>
