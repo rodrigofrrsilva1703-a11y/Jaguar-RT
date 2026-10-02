@@ -266,6 +266,26 @@ const MODULE_VISUAL_GUIDE={
  '16':{focus:['Diagnóstico','Automação','Plano de ação'],flow:['Entender o cliente','Simular cenários','Orientar próximos passos']}
 };
 
+const MODULE_VISUAL_HELP={
+ '01':{help:'Pense no IVA como uma cadeia: cada empresa observa o imposto da venda e os créditos permitidos da etapa anterior. O ponto central não é decorar siglas, mas entender a lógica do valor adicionado.',question:'Pergunta-guia: o que pertence à CBS, o que pertence ao IBS e em que momento o crédito reduz o valor a recolher?'},
+ '02':{help:'Antes de pensar em alíquota, descubra onde a operação é considerada consumida. O destino é a informação que organiza o raciocínio deste módulo.',question:'Pergunta-guia: quem é o destinatário e qual local deve ser considerado para a operação?'},
+ '03':{help:'Separe três momentos: contratação, pagamento e fornecimento. Eles podem acontecer em datas diferentes, e isso muda a análise do momento do débito e das antecipações.',question:'Pergunta-guia: houve pagamento antes do fornecimento ou a operação só se completou na entrega?'},
+ '04':{help:'Comece pelo valor da operação e só depois aplique os tributos. O cálculo “por fora” precisa ficar visualmente separado do preço para você enxergar a base e o imposto.',question:'Pergunta-guia: qual é a base líquida e quais tributos devem ser acrescentados fora dela?'},
+ '05':{help:'Crédito e custo efetivo precisam ser analisados juntos. Um preço de compra menor nem sempre representa menor custo econômico se a operação gerar menos crédito.',question:'Pergunta-guia: quanto custa a compra depois dos créditos que realmente podem ser aproveitados?'},
+ '06':{help:'Saldo credor, ressarcimento, restituição e cashback não são a mesma coisa. Primeiro identifique de onde veio o crédito e depois qual mecanismo legal pode ser usado.',question:'Pergunta-guia: existe crédito acumulado da empresa ou devolução destinada ao consumidor?'},
+ '07':{help:'Não aplique uma redução apenas porque o cliente pertence a determinado setor. Identifique primeiro a operação e confirme qual tratamento diferenciado alcança aquela situação.',question:'Pergunta-guia: a redução vale para este bem, serviço e operação específicos?'},
+ '08':{help:'Regime específico significa que a regra geral pode não explicar toda a apuração. O primeiro passo é reconhecer o setor e depois seguir a obrigação própria, inclusive a DeRE quando aplicável.',question:'Pergunta-guia: esta operação está na regra geral ou possui forma própria de apuração e declaração?'},
+ '09':{help:'No comércio exterior, origem, destino e tipo de operação mudam completamente a leitura. Separe importação, exportação e áreas incentivadas antes de calcular qualquer efeito.',question:'Pergunta-guia: é entrada do exterior, saída para o exterior ou operação com tratamento territorial específico?'},
+ '10':{help:'Não tente decorar todos os anos isoladamente. Enxergue a transição como uma linha do tempo em que tributos antigos perdem espaço enquanto CBS e IBS ganham participação.',question:'Pergunta-guia: em qual ano está a operação e quais parcelas do sistema antigo e novo convivem naquele período?'},
+ '11':{help:'No Simples, a decisão não deve olhar apenas o DAS. Em operações B2B, também importa entender como a forma de recolhimento afeta os créditos ao longo da cadeia.',question:'Pergunta-guia: a empresa vende principalmente para consumidor final ou para clientes que valorizam crédito?'},
+ '12':{help:'Lucro Presumido e Lucro Real continuam sendo regimes da renda. Para estudar a Reforma, separe IRPJ/CSLL da tributação do consumo e analise IBS/CBS em outra camada.',question:'Pergunta-guia: qual parte da análise é renda e qual parte é tributação sobre o consumo?'},
+ '13':{help:'Preço não deve ser recalculado olhando apenas a nova alíquota. Refaça a ponte entre custo de compra, créditos, tributos da saída e margem desejada.',question:'Pergunta-guia: depois dos créditos e tributos, a margem econômica continua a mesma?'},
+ '14':{help:'A qualidade da apuração depende da qualidade do cadastro e do documento fiscal. Erros de classificação entram no sistema antes mesmo do cálculo do imposto.',question:'Pergunta-guia: cadastro, natureza da operação e documento fiscal estão coerentes antes da apuração assistida?'},
+ '15':{help:'Split payment muda o fluxo financeiro. Para entender o efeito, acompanhe o dinheiro desde o pagamento do cliente até a segregação do tributo e a conciliação contábil.',question:'Pergunta-guia: quanto entra livremente no caixa e quanto é segregado no fluxo de pagamento?'},
+ '16':{help:'A consultoria começa pelo diagnóstico, não pela resposta pronta. Primeiro entenda o perfil do cliente, depois simule cenários e só então organize o plano de ação.',question:'Pergunta-guia: qual problema do cliente estamos tentando resolver e quais premissas sustentam a simulação?'}
+};
+
+
 function courseClip(value,max=175){
  const clean=String(value||'').replace(/\s+/g,' ').trim();
  if(clean.length<=max)return clean;
@@ -298,6 +318,12 @@ function regimeSummaryFromBlock(block,label){
  if(!line)return '';
  return courseFirstSentence(line.replace(/^[-*•]\s*/,'').replace(new RegExp('^'+label+'\\s*:\\s*','i'),''),125);
 }
+function moduleHelpFooter(m){
+ const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Use o quadro como apoio e volte ao texto para aprofundar a regra.'};
+ const mistake=MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.';
+ return '<div class="lesson-help-grid"><div class="lesson-help-main"><small>AJUDA PARA ENTENDER</small><p>'+courseEscape(h.help)+'</p><b>'+courseEscape(h.question)+'</b></div><div class="lesson-help-alert"><small>ATENÇÃO</small><p>'+courseEscape(mistake)+'</p></div></div>';
+}
+
 function moduleBlockVisualHtml(m,b,index){
  const guide=MODULE_VISUAL_GUIDE[m.id]||{focus:[m.title],flow:['Entenda','Aplique','Revise']};
  const kind=String(b.k||'').toUpperCase();
@@ -305,12 +331,12 @@ function moduleBlockVisualHtml(m,b,index){
  if(/PRÓXIMA ETAPA/.test(kind)||/Próximo passo/i.test(title)) return '';
 
  if(index===0){
-  return '<figure class="lesson-inline-visual lesson-visual-focus" aria-label="Pontos-chave desta etapa"><span class="lesson-visual-label">EM UMA OLHADA</span><div class="lesson-visual-focus-list">'+guide.focus.map((x,i)=>'<div><small>0'+(i+1)+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></figure>';
+  return '<figure class="lesson-inline-visual lesson-visual-focus" aria-label="Pontos-chave desta etapa"><div class="lesson-visual-head"><span class="lesson-visual-label">MAPA DO MÓDULO</span><b>Antes de continuar, fixe estas três ideias</b></div><div class="lesson-visual-focus-list">'+guide.focus.map((x,i)=>'<div><small>0'+(i+1)+'</small><b>'+courseEscape(x)+'</b><span>'+courseEscape(['Conceito central','Como a regra se organiza','O que muda na análise'][i]||'Ponto-chave')+'</span></div>').join('')+'</div>'+moduleHelpFooter(m)+'</figure>';
  }
 
  if(/COMPARATIVO/.test(kind)){
   const compare=compareFromBlock(b);
-  return '<figure class="lesson-inline-visual lesson-visual-compare" aria-label="Comparação visual"><span class="lesson-visual-label">ANTES × AGORA</span><div class="lesson-compare-mini"><div><small>ANTES</small><p>'+courseEscape(compare.before)+'</p></div><div class="after"><small>AGORA</small><p>'+courseEscape(compare.after||m.subtitle)+'</p></div></div></figure>';
+  return '<figure class="lesson-inline-visual lesson-visual-compare" aria-label="Comparação visual"><div class="lesson-visual-head"><span class="lesson-visual-label">ANTES × AGORA</span><b>Use a comparação para enxergar o que realmente mudou</b></div><div class="lesson-compare-mini"><div><small>ANTES</small><p>'+courseEscape(compare.before)+'</p></div><div class="after"><small>AGORA</small><p>'+courseEscape(compare.after||m.subtitle)+'</p></div></div>'+moduleHelpFooter(m)+'</figure>';
  }
 
  if(/REGIMES/.test(kind)||/afeta cada regime/i.test(title)){
@@ -320,17 +346,17 @@ function moduleBlockVisualHtml(m,b,index){
    ['Real',regimeSummaryFromBlock(b,'Lucro Real')]
   ].filter(x=>x[1]);
   if(rows.length){
-   return '<figure class="lesson-inline-visual lesson-visual-regimes" aria-label="Regimes em foco"><span class="lesson-visual-label">REGIMES EM FOCO</span><div class="lesson-regime-list">'+rows.map(x=>'<div><b>'+courseEscape(x[0])+'</b><span>'+courseEscape(x[1])+'</span></div>').join('')+'</div></figure>';
+   return '<figure class="lesson-inline-visual lesson-visual-regimes" aria-label="Regimes em foco"><div class="lesson-visual-head"><span class="lesson-visual-label">REGIMES EM FOCO</span><b>Compare o efeito sem misturar as regras de cada regime</b></div><div class="lesson-regime-list">'+rows.map(x=>'<div><b>'+courseEscape(x[0])+'</b><span>'+courseEscape(x[1])+'</span></div>').join('')+'</div>'+moduleHelpFooter(m)+'</figure>';
   }
  }
 
  if(/EXEMPLO|NUMÉRICO|CASO PRÁTICO/.test(kind+' '+title)){
   const points=examplePointsFromBlock(b);
-  return '<figure class="lesson-inline-visual lesson-visual-example" aria-label="Exemplo resumido"><span class="lesson-visual-label">EXEMPLO EM ETAPAS</span><div class="lesson-example-list">'+points.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></figure>';
+  return '<figure class="lesson-inline-visual lesson-visual-example" aria-label="Exemplo resumido"><div class="lesson-visual-head"><span class="lesson-visual-label">EXEMPLO EM ETAPAS</span><b>Acompanhe a conta na mesma ordem em que ela deve ser analisada</b></div><div class="lesson-example-list">'+points.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div>'+moduleHelpFooter(m)+'</figure>';
  }
 
  if(/PROCESSO|CRONOGRAMA|INTEGRAÇÃO|CONFORMIDADE/.test(kind)){
-  return '<figure class="lesson-inline-visual lesson-visual-flow" aria-label="Fluxo resumido"><span class="lesson-visual-label">FLUXO DA IDEIA</span><div class="lesson-flow-mini">'+guide.flow.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('<i>→</i>')+'</div></figure>';
+  return '<figure class="lesson-inline-visual lesson-visual-flow" aria-label="Fluxo resumido"><div class="lesson-visual-head"><span class="lesson-visual-label">FLUXO DA IDEIA</span><b>Leia da esquerda para a direita e acompanhe a sequência</b></div><div class="lesson-flow-mini">'+guide.flow.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('<i>→</i>')+'</div>'+moduleHelpFooter(m)+'</figure>';
  }
 
  return '';
