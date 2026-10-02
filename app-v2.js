@@ -320,7 +320,8 @@ function regimeSummaryFromBlock(block,label){
 }
 function moduleHelpFooter(m){
  const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Volte ao texto para aprofundar a regra.'};
- const question=String(h.question||'').replace(/^Pergunta-guia:\s*/i,'');
+ const rawQuestion=String(h.question||'').replace(/^Pergunta-guia:\s*/i,'');
+ const question=rawQuestion.charAt(0).toUpperCase()+rawQuestion.slice(1);
  const mistake=MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.';
  return '<figcaption class="lesson-takeaway"><span>PARA FIXAR</span><p>'+courseEscape(question)+'</p></figcaption>'+
   '<details class="lesson-context"><summary>Entenda o raciocínio e o cuidado principal</summary><div><p>'+courseEscape(h.help)+'</p><p class="lesson-context-caution"><b>Evite este erro</b>'+courseEscape(mistake)+'</p></div></details>';
@@ -334,7 +335,7 @@ function moduleBlockVisualHtml(m,b,index){
 
  if(index===0){
   return '<figure class="lesson-story lesson-story-focus" aria-label="Mapa visual do módulo">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">VISÃO DO MÓDULO</span><h3>Três ideias para guardar</h3></div><p>Entenda a ideia, conecte os conceitos e aplique na análise.</p></div>'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">MAPA DO MÓDULO '+courseEscape(m.id)+'</span><h3>'+courseEscape(guide.focus[0])+' na prática</h3></div><p>Entenda a ideia, conecte os conceitos e aplique na análise.</p></div>'+
    '<div class="lesson-concept-route">'+guide.focus.map((x,i)=>'<div class="lesson-concept-step"><span class="lesson-concept-no">'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['ENTENDA','CONECTE','APLIQUE'][i]||'FIXE')+'</small><b>'+courseEscape(x)+'</b></div></div>').join('')+'</div>'+
    moduleHelpFooter(m)+
   '</figure>';
