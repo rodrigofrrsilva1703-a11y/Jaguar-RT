@@ -409,7 +409,7 @@ function renderHome(){
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
- $('timeline').innerHTML=Object.keys(TIMELINE).map(y=>{const info=timelineInfo(y);return `<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" data-tip="${courseEscape(info.short)}" aria-label="${y}: ${courseEscape(info.short)}" aria-pressed="false"><b>${y}</b><small>${courseEscape(info.phase)}</small></button>`;}).join('');
+ $('timeline').innerHTML=Object.keys(TIMELINE).map(y=>{const info=timelineInfo(y);return `<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" aria-label="${y}: ${courseEscape(info.short)}" aria-pressed="false"><b>${y}</b><small>${courseEscape(info.phase)}</small></button>`;}).join('');
  pickYear('2027');
 }
 
@@ -877,24 +877,17 @@ function pickYear(y){
 
  $('timelinePanel').innerHTML=
   '<div class="transition-selected">'+
-   '<small>ANO SELECIONADO</small>'+
    '<strong>'+courseEscape(y)+'</strong>'+
    '<span>'+courseEscape(info.phase)+'</span>'+
-   '<em>Etapa '+(idx+1)+' de '+years.length+'</em>'+
   '</div>'+
   '<div class="transition-summary">'+
-   '<div class="transition-summary-top"><span class="transition-stage">'+courseEscape(info.stage)+'</span><h3>'+courseEscape(info.short)+'</h3><p>'+courseEscape(o.text)+'</p></div>'+
+   '<div class="transition-summary-top"><h3>'+courseEscape(info.short)+'</h3><p>'+courseEscape(o.text)+'</p><span class="transition-stage">'+courseEscape(info.stage)+'</span></div>'+
    '<div class="transition-facts">'+
-    '<div><small>NOVO MODELO</small><b>'+courseEscape(info.newModel)+'</b></div>'+
-    '<div><small>SISTEMA ANTERIOR</small><b>'+courseEscape(info.oldModel)+'</b></div>'+
-    '<div class="transition-focus"><small>FOCO PRÁTICO</small><b>'+courseEscape(info.focus)+'</b></div>'+
+    '<div><small>O QUE MUDA</small><b>'+courseEscape(info.newModel)+' · '+courseEscape(info.oldModel)+'</b></div>'+
+    '<div class="transition-focus"><small>ATENÇÃO PRÁTICA</small><b>'+courseEscape(info.focus)+'</b></div>'+
    '</div>'+
-   (Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">10%, 20%, 30% e 40% indicam a proporção da transição para o IBS — não a alíquota final do tributo.</small>':'')+
-   '<div class="transition-panel-actions">'+
-    '<button type="button" onclick="moveYear(-1)" '+(idx===0?'disabled':'')+'>← Anterior</button>'+
-    '<div class="transition-action-links"><button type="button" class="transition-study" onclick="openModule(\'10\')">Estudar Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>'+
-    '<button type="button" onclick="moveYear(1)" '+(idx===years.length-1?'disabled':'')+'>Próximo →</button>'+
-   '</div>'+
+   (Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">A proporção indicada representa a transição para o IBS, não a alíquota final.</small>':'')+
+   '<div class="transition-panel-actions"><div class="transition-action-links"><button type="button" class="transition-study" onclick="openModule(\'10\')">Ver Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div></div>'+
   '</div>';
 
  const activeNode=document.querySelector('#home .year.active');
