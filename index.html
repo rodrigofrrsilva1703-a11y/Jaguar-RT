@@ -811,6 +811,202 @@ html.has-saved-session #loginGate{display:none!important}
 
 
 
+/* ===== HOME · TRANSIÇÃO 2026–2033 · REVISÃO 2026-10-02 ===== */
+#home .interactive-transition{
+  margin-top:28px;
+  padding:27px;
+  border:1px solid #deded9;
+  border-radius:22px;
+  background:#fff;
+  box-shadow:0 12px 34px rgba(0,0,0,.035);
+}
+#home .transition-home-head{
+  display:grid;
+  grid-template-columns:minmax(0,1.45fr) minmax(220px,.55fr);
+  gap:30px;
+  align-items:end;
+  padding-bottom:22px;
+  border-bottom:1px solid #e3e3de;
+}
+#home .transition-home-head .eyebrow{display:block;margin-bottom:8px;color:#777;font-size:9px;letter-spacing:.14em}
+#home .transition-home-head h2{margin:0;max-width:720px;font-size:clamp(27px,3vw,39px);line-height:1.08;letter-spacing:-.035em}
+#home .transition-home-head p{max-width:680px;margin:11px 0 0;color:#62625c;font-size:13px;line-height:1.62}
+#home .transition-home-stat{padding-left:22px;border-left:1px solid #deded9}
+#home .transition-home-stat small,#home .transition-home-stat b,#home .transition-home-stat span{display:block}
+#home .transition-home-stat small{color:#85857f;font-size:8px;font-weight:900;letter-spacing:.13em}
+#home .transition-home-stat b{margin-top:5px;font-size:27px;letter-spacing:-.04em}
+#home .transition-home-stat span{margin-top:5px;color:#777;font-size:10px;line-height:1.45}
+
+#home .transition-phases{
+  display:grid;
+  grid-template-columns:.72fr 1.05fr 1.45fr .78fr;
+  margin:19px 0 15px;
+  border:1px solid #deded9;
+  border-radius:13px;
+  overflow:hidden;
+  background:#f5f5f2;
+}
+#home .transition-phases>div{padding:13px 15px;background:#fff}
+#home .transition-phases>div+div{border-left:1px solid #deded9}
+#home .transition-phases b,#home .transition-phases span{display:block}
+#home .transition-phases b{font-size:12px;color:#111}
+#home .transition-phases span{margin-top:3px;color:#74746f;font-size:9px}
+
+#home .transition-progress-new{height:5px;margin:0 3px;background:#ecece7;border-radius:999px;overflow:hidden}
+#home .transition-progress-new span{display:block;width:14.285%;height:100%;background:#111;border-radius:999px;transition:width .3s ease}
+#home .transition-progress-caption{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:6px 2px 15px;color:#969690;font-size:8px}
+#home .transition-progress-caption b{color:#555;font-size:9px;text-align:center}
+#home .transition-progress-caption span:last-child{text-align:right}
+
+#home .interactive-transition .timeline{
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:7px;
+  margin-bottom:10px;
+}
+#home .interactive-transition .year{
+  position:relative;
+  min-width:0;
+  min-height:62px;
+  padding:10px 9px;
+  border:1px solid #dfdfda;
+  border-radius:11px;
+  background:#fafaf8;
+  color:#111;
+  text-align:left;
+  transition:background .16s,border-color .16s,transform .16s;
+}
+#home .interactive-transition .year:before{
+  content:"";
+  position:absolute;
+  left:10px;
+  top:0;
+  width:0;
+  height:3px;
+  border-radius:0 0 3px 3px;
+  background:#111;
+  transition:width .18s ease;
+}
+#home .interactive-transition .year b{display:block;font-size:17px;line-height:1.1}
+#home .interactive-transition .year small{display:block;margin-top:6px;color:#72726c;font-size:8px;line-height:1.25}
+#home .interactive-transition .year:hover{transform:translateY(-2px);border-color:#aaa}
+#home .interactive-transition .year.active{border-color:#111;background:#111;color:#fff}
+#home .interactive-transition .year.active:before{width:28px;background:#fff}
+#home .interactive-transition .year.active small{color:#c8c8c2}
+
+#home .interactive-transition .timeline-panel{
+  display:grid;
+  grid-template-columns:180px minmax(0,1fr);
+  min-height:0;
+  margin-top:0;
+  padding:0;
+  overflow:hidden;
+  border:1px solid #deded9;
+  border-radius:16px;
+  background:#fff;
+}
+#home .transition-selected{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:22px;
+  background:#111;
+  color:#fff;
+}
+#home .transition-selected small{color:#999;font-size:7px;font-weight:900;letter-spacing:.13em}
+#home .transition-selected strong{margin-top:8px;font-size:47px;line-height:.95;letter-spacing:-.065em}
+#home .transition-selected span{margin-top:10px;color:#d0d0cb;font-size:11px;line-height:1.35}
+#home .transition-selected em{margin-top:18px;color:#8e8e89;font-size:8px;font-style:normal}
+
+#home .transition-summary{padding:21px 23px 17px;min-width:0}
+#home .transition-summary-top{max-width:920px}
+#home .transition-stage{
+  display:inline-flex;
+  padding:5px 7px;
+  border-radius:999px;
+  background:#eeeeea;
+  color:#62625d;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.12em;
+}
+#home .transition-summary h3{margin:8px 0 5px;font-size:20px;line-height:1.2;letter-spacing:-.025em}
+#home .transition-summary-top>p{margin:0;color:#595954;font-size:11.5px;line-height:1.58}
+
+#home .transition-facts{
+  display:grid;
+  grid-template-columns:1fr 1fr 1.15fr;
+  margin-top:16px;
+  border:1px solid #e0e0db;
+  border-radius:11px;
+  overflow:hidden;
+  background:#f5f5f2;
+}
+#home .transition-facts>div{min-width:0;padding:12px 13px;background:#fff}
+#home .transition-facts>div+div{border-left:1px solid #e0e0db}
+#home .transition-facts small,#home .transition-facts b{display:block}
+#home .transition-facts small{color:#8a8a84;font-size:7px;font-weight:900;letter-spacing:.12em}
+#home .transition-facts b{margin-top:5px;color:#222;font-size:10.5px;line-height:1.42}
+#home .transition-facts .transition-focus{background:#f3f3ef}
+#home .transition-caveat{display:block;margin-top:10px;color:#777;font-size:9px;line-height:1.45}
+
+#home .transition-panel-actions{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:10px;
+  align-items:center;
+  margin-top:14px;
+  padding-top:13px;
+  border-top:1px solid #e5e5e0;
+}
+#home .transition-panel-actions>button,
+#home .transition-action-links button{
+  border:1px solid #d6d6d1;
+  border-radius:8px;
+  background:#fff;
+  color:#111;
+  padding:7px 10px;
+  font-size:9px;
+  font-weight:850;
+}
+#home .transition-panel-actions>button:hover:not(:disabled),
+#home .transition-action-links button:hover{background:#111;color:#fff}
+#home .transition-panel-actions button:disabled{opacity:.32;cursor:default}
+#home .transition-action-links{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+#home .transition-action-links .transition-study{background:#111;color:#fff;border-color:#111}
+#home .transition-action-links .transition-study:hover{background:#333}
+#home .transition-action-links a{color:#666;font-size:9px;font-weight:800;text-decoration:underline;text-underline-offset:2px}
+
+@media(max-width:920px){
+ #home .transition-home-head{grid-template-columns:1fr;gap:16px}
+ #home .transition-home-stat{padding:14px 0 0;border-left:0;border-top:1px solid #deded9}
+ #home .transition-phases{grid-template-columns:repeat(4,minmax(130px,1fr));overflow-x:auto}
+ #home .interactive-transition .timeline{display:flex;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x proximity}
+ #home .interactive-transition .year{flex:0 0 104px;scroll-snap-align:start}
+ #home .transition-facts{grid-template-columns:1fr 1fr}
+ #home .transition-facts .transition-focus{grid-column:1/-1;border-left:0;border-top:1px solid #e0e0db}
+}
+@media(max-width:650px){
+ #home .interactive-transition{padding:19px 16px;border-radius:18px}
+ #home .transition-home-head h2{font-size:27px}
+ #home .transition-home-head p{font-size:12px}
+ #home .transition-phases{margin-top:16px}
+ #home .interactive-transition .timeline-panel{grid-template-columns:1fr}
+ #home .transition-selected{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center;padding:16px 18px}
+ #home .transition-selected small{grid-column:1/-1}
+ #home .transition-selected strong{grid-row:2/4;font-size:39px}
+ #home .transition-selected span{margin:0;font-size:10px}
+ #home .transition-selected em{margin:0}
+ #home .transition-summary{padding:18px 16px 15px}
+ #home .transition-facts{grid-template-columns:1fr}
+ #home .transition-facts>div+div,#home .transition-facts .transition-focus{border-left:0;border-top:1px solid #e0e0db}
+ #home .transition-facts .transition-focus{grid-column:auto}
+ #home .transition-panel-actions{grid-template-columns:1fr 1fr}
+ #home .transition-panel-actions>button{width:100%}
+ #home .transition-action-links{grid-column:1/-1;grid-row:2;justify-content:flex-start}
+ #home .transition-action-links .transition-study{flex:1}
+}
+
 /* ===== EXPERIÊNCIAS VISUAIS INTEGRADAS À LEITURA · PADRÃO UNIFICADO ===== */
 .course-main .course-block{overflow:visible}
 .course-main .course-text{max-width:none}
@@ -1025,11 +1221,22 @@ try{
  </div>
 
  <div class="section transition-home interactive-transition">
-  <div class="section-head">
-   <div><span class="eyebrow">LINHA DO TEMPO</span><h2>Transição 2026 → 2033</h2></div>
-   <p>Escolha um ano para ver o principal marco.</p>
+  <div class="transition-home-head">
+   <div><span class="eyebrow">TRANSIÇÃO TRIBUTÁRIA</span><h2>De 2026 a 2033, o sistema muda em quatro fases</h2><p>Veja o que entra, o que permanece e qual deve ser o foco prático em cada etapa da Reforma do consumo.</p></div>
+   <div class="transition-home-stat"><small>PERÍODO COMPLETO</small><b>8 anos</b><span>teste → implantação → convivência → modelo integral</span></div>
   </div>
-  <div id="timeline" class="timeline"></div>
+
+  <div class="transition-phases" aria-label="Fases da transição">
+   <div><b>2026</b><span>Teste</span></div>
+   <div><b>2027–2028</b><span>Implantação inicial</span></div>
+   <div><b>2029–2032</b><span>Convivência</span></div>
+   <div><b>2033</b><span>Modelo integral</span></div>
+  </div>
+
+  <div class="transition-progress-new" aria-hidden="true"><span id="transitionProgressFill"></span></div>
+  <div class="transition-progress-caption"><span>Início</span><b id="transitionProgressLabel">Etapa 2 de 8</b><span>Modelo integral</span></div>
+
+  <div id="timeline" class="timeline" aria-label="Escolha o ano da transição"></div>
   <div id="timelinePanel" class="timeline-panel" aria-live="polite"></div>
  </div>
 </section>
@@ -1521,7 +1728,7 @@ try{
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20261002-03" defer></script>
+<script src="app-v2.js?v=20261002-04" defer></script>
 <script src="account.js?v=20261002-99" defer></script>
 <script>window.JAGUAR_RT_BUILD="20261002-102";</script>
 </body>
