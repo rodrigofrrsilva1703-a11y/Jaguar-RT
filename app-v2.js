@@ -329,7 +329,7 @@ function moduleBlockVisualHtml(m,b,index){
   return '<figure class="lesson-inline-visual lesson-visual-example" aria-label="Exemplo resumido"><span class="lesson-visual-label">EXEMPLO EM ETAPAS</span><div class="lesson-example-list">'+points.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></figure>';
  }
 
- return '<figure class="lesson-inline-visual lesson-visual-flow" aria-label="Mapa da etapa"><span class="lesson-visual-label">MAPA DA IDEIA</span><div class="lesson-flow-mini">'+guide.flow.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('<i>→</i>')+'</div></figure>';
+ return '';
 }
 
 function renderHome(){
