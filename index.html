@@ -811,9 +811,9 @@ html.has-saved-session #loginGate{display:none!important}
 
 
 
-/* ===== HOME · TIMELINE LIGHT 2026–2033 ===== */
+/* ===== HOME · TIMELINE FLUTUANTE 2026–2033 ===== */
 #home .interactive-transition{
-  margin-top:28px;
+  margin-top:30px;
   padding:0;
   border:0;
   background:transparent;
@@ -824,67 +824,69 @@ html.has-saved-session #loginGate{display:none!important}
   align-items:flex-end;
   justify-content:space-between;
   gap:24px;
-  margin-bottom:15px;
+  margin-bottom:20px;
 }
 #home .transition-home-head .eyebrow{
   display:block;
-  margin-bottom:5px;
-  color:#8b8b85;
+  margin-bottom:6px;
+  color:#8a8a84;
   font-size:8px;
   letter-spacing:.14em;
 }
 #home .transition-home-head h2{
   margin:0;
-  font-size:clamp(28px,3vw,38px);
-  line-height:.98;
-  letter-spacing:-.045em;
+  font-size:clamp(30px,3.2vw,42px);
+  line-height:.95;
+  letter-spacing:-.05em;
 }
 #home .transition-home-head p{
   margin:0;
   max-width:430px;
-  color:#74746e;
+  color:#73736d;
   font-size:10px;
   line-height:1.5;
   text-align:right;
 }
 
-#home .transition-light-shell{
+#home .transition-journey{
   position:relative;
-  padding:18px 18px 13px;
-  border:1px solid #e2e2dd;
-  border-radius:16px;
+  min-height:245px;
+  padding:17px 18px 18px;
+  border-top:1px solid #dfdfda;
+  border-bottom:1px solid #dfdfda;
   background:#fff;
 }
-#home .transition-phases{
+#home .transition-phase-guide{
   display:grid;
   grid-template-columns:repeat(8,minmax(0,1fr));
-  margin:0 0 8px;
+  margin-bottom:13px;
 }
-#home .transition-phases span{
-  color:#999993;
-  font-size:6.5px;
-  font-weight:900;
-  letter-spacing:.11em;
+#home .transition-phase-guide span{
+  color:#9a9a94;
+  font-size:7px;
+  font-weight:850;
+  letter-spacing:.08em;
   text-align:center;
 }
-#home .transition-phases .phase-2026{grid-column:1}
-#home .transition-phases .phase-2728{grid-column:2/4}
-#home .transition-phases .phase-2932{grid-column:4/8}
-#home .transition-phases .phase-2033{grid-column:8}
+#home .transition-phase-guide .phase-test{grid-column:1}
+#home .transition-phase-guide .phase-start{grid-column:2/4}
+#home .transition-phase-guide .phase-mix{grid-column:4/8}
+#home .transition-phase-guide .phase-full{grid-column:8}
 
 #home .transition-track-wrap{
   position:relative;
-  padding:0 4px;
+  padding:0 8px;
 }
 #home .transition-track-line{
   position:absolute;
   left:6.25%;
   right:6.25%;
-  top:33px;
+  top:42px;
   height:2px;
-  background:#e1e1dc;
+  background:#e2e2dd;
   border-radius:999px;
   overflow:hidden;
+  pointer-events:none;
 }
 #home .transition-track-line span{
   display:block;
@@ -901,238 +903,189 @@ html.has-saved-session #loginGate{display:none!important}
   grid-template-columns:repeat(8,minmax(0,1fr));
 }
 #home .interactive-transition .year{
-  position:relative;
   display:flex;
   flex-direction:column;
   align-items:center;
   min-width:0;
-  min-height:76px;
-  padding:0 2px;
+  min-height:80px;
+  padding:0;
   border:0;
   background:transparent;
   color:#111;
-  text-align:center;
   cursor:pointer;
 }
 #home .interactive-transition .year b{
   display:block;
-  margin-bottom:11px;
-  color:#676761;
-  font-size:12px;
+  margin-bottom:15px;
+  color:#70706a;
+  font-size:13px;
   line-height:1;
   font-weight:750;
-  transition:color .18s ease,transform .18s ease,font-size .18s ease;
+  transition:color .18s,font-size .18s,transform .18s;
 }
 #home .interactive-transition .year:after{
   content:"";
   display:block;
-  width:11px;
-  height:11px;
+  width:12px;
+  height:12px;
   border:2px solid #aaa9a3;
   border-radius:50%;
   background:#fff;
   box-shadow:0 0 0 5px #fff;
-  transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease;
+  transition:transform .18s,background .18s,border-color .18s,box-shadow .18s;
 }
-#home .interactive-transition .year small{
-  display:block;
-  margin-top:10px;
-  max-width:90px;
-  color:#979791;
-  font-size:7px;
-  line-height:1.18;
-  transition:color .18s ease,opacity .18s ease;
-}
+#home .interactive-transition .year small{display:none}
 #home .interactive-transition .year:hover b{color:#111;transform:translateY(-1px)}
 #home .interactive-transition .year:hover:after{border-color:#111;transform:scale(1.1)}
 #home .interactive-transition .year.active b{
   color:#111;
-  font-size:14px;
+  font-size:16px;
   font-weight:900;
 }
 #home .interactive-transition .year.active:after{
-  width:15px;
-  height:15px;
-  margin-top:-2px;
-  margin-bottom:-2px;
+  width:17px;
+  height:17px;
+  margin-top:-2.5px;
   border-color:#111;
   background:#111;
-  box-shadow:0 0 0 5px #ecece8;
-}
-#home .interactive-transition .year.active small{
-  color:#44443f;
-  font-weight:850;
+  box-shadow:0 0 0 6px #ededE9;
 }
 
-/* detalhe integrado */
-#home .interactive-transition .timeline-panel{
-  display:grid;
-  grid-template-columns:96px minmax(0,1.2fr) minmax(260px,.8fr);
-  gap:0;
-  align-items:stretch;
-  margin-top:9px;
-  border:1px solid #e2e2dd;
-  border-radius:14px;
-  background:#f7f7f4;
-  overflow:hidden;
-}
-#home .transition-selected{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:15px 16px;
-  background:#111;
-  color:#fff;
-}
-#home .transition-selected strong{
-  display:block;
-  font-size:31px;
-  line-height:1;
-  letter-spacing:-.055em;
-}
-#home .transition-selected span{
-  display:block;
-  margin-top:6px;
-  color:#c7c7c2;
-  font-size:8px;
-  line-height:1.25;
-}
-#home .transition-selected em{display:none}
-
-#home .transition-summary{
-  display:contents;
-}
-#home .transition-summary-top{
-  min-width:0;
-  padding:14px 17px;
+/* card flutuante ligado ao ano selecionado */
+#home .transition-popover{
+  --timeline-left:14.285%;
+  --timeline-shift:-50%;
+  position:absolute;
+  left:var(--timeline-left);
+  top:112px;
+  width:min(410px,calc(100% - 34px));
+  transform:translateX(var(--timeline-shift));
+  z-index:4;
+  padding:14px 16px 13px;
+  border:1px solid #deded9;
+  border-radius:13px;
   background:#fff;
+  box-shadow:0 12px 30px rgba(0,0,0,.07);
+  transition:left .32s cubic-bezier(.22,1,.36,1),transform .32s cubic-bezier(.22,1,.36,1);
 }
-#home .transition-stage{
-  display:inline-flex;
-  margin-bottom:6px;
+#home .transition-popover:before{
+  content:"";
+  position:absolute;
+  top:-7px;
+  left:var(--popover-arrow,50%);
+  width:12px;
+  height:12px;
+  border-left:1px solid #deded9;
+  border-top:1px solid #deded9;
+  background:#fff;
+  transform:translateX(-50%) rotate(45deg);
+}
+#home .transition-popover-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:7px;
+}
+#home .transition-popover-head strong{
+  color:#111;
+  font-size:21px;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+#home .transition-popover-head span{
   padding:4px 6px;
   border-radius:999px;
   background:#efefeb;
-  color:#6d6d67;
+  color:#686862;
   font-size:6px;
   font-weight:900;
-  letter-spacing:.1em;
+  letter-spacing:.08em;
 }
-#home .transition-summary-top h3{
+#home .transition-popover h3{
   margin:0;
   color:#222;
-  font-size:15px;
-  line-height:1.2;
+  font-size:14px;
+  line-height:1.25;
   letter-spacing:-.015em;
 }
-#home .transition-summary-top>p{display:none}
-
-#home .transition-facts{
+#home .transition-popover-change,
+#home .transition-popover-focus{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid #e8e8e3;
+}
+#home .transition-popover small{
   display:block;
-  min-width:0;
-  padding:14px 17px;
-  border-left:1px solid #e2e2dd;
-  background:#f7f7f4;
-}
-#home .transition-facts>div{padding:0}
-#home .transition-facts>div+div{
-  margin-top:9px;
-  padding-top:9px;
-  border-top:1px solid #dfdfda;
-}
-#home .transition-facts small,
-#home .transition-facts b{display:block}
-#home .transition-facts small{
-  color:#8f8f89;
-  font-size:6px;
+  color:#999993;
+  font-size:5.5px;
   font-weight:900;
   letter-spacing:.1em;
 }
-#home .transition-facts b{
-  margin-top:4px;
-  color:#33332f;
+#home .transition-popover p{
+  margin:4px 0 0;
+  color:#4f4f4a;
   font-size:8.5px;
-  line-height:1.38;
+  line-height:1.4;
 }
-#home .transition-caveat{
-  grid-column:2/-1;
-  display:block;
-  padding:0 17px 11px;
-  color:#85857f;
-  font-size:7px;
-  line-height:1.35;
-  background:#f7f7f4;
-}
-#home .transition-panel-actions{
-  grid-column:2/-1;
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:9px;
-  padding:0 17px 12px;
-  background:#f7f7f4;
-}
-#home .transition-panel-actions>button{display:none}
-#home .transition-action-links{
+#home .transition-popover-actions{
   display:flex;
   align-items:center;
+  justify-content:space-between;
   gap:10px;
+  margin-top:9px;
 }
-#home .transition-action-links .transition-study{
+#home .transition-popover-actions button{
   border:0;
   border-radius:7px;
   background:#111;
   color:#fff;
-  padding:6px 9px;
+  padding:6px 8px;
   font-size:7px;
   font-weight:850;
 }
-#home .transition-action-links a{
-  color:#73736d;
+#home .transition-popover-actions a{
+  color:#74746e;
   font-size:7px;
   font-weight:800;
   text-decoration:none;
 }
-#home .transition-action-links a:hover{text-decoration:underline}
+#home .transition-popover-actions a:hover{text-decoration:underline}
 
 @media(max-width:920px){
   #home .transition-home-head{display:block}
-  #home .transition-home-head p{margin-top:6px;text-align:left}
-  #home .transition-light-shell{overflow-x:auto;scrollbar-width:thin}
-  #home .transition-phases,#home .transition-track-wrap{width:760px}
+  #home .transition-home-head p{margin-top:7px;text-align:left}
+  #home .transition-journey{
+    min-height:250px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scrollbar-width:thin;
+  }
+  #home .transition-phase-guide,
+  #home .transition-track-wrap{width:760px}
   #home .transition-track-line{left:47.5px;right:47.5px}
   #home .interactive-transition .timeline{grid-template-columns:repeat(8,95px)}
-  #home .interactive-transition .timeline-panel{grid-template-columns:90px 1fr}
-  #home .transition-facts{
-    grid-column:2;
-    border-left:0;
-    border-top:1px solid #e2e2dd;
+  #home .transition-popover{
+    position:sticky;
+    left:14px!important;
+    top:auto;
+    bottom:auto;
+    width:calc(100vw - 58px);
+    max-width:430px;
+    margin:14px 0 2px;
+    transform:none!important;
   }
-  #home .transition-caveat,#home .transition-panel-actions{grid-column:2}
+  #home .transition-popover:before{display:none}
 }
 @media(max-width:650px){
-  #home .transition-home-head{margin-bottom:11px}
-  #home .transition-home-head h2{font-size:28px}
+  #home .interactive-transition{margin-top:24px}
+  #home .transition-home-head{margin-bottom:13px}
+  #home .transition-home-head h2{font-size:30px}
   #home .transition-home-head p{font-size:9px}
-  #home .transition-light-shell{padding:15px 10px 11px;border-radius:14px}
-  #home .interactive-transition .timeline-panel{grid-template-columns:1fr}
-  #home .transition-selected{
-    flex-direction:row;
-    align-items:baseline;
-    gap:10px;
-    padding:10px 13px;
+  #home .transition-journey{padding:15px 12px 14px}
+  #home .transition-popover{
+    width:calc(100vw - 50px);
+    padding:12px 13px;
   }
-  #home .transition-selected strong{font-size:27px}
-  #home .transition-selected span{margin-top:0}
-  #home .transition-summary-top,
-  #home .transition-facts,
-  #home .transition-caveat,
-  #home .transition-panel-actions{grid-column:1}
-  #home .transition-facts{
-    border-left:0;
-    border-top:1px solid #e2e2dd;
-  }
-  #home .transition-panel-actions{justify-content:flex-start}
 }
 
 /* ===== EXPERIÊNCIAS VISUAIS INTEGRADAS À LEITURA · PADRÃO UNIFICADO ===== */
@@ -1350,24 +1303,28 @@ try{
 
  <div class="section transition-home interactive-transition">
   <div class="transition-home-head">
-   <div><span class="eyebrow">TRANSIÇÃO TRIBUTÁRIA</span><h2>2026 → 2033</h2></div>
-   <p>Uma visão rápida de como o sistema atual dá lugar ao novo modelo.</p>
+   <div>
+    <span class="eyebrow">TRANSIÇÃO TRIBUTÁRIA</span>
+    <h2>2026 → 2033</h2>
+   </div>
+   <p>Clique em um ano e acompanhe a passagem do sistema atual para o novo modelo.</p>
   </div>
 
-  <div class="transition-light-shell">
-   <div class="transition-phases" aria-hidden="true">
-    <span class="phase-2026">TESTE</span>
-    <span class="phase-2728">IMPLANTAÇÃO</span>
-    <span class="phase-2932">CONVIVÊNCIA</span>
-    <span class="phase-2033">INTEGRAL</span>
+  <div class="transition-journey">
+   <div class="transition-phase-guide" aria-hidden="true">
+    <span class="phase-test">Teste</span>
+    <span class="phase-start">Implantação</span>
+    <span class="phase-mix">Convivência</span>
+    <span class="phase-full">Integral</span>
    </div>
+
    <div class="transition-track-wrap">
     <div class="transition-track-line" aria-hidden="true"><span id="transitionLineFill"></span></div>
     <div id="timeline" class="timeline" aria-label="Escolha o ano da transição"></div>
    </div>
-  </div>
 
-  <div id="timelinePanel" class="timeline-panel" aria-live="polite"></div>
+   <div id="timelinePanel" class="transition-popover" aria-live="polite"></div>
+  </div>
  </div>
 </section>
 
@@ -1858,7 +1815,7 @@ try{
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20261002-10" defer></script>
+<script src="app-v2.js?v=20261002-11" defer></script>
 <script src="account.js?v=20261002-99" defer></script>
 <script>window.JAGUAR_RT_BUILD="20261002-102";</script>
 </body>
