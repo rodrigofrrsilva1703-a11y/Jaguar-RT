@@ -893,8 +893,10 @@ function pickYear(y){
   '</aside>';
 
  const activeNode=document.querySelector('#home .year.active');
- if(activeNode&&window.matchMedia('(max-width:920px)').matches){
-  activeNode.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+ const timelineScroller=document.querySelector('#home .rt-timeline-scroll');
+ if(activeNode&&timelineScroller&&window.matchMedia('(max-width:920px)').matches){
+  const targetLeft=activeNode.offsetLeft-(timelineScroller.clientWidth-activeNode.offsetWidth)/2;
+  timelineScroller.scrollTo({left:Math.max(0,targetLeft),behavior:'smooth'});
  }
  if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   const panel=$('timelinePanel');
