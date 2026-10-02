@@ -217,6 +217,7 @@ function courseText(value){
 }
 
 
+
 const MODULE_VISUAL_GUIDE={
  '01':{focus:['IVA Dual','CBS + IBS','Neutralidade'],flow:['Sistema fragmentado','IVA Dual','Valor adicionado']},
  '02':{focus:['Destino','Local da operação','IBS'],flow:['Fornecedor','Destino do consumo','Arrecadação']},
@@ -236,66 +237,71 @@ const MODULE_VISUAL_GUIDE={
  '16':{focus:['Diagnóstico','Automação','Plano de ação'],flow:['Entender o cliente','Simular cenários','Orientar próximos passos']}
 };
 
-function courseClip(value,max=180){
+function courseClip(value,max=175){
  const clean=String(value||'').replace(/\s+/g,' ').trim();
  if(clean.length<=max)return clean;
  const cut=clean.slice(0,max);
  const stop=Math.max(cut.lastIndexOf('.'),cut.lastIndexOf(';'));
  return (stop>max*.55?cut.slice(0,stop+1):cut.replace(/\s+\S*$/,'')+'…');
 }
-function courseFirstSentence(value,max=190){
+function courseFirstSentence(value,max=175){
  const clean=String(value||'').replace(/\s+/g,' ').trim();
- const m=clean.match(/^(.{30,220}?[.!?])(?:\s|$)/);
+ const m=clean.match(/^(.{25,210}?[.!?])(?:\s|$)/);
  return courseClip(m?m[1]:clean,max);
 }
-function moduleCompareParts(m){
- const block=m.blocks.find(b=>String(b.k||'').toUpperCase().includes('COMPARATIVO'))||m.blocks[1]||m.blocks[0];
+function compareFromBlock(block){
  const text=String(block?.x||'');
  const nowAt=text.indexOf('COMO É AGORA');
- if(nowAt<0)return {before:courseFirstSentence(text),after:courseFirstSentence(m.subtitle)};
- const beforeRaw=text.slice(0,nowAt).replace(/^COMO ERA ANTES[^\n]*/,'').trim();
- const afterRaw=text.slice(nowAt).replace(/^COMO É AGORA[^\n]*/,'').trim();
- return {before:courseFirstSentence(beforeRaw),after:courseFirstSentence(afterRaw)};
+ if(nowAt<0)return {before:courseFirstSentence(text),after:''};
+ return {
+  before:courseFirstSentence(text.slice(0,nowAt).replace(/^COMO ERA ANTES[^\n]*/,'').trim()),
+  after:courseFirstSentence(text.slice(nowAt).replace(/^COMO É AGORA[^\n]*/,'').trim())
+ };
 }
-function moduleExamplePoints(m){
- const block=m.blocks.find(b=>/EXEMPLO|NUMÉRICO/i.test(String(b.k||'')+' '+String(b.t||'')))||m.blocks[Math.max(0,m.blocks.length-2)]||m.blocks[0];
+function examplePointsFromBlock(block){
  const lines=String(block?.x||'').split('\n').map(x=>x.replace(/^[-*•]\s*/,'').trim()).filter(Boolean);
- const selected=lines.filter(x=>/R\\$|%|Etapa|Fase|Ano|→|=>/.test(x)).slice(0,4);
- return (selected.length>=2?selected:lines.slice(0,4)).map(x=>courseClip(x,115));
+ const selected=lines.filter(x=>/R\$|%|Etapa|Fase|Ano|→|=>|Total|Crédito|Débito|Base/i.test(x)).slice(0,4);
+ return (selected.length>=2?selected:lines.slice(0,4)).map(x=>courseClip(x,105));
 }
-function moduleVisualSlides(m){
+function regimeSummaryFromBlock(block,label){
+ const lines=String(block?.x||'').split('\n').map(x=>x.trim()).filter(Boolean);
+ const line=lines.find(x=>new RegExp('^[-*•]?\\s*'+label,'i').test(x));
+ if(!line)return '';
+ return courseFirstSentence(line.replace(/^[-*•]\s*/,'').replace(new RegExp('^'+label+'\\s*:\\s*','i'),''),125);
+}
+function moduleBlockVisualHtml(m,b,index){
  const guide=MODULE_VISUAL_GUIDE[m.id]||{focus:[m.title],flow:['Entenda','Aplique','Revise']};
- const compare=moduleCompareParts(m);
- const example=moduleExamplePoints(m);
- return [
-  {type:'intro',eyebrow:'VISÃO RÁPIDA',title:'O que você vai entender',focus:guide.focus,body:courseClip(m.subtitle,190)},
-  {type:'compare',eyebrow:'ANTES × AGORA',title:'A mudança central',leftTitle:'ANTES',left:compare.before,rightTitle:'AGORA',right:compare.after},
-  {type:'flow',eyebrow:'MAPA VISUAL',title:'A lógica em três passos',flow:guide.flow},
-  {type:'example',eyebrow:'EXEMPLO-CHAVE',title:'Veja a regra aplicada',points:example},
-  {type:'summary',eyebrow:'ANTES DE CONTINUAR',title:'O que guardar',focus:guide.focus,body:MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.'}
- ];
+ const kind=String(b.k||'').toUpperCase();
+ const title=String(b.t||'');
+ if(/PRÓXIMA ETAPA/.test(kind)||/Próximo passo/i.test(title)) return '';
+
+ if(index===0){
+  return '<aside class="lesson-visual lesson-visual-focus" aria-label="Pontos-chave desta etapa"><span class="lesson-visual-label">EM UMA OLHADA</span><div class="lesson-visual-focus-list">'+guide.focus.map((x,i)=>'<div><small>0'+(i+1)+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></aside>';
+ }
+
+ if(/COMPARATIVO/.test(kind)){
+  const compare=compareFromBlock(b);
+  return '<aside class="lesson-visual lesson-visual-compare" aria-label="Comparação visual"><span class="lesson-visual-label">ANTES × AGORA</span><div class="lesson-compare-mini"><div><small>ANTES</small><p>'+courseEscape(compare.before)+'</p></div><div class="after"><small>AGORA</small><p>'+courseEscape(compare.after||m.subtitle)+'</p></div></div></aside>';
+ }
+
+ if(/REGIMES/.test(kind)||/afeta cada regime/i.test(title)){
+  const rows=[
+   ['Simples',regimeSummaryFromBlock(b,'Simples Nacional')],
+   ['Presumido',regimeSummaryFromBlock(b,'Lucro Presumido')],
+   ['Real',regimeSummaryFromBlock(b,'Lucro Real')]
+  ].filter(x=>x[1]);
+  if(rows.length){
+   return '<aside class="lesson-visual lesson-visual-regimes" aria-label="Regimes em foco"><span class="lesson-visual-label">REGIMES EM FOCO</span><div class="lesson-regime-list">'+rows.map(x=>'<div><b>'+courseEscape(x[0])+'</b><span>'+courseEscape(x[1])+'</span></div>').join('')+'</div></aside>';
+  }
+ }
+
+ if(/EXEMPLO|NUMÉRICO/.test(kind+' '+title)){
+  const points=examplePointsFromBlock(b);
+  return '<aside class="lesson-visual lesson-visual-example" aria-label="Exemplo resumido"><span class="lesson-visual-label">EXEMPLO EM ETAPAS</span><div class="lesson-example-list">'+points.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></aside>';
+ }
+
+ return '<aside class="lesson-visual lesson-visual-flow" aria-label="Mapa da etapa"><span class="lesson-visual-label">MAPA DA IDEIA</span><div class="lesson-flow-mini">'+guide.flow.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('<i>→</i>')+'</div></aside>';
 }
-function moduleVisualSlideCard(slide,index){
- if(slide.type==='intro')return '<article class="module-visual-slide visual-intro" data-module-slide="'+index+'" '+(index?'hidden':'')+'><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2><p>'+courseEscape(slide.body)+'</p></div><div class="visual-focus">'+slide.focus.map((x,i)=>'<div><small>0'+(i+1)+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></article>';
- if(slide.type==='compare')return '<article class="module-visual-slide visual-compare" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-compare-grid"><div><small>'+courseEscape(slide.leftTitle)+'</small><p>'+courseEscape(slide.left)+'</p></div><div class="after"><small>'+courseEscape(slide.rightTitle)+'</small><p>'+courseEscape(slide.right)+'</p></div></div></article>';
- if(slide.type==='flow')return '<article class="module-visual-slide visual-flow" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-flowline">'+slide.flow.map((x,i)=>'<div><span>'+String(i+1).padStart(2,'0')+'</span><b>'+courseEscape(x)+'</b></div>'+(i<slide.flow.length-1?'<i>→</i>':'')).join('')+'</div></article>';
- if(slide.type==='example')return '<article class="module-visual-slide visual-example" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-example-grid">'+slide.points.map((x,i)=>'<div><small>PASSO '+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></article>';
- return '<article class="module-visual-slide visual-summary" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-summary-grid"><div class="visual-takeaways">'+slide.focus.map(x=>'<span>✓ '+courseEscape(x)+'</span>').join('')+'</div><div class="visual-warning"><small>EVITE ESTE ERRO</small><b>'+courseEscape(slide.body)+'</b></div></div></article>';
-}
-function moduleVisualDeckHtml(m){
- const slides=moduleVisualSlides(m);
- return '<section class="module-visual-deck" aria-label="Resumo visual do módulo"><div class="module-visual-head"><div><span class="eyebrow">RESUMO VISUAL</span><b>Entenda antes de aprofundar</b></div><span id="moduleVisualCounter">1 / '+slides.length+'</span></div><div class="module-visual-stage">'+slides.map(moduleVisualSlideCard).join('')+'</div><div class="module-visual-controls"><button type="button" id="moduleVisualPrev" onclick="moveModuleVisualSlide(-1)" aria-label="Slide anterior">←</button><div class="module-visual-dots">'+slides.map((_,i)=>'<button type="button" data-module-visual-dot="'+i+'" onclick="setModuleVisualSlide('+i+')" aria-label="Ir para slide '+(i+1)+'"></button>').join('')+'</div><button type="button" id="moduleVisualNext" onclick="moveModuleVisualSlide(1)" aria-label="Próximo slide">→</button></div></section>';
-}
-let activeModuleVisualSlide=0;
-function setModuleVisualSlide(index,scroll=false){
- const slides=[...document.querySelectorAll('#modulePage [data-module-slide]')];if(!slides.length)return;
- const next=(Number(index)+slides.length)%slides.length;activeModuleVisualSlide=next;
- slides.forEach((slide,i)=>slide.hidden=i!==next);
- document.querySelectorAll('#modulePage [data-module-visual-dot]').forEach((dot,i)=>{dot.classList.toggle('active',i===next);dot.setAttribute('aria-current',i===next?'true':'false');});
- if($('moduleVisualCounter'))$('moduleVisualCounter').textContent=(next+1)+' / '+slides.length;
- if(scroll)document.querySelector('#modulePage .module-visual-deck')?.scrollIntoView({behavior:'smooth',block:'center'});
-}
-function moveModuleVisualSlide(direction){setModuleVisualSlide(activeModuleVisualSlide+direction);}
 
 function renderHome(){
  renderHomeResume();
@@ -569,12 +575,12 @@ function openModule(id){
   courseAllVisible=false;
   const blocks=m.blocks.map((b,i)=>`<section class="lesson-block course-block" id="course-${m.id}-${i+1}">
    <div class="lesson-top"><span class="step-no">${String(i+1).padStart(2,'0')}</span><span class="tag">${courseEscape(b.k)}</span></div>
-   <h2>${courseEscape(b.t)}</h2><div class="course-text">${courseText(b.x)}</div>
+   <h2>${courseEscape(b.t)}</h2>
+   <div class="course-reading-layout ${moduleBlockVisualHtml(m,b,i)?'has-visual':''}"><div class="course-text">${courseText(b.x)}</div>${moduleBlockVisualHtml(m,b,i)}</div>
   </section>`).join('');
   $('modulePage').innerHTML=`
    <button class="back" onclick="go('modules')">← Todos os estudos</button>
    <header class="course-hero"><span class="module-no">MÓDULO ${m.id} DE ${STUDY_MODULES.length}</span><h1 class="page-title">${courseEscape(m.title)}</h1><p class="page-lead">${courseEscape(m.subtitle)}</p><div class="course-hero-progress"><strong id="courseProgressLabel"></strong><span class="study-progress-track"><i id="courseProgressFill"></i></span></div></header>
-   ${moduleVisualDeckHtml(m)}
    <div class="course-note"><b>Premissas dos exemplos</b><p>Os valores de CBS 9,21% e IBS 18,70% são parâmetros didáticos deste curso. A alíquota efetiva e os créditos dependem do ano, do destino, do regime, da operação e dos requisitos legais. Confira as regras vigentes antes de aplicar um exemplo a uma empresa.</p></div>
    <div class="course-layout"><nav class="course-toc" aria-label="Etapas da aula"><div class="course-toc-head"><b>Nesta aula</b><span>${m.blocks.length} etapas</span></div>${m.blocks.map((b,i)=>`<button type="button" data-course-step="${i}" onclick="showCourseStep(${i})"><span class="course-step-number">${String(i+1).padStart(2,'0')}</span><span>${courseEscape(b.t)}</span><span class="course-step-check" aria-hidden="true">✓</span></button>`).join('')}<button type="button" class="course-view-all" id="courseViewAll" onclick="toggleCourseView()">Ver aula inteira</button></nav><div class="course-main"><div class="course-stage-label" id="courseStageLabel"></div><div class="lesson-stack">${blocks}</div><div class="course-controls"><button type="button" id="coursePrev" onclick="moveCourseStep(-1)">← Etapa anterior</button><button type="button" class="course-next" id="courseNext" onclick="moveCourseStep(1)">Próxima etapa →</button></div></div></div>
    ${moduleSummaryHtml(m,index)}
@@ -582,7 +588,6 @@ function openModule(id){
    <div class="course-quiz-callout"><div><b>Concluiu a leitura?</b><span>Confira o que aprendeu em 10 perguntas deste módulo.</span></div><button class="quiz-primary" onclick="startModuleQuiz('${m.id}')">Fazer teste do módulo ${m.id} →</button></div>
    <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
   go('modulePage',{instant:true});
-  setModuleVisualSlide(0,false);
   showCourseStep(progress.step,false);
   requestAnimationFrame(()=>{
    const target=document.querySelector('#modulePage .course-block:not([hidden])');
