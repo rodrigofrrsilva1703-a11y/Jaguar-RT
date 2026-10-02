@@ -881,13 +881,13 @@ function pickYear(y){
    '<span>'+courseEscape(info.phase)+'</span>'+
   '</div>'+
   '<div class="transition-summary">'+
-   '<div class="transition-summary-top"><h3>'+courseEscape(info.short)+'</h3><p>'+courseEscape(o.text)+'</p><span class="transition-stage">'+courseEscape(info.stage)+'</span></div>'+
+   '<div class="transition-summary-top"><span class="transition-stage">'+courseEscape(info.stage)+'</span><h3>'+courseEscape(info.short)+'</h3><p>'+courseEscape(o.text)+'</p></div>'+
    '<div class="transition-facts">'+
     '<div><small>O QUE MUDA</small><b>'+courseEscape(info.newModel)+' · '+courseEscape(info.oldModel)+'</b></div>'+
-    '<div class="transition-focus"><small>ATENÇÃO PRÁTICA</small><b>'+courseEscape(info.focus)+'</b></div>'+
+    '<div><small>FOCO PRÁTICO</small><b>'+courseEscape(info.focus)+'</b></div>'+
    '</div>'+
    (Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">A proporção indicada representa a transição para o IBS, não a alíquota final.</small>':'')+
-   '<div class="transition-panel-actions"><div class="transition-action-links"><button type="button" class="transition-study" onclick="openModule(\'10\')">Ver Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div></div>'+
+   '<div class="transition-panel-actions"><div class="transition-action-links"><button type="button" class="transition-study" onclick="openModule(\'10\')">Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div></div>'+
   '</div>';
 
  const activeNode=document.querySelector('#home .year.active');
