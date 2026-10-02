@@ -811,95 +811,332 @@ html.has-saved-session #loginGate{display:none!important}
 
 
 
-/* ===== HOME · LINHA DO TEMPO INTERATIVA 2026–2033 ===== */
-#home .interactive-transition{margin-top:22px;padding:20px 21px 18px;border:1px solid #dfdfda;border-radius:18px;background:#fff;box-shadow:0 7px 22px rgba(0,0,0,.025)}
-#home .transition-home-head{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;padding-bottom:14px}
-#home .transition-home-head .eyebrow{display:block;margin-bottom:5px;color:#888882;font-size:8px;letter-spacing:.13em}
-#home .transition-home-head h2{margin:0;font-size:clamp(24px,2.6vw,32px);line-height:1.05;letter-spacing:-.035em}
-#home .transition-home-head p{margin:0;max-width:430px;color:#70706a;font-size:10px;line-height:1.45;text-align:right}
-#home .transition-timeline-shell{position:relative;padding-top:4px}
-#home .transition-phase-row{display:grid;grid-template-columns:1fr 2fr 4fr 1fr;gap:0;margin:0 0 9px}
-#home .transition-phase-row span{position:relative;min-width:0;padding:6px 10px 7px;border-top:2px solid #d8d8d3}
-#home .transition-phase-row span+span{margin-left:4px}
-#home .transition-phase-row b,#home .transition-phase-row small{display:block}
-#home .transition-phase-row b{color:#474742;font-size:8px;line-height:1.15}
-#home .transition-phase-row small{margin-top:2px;color:#9a9a94;font-size:6.5px}
-#home .transition-phase-row .phase-test{border-top-color:#8f8f89}
-#home .transition-phase-row .phase-start{border-top-color:#666660}
-#home .transition-phase-row .phase-mix{border-top-color:#3e3e3a}
-#home .transition-phase-row .phase-full{border-top-color:#111}
-#home .transition-track-wrap{position:relative;padding:0 7px}
-#home .transition-track-line{position:absolute;left:6.25%;right:6.25%;top:16px;height:2px;background:#ddddda;border-radius:999px;overflow:hidden;pointer-events:none}
-#home .transition-track-line span{display:block;width:14.285%;height:100%;background:#111;border-radius:999px;transition:width .35s cubic-bezier(.2,.75,.2,1)}
-#home .interactive-transition .timeline{position:relative;z-index:2;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:0}
-#home .interactive-transition .year{position:relative;display:flex;flex-direction:column;align-items:center;min-width:0;min-height:62px;padding:0 3px 6px;border:0;background:transparent;color:#111;text-align:center;cursor:pointer}
-#home .interactive-transition .year:before{content:"";display:block;width:11px;height:11px;margin:11px auto 8px;border:2px solid #9b9b95;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #fff;transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease}
-#home .interactive-transition .year b{display:block;color:#3d3d39;font-size:11px;line-height:1;transition:color .18s ease,transform .18s ease}
-#home .interactive-transition .year small{display:block;max-width:78px;margin-top:4px;color:#8a8a84;font-size:6.5px;line-height:1.15;opacity:.72;transition:opacity .18s,color .18s}
-#home .interactive-transition .year:hover:before{transform:scale(1.22);border-color:#111}
-#home .interactive-transition .year:hover b{color:#111}
-#home .interactive-transition .year:hover small{opacity:1;color:#555}
-#home .interactive-transition .year.active:before{width:15px;height:15px;margin-top:9px;margin-bottom:6px;border-color:#111;background:#111;box-shadow:0 0 0 5px #efefeb}
-#home .interactive-transition .year.active b{color:#111;font-size:13px;font-weight:900;transform:translateY(1px)}
-#home .interactive-transition .year.active small{color:#555;opacity:1;font-weight:800}
-#home .interactive-transition .year[data-tip]:after{content:attr(data-tip);position:absolute;left:50%;bottom:100%;z-index:5;width:max-content;max-width:210px;transform:translate(-50%,6px);padding:6px 8px;border-radius:7px;background:#111;color:#fff;font-size:7px;line-height:1.25;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s}
-#home .interactive-transition .year[data-tip]:hover:after,#home .interactive-transition .year[data-tip]:focus-visible:after{opacity:1;transform:translate(-50%,0)}
-#home .interactive-transition .timeline-panel{display:grid;grid-template-columns:96px minmax(0,1fr);min-height:0;margin-top:8px;overflow:hidden;border:1px solid #e0e0db;border-radius:12px;background:#fff}
-#home .transition-selected{display:flex;flex-direction:column;justify-content:center;padding:13px 14px;background:#f4f4f1;border-right:1px solid #e0e0db;color:#111}
-#home .transition-selected strong{font-size:29px;line-height:1;letter-spacing:-.05em}
-#home .transition-selected span{margin-top:5px;color:#62625d;font-size:8px;line-height:1.2}
-#home .transition-selected em{margin-top:7px;color:#9a9a94;font-size:6.5px;font-style:normal}
-#home .transition-summary{padding:12px 14px 10px;min-width:0}
-#home .transition-summary-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 14px;align-items:start}
-#home .transition-summary-top h3{grid-column:1;margin:0;color:#222;font-size:14px;line-height:1.2;letter-spacing:-.015em}
-#home .transition-summary-top>p{grid-column:1;margin:0;max-width:800px;color:#666660;font-size:9.5px;line-height:1.45}
-#home .transition-stage{grid-column:2;grid-row:1/3;align-self:center;padding:5px 7px;border-radius:999px;background:#efefeb;color:#70706a;font-size:6px;font-weight:900;letter-spacing:.1em;white-space:nowrap}
-#home .transition-facts{display:grid;grid-template-columns:1fr 1fr 1.15fr;margin-top:9px;border-top:1px solid #e8e8e3}
-#home .transition-facts>div{min-width:0;padding:8px 9px 0}
-#home .transition-facts>div:first-child{padding-left:0}
-#home .transition-facts>div+div{border-left:1px solid #e8e8e3}
-#home .transition-facts small,#home .transition-facts b{display:block}
-#home .transition-facts small{color:#999993;font-size:5.5px;font-weight:900;letter-spacing:.09em}
-#home .transition-facts b{margin-top:3px;color:#353532;font-size:8px;font-weight:700;line-height:1.3}
-#home .transition-caveat{display:block;margin-top:6px;color:#85857f;font-size:7px;line-height:1.35}
-#home .transition-panel-actions{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:7px;padding-top:7px;border-top:1px solid #ecece7}
-#home .transition-panel-actions>button,#home .transition-action-links button{border:0;border-radius:6px;background:#f2f2ef;color:#111;padding:5px 7px;font-size:7px;font-weight:850}
-#home .transition-panel-actions>button:hover:not(:disabled),#home .transition-action-links button:hover{background:#111;color:#fff}
-#home .transition-panel-actions button:disabled{opacity:.24;cursor:default}
-#home .transition-action-links{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
-#home .transition-action-links .transition-study{background:#111;color:#fff}
-#home .transition-action-links a{color:#7a7a74;font-size:7px;font-weight:800;text-decoration:none}
+/* ===== HOME · TIMELINE ESSENCIAL 2026–2033 ===== */
+#home .interactive-transition{
+  margin-top:22px;
+  padding:22px 24px 20px;
+  border:1px solid #e1e1dc;
+  border-radius:19px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(0,0,0,.025);
+}
+#home .transition-home-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:22px;
+  margin-bottom:18px;
+}
+#home .transition-home-head .eyebrow{
+  display:block;
+  margin-bottom:5px;
+  color:#8a8a84;
+  font-size:8px;
+  letter-spacing:.13em;
+}
+#home .transition-home-head h2{
+  margin:0;
+  font-size:clamp(26px,2.7vw,34px);
+  line-height:1;
+  letter-spacing:-.04em;
+}
+#home .transition-home-head p{
+  margin:0;
+  color:#74746e;
+  font-size:10px;
+  line-height:1.45;
+  text-align:right;
+}
+
+#home .transition-simple-shell{position:relative}
+#home .transition-phase-labels{
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  margin:0 0 4px;
+}
+#home .transition-phase-labels span{
+  grid-column:var(--start)/span var(--span);
+  color:#969690;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-align:center;
+}
+#home .transition-phase-labels span:not(:last-child){
+  border-right:1px solid #ecece7;
+}
+
+#home .transition-track-wrap{
+  position:relative;
+  padding:0 4px;
+}
+#home .transition-track-line{
+  position:absolute;
+  left:6.25%;
+  right:6.25%;
+  top:35px;
+  height:2px;
+  background:#e2e2de;
+  border-radius:999px;
+  overflow:hidden;
+}
+#home .transition-track-line span{
+  display:block;
+  width:14.285%;
+  height:100%;
+  background:#111;
+  border-radius:999px;
+  transition:width .32s cubic-bezier(.2,.75,.2,1);
+}
+#home .interactive-transition .timeline{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:0;
+}
+#home .interactive-transition .year{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-width:0;
+  min-height:74px;
+  padding:0 2px;
+  border:0;
+  background:transparent;
+  color:#111;
+  text-align:center;
+  cursor:pointer;
+}
+#home .interactive-transition .year b{
+  display:block;
+  margin-bottom:10px;
+  color:#6f6f69;
+  font-size:11px;
+  line-height:1;
+  font-weight:750;
+  transition:color .18s ease,transform .18s ease;
+}
+#home .interactive-transition .year:after{
+  content:"";
+  display:block;
+  width:12px;
+  height:12px;
+  border:2px solid #aaa9a3;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 0 5px #fff;
+  transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+#home .interactive-transition .year small{
+  display:block;
+  margin-top:10px;
+  max-width:82px;
+  color:#999993;
+  font-size:7px;
+  line-height:1.2;
+  opacity:.82;
+}
+#home .interactive-transition .year:hover b{color:#111;transform:translateY(-1px)}
+#home .interactive-transition .year:hover:after{border-color:#111;transform:scale(1.12)}
+#home .interactive-transition .year.active b{
+  color:#111;
+  font-size:14px;
+  font-weight:900;
+}
+#home .interactive-transition .year.active:after{
+  width:16px;
+  height:16px;
+  margin-top:-2px;
+  border-color:#111;
+  background:#111;
+  box-shadow:0 0 0 5px #efefeb;
+}
+#home .interactive-transition .year.active small{
+  color:#555;
+  opacity:1;
+  font-weight:800;
+}
+
+/* Painel curto do ano */
+#home .interactive-transition .timeline-panel{
+  display:grid;
+  grid-template-columns:84px minmax(0,1fr);
+  gap:0;
+  margin-top:11px;
+  border-top:1px solid #e5e5e0;
+  background:#fff;
+}
+#home .transition-selected{
+  padding:16px 16px 0 0;
+}
+#home .transition-selected strong{
+  display:block;
+  color:#111;
+  font-size:31px;
+  line-height:1;
+  letter-spacing:-.055em;
+}
+#home .transition-selected span{
+  display:block;
+  margin-top:5px;
+  color:#6c6c66;
+  font-size:8px;
+  line-height:1.25;
+}
+#home .transition-selected em{display:none}
+
+#home .transition-summary{
+  padding:15px 0 0 18px;
+  border-left:1px solid #e5e5e0;
+}
+#home .transition-summary-top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:5px 14px;
+}
+#home .transition-summary-top h3{
+  margin:0;
+  color:#222;
+  font-size:16px;
+  line-height:1.2;
+  letter-spacing:-.02em;
+}
+#home .transition-summary-top>p{
+  margin:0;
+  max-width:760px;
+  color:#686862;
+  font-size:10px;
+  line-height:1.5;
+}
+#home .transition-stage{
+  grid-column:2;
+  grid-row:1/3;
+  align-self:start;
+  padding:5px 7px;
+  border-radius:999px;
+  background:#f0f0ec;
+  color:#74746e;
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.1em;
+  white-space:nowrap;
+}
+
+/* Só dois pontos de leitura: mudança e atenção prática */
+#home .transition-facts{
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:18px;
+  margin-top:11px;
+}
+#home .transition-facts>div{
+  min-width:0;
+  padding:0;
+}
+#home .transition-facts>div+div{
+  border-left:1px solid #e8e8e3;
+  padding-left:18px;
+}
+#home .transition-facts small,
+#home .transition-facts b{display:block}
+#home .transition-facts small{
+  color:#999993;
+  font-size:6px;
+  font-weight:900;
+  letter-spacing:.1em;
+}
+#home .transition-facts b{
+  margin-top:4px;
+  color:#343431;
+  font-size:9px;
+  line-height:1.38;
+}
+#home .transition-facts .transition-focus{
+  grid-column:auto;
+  border-left:1px solid #e8e8e3;
+}
+#home .transition-caveat{
+  display:block;
+  margin-top:7px;
+  color:#888882;
+  font-size:7px;
+  line-height:1.35;
+}
+#home .transition-panel-actions{
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+#home .transition-panel-actions>button{display:none}
+#home .transition-action-links{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+#home .transition-action-links .transition-study{
+  border:0;
+  border-radius:7px;
+  background:#111;
+  color:#fff;
+  padding:6px 9px;
+  font-size:7px;
+  font-weight:850;
+}
+#home .transition-action-links a{
+  color:#767670;
+  font-size:7px;
+  font-weight:800;
+  text-decoration:none;
+}
 #home .transition-action-links a:hover{text-decoration:underline}
+
 @media(max-width:920px){
- #home .transition-home-head{display:block}
- #home .transition-home-head p{margin-top:6px;text-align:left}
- #home .transition-timeline-shell{overflow-x:auto;scrollbar-width:thin;padding-bottom:3px}
- #home .transition-phase-row{grid-template-columns:112px 210px 390px 112px;width:824px;margin-bottom:6px}
- #home .transition-track-wrap{width:824px;padding:0}
- #home .transition-track-line{left:51.5px;right:51.5px}
- #home .interactive-transition .timeline{grid-template-columns:repeat(8,103px)}
- #home .transition-facts{grid-template-columns:1fr 1fr}
- #home .transition-facts .transition-focus{grid-column:1/-1;border-left:0;border-top:1px solid #e8e8e3;padding-left:0}
+  #home .transition-home-head{display:block}
+  #home .transition-home-head p{margin-top:6px;text-align:left}
+  #home .transition-simple-shell{overflow-x:auto;scrollbar-width:thin;padding-bottom:4px}
+  #home .transition-phase-labels,
+  #home .transition-track-wrap{width:760px}
+  #home .transition-track-line{left:47.5px;right:47.5px}
+  #home .interactive-transition .timeline{grid-template-columns:repeat(8,95px)}
 }
 @media(max-width:650px){
- #home .interactive-transition{padding:16px 13px;border-radius:15px}
- #home .transition-home-head h2{font-size:23px}
- #home .transition-home-head p{font-size:9px}
- #home .interactive-transition .timeline-panel{grid-template-columns:1fr}
- #home .transition-selected{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-right:0;border-bottom:1px solid #e0e0db}
- #home .transition-selected strong{font-size:25px}
- #home .transition-selected span,#home .transition-selected em{margin:0}
- #home .transition-summary{padding:10px 12px 9px}
- #home .transition-summary-top{grid-template-columns:1fr}
- #home .transition-stage{grid-column:1;grid-row:auto;justify-self:start}
- #home .transition-facts{grid-template-columns:1fr}
- #home .transition-facts>div,#home .transition-facts>div:first-child{padding:6px 0 0}
- #home .transition-facts>div+div,#home .transition-facts .transition-focus{border-left:0;border-top:1px solid #e8e8e3;padding-top:6px}
- #home .transition-facts .transition-focus{grid-column:auto}
- #home .transition-panel-actions{display:grid;grid-template-columns:1fr 1fr}
- #home .transition-panel-actions>button{width:100%}
- #home .transition-action-links{grid-column:1/-1;grid-row:2;justify-content:flex-start}
- #home .transition-action-links .transition-study{flex:1}
+  #home .interactive-transition{padding:17px 14px 16px;border-radius:16px}
+  #home .transition-home-head{margin-bottom:13px}
+  #home .transition-home-head h2{font-size:25px}
+  #home .transition-home-head p{font-size:9px}
+  #home .interactive-transition .timeline-panel{grid-template-columns:1fr;margin-top:8px}
+  #home .transition-selected{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    padding:12px 0 8px;
+  }
+  #home .transition-selected strong{font-size:27px}
+  #home .transition-selected span{margin-top:0}
+  #home .transition-summary{
+    padding:10px 0 0;
+    border-left:0;
+    border-top:1px solid #e5e5e0;
+  }
+  #home .transition-summary-top{grid-template-columns:1fr}
+  #home .transition-stage{
+    grid-column:1;
+    grid-row:auto;
+    justify-self:start;
+  }
+  #home .transition-facts{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  #home .transition-facts>div+div,
+  #home .transition-facts .transition-focus{
+    border-left:0;
+    border-top:1px solid #e8e8e3;
+    padding:8px 0 0;
+  }
 }
 
 /* ===== EXPERIÊNCIAS VISUAIS INTEGRADAS À LEITURA · PADRÃO UNIFICADO ===== */
@@ -1117,16 +1354,16 @@ try{
 
  <div class="section transition-home interactive-transition">
   <div class="transition-home-head">
-   <div><span class="eyebrow">TRANSIÇÃO TRIBUTÁRIA</span><h2>Linha do tempo 2026 → 2033</h2></div>
-   <p>Selecione um ano para acompanhar a mudança do sistema ao longo da transição.</p>
+   <div><span class="eyebrow">TRANSIÇÃO TRIBUTÁRIA</span><h2>2026 → 2033</h2></div>
+   <p>Clique em um ano para acompanhar a mudança do sistema.</p>
   </div>
 
-  <div class="transition-timeline-shell">
-   <div class="transition-phase-row" aria-hidden="true">
-    <span class="phase-test"><b>Teste</b><small>2026</small></span>
-    <span class="phase-start"><b>Implantação</b><small>2027–2028</small></span>
-    <span class="phase-mix"><b>Convivência</b><small>2029–2032</small></span>
-    <span class="phase-full"><b>Integral</b><small>2033</small></span>
+  <div class="transition-simple-shell">
+   <div class="transition-phase-labels" aria-hidden="true">
+    <span style="--start:1;--span:1">Teste</span>
+    <span style="--start:2;--span:2">Implantação</span>
+    <span style="--start:4;--span:4">Convivência</span>
+    <span style="--start:8;--span:1">Integral</span>
    </div>
    <div class="transition-track-wrap">
     <div class="transition-track-line" aria-hidden="true"><span id="transitionLineFill"></span></div>
@@ -1625,7 +1862,7 @@ try{
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20261002-07" defer></script>
+<script src="app-v2.js?v=20261002-08" defer></script>
 <script src="account.js?v=20261002-99" defer></script>
 <script>window.JAGUAR_RT_BUILD="20261002-102";</script>
 </body>
