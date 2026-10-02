@@ -69,7 +69,7 @@ function hydrate(state){
  if(normalized.history)localStorage.setItem(KEYS[1],JSON.stringify(normalized.history));
  if(normalized.quiz)localStorage.setItem(KEYS[2],JSON.stringify(normalized.quiz));
  quizSession=read(KEYS[2],null);
- renderModuleGrid();updateQuizStats();updateQuizResume();renderHomeResume();renderHomeDashboard();
+ renderModuleGrid();updateQuizStats();updateErrorReview();updateQuizResume();renderHomeResume();renderHomeDashboard();
  return normalized;
 }
 function mergeState(remote,local){
@@ -165,8 +165,24 @@ function filteredTeam(){
    (performance==='all'||performance==='help'&&p.needsHelp||performance==='good'&&p.average!==null&&p.average>=7||performance==='untested'&&!p.tests.length);
  });
 }
+function reportTopics(accounts){
+ const topics=new Map(STUDY_MODULES.map(m=>[m.id,{id:m.id,title:m.title,total:0,wrong:0,people:new Set()}]));
+ accounts.forEach(a=>(a.attempts||[]).forEach(t=>(t.details||[]).forEach(q=>{
+  const id=Number(t.order_version??t.orderVersion??2)===2?q.module:remapCourseId(q.module);
+  const topic=topics.get(id);if(!topic||typeof q.ok!=='boolean')return;
+  topic.total++;if(!q.ok){topic.wrong++;topic.people.add(a.email);}
+ })));
+ return [...topics.values()].filter(t=>t.total).sort((a,b)=>b.wrong/b.total-a.wrong/a.total||b.wrong-a.wrong);
+}
+function reportInsightHtml(accounts){
+ const topics=reportTopics(accounts),help=accounts.filter(a=>reportMetrics(a).needsHelp);
+ return '<section><h2>Onde reforçar o aprendizado</h2><p>Erros por módulo nos testes disponíveis, considerando os filtros atuais.</p>'+(topics.length?'<div class="comparison-scroll"><table class="comparison-table"><thead><tr><th>Módulo</th><th>Erros / respostas</th><th>Acertos</th><th>Pessoas com erros</th></tr></thead><tbody>'+topics.map(t=>'<tr><th>Módulo '+Number(t.id)+'<small>'+esc(t.title)+'</small></th><td>'+t.wrong+' / '+t.total+'</td><td>'+Math.round((t.total-t.wrong)/t.total*100)+'%</td><td>'+t.people.size+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty">Ainda não há respostas detalhadas para analisar os assuntos.</div>')+'</section><section><h2>Quem precisa de reforço</h2><p>Média inferior a 7 nos testes finalizados.</p>'+(help.length?'<ul class="reinforcement-list">'+help.map(a=>'<li><b>'+esc(personName(a.email))+'</b><span>Média '+reportMetrics(a).average.toFixed(1).replace('.',',')+'/10 · progresso '+reportMetrics(a).pct+'%</span></li>').join('')+'</ul>':'<div class="empty">Nenhum colaborador com média abaixo de 7 neste filtro.</div>')+'</section>';
+}
 function renderReports(){
  const filtered=filteredTeam();
+ const sort=by('reportsSort').value;
+ filtered.sort((a,b)=>sort==='progress'?reportMetrics(b).pct-reportMetrics(a).pct:sort==='performance'?(reportMetrics(a).average??11)-(reportMetrics(b).average??11):personName(a.email).localeCompare(personName(b.email),'pt-BR'));
+ by('reportsInsights').innerHTML=reportInsightHtml(filtered);
  const average=team.length?Math.round(team.reduce((sum,a)=>sum+progress(a.state).pct,0)/team.length):0;
  by('reportsSummary').innerHTML=[['Colaboradores',team.length],['Ativos recentemente',team.filter(a=>a.online).length],['Progresso médio',average+'%'],['Testes finalizados',team.reduce((n,a)=>n+(a.attempts||[]).length,0)],['Precisam de acompanhamento',team.filter(a=>reportMetrics(a).needsHelp).length]].map(([label,value])=>'<div><small>'+label+'</small><strong>'+value+'</strong></div>').join('');
  by('reportsCount').textContent=filtered.length+' de '+team.length+' colaboradores · Acompanhamento: média dos testes abaixo de 7.';
@@ -189,7 +205,8 @@ function exportReports(){
   STUDY_MODULES.forEach(m=>{const n=new Set(p.state.study?.[m.id]?.read||[]).size;modules.push([name,a.email,'Módulo '+Number(m.id),n,m.blocks.length,n===m.blocks.length?'Sim':'Não']);});
   p.tests.forEach(t=>tests.push([name,a.email,t.scope==='all'?'Todos os módulos':'Módulo '+Number(t.scope),t.score,date(t.created_at)]));
  });
- for(const [name,rows] of [['Colaboradores',summary],['Módulos',modules],['Testes',tests]]){
+ const topics=[['Módulo','Assunto','Respostas','Erros','Acertos (%)','Colaboradores com erros'],...reportTopics(accounts).map(t=>['Módulo '+Number(t.id),t.title,t.total,t.wrong,Math.round((t.total-t.wrong)/t.total*100),t.people.size])];
+ for(const [name,rows] of [['Colaboradores',summary],['Módulos',modules],['Testes',tests],['Reforço por assunto',topics]]){
   const sheet=XLSX.utils.aoa_to_sheet(rows);sheet['!cols']=rows[0].map((_,i)=>({wch:Math.min(45,Math.max(...rows.map(r=>String(r[i]??'').length))+2)}));
   sheet['!autofilter']={ref:sheet['!ref']};XLSX.utils.book_append_sheet(book,sheet,name);
  }
@@ -205,6 +222,7 @@ by('reportsFilter').addEventListener('change',renderReports);
 by('reportsModule').innerHTML='<option value="all">Todos os módulos</option>'+STUDY_MODULES.map(m=>'<option value="'+m.id+'">Módulo '+Number(m.id)+' concluído</option>').join('');
 by('reportsModule').addEventListener('change',renderReports);
 by('reportsPerformance').addEventListener('change',renderReports);
+by('reportsSort').addEventListener('change',renderReports);
 by('reportsExport').onclick=exportReports;
 setInterval(async()=>{if(!loaded||document.hidden)return;try{if(attemptQueue.length||read(pendingKey(),null)){await flush();return;}await refreshState();}catch(e){status(e.message);}},60000);
 window.addEventListener('online',()=>{if(loaded)flush();else if(token)restoreSession();});

@@ -766,3 +766,57 @@ test('resposta inválida de rede mantém a sessão e reconecta ao voltar para o 
  await expect(page.locator('#sessionNotice')).toBeHidden();
  await expect(page.locator('#accountName')).toHaveText('Teste');
 });
+
+test('revisão pratica somente erros e não altera a nota dos testes',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=error-review');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>{startQuiz(false,'01');quizSession.answers=quizSession.questions.map((q,i)=>i<2?(q.correct+1)%q.options.length:q.correct);finishQuiz();go('quiz');});
+ await expect(page.locator('#quizErrorReview')).toContainText('2 questões para revisar');
+ await page.locator('#quizErrorReview button').click();
+ await expect(page.locator('.quiz-question')).toHaveCount(2);
+ await expect(page.locator('#quizPage .page-lead')).toContainText('não altera sua média');
+ await page.evaluate(()=>{quizSession.answers=quizSession.questions.map(q=>q.correct);finishQuiz();go('quiz');});
+ await expect(page.locator('#quizErrorReview')).toContainText('Nenhum erro pendente');
+ const stats=await page.evaluate(()=>quizRead(QUIZ_HISTORY_KEY,{}).results['01']);
+ expect(stats).toMatchObject({attempts:1,last:8,best:8});
+});
+
+test('busca mostra trecho e abre a etapa encontrada sem marcar como lida',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=deep-search');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ const target=await page.evaluate(()=>({id:STUDY_MODULES[0].id,step:2,title:STUDY_MODULES[0].blocks[2].t}));
+ await page.evaluate(title=>{searchModules(title);go('search');},target.title);
+ const hit=page.locator(`.search-hit[onclick="openSearchResult('${target.id}',${target.step})"]`);
+ await expect(hit).toContainText(target.title);
+ await hit.click();
+ await expect(page.locator(`#course-${target.id}-${target.step+1}`)).toBeVisible();
+ expect(await page.evaluate(()=>moduleProgress(activeCourse).read)).toEqual([]);
+});
+
+test('dois cenários salvos são comparados sem mudar a configuração atual',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=two-scenarios');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>{go('tools');showTaxTool('price');$('priceNow').value='100,00';$('priceScenarioName').value='Cenário A';saveNamedScenario('price');$('priceNow').value='200,00';$('priceScenarioName').value='Cenário B';saveNamedScenario('price');$('priceNow').value='350,00';const rows=readNamedScenarios().price;$('priceScenarioSelect').value=rows[1].id;$('priceScenarioSecond').value=rows[0].id;compareNamedScenario('price');document.querySelector('#priceScenarioCompare').closest('details').open=true;});
+ await expect(page.locator('#priceScenarioCompare thead')).toContainText('A · Cenário A');
+ await expect(page.locator('#priceScenarioCompare thead')).toContainText('B · Cenário B');
+ await expect(page.locator('#priceScenarioCompare tbody tr')).toHaveCount(4);
+ const cells=await page.locator('#priceScenarioCompare tbody tr').first().locator('td').allTextContents();
+ expect(brl(cells[1])).toBeCloseTo(brl(cells[0])*2,1);
+ await expect(page.locator('#priceNow')).toHaveValue('350,00');
+});
+
+test('relatório identifica assuntos com erros e responde aos filtros',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const action=route.request().postDataJSON().action;
+  const accounts=[{email:'ana@jaguarcontabil.com.br',state:{study:{__orderVersion:2}},attempts:[{scope:'01',score:5,order_version:2,details:[{module:'01',ok:false},{module:'01',ok:true}],created_at:'2026-10-02T12:00:00Z'}],last_seen:'2026-10-02T12:00:00Z'}];
+  await route.fulfill({json:action==='admin'?{accounts}:{email:'rodrigo.silva@jaguarcontabil.com.br',admin:true,state:{},attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=report-insights');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.locator('#accountToggle').click();await page.locator('#reportsOpen').click();
+ await expect(page.locator('#reportsInsights')).toContainText('50%');
+ await expect(page.locator('.reinforcement-list')).toContainText('Ana');
+ await page.locator('#reportsSearch').fill('inexistente');
+ await expect(page.locator('#reportsInsights')).toContainText('Ainda não há respostas detalhadas');
+});

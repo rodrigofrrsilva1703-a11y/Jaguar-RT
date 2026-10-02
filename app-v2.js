@@ -184,7 +184,7 @@ function renderHomeDashboard(){
  let lastScore=null,lastScope=null;
  try{
   const saved=JSON.parse(localStorage.getItem('jaguar-rtav-quiz-session-v3')||'null');
-  if(saved&&saved.finished&&Array.isArray(saved.questions)&&Array.isArray(saved.answers)){
+  if(saved&&saved.finished&&!saved.review&&Array.isArray(saved.questions)&&Array.isArray(saved.answers)){
    lastScore=RTAV_QUIZ.grade(saved.questions,saved.answers).score;
    lastScope=saved.scope;
   }
@@ -290,7 +290,7 @@ function updateQuizResume(){
  if(!quizSession){el.innerHTML='';return;}
  const answered=Array.isArray(quizSession.answers)?quizSession.answers.filter(x=>x!==null).length:0;
  const status=quizSession.finished?'ÚLTIMO RESULTADO':'TESTE EM ANDAMENTO';
- const detail=quizSession.finished?'Veja novamente a correção comentada.':answered+' de 10 questões respondidas.';
+ const detail=quizSession.finished?'Veja novamente a correção comentada.':answered+' de '+quizSession.questions.length+' questões respondidas.';
  el.innerHTML='<button type="button" onclick="resumeQuiz()">'+
   '<small>'+status+'</small>'+
   '<b>'+courseEscape(quizTitle(quizSession.scope))+'</b>'+
@@ -303,20 +303,39 @@ function initQuiz(){
  if(!select)return;
  select.innerHTML='<option value="all">Todos os módulos · 10 perguntas mistas</option>'+STUDY_MODULES.map(m=>`<option value="${m.id}">Módulo ${m.id} · ${courseEscape(m.title)}</option>`).join('');
  const saved=quizRead(QUIZ_SESSION_KEY,null);
- if(saved?.questions?.length===10&&saved.questions.every(q=>QUIZ_BANK[q.module])){
+ if(saved?.questions?.length>0&&saved.questions.length<=10&&(saved.review||saved.questions.length===10)&&saved.questions.every(q=>QUIZ_BANK[q.module])){
   const contexts=new Map(RTAV_QUIZ.pool(QUIZ_BANK).map(q=>[q.id,q.context]));
   saved.questions.forEach(q=>{q.context=contexts.get(q.id)||q.context;});
   quizSession=saved;
   select.value=saved.scope;
   updateQuizResume();
  }
- select.addEventListener('change',updateQuizStats);
- updateQuizStats();
+ select.addEventListener('change',()=>{updateQuizStats();updateErrorReview();});
+ updateQuizStats();updateErrorReview();
 }
 
+function pendingQuizErrors(scope='all'){
+ const history=quizRead(QUIZ_HISTORY_KEY,{});
+ const wrong=history.wrong||Object.fromEntries((quizSession?.finished?RTAV_QUIZ.grade(quizSession.questions,quizSession.answers).details:[]).filter(q=>!q.ok).map(q=>[q.id,true]));
+ const pool=new Map(RTAV_QUIZ.pool(QUIZ_BANK).map(q=>[q.id,q]));
+ return Object.keys(wrong).filter(id=>pool.has(id)&&(scope==='all'||pool.get(id).module===scope));
+}
+function updateErrorReview(){
+ const el=$('quizErrorReview');if(!el)return;
+ const count=pendingQuizErrors($('quizModule')?.value||'all').length;
+ el.innerHTML=count?`<div><b>${count} ${count===1?'questão para revisar':'questões para revisar'}</b><span>Pratique até 10 erros por rodada. Os acertos saem desta lista.</span></div><button type="button" onclick="startErrorReview()">Revisar meus erros →</button>`:'<div><b>Nenhum erro pendente</b><span>Os erros dos próximos testes aparecerão aqui para revisão.</span></div>';
+}
+function startErrorReview(){
+ const scope=$('quizModule')?.value||'all',ids=pendingQuizErrors(scope).slice(0,10);
+ const pool=new Map(RTAV_QUIZ.pool(QUIZ_BANK).map(q=>[q.id,q]));
+ if(!ids.length)return;
+ const questions=ids.map(id=>{const q=pool.get(id);return {...q,options:q.choices.slice(),correct:q.answer};});
+ quizSession={scope,questions,answers:Array(questions.length).fill(null),finished:false,review:true};
+ quizSave(QUIZ_SESSION_KEY,quizSession);updateQuizResume();renderQuiz();go('quizPage');
+}
 function startQuiz(same=false,scope){
- if(same&&(!quizSession||quizSession.questions.length!==10))return;
- if(same){quizSession={...quizSession,answers:Array(10).fill(null),finished:false};}
+ if(same&&(!quizSession||!quizSession.questions.length))return;
+ if(same){quizSession={...quizSession,answers:Array(quizSession.questions.length).fill(null),finished:false};}
  else{
   const selected=scope||$('quizModule').value;
   const history=quizRead(QUIZ_HISTORY_KEY,{seen:[],moduleCounts:{}});
@@ -341,8 +360,8 @@ function quizAnswer(index,option){
  quizSession.answers[index]=option;
  quizSave(QUIZ_SESSION_KEY,quizSession);
  const answered=quizSession.answers.filter(x=>x!==null).length;
- $('quizProgress').textContent=`${answered} de 10 respondidas`;
- $('quizProgressBar').style.width=`${answered*10}%`;
+ $('quizProgress').textContent=`${answered} de ${quizSession.questions.length} respondidas`;
+ $('quizProgressBar').style.width=`${answered/quizSession.questions.length*100}%`;
  $('quizError').textContent='';
 }
 
@@ -351,9 +370,9 @@ function renderQuiz(){
  if(s.finished){renderQuizResult();return;}
  const answered=s.answers.filter(x=>x!==null).length;
  $('quizPage').innerHTML=`<button class="back" onclick="go('quiz')">← Escolher teste</button>
-  <span class="module-no">${courseEscape(quizTitle(s.scope))}</span><h1 class="page-title">Teste de conhecimento</h1>
-  <p class="page-lead">Responda as 10 questões. O resultado e as explicações aparecem após a entrega.</p>
-  <div class="quiz-progress"><span id="quizProgress">${answered} de 10 respondidas</span><div><i id="quizProgressBar" style="width:${answered*10}%"></i></div></div>
+  <span class="module-no">${courseEscape(quizTitle(s.scope))}</span><h1 class="page-title">${s.review?'Revisão dos erros':'Teste de conhecimento'}</h1>
+  <p class="page-lead">Responda ${s.questions.length} ${s.questions.length===1?'questão':'questões'}. ${s.review?'Esta revisão não altera sua média dos testes.':'O resultado e as explicações aparecem após a entrega.'}</p>
+  <div class="quiz-progress"><span id="quizProgress">${answered} de ${s.questions.length} respondidas</span><div><i id="quizProgressBar" style="width:${answered/s.questions.length*100}%"></i></div></div>
   <form id="quizForm" onsubmit="event.preventDefault();finishQuiz()">${s.questions.map((q,i)=>`
    <fieldset class="quiz-question" id="quiz-question-${i}"><legend><small>QUESTÃO ${String(i+1).padStart(2,'0')} · ${q.kind==='concept'?'INTERPRETAÇÃO':'CASO PRÁTICO'} · MÓDULO ${q.module} — ${courseEscape(STUDY_MODULES.find(m=>m.id===q.module)?.title||'')}</small><span class="quiz-context">${courseEscape(q.context||'')}</span><strong>${courseEscape(q.prompt)}</strong></legend>
    ${q.options.map((option,j)=>`<label class="quiz-option"><input type="radio" name="question-${i}" value="${j}" ${s.answers[i]===j?'checked':''} onchange="quizAnswer(${i},${j})"><span>${courseEscape(option)}</span></label>`).join('')}</fieldset>`).join('')}
@@ -365,6 +384,10 @@ function finishQuiz(){
  const missing=s.answers.findIndex(x=>x===null);
  if(missing!==-1){$('quizError').textContent=`Responda a questão ${missing+1} antes de conferir.`;$(`quiz-question-${missing}`).scrollIntoView({behavior:'smooth',block:'center'});return;}
  const history=quizRead(QUIZ_HISTORY_KEY,{seen:[],moduleCounts:{}});
+ const graded=RTAV_QUIZ.grade(s.questions,s.answers);
+ history.wrong=history.wrong||Object.fromEntries(pendingQuizErrors('all').map(id=>[id,true]));
+ graded.details.forEach(q=>{if(q.ok)delete history.wrong[q.id];else history.wrong[q.id]=true;});
+ if(!s.review){
  history.seen=[...new Set([...(history.seen||[]),...s.questions.map(q=>q.id)])];
  history.moduleCounts=history.moduleCounts||{};
  s.questions.forEach(q=>{history.moduleCounts[q.module]=(history.moduleCounts[q.module]||0)+1;});
@@ -372,10 +395,11 @@ function finishQuiz(){
  const prev=history.results[s.scope]||{attempts:0,best:0};
  const score=RTAV_QUIZ.grade(s.questions,s.answers).score;
  history.results[s.scope]={attempts:prev.attempts+1,last:score,best:Math.max(prev.best,score)};
+ }
  quizSave(QUIZ_HISTORY_KEY,history);
- updateQuizStats();
+ updateQuizStats();updateErrorReview();
  s.finished=true;
- window.JaguarAccount?.attempt(s);
+ if(!s.review)window.JaguarAccount?.attempt(s);
  quizSave(QUIZ_SESSION_KEY,s);
  updateQuizResume();
  renderHomeDashboard();
@@ -388,8 +412,9 @@ function renderQuizResult(){
  const result=RTAV_QUIZ.grade(s.questions,s.answers);
  $('quizPage').innerHTML=`<button class="back" onclick="go('quiz')">← Escolher teste</button>
   <span class="module-no">${courseEscape(quizTitle(s.scope))}</span>
-  <div class="quiz-result"><small>RESULTADO DO TESTE</small><h1>${result.score} de ${result.total}</h1><p>${result.score===10?'Você acertou todas. Gere uma nova seleção para avançar.':'Veja as explicações abaixo e revise os módulos em que teve dúvida.'}</p></div>
+  <div class="quiz-result"><small>${s.review?'RESULTADO DA REVISÃO':'RESULTADO DO TESTE'}</small><h1>${result.score} de ${result.total}</h1><p>${result.score===result.total?'Você acertou todas. Gere uma nova seleção para avançar.':'Veja as explicações abaixo e revise os módulos em que teve dúvida.'}</p></div>
   <div class="quiz-actions"><button class="quiz-primary" onclick="startQuiz(true)">Refazer este teste</button><button onclick="startQuiz(false,'${s.scope}')">Novo teste · ${s.scope==='all'?'todos os módulos':'módulo '+s.scope}</button></div>
+  ${result.score<result.total?`<div class="quiz-actions"><button onclick="startErrorReview()">Praticar erros pendentes →</button></div>`:''}
   <div class="quiz-review">${s.questions.map((q,i)=>`<article class="quiz-review-item ${result.details[i].ok?'is-correct':'is-wrong'}">
    <small>QUESTÃO ${i+1} · MÓDULO ${q.module} · ${result.details[i].ok?'ACERTOU':'REVISAR'}</small><p class="quiz-review-context">${courseEscape(q.context||'')}</p><h2>${courseEscape(q.prompt)}</h2>
    <p>Sua resposta: <b>${courseEscape(q.options[s.answers[i]])}</b></p>
@@ -565,11 +590,25 @@ function moveYear(direction){
  pickYear(years[idx]);
 }
 
+function searchText(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
+function openSearchResult(id,step){
+ openModule(id);
+ showCourseStep(step,false);
+ requestAnimationFrame(()=>document.querySelector('#modulePage .course-block:not([hidden])')?.scrollIntoView({behavior:'auto',block:'start'}));
+}
 function searchModules(q){
- q=(q||'').trim().toLowerCase();
+ q=(q||'').trim();
  if($('search')?.classList.contains('active'))saveNavigation({view:'search',search:q});
- const result=STUDY_MODULES.filter(m=>JSON.stringify(m).toLowerCase().includes(q));
- $('searchResults').innerHTML=result.length?result.map(moduleCard).join(''):'<div class="empty">Nenhum conteúdo encontrado.</div>';
+ if(!q){$('searchResults').innerHTML=STUDY_MODULES.map(moduleCard).join('');return;}
+ const term=searchText(q),results=[];
+ STUDY_MODULES.forEach(m=>m.blocks.forEach((block,step)=>{
+  const text=String(block.x||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+  if(!searchText(m.title+' '+block.t+' '+text).includes(term))return;
+  const at=Math.max(0,searchText(text).indexOf(term)),start=Math.max(0,at-75);
+  const snippet=(start?'…':'')+text.slice(start,start+220)+(text.length>start+220?'…':'');
+  results.push(`<button type="button" class="search-hit" onclick="openSearchResult('${m.id}',${step})"><small>MÓDULO ${Number(m.id)} · ETAPA ${step+1}</small><b>${courseEscape(block.t)}</b><span>${courseEscape(snippet)}</span><em>Abrir este trecho →</em></button>`);
+ }));
+ $('searchResults').innerHTML=results.length?results.join(''):'<div class="empty">Nenhum conteúdo encontrado. Tente outro termo.</div>';
 }
 function runHeroSearch(){
  const q=$('heroSearch')?.value||'';
@@ -1978,8 +2017,12 @@ function renderScenarioOptions(kind){
  if(!select) return;
  const store=readNamedScenarios();
  const rows=store[kind]||[];
+ const previous=select.value;
  select.innerHTML='<option value="">'+(rows.length?'Selecione um cenário':'Nenhum cenário salvo')+'</option>'+
   rows.map(function(x){return '<option value="'+x.id+'">'+xmlEsc(x.name)+(x.client?' · '+xmlEsc(x.client):'')+'</option>';}).join('');
+ select.value=rows.some(x=>x.id===previous)?previous:'';
+ const other=$(kind+'ScenarioSecond');
+ if(other){const previousOther=other.value;other.innerHTML='<option value="">Configuração atual</option>'+rows.map(x=>'<option value="'+x.id+'">'+xmlEsc(x.name)+'</option>').join('');other.value=rows.some(x=>x.id===previousOther)?previousOther:'';}
 }
 
 function saveNamedScenario(kind){
@@ -1993,7 +2036,7 @@ function saveNamedScenario(kind){
  }
  const store=readNamedScenarios();
  const item={
-  id:String(Date.now()),
+  id:crypto.randomUUID(),
   name,
   client:(clientInput?.value||'').trim(),
   savedAt:new Date().toISOString(),
@@ -2077,34 +2120,28 @@ function revenueInputFromState(data){
 }
 
 function compareNamedScenario(kind){
- const saved=selectedNamedScenario(kind);
- const panel=$(kind==='price'?'priceScenarioCompare':'revenueScenarioCompare');
- if(!saved||!panel) return;
-
+ const first=selectedNamedScenario(kind),panel=$(kind==='price'?'priceScenarioCompare':'revenueScenarioCompare');
+ if(!panel)return;
+ const secondId=$(kind+'ScenarioSecond')?.value;
+ const second=(readNamedScenarios()[kind]||[]).find(x=>x.id===secondId);
+ if(!first){panel.innerHTML='<p class="validation-message">Selecione o primeiro cenário salvo.</p>';return;}
+ if(first.id===second?.id){panel.innerHTML='<p class="validation-message">Escolha dois cenários diferentes.</p>';return;}
+ const a=first.data,b=second?.data||snapshotState(kind);
+ const year=Number($(kind+'CompareYear')?.value||2027);
+ let rows;
  if(kind==='price'){
-  const year=Number($('priceYear')?.value||2027);
-  const currentInput=priceEngineInput();
-  const savedInput=priceInputFromState(saved.data);
-  const currentBuyer=currentInput.buyerRegime;
-  const savedBuyer=savedInput.buyerRegime;
-  const currentModels=purchaseSupplierModels(year,currentInput);
-  const savedModels=PURCHASE_SUPPLIERS.map(key=>RTAV_ENGINE.segmentedPurchaseComparison({...savedInput,supplierRegime:key},year));
-  panel.innerHTML='<div class="scenario-compare-grid">'+PURCHASE_SUPPLIERS.map(function(key){
-   const current=currentModels.find(x=>x.supplierRegime===key).buyers[currentBuyer].futureCost;
-   const old=savedModels.find(x=>x.supplierRegime===key).buyers[savedBuyer].futureCost;
-   return compareItem('Fornecedor '+SUPPLIER_LABELS[key],old,current);
-  }).join('')+'</div><div class="rate-note">Comparação em '+year+' · atual: comprador '+PURCHASE_BUYER_LABELS[currentBuyer]+' · salvo: comprador '+PURCHASE_BUYER_LABELS[savedBuyer]+'.</div>';
+  const inputA=priceInputFromState(a),inputB=priceInputFromState(b);
+  rows=PURCHASE_SUPPLIERS.map(key=>{
+   const modelA=RTAV_ENGINE.segmentedPurchaseComparison({...inputA,supplierRegime:key},year);
+   const modelB=RTAV_ENGINE.segmentedPurchaseComparison({...inputB,supplierRegime:key},year);
+   return ['Custo · fornecedor '+SUPPLIER_LABELS[key],modelA.buyers[inputA.buyerRegime].futureCost,modelB.buyers[inputB.buyerRegime].futureCost];
+  });
  }else{
-  const year=Number($('revYear')?.value||2027);
-  const current=RTAV_ENGINE.futureRevenueScenario(revenueEngineInput(),year);
-  const other=RTAV_ENGINE.futureRevenueScenario(revenueInputFromState(saved.data),year);
-  panel.innerHTML='<div class="scenario-compare-grid">'+
-   compareItem('Faturamento',other.revenue,current.revenue)+
-   compareItem('Tributos brutos',other.taxes,current.taxes)+
-   compareItem('Carga líquida',other.netTax??other.taxes,current.netTax??current.taxes)+
-   compareItem('Líquido econômico',other.economicNet??other.net,current.economicNet??current.net)+
-  '</div><div class="rate-note">Comparação em '+year+' · cenário salvo: '+xmlEsc(saved.name)+'.</div>';
+  const modelA=RTAV_ENGINE.futureRevenueScenario(revenueInputFromState(a),year),modelB=RTAV_ENGINE.futureRevenueScenario(revenueInputFromState(b),year);
+  rows=[['Faturamento',modelA.revenue,modelB.revenue],['Tributos brutos',modelA.taxes,modelB.taxes],['Carga líquida',modelA.netTax??modelA.taxes,modelB.netTax??modelB.taxes],['Líquido econômico',modelA.economicNet??modelA.net,modelB.economicNet??modelB.net]];
  }
+ const nameB=second?.name||'Configuração atual';
+ panel.innerHTML='<p class="rate-note">Mesmo ano de comparação: '+year+'. Os parâmetros de cada cenário são preservados. Diferença = B − A.</p><div class="comparison-scroll"><table class="comparison-table"><thead><tr><th>Resultado</th><th>A · '+xmlEsc(first.name)+'</th><th>B · '+xmlEsc(nameB)+'</th><th>Diferença</th></tr></thead><tbody>'+rows.map(([label,x,y])=>'<tr><th>'+xmlEsc(label)+'</th><td>'+money(x)+'</td><td>'+money(y)+'</td><td>'+money(y-x)+'<small>'+effectText(effectPct(x,y))+'</small></td></tr>').join('')+'</tbody></table></div>';
 }
 
 function compareItem(label,saved,current){
@@ -2207,7 +2244,7 @@ function restoreAppNavigation(options={}){
  }
 
  if(view==='quizPage'){
-  if(quizSession&&Array.isArray(quizSession.questions)&&quizSession.questions.length===10){
+  if(quizSession&&Array.isArray(quizSession.questions)&&quizSession.questions.length>0&&quizSession.questions.length<=10&&(quizSession.review||quizSession.questions.length===10)){
    renderQuiz();
    go('quizPage',{instant:true});
    return 'quizPage';
