@@ -319,9 +319,14 @@ function regimeSummaryFromBlock(block,label){
  return courseFirstSentence(line.replace(/^[-*•]\s*/,'').replace(new RegExp('^'+label+'\\s*:\\s*','i'),''),125);
 }
 function moduleHelpFooter(m){
- const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Use o quadro como apoio e volte ao texto para aprofundar a regra.'};
+ const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Use este quadro como apoio e volte ao texto para aprofundar a regra.'};
  const mistake=MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.';
- return '<div class="lesson-help-grid"><div class="lesson-help-main"><small>AJUDA PARA ENTENDER</small><p>'+courseEscape(h.help)+'</p><b>'+courseEscape(h.question)+'</b></div><div class="lesson-help-alert"><small>ATENÇÃO</small><p>'+courseEscape(mistake)+'</p></div></div>';
+ const question=String(h.question||'').replace(/^Pergunta-guia:\s*/i,'');
+ return '<div class="lesson-insight-row">'+
+  '<div class="lesson-insight-main"><small>COMO ENTENDER</small><p>'+courseEscape(h.help)+'</p></div>'+
+  '<div class="lesson-insight-question"><small>PERGUNTA-CHAVE</small><b>'+courseEscape(question)+'</b></div>'+
+  '<div class="lesson-insight-warning"><small>EVITE ESTE ERRO</small><p>'+courseEscape(mistake)+'</p></div>'+
+ '</div>';
 }
 
 function moduleBlockVisualHtml(m,b,index){
@@ -331,32 +336,56 @@ function moduleBlockVisualHtml(m,b,index){
  if(/PRÓXIMA ETAPA/.test(kind)||/Próximo passo/i.test(title)) return '';
 
  if(index===0){
-  return '<figure class="lesson-inline-visual lesson-visual-focus" aria-label="Pontos-chave desta etapa"><div class="lesson-visual-head"><span class="lesson-visual-label">MAPA DO MÓDULO</span><b>Antes de continuar, fixe estas três ideias</b></div><div class="lesson-visual-focus-list">'+guide.focus.map((x,i)=>'<div><small>0'+(i+1)+'</small><b>'+courseEscape(x)+'</b><span>'+courseEscape(['Conceito central','Como a regra se organiza','O que muda na análise'][i]||'Ponto-chave')+'</span></div>').join('')+'</div>'+moduleHelpFooter(m)+'</figure>';
+  return '<figure class="lesson-story lesson-story-focus" aria-label="Mapa visual do módulo">'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">VISÃO DO MÓDULO</span><h3>O raciocínio que você precisa levar desta etapa</h3></div><p>'+courseEscape(m.subtitle)+'</p></div>'+
+   '<div class="lesson-concept-route">'+guide.focus.map((x,i)=>'<div class="lesson-concept-step"><span class="lesson-concept-no">'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['ENTENDA','CONECTE','APLIQUE'][i]||'FIXE')+'</small><b>'+courseEscape(x)+'</b><p>'+courseEscape(['Primeiro, entenda o conceito sem decorar a sigla.','Depois, veja como essa ideia se conecta à nova sistemática.','Por fim, use o conceito para analisar uma operação real.'][i]||'Ponto central do módulo.')+'</p></div></div>').join('')+'</div>'+
+   moduleHelpFooter(m)+
+  '</figure>';
  }
 
  if(/COMPARATIVO/.test(kind)){
   const compare=compareFromBlock(b);
-  return '<figure class="lesson-inline-visual lesson-visual-compare" aria-label="Comparação visual"><div class="lesson-visual-head"><span class="lesson-visual-label">ANTES × AGORA</span><b>Use a comparação para enxergar o que realmente mudou</b></div><div class="lesson-compare-mini"><div><small>ANTES</small><p>'+courseEscape(compare.before)+'</p></div><div class="after"><small>AGORA</small><p>'+courseEscape(compare.after||m.subtitle)+'</p></div></div>'+moduleHelpFooter(m)+'</figure>';
+  return '<figure class="lesson-story lesson-story-compare" aria-label="Comparação entre antes e depois">'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">ANTES × DEPOIS</span><h3>Veja a mudança antes de continuar a leitura</h3></div><p>O objetivo aqui não é resumir todo o tema, mas deixar visível qual lógica mudou.</p></div>'+
+   '<div class="lesson-before-after">'+
+    '<section class="lesson-era lesson-era-before"><div class="lesson-era-title"><small>ANTES</small><b>Sistema anterior</b></div><p>'+courseEscape(compare.before)+'</p></section>'+
+    '<div class="lesson-shift"><span>→</span><small>MUDANÇA<br>CENTRAL</small></div>'+
+    '<section class="lesson-era lesson-era-after"><div class="lesson-era-title"><small>AGORA</small><b>Nova lógica</b></div><p>'+courseEscape(compare.after||m.subtitle)+'</p></section>'+
+   '</div>'+
+   moduleHelpFooter(m)+
+  '</figure>';
  }
 
  if(/REGIMES/.test(kind)||/afeta cada regime/i.test(title)){
   const rows=[
-   ['Simples',regimeSummaryFromBlock(b,'Simples Nacional')],
-   ['Presumido',regimeSummaryFromBlock(b,'Lucro Presumido')],
-   ['Real',regimeSummaryFromBlock(b,'Lucro Real')]
+   ['Simples Nacional',regimeSummaryFromBlock(b,'Simples Nacional')],
+   ['Lucro Presumido',regimeSummaryFromBlock(b,'Lucro Presumido')],
+   ['Lucro Real',regimeSummaryFromBlock(b,'Lucro Real')]
   ].filter(x=>x[1]);
   if(rows.length){
-   return '<figure class="lesson-inline-visual lesson-visual-regimes" aria-label="Regimes em foco"><div class="lesson-visual-head"><span class="lesson-visual-label">REGIMES EM FOCO</span><b>Compare o efeito sem misturar as regras de cada regime</b></div><div class="lesson-regime-list">'+rows.map(x=>'<div><b>'+courseEscape(x[0])+'</b><span>'+courseEscape(x[1])+'</span></div>').join('')+'</div>'+moduleHelpFooter(m)+'</figure>';
+   return '<figure class="lesson-story lesson-story-regimes" aria-label="Regimes em foco">'+
+    '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">REGIMES EM FOCO</span><h3>A mesma reforma produz efeitos diferentes conforme o regime</h3></div><p>Leia cada coluna separadamente antes de comparar.</p></div>'+
+    '<div class="lesson-regime-track">'+rows.map((x,i)=>'<section><span>'+String(i+1).padStart(2,'0')+'</span><small>REGIME</small><b>'+courseEscape(x[0])+'</b><p>'+courseEscape(x[1])+'</p></section>').join('')+'</div>'+
+    moduleHelpFooter(m)+
+   '</figure>';
   }
  }
 
  if(/EXEMPLO|NUMÉRICO|CASO PRÁTICO/.test(kind+' '+title)){
   const points=examplePointsFromBlock(b);
-  return '<figure class="lesson-inline-visual lesson-visual-example" aria-label="Exemplo resumido"><div class="lesson-visual-head"><span class="lesson-visual-label">EXEMPLO EM ETAPAS</span><b>Acompanhe a conta na mesma ordem em que ela deve ser analisada</b></div><div class="lesson-example-list">'+points.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div>'+moduleHelpFooter(m)+'</figure>';
+  return '<figure class="lesson-story lesson-story-example" aria-label="Exemplo explicado em etapas">'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">EXEMPLO GUIADO</span><h3>Acompanhe a análise na ordem certa</h3></div><p>Use o exemplo como ponte entre a regra e a aplicação prática.</p></div>'+
+   '<div class="lesson-example-route">'+points.map((x,i)=>'<div class="lesson-example-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><small>ETAPA '+(i+1)+'</small><b>'+courseEscape(x)+'</b></div></div>').join('')+'</div>'+
+   moduleHelpFooter(m)+
+  '</figure>';
  }
 
  if(/PROCESSO|CRONOGRAMA|INTEGRAÇÃO|CONFORMIDADE/.test(kind)){
-  return '<figure class="lesson-inline-visual lesson-visual-flow" aria-label="Fluxo resumido"><div class="lesson-visual-head"><span class="lesson-visual-label">FLUXO DA IDEIA</span><b>Leia da esquerda para a direita e acompanhe a sequência</b></div><div class="lesson-flow-mini">'+guide.flow.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('<i>→</i>')+'</div>'+moduleHelpFooter(m)+'</figure>';
+  return '<figure class="lesson-story lesson-story-flow" aria-label="Fluxo visual do processo">'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">FLUXO DA IDEIA</span><h3>Transforme a regra em uma sequência fácil de acompanhar</h3></div><p>Leia o caminho da esquerda para a direita e depois volte ao texto para os detalhes.</p></div>'+
+   '<div class="lesson-process-line">'+guide.flow.map((x,i)=>'<div class="lesson-process-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['INÍCIO','TRATAMENTO','RESULTADO'][i]||'ETAPA')+'</small><b>'+courseEscape(x)+'</b></div></div>').join('<i aria-hidden="true">→</i>')+'</div>'+
+   moduleHelpFooter(m)+
+  '</figure>';
  }
 
  return '';
