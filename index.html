@@ -1126,30 +1126,164 @@ html.has-saved-session #loginGate{display:none!important}
   #home .transition-home-head{display:block}
   #home .transition-home-head p{margin-top:7px;text-align:left}
   #home .rt-timeline-card{padding:18px 16px 16px}
+
+  /* somente a linha do tempo rola horizontalmente */
+  #home .rt-timeline-scroll{
+    width:calc(100% + 2px);
+    overflow-x:auto;
+    overflow-y:hidden;
+    margin:0 -1px;
+    padding:0 1px 5px;
+    scrollbar-width:thin;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+  }
   #home .rt-phase-row,#home .rt-track-shell{width:760px}
-  #home .rt-timeline-card{overflow-x:auto;scrollbar-width:thin}
   #home .transition-track-line{left:47.5px;right:47.5px}
   #home .interactive-transition .timeline{grid-template-columns:repeat(8,95px)}
+  #home .interactive-transition .year{scroll-snap-align:center}
+
+  /* o conteúdo fica preso à largura da tela */
   #home .interactive-transition .timeline-panel{
-    width:760px;
-    grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);
+    width:100%;
+    grid-template-columns:1fr;
+    margin-top:8px;
+  }
+  #home .rt-detail-main{
+    padding:17px 0 14px;
+  }
+  #home .rt-detail-side{
+    padding:14px 0 0;
+    border-left:0;
+    border-top:1px solid #e5e5e0;
   }
 }
+
 @media(max-width:650px){
-  #home .interactive-transition{margin-top:25px}
+  #home .interactive-transition{margin-top:24px}
   #home .transition-home-head{margin-bottom:12px}
-  #home .transition-home-head h2{font-size:30px}
-  #home .transition-home-head p{font-size:10px}
+  #home .transition-home-head h2{
+    font-size:28px;
+    line-height:1.02;
+  }
+  #home .transition-home-head p{
+    max-width:330px;
+    font-size:11px;
+    line-height:1.45;
+  }
   #home .rt-timeline-card{
-    padding:15px 12px 14px;
+    padding:14px 12px 15px;
     border-radius:16px;
   }
-  #home .interactive-transition .timeline-panel{
-    width:720px;
-    grid-template-columns:1fr 280px;
+
+  #home .rt-timeline-scroll{
+    width:calc(100% + 24px);
+    margin:0 -12px;
+    padding:0 12px 6px;
+    scrollbar-width:none;
   }
-  #home .rt-detail-main{padding-top:15px}
-  #home .rt-detail-main h3{font-size:16px}
+  #home .rt-timeline-scroll::-webkit-scrollbar{display:none}
+  #home .rt-phase-row,#home .rt-track-shell{width:672px}
+  #home .interactive-transition .timeline{grid-template-columns:repeat(8,84px)}
+  #home .transition-track-line{
+    left:42px;
+    right:42px;
+    top:48px;
+  }
+  #home .rt-phase{
+    font-size:7px;
+    padding-bottom:6px;
+  }
+  #home .interactive-transition .year{
+    min-height:88px;
+    padding:0 2px;
+  }
+  #home .interactive-transition .year b{
+    margin-top:2px;
+    margin-bottom:14px;
+    font-size:13px;
+  }
+  #home .interactive-transition .year.active b{font-size:16px}
+  #home .interactive-transition .year small{
+    margin-top:11px;
+    max-width:78px;
+    font-size:7.5px;
+  }
+
+  #home .interactive-transition .timeline-panel{
+    display:block;
+    width:100%;
+    margin-top:9px;
+    border-top:1px solid #e5e5e0;
+  }
+  #home .rt-detail-main{
+    padding:15px 0 13px;
+  }
+  #home .rt-detail-kicker{
+    margin-bottom:8px;
+  }
+  #home .rt-detail-kicker strong{font-size:23px}
+  #home .rt-detail-kicker span{
+    padding:5px 7px;
+    font-size:7px;
+  }
+  #home .rt-detail-main h3{
+    font-size:17px;
+    line-height:1.25;
+  }
+  #home .rt-detail-main p{
+    margin-top:7px;
+    font-size:12px;
+    line-height:1.55;
+  }
+  #home .rt-detail-meta{
+    grid-template-columns:1fr;
+    gap:7px;
+    margin-top:12px;
+  }
+  #home .rt-detail-meta div{
+    padding:10px 11px;
+    border-radius:9px;
+  }
+  #home .rt-detail-meta small{font-size:6.5px}
+  #home .rt-detail-meta b{
+    margin-top:4px;
+    font-size:10.5px;
+    line-height:1.4;
+  }
+  #home .rt-detail-side{
+    gap:12px;
+    padding-top:12px;
+  }
+  #home .rt-detail-side small{font-size:6.5px}
+  #home .rt-detail-side b{
+    margin-top:4px;
+    font-size:11.5px;
+    line-height:1.45;
+  }
+  #home .rt-detail-actions{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:9px;
+    width:100%;
+  }
+  #home .rt-detail-actions button{
+    min-height:40px;
+    padding:9px 12px;
+    font-size:10px;
+  }
+  #home .rt-detail-actions a{
+    display:flex;
+    align-items:center;
+    min-height:40px;
+    padding:0 4px;
+    font-size:9px;
+  }
+  #home .transition-caveat{
+    margin-top:8px;
+    font-size:8px;
+  }
 }
 
 /* ===== EXPERIÊNCIAS VISUAIS INTEGRADAS À LEITURA · PADRÃO UNIFICADO ===== */
@@ -1375,16 +1509,18 @@ try{
   </div>
 
   <div class="rt-timeline-card">
-   <div class="rt-phase-row" aria-hidden="true">
-    <span class="rt-phase rt-phase-test">Teste</span>
-    <span class="rt-phase rt-phase-start">Implantação</span>
-    <span class="rt-phase rt-phase-mix">Convivência</span>
-    <span class="rt-phase rt-phase-full">Modelo integral</span>
-   </div>
+   <div class="rt-timeline-scroll">
+    <div class="rt-phase-row" aria-hidden="true">
+     <span class="rt-phase rt-phase-test">Teste</span>
+     <span class="rt-phase rt-phase-start">Implantação</span>
+     <span class="rt-phase rt-phase-mix">Convivência</span>
+     <span class="rt-phase rt-phase-full">Modelo integral</span>
+    </div>
 
-   <div class="rt-track-shell">
-    <div class="transition-track-line" aria-hidden="true"><span id="transitionLineFill"></span></div>
-    <div id="timeline" class="timeline" aria-label="Escolha o ano da transição"></div>
+    <div class="rt-track-shell">
+     <div class="transition-track-line" aria-hidden="true"><span id="transitionLineFill"></span></div>
+     <div id="timeline" class="timeline" aria-label="Escolha o ano da transição"></div>
+    </div>
    </div>
 
    <div id="timelinePanel" class="timeline-panel" aria-live="polite"></div>
@@ -1879,7 +2015,7 @@ try{
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20261002-12" defer></script>
+<script src="app-v2.js?v=20261002-13" defer></script>
 <script src="account.js?v=20261002-99" defer></script>
 <script>window.JAGUAR_RT_BUILD="20261002-102";</script>
 </body>
