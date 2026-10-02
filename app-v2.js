@@ -409,7 +409,7 @@ function renderHome(){
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
- $('timeline').innerHTML=Object.keys(TIMELINE).map(y=>{const info=timelineInfo(y);return `<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" aria-pressed="false"><b>${y}</b><small>${courseEscape(info.phase)}</small></button>`;}).join('');
+ $('timeline').innerHTML=Object.keys(TIMELINE).map(y=>{const info=timelineInfo(y);return `<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" data-tip="${courseEscape(info.short)}" aria-label="${y}: ${courseEscape(info.short)}" aria-pressed="false"><b>${y}</b><small>${courseEscape(info.phase)}</small></button>`;}).join('');
  pickYear('2027');
 }
 
@@ -872,10 +872,8 @@ function pickYear(y){
   b.classList.toggle('active',active);
   b.setAttribute('aria-pressed',String(active));
  });
- const progress=$('transitionProgressFill');
- if(progress)progress.style.width=(idx/(years.length-1)*100)+'%';
- const progressLabel=$('transitionProgressLabel');
- if(progressLabel)progressLabel.textContent='Etapa '+(idx+1)+' de '+years.length;
+ const lineFill=$('transitionLineFill');
+ if(lineFill)lineFill.style.width=(idx/(years.length-1)*100)+'%';
 
  $('timelinePanel').innerHTML=
   '<div class="transition-selected">'+
@@ -899,6 +897,8 @@ function pickYear(y){
    '</div>'+
   '</div>';
 
+ const activeNode=document.querySelector('#home .year.active');
+ if(activeNode&&window.matchMedia('(max-width:920px)').matches){activeNode.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
  if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   const summary=$('timelinePanel').querySelector('.transition-summary');
   summary?.animate([{opacity:.45,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:280,easing:'cubic-bezier(.22,1,.36,1)'});
