@@ -410,7 +410,7 @@ function renderHome(){
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
  $('timeline').innerHTML=Object.keys(TIMELINE).map(y=>{const info=timelineInfo(y);return `<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" aria-label="${y}: ${courseEscape(info.short)}" aria-pressed="false"><b>${y}</b><small>${courseEscape(info.phase)}</small></button>`;}).join('');
- pickYear('2027');
+ pickYear(TIMELINE[String(new Date().getFullYear())]?String(new Date().getFullYear()):'2026');
 }
 
 const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v2';
@@ -881,13 +881,14 @@ function pickYear(y){
    '<span>'+courseEscape(info.phase)+'</span>'+
   '</div>'+
   '<div class="transition-summary">'+
-   '<div class="transition-summary-top"><span class="transition-stage">'+courseEscape(info.stage)+'</span><h3>'+courseEscape(info.short)+'</h3><p>'+courseEscape(o.text)+'</p></div>'+
+   '<div class="transition-summary-top"><span class="transition-stage">'+courseEscape(info.stage)+'</span><h3>'+courseEscape(info.short)+'</h3></div>'+
    '<div class="transition-facts">'+
-    '<div><small>O QUE MUDA</small><b>'+courseEscape(info.newModel)+' · '+courseEscape(info.oldModel)+'</b></div>'+
+    '<div><small>MUDANÇA PRINCIPAL</small><b>'+courseEscape(info.newModel)+'</b></div>'+
+    '<div><small>O QUE AINDA PERMANECE</small><b>'+courseEscape(info.oldModel)+'</b></div>'+
     '<div><small>FOCO PRÁTICO</small><b>'+courseEscape(info.focus)+'</b></div>'+
    '</div>'+
    (Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">A proporção indicada representa a transição para o IBS, não a alíquota final.</small>':'')+
-   '<div class="transition-panel-actions"><div class="transition-action-links"><button type="button" class="transition-study" onclick="openModule(\'10\')">Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div></div>'+
+   '<div class="transition-panel-actions"><div class="transition-action-links"><button type="button" class="transition-study" onclick="openModule(\'10\')">Ver detalhes no Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div></div>'+
   '</div>';
 
  const activeNode=document.querySelector('#home .year.active');
