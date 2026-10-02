@@ -226,13 +226,27 @@ function courseLineHtml(line){
 function courseInlineVisualPosition(block,index){
  const lines=String(block?.x||'').split('\n');
  const kind=String(block?.k||'').toUpperCase();
- if(/COMPARATIVO/.test(kind)){
-  const pos=lines.findIndex(x=>/^COMO É AGORA/.test(x.trim()));
-  return pos>1?pos:Math.min(2,lines.length);
+ const title=String(block?.t||'');
+
+ // Comparativos e regimes funcionam melhor como visão geral antes do texto detalhado.
+ if(/COMPARATIVO/.test(kind)) return 0;
+ if(/REGIMES/.test(kind)||/afeta cada regime/i.test(title)) return 0;
+
+ // Exemplos: apresente primeiro o cenário e só então mostre o quadro guiado.
+ if(/EXEMPLO|NUMÉRICO|CASO PRÁTICO/.test(kind+' '+title)) return Math.min(1,lines.length);
+
+ // Fluxos: explique a ideia em uma frase/parágrafo e depois mostre a sequência visual.
+ if(/PROCESSO|CRONOGRAMA|INTEGRAÇÃO|CONFORMIDADE/.test(kind)) return Math.min(1,lines.length);
+
+ // Primeiro bloco: preserve a introdução curta antes do mapa do módulo.
+ if(index===0){
+  const firstContent=lines.findIndex(x=>x.trim());
+  if(firstContent<0)return 0;
+  let pos=firstContent+1;
+  while(pos<lines.length&&!lines[pos].trim())pos++;
+  return pos;
  }
- if(/EXEMPLO|NUMÉRICO/.test(kind+' '+String(block?.t||''))) return Math.min(1,lines.length);
- if(/REGIMES/.test(kind)||/afeta cada regime/i.test(String(block?.t||''))) return Math.max(1,Math.min(lines.length-1,Math.ceil(lines.length/2)));
- if(index===0) return Math.min(2,lines.length);
+
  return Math.min(1,lines.length);
 }
 function courseTextWithVisual(m,b,index){
@@ -322,11 +336,9 @@ function moduleHelpFooter(m){
  const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Volte ao texto para aprofundar a regra.'};
  const rawQuestion=String(h.question||'').replace(/^Pergunta-guia:\s*/i,'');
  const question=rawQuestion.charAt(0).toUpperCase()+rawQuestion.slice(1);
- const mistake=MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.';
  return '<figcaption class="lesson-takeaway"><span>PARA FIXAR</span><p>'+courseEscape(question)+'</p></figcaption>'+
-  '<details class="lesson-context"><summary>Entenda o raciocínio e o cuidado principal</summary><div><p>'+courseEscape(h.help)+'</p><p class="lesson-context-caution"><b>Evite este erro</b>'+courseEscape(mistake)+'</p></div></details>';
+  '<details class="lesson-context"><summary>Entenda melhor</summary><p>'+courseEscape(h.help)+'</p></details>';
 }
-
 function moduleBlockVisualHtml(m,b,index){
  const guide=MODULE_VISUAL_GUIDE[m.id]||{focus:[m.title],flow:['Entenda','Aplique','Revise']};
  const kind=String(b.k||'').toUpperCase();
@@ -656,21 +668,36 @@ window.matchMedia('(max-width:760px)').addEventListener('change',e=>{
 });
 function initLessonStoryDynamics(){
  lessonStoryObserver?.disconnect();
- const stories=[...document.querySelectorAll('#modulePage .lesson-story:not(.is-visible)')];
+ const allStories=[...document.querySelectorAll('#modulePage .lesson-story')];
+ if(!allStories.length)return;
+
+ allStories.forEach(story=>{
+  if(story.dataset.interactiveReady)return;
+  story.dataset.interactiveReady='1';
+  const items=[...story.querySelectorAll('.lesson-concept-step,.lesson-regime-track section,.lesson-example-step,.lesson-process-step')];
+  items.forEach(item=>{
+   item.tabIndex=0;
+   const activate=()=>{
+    items.forEach(x=>x.classList.remove('is-active'));
+    item.classList.add('is-active');
+   };
+   item.addEventListener('click',activate);
+   item.addEventListener('focus',activate);
+  });
+ });
+
+ const stories=allStories.filter(x=>!x.classList.contains('is-visible'));
  if(!stories.length)return;
  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){stories.forEach(x=>x.classList.add('is-visible'));return;}
- // Content remains readable before reveal, when printing, or if observation is unavailable.
  if(!('IntersectionObserver' in window)){stories.forEach(x=>x.classList.add('is-visible'));return;}
  lessonStoryObserver=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{if(entry.isIntersecting){
    entry.target.classList.add('is-visible');
-   entry.target.animate([{opacity:.4,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:380,easing:'cubic-bezier(.22,1,.36,1)'});
    lessonStoryObserver.unobserve(entry.target);
   }});
- },{threshold:.08});
+ },{threshold:.1,rootMargin:'0px 0px -5% 0px'});
  stories.forEach(x=>lessonStoryObserver.observe(x));
 }
-
 function openModule(id){
  const m=STUDY_MODULES.find(x=>x.id===id);
  if(m)saveNavigation({view:'modulePage',moduleId:m.id});
