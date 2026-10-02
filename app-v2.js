@@ -652,6 +652,39 @@ function moduleSummaryHtml(m,index){
   '</div></section>';
 }
 
+function initLessonStoryDynamics(){
+ const stories=[...document.querySelectorAll('#modulePage .lesson-story')];
+ if(!stories.length)return;
+ const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ stories.forEach(story=>{
+  if(story.dataset.motionReady)return;
+  story.dataset.motionReady='1';
+  if(!reduced)story.classList.add('lesson-story-motion');
+  const items=story.querySelectorAll('.lesson-concept-step,.lesson-regime-track section,.lesson-example-step,.lesson-process-step');
+  items.forEach(item=>{
+   item.tabIndex=0;
+   item.addEventListener('click',()=>{
+    items.forEach(x=>x.classList.remove('is-active'));
+    item.classList.add('is-active');
+   });
+   item.addEventListener('focus',()=>{
+    items.forEach(x=>x.classList.remove('is-active'));
+    item.classList.add('is-active');
+   });
+  });
+ });
+ if(reduced){stories.forEach(x=>x.classList.add('is-visible'));return;}
+ const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+   if(entry.isIntersecting){
+    entry.target.classList.add('is-visible');
+    observer.unobserve(entry.target);
+   }
+  });
+ },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+ stories.filter(x=>!x.classList.contains('is-visible')).forEach(x=>observer.observe(x));
+}
+
 function openModule(id){
  const m=STUDY_MODULES.find(x=>x.id===id);
  if(m)saveNavigation({view:'modulePage',moduleId:m.id});
@@ -677,6 +710,7 @@ function openModule(id){
    <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
   go('modulePage',{instant:true});
   showCourseStep(progress.step,false);
+  requestAnimationFrame(initLessonStoryDynamics);
   requestAnimationFrame(()=>{
    const target=document.querySelector('#modulePage .course-block:not([hidden])');
    (target||document.querySelector('#modulePage .course-layout'))?.scrollIntoView({behavior:'auto',block:'start'});
@@ -709,6 +743,7 @@ function showCourseStep(index,scroll=true){
  const progress=moduleProgress(m),all=studyProgress();
  all[m.id]={...progress,step};saveStudyProgress(all);
  document.querySelectorAll('#modulePage .course-block').forEach((block,i)=>{block.hidden=!courseAllVisible&&i!==step;});
+ requestAnimationFrame(initLessonStoryDynamics);
  document.querySelectorAll('#modulePage [data-course-step]').forEach((button,i)=>{
   button.classList.toggle('active',i===step);
   button.classList.toggle('read',progress.read.includes(i));
