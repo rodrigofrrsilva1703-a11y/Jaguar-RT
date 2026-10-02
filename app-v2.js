@@ -867,34 +867,38 @@ function pickYear(y){
  const idx=years.indexOf(String(y));
  const o=TIMELINE[y],info=timelineInfo(y);
 
- document.querySelectorAll('#home .year').forEach(b=>{
+ document.querySelectorAll('#home .year').forEach((b,i)=>{
   const active=b.dataset.year===String(y);
   b.classList.toggle('active',active);
+  b.classList.toggle('is-past',i<idx);
   b.setAttribute('aria-pressed',String(active));
  });
  const lineFill=$('transitionLineFill');
  if(lineFill)lineFill.style.width=(idx/(years.length-1)*100)+'%';
 
- const panel=$('timelinePanel');
- const pct=idx/(years.length-1)*100;
- let shift='-50%',arrow='50%';
- if(idx<=1){shift='0%';arrow=idx===0?'13%':'28%';}
- else if(idx>=years.length-2){shift='-100%';arrow=idx===years.length-1?'87%':'72%';}
- panel.style.setProperty('--timeline-left',pct+'%');
- panel.style.setProperty('--timeline-shift',shift);
- panel.style.setProperty('--popover-arrow',arrow);
- panel.innerHTML=
-  '<div class="transition-popover-head"><strong>'+courseEscape(y)+'</strong><span>'+courseEscape(info.phase)+'</span></div>'+
-  '<h3>'+courseEscape(info.short)+'</h3>'+
-  '<div class="transition-popover-change"><small>MUDANÇA PRINCIPAL</small><p>'+courseEscape(info.newModel)+'</p></div>'+
-  '<div class="transition-popover-focus"><small>NA PRÁTICA</small><p>'+courseEscape(info.focus)+'</p></div>'+
-  '<div class="transition-popover-actions"><button type="button" onclick="openModule(\'10\')">Ver Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>';
+ $('timelinePanel').innerHTML=
+  '<div class="rt-detail-main">'+
+   '<div class="rt-detail-kicker"><strong>'+courseEscape(y)+'</strong><span>'+courseEscape(info.phase)+'</span></div>'+
+   '<h3>'+courseEscape(info.short)+'</h3>'+
+   '<p>'+courseEscape(o.text)+'</p>'+
+   '<div class="rt-detail-meta">'+
+    '<div><small>NOVO MODELO</small><b>'+courseEscape(info.newModel)+'</b></div>'+
+    '<div><small>SISTEMA ANTERIOR</small><b>'+courseEscape(info.oldModel)+'</b></div>'+
+   '</div>'+
+   (Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">A proporção indicada representa a transição para o IBS, não a alíquota final.</small>':'')+
+  '</div>'+
+  '<aside class="rt-detail-side">'+
+   '<div><small>FOCO PRÁTICO</small><b>'+courseEscape(info.focus)+'</b></div>'+
+   '<div class="rt-detail-actions"><button type="button" onclick="openModule(\'10\')">Ver Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>'+
+  '</aside>';
 
  const activeNode=document.querySelector('#home .year.active');
- if(activeNode&&window.matchMedia('(max-width:920px)').matches){activeNode.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+ if(activeNode&&window.matchMedia('(max-width:920px)').matches){
+  activeNode.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+ }
  if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-  const summary=$('timelinePanel').querySelector('.transition-summary');
-  summary?.animate([{opacity:.45,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:280,easing:'cubic-bezier(.22,1,.36,1)'});
+  const panel=$('timelinePanel');
+  panel?.animate([{opacity:.55,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'cubic-bezier(.22,1,.36,1)'});
  }
 }
 
