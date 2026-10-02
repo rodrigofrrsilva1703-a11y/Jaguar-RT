@@ -804,6 +804,35 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 /* Paint the saved session's page before the background session check completes. */
 html.has-saved-session #siteShell[hidden]{display:block!important}
 html.has-saved-session #loginGate{display:none!important}
+
+/* ===== RESUMO VISUAL DOS MÓDULOS ===== */
+.module-visual-deck{max-width:1120px;margin:16px 0 18px;border:1px solid #d9d9d4;border-radius:22px;background:#fff;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.035)}
+.module-visual-head{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 18px;border-bottom:1px solid #ecece8;background:#fafaf7}
+.module-visual-head>div{display:flex;align-items:center;gap:10px;min-width:0}.module-visual-head .eyebrow{color:#777}.module-visual-head b{font-size:12px}.module-visual-head>span{font-size:9px;font-weight:900;color:#777;white-space:nowrap}
+.module-visual-stage{position:relative;min-height:320px}
+.module-visual-slide{min-height:320px;padding:32px 36px;animation:moduleSlideIn .24s ease both}
+.module-visual-slide[hidden]{display:none!important}
+@keyframes moduleSlideIn{from{opacity:.25;transform:translateX(8px)}to{opacity:1;transform:none}}
+.visual-copy{max-width:650px}.visual-eyebrow{display:block;font-size:9px;font-weight:900;letter-spacing:.16em;color:#7c7c77;margin-bottom:9px}
+.visual-copy h2{font-size:clamp(28px,3vw,41px);letter-spacing:-.045em;line-height:1.04;margin:0 0 12px}.visual-copy p{font-size:13px;line-height:1.7;color:#62625e;margin:0}
+.visual-intro{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:34px;align-items:center;background:#111;color:#fff}.visual-intro .visual-eyebrow{color:#aaa}.visual-intro .visual-copy p{color:#c9c9c5}.visual-focus{display:grid;gap:8px}
+.visual-focus>div{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;padding:13px 14px;border:1px solid #343434;border-radius:12px;background:#191919}.visual-focus small{font-size:8px;color:#898989;font-weight:900}.visual-focus b{font-size:14px;line-height:1.25}
+.visual-compare{background:#f4f4f1}.visual-compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:25px}.visual-compare-grid>div{background:#fff;border:1px solid #deded9;border-radius:16px;padding:18px}.visual-compare-grid>div.after{background:#111;color:#fff;border-color:#111}.visual-compare-grid small{font-size:8px;font-weight:900;letter-spacing:.14em;color:#8a8a84}.visual-compare-grid .after small{color:#aaa}.visual-compare-grid p{font-size:12px;line-height:1.65;color:#555;margin:9px 0 0}.visual-compare-grid .after p{color:#d3d3cf}
+.visual-flow{background:#fff}.visual-flowline{display:flex;align-items:stretch;gap:10px;margin-top:34px}.visual-flowline>div{flex:1;min-width:0;border:1px solid #dadad5;border-radius:16px;padding:19px;background:#f8f8f5}.visual-flowline>div span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#111;color:#fff;font-size:9px;font-weight:900;margin-bottom:19px}.visual-flowline>div b{font-size:15px;line-height:1.35}.visual-flowline>i{align-self:center;font-style:normal;font-size:20px;color:#aaa}
+.visual-example{background:#111;color:#fff}.visual-example .visual-eyebrow{color:#aaa}.visual-example-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:23px}.visual-example-grid>div{min-height:86px;border:1px solid #353535;border-radius:14px;padding:14px;background:#191919}.visual-example-grid small,.visual-example-grid b{display:block}.visual-example-grid small{font-size:7px;color:#8f8f8f;font-weight:900;letter-spacing:.11em}.visual-example-grid b{font-size:12px;line-height:1.5;margin-top:7px;color:#f4f4f0}
+.visual-summary{background:#f4f4f1}.visual-summary-grid{display:grid;grid-template-columns:1fr .9fr;gap:10px;margin-top:22px}.visual-takeaways{display:grid;gap:7px}.visual-takeaways span{background:#fff;border:1px solid #dddcd7;border-radius:12px;padding:12px 14px;font-size:12px;font-weight:800}.visual-warning{background:#111;color:#fff;border-radius:15px;padding:18px}.visual-warning small,.visual-warning b{display:block}.visual-warning small{font-size:8px;color:#aaa;letter-spacing:.12em;font-weight:900}.visual-warning b{font-size:14px;line-height:1.55;margin-top:9px}
+.module-visual-controls{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid #ecece8;background:#fff}.module-visual-controls>button{height:34px;border:1px solid #d8d8d3;background:#fff;border-radius:9px;font-weight:900}.module-visual-controls>button:hover{background:#111;color:#fff;border-color:#111}.module-visual-dots{display:flex;justify-content:center;gap:6px}.module-visual-dots button{width:7px;height:7px;border:0;border-radius:50%;padding:0;background:#ccc}.module-visual-dots button.active{width:23px;border-radius:999px;background:#111}
+@media(max-width:760px){
+ .module-visual-deck{border-radius:17px;margin:13px 0 16px}
+ .module-visual-head{padding:12px 14px}.module-visual-head>div{display:block}.module-visual-head b{display:block;margin-top:3px}
+ .module-visual-stage,.module-visual-slide{min-height:0}.module-visual-slide{padding:23px 19px}
+ .visual-intro{grid-template-columns:1fr;gap:20px}.visual-focus{grid-template-columns:repeat(3,1fr);gap:6px}.visual-focus>div{display:block;padding:11px}.visual-focus small{display:block;margin-bottom:5px}.visual-focus b{font-size:11px}
+ .visual-compare-grid,.visual-summary-grid{grid-template-columns:1fr}.visual-compare-grid{margin-top:19px}
+ .visual-flowline{display:grid;grid-template-columns:1fr;margin-top:22px;gap:6px}.visual-flowline>div{display:grid;grid-template-columns:32px 1fr;align-items:center;gap:9px;padding:12px 13px}.visual-flowline>div span{margin:0;width:28px;height:28px}.visual-flowline>div b{font-size:12px}.visual-flowline>i{display:none}
+ .visual-example-grid{grid-template-columns:1fr;margin-top:19px}.visual-example-grid>div{min-height:0}
+ .visual-copy h2{font-size:29px}.visual-copy p{font-size:12px}
+}
+
 </style>
 <script>
 try{
@@ -1384,7 +1413,7 @@ try{
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20261002-96" defer></script>
+<script src="app-v2.js?v=20261002-97" defer></script>
 <script src="account.js?v=20261002-96" defer></script>
 </body>
 </html>
