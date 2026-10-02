@@ -310,7 +310,7 @@ function compareFromBlock(block){
 function examplePointsFromBlock(block){
  const lines=String(block?.x||'').split('\n').map(x=>x.replace(/^[-*•]\s*/,'').trim()).filter(Boolean);
  const selected=lines.filter(x=>/R\$|%|Etapa|Fase|Ano|→|=>|Total|Crédito|Débito|Base/i.test(x)).slice(0,4);
- return (selected.length>=2?selected:lines.slice(0,4)).map(x=>courseClip(x,105));
+ return (selected.length>=2?selected:lines.slice(0,4)).map(x=>x);
 }
 function regimeSummaryFromBlock(block,label){
  const lines=String(block?.x||'').split('\n').map(x=>x.trim()).filter(Boolean);
@@ -319,14 +319,11 @@ function regimeSummaryFromBlock(block,label){
  return courseFirstSentence(line.replace(/^[-*•]\s*/,'').replace(new RegExp('^'+label+'\\s*:\\s*','i'),''),125);
 }
 function moduleHelpFooter(m){
- const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Use este quadro como apoio e volte ao texto para aprofundar a regra.'};
- const mistake=MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.';
+ const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Volte ao texto para aprofundar a regra.'};
  const question=String(h.question||'').replace(/^Pergunta-guia:\s*/i,'');
- return '<div class="lesson-insight-row">'+
-  '<div class="lesson-insight-main"><small>COMO ENTENDER</small><p>'+courseEscape(h.help)+'</p></div>'+
-  '<div class="lesson-insight-question"><small>PERGUNTA-CHAVE</small><b>'+courseEscape(question)+'</b></div>'+
-  '<div class="lesson-insight-warning"><small>EVITE ESTE ERRO</small><p>'+courseEscape(mistake)+'</p></div>'+
- '</div>';
+ const mistake=MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.';
+ return '<figcaption class="lesson-takeaway"><span>PARA FIXAR</span><p>'+courseEscape(question)+'</p></figcaption>'+
+  '<details class="lesson-context"><summary>Entenda o raciocínio e o cuidado principal</summary><div><p>'+courseEscape(h.help)+'</p><p class="lesson-context-caution"><b>Evite este erro</b>'+courseEscape(mistake)+'</p></div></details>';
 }
 
 function moduleBlockVisualHtml(m,b,index){
@@ -337,8 +334,8 @@ function moduleBlockVisualHtml(m,b,index){
 
  if(index===0){
   return '<figure class="lesson-story lesson-story-focus" aria-label="Mapa visual do módulo">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">VISÃO DO MÓDULO</span><h3>O raciocínio que você precisa levar desta etapa</h3></div><p>'+courseEscape(m.subtitle)+'</p></div>'+
-   '<div class="lesson-concept-route">'+guide.focus.map((x,i)=>'<div class="lesson-concept-step"><span class="lesson-concept-no">'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['ENTENDA','CONECTE','APLIQUE'][i]||'FIXE')+'</small><b>'+courseEscape(x)+'</b><p>'+courseEscape(['Primeiro, entenda o conceito sem decorar a sigla.','Depois, veja como essa ideia se conecta à nova sistemática.','Por fim, use o conceito para analisar uma operação real.'][i]||'Ponto central do módulo.')+'</p></div></div>').join('')+'</div>'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">VISÃO DO MÓDULO</span><h3>Três ideias para guardar</h3></div><p>Entenda a ideia, conecte os conceitos e aplique na análise.</p></div>'+
+   '<div class="lesson-concept-route">'+guide.focus.map((x,i)=>'<div class="lesson-concept-step"><span class="lesson-concept-no">'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['ENTENDA','CONECTE','APLIQUE'][i]||'FIXE')+'</small><b>'+courseEscape(x)+'</b></div></div>').join('')+'</div>'+
    moduleHelpFooter(m)+
   '</figure>';
  }
@@ -346,7 +343,7 @@ function moduleBlockVisualHtml(m,b,index){
  if(/COMPARATIVO/.test(kind)){
   const compare=compareFromBlock(b);
   return '<figure class="lesson-story lesson-story-compare" aria-label="Comparação entre antes e depois">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">ANTES × DEPOIS</span><h3>Veja a mudança antes de continuar a leitura</h3></div><p>O objetivo aqui não é resumir todo o tema, mas deixar visível qual lógica mudou.</p></div>'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">ANTES × DEPOIS</span><h3>O que mudou na prática</h3></div><p>O objetivo aqui não é resumir todo o tema, mas deixar visível qual lógica mudou.</p></div>'+
    '<div class="lesson-before-after">'+
     '<section class="lesson-era lesson-era-before"><div class="lesson-era-title"><small>ANTES</small><b>Sistema anterior</b></div><p>'+courseEscape(compare.before)+'</p></section>'+
     '<div class="lesson-shift"><span>→</span><small>MUDANÇA<br>CENTRAL</small></div>'+
@@ -364,7 +361,7 @@ function moduleBlockVisualHtml(m,b,index){
   ].filter(x=>x[1]);
   if(rows.length){
    return '<figure class="lesson-story lesson-story-regimes" aria-label="Regimes em foco">'+
-    '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">REGIMES EM FOCO</span><h3>A mesma reforma produz efeitos diferentes conforme o regime</h3></div><p>Leia cada coluna separadamente antes de comparar.</p></div>'+
+    '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">REGIMES EM FOCO</span><h3>Compare os regimes</h3></div><p>Leia cada coluna separadamente antes de comparar.</p></div>'+
     '<div class="lesson-regime-track">'+rows.map((x,i)=>'<section><span>'+String(i+1).padStart(2,'0')+'</span><small>REGIME</small><b>'+courseEscape(x[0])+'</b><p>'+courseEscape(x[1])+'</p></section>').join('')+'</div>'+
     moduleHelpFooter(m)+
    '</figure>';
@@ -374,15 +371,15 @@ function moduleBlockVisualHtml(m,b,index){
  if(/EXEMPLO|NUMÉRICO|CASO PRÁTICO/.test(kind+' '+title)){
   const points=examplePointsFromBlock(b);
   return '<figure class="lesson-story lesson-story-example" aria-label="Exemplo explicado em etapas">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">EXEMPLO GUIADO</span><h3>Acompanhe a análise na ordem certa</h3></div><p>Use o exemplo como ponte entre a regra e a aplicação prática.</p></div>'+
-   '<div class="lesson-example-route">'+points.map((x,i)=>'<div class="lesson-example-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><small>ETAPA '+(i+1)+'</small><b>'+courseEscape(x)+'</b></div></div>').join('')+'</div>'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">EXEMPLO GUIADO</span><h3>O exemplo em etapas</h3></div><p>Use o exemplo como ponte entre a regra e a aplicação prática.</p></div>'+
+   '<div class="lesson-example-route">'+points.map((x,i)=>'<div class="lesson-example-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><small>ETAPA '+(i+1)+'</small><b>'+courseEscape(courseFirstSentence(x,170))+'</b>'+(courseFirstSentence(x,170)!==x?'<details class="lesson-calculation"><summary>Ver explicação completa</summary><p>'+courseEscape(x)+'</p></details>':'')+'</div></div>').join('')+'</div>'+
    moduleHelpFooter(m)+
   '</figure>';
  }
 
  if(/PROCESSO|CRONOGRAMA|INTEGRAÇÃO|CONFORMIDADE/.test(kind)){
   return '<figure class="lesson-story lesson-story-flow" aria-label="Fluxo visual do processo">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">FLUXO DA IDEIA</span><h3>Transforme a regra em uma sequência fácil de acompanhar</h3></div><p>Leia o caminho da esquerda para a direita e depois volte ao texto para os detalhes.</p></div>'+
+   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">FLUXO DA IDEIA</span><h3>O caminho da operação</h3></div><p>Siga as etapas numeradas para acompanhar o processo.</p></div>'+
    '<div class="lesson-process-line">'+guide.flow.map((x,i)=>'<div class="lesson-process-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['INÍCIO','TRATAMENTO','RESULTADO'][i]||'ETAPA')+'</small><b>'+courseEscape(x)+'</b></div></div>').join('<i aria-hidden="true">→</i>')+'</div>'+
    moduleHelpFooter(m)+
   '</figure>';
@@ -652,37 +649,25 @@ function moduleSummaryHtml(m,index){
   '</div></section>';
 }
 
+let lessonStoryObserver=null;
+window.matchMedia('(max-width:760px)').addEventListener('change',e=>{
+ const outline=document.querySelector('#modulePage .course-outline');if(outline)outline.open=!e.matches;
+});
 function initLessonStoryDynamics(){
- const stories=[...document.querySelectorAll('#modulePage .lesson-story')];
+ lessonStoryObserver?.disconnect();
+ const stories=[...document.querySelectorAll('#modulePage .lesson-story:not(.is-visible)')];
  if(!stories.length)return;
- const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- stories.forEach(story=>{
-  if(story.dataset.motionReady)return;
-  story.dataset.motionReady='1';
-  if(!reduced)story.classList.add('lesson-story-motion');
-  const items=story.querySelectorAll('.lesson-concept-step,.lesson-regime-track section,.lesson-example-step,.lesson-process-step');
-  items.forEach(item=>{
-   item.tabIndex=0;
-   item.addEventListener('click',()=>{
-    items.forEach(x=>x.classList.remove('is-active'));
-    item.classList.add('is-active');
-   });
-   item.addEventListener('focus',()=>{
-    items.forEach(x=>x.classList.remove('is-active'));
-    item.classList.add('is-active');
-   });
-  });
- });
- if(reduced){stories.forEach(x=>x.classList.add('is-visible'));return;}
- const observer=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-   if(entry.isIntersecting){
-    entry.target.classList.add('is-visible');
-    observer.unobserve(entry.target);
-   }
-  });
- },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
- stories.filter(x=>!x.classList.contains('is-visible')).forEach(x=>observer.observe(x));
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){stories.forEach(x=>x.classList.add('is-visible'));return;}
+ // Content remains readable before reveal, when printing, or if observation is unavailable.
+ if(!('IntersectionObserver' in window)){stories.forEach(x=>x.classList.add('is-visible'));return;}
+ lessonStoryObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{if(entry.isIntersecting){
+   entry.target.classList.add('is-visible');
+   entry.target.animate([{opacity:.4,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:380,easing:'cubic-bezier(.22,1,.36,1)'});
+   lessonStoryObserver.unobserve(entry.target);
+  }});
+ },{threshold:.08});
+ stories.forEach(x=>lessonStoryObserver.observe(x));
 }
 
 function openModule(id){
@@ -703,7 +688,7 @@ function openModule(id){
    <button class="back" onclick="go('modules')">← Todos os estudos</button>
    <header class="course-hero"><span class="module-no">MÓDULO ${m.id} DE ${STUDY_MODULES.length}</span><h1 class="page-title">${courseEscape(m.title)}</h1><p class="page-lead">${courseEscape(m.subtitle)}</p><div class="course-hero-progress"><strong id="courseProgressLabel"></strong><span class="study-progress-track"><i id="courseProgressFill"></i></span></div></header>
    <div class="course-note"><b>Premissas dos exemplos</b><p>Os valores de CBS 9,21% e IBS 18,70% são parâmetros didáticos deste curso. A alíquota efetiva e os créditos dependem do ano, do destino, do regime, da operação e dos requisitos legais. Confira as regras vigentes antes de aplicar um exemplo a uma empresa.</p></div>
-   <div class="course-layout"><nav class="course-toc" aria-label="Etapas da aula"><div class="course-toc-head"><b>Nesta aula</b><span>${m.blocks.length} etapas</span></div>${m.blocks.map((b,i)=>`<button type="button" data-course-step="${i}" onclick="showCourseStep(${i})"><span class="course-step-number">${String(i+1).padStart(2,'0')}</span><span>${courseEscape(b.t)}</span><span class="course-step-check" aria-hidden="true">✓</span></button>`).join('')}<button type="button" class="course-view-all" id="courseViewAll" onclick="toggleCourseView()">Ver aula inteira</button></nav><div class="course-main"><div class="course-stage-label" id="courseStageLabel"></div><div class="lesson-stack">${blocks}</div><div class="course-controls"><button type="button" id="coursePrev" onclick="moveCourseStep(-1)">← Etapa anterior</button><button type="button" class="course-next" id="courseNext" onclick="moveCourseStep(1)">Próxima etapa →</button></div></div></div>
+   <div class="course-layout"><nav class="course-toc" aria-label="Etapas da aula"><details class="course-outline" ${window.matchMedia('(max-width:760px)').matches?'':'open'}><summary>Etapas da aula <span id="courseOutlineCurrent"></span></summary><div class="course-outline-list"><div class="course-toc-head"><b>Nesta aula</b><span>${m.blocks.length} etapas</span></div>${m.blocks.map((b,i)=>`<button type="button" data-course-step="${i}" onclick="showCourseStep(${i})"><span class="course-step-number">${String(i+1).padStart(2,'0')}</span><span>${courseEscape(b.t)}</span><span class="course-step-check" aria-hidden="true">✓</span></button>`).join('')}<button type="button" class="course-view-all" id="courseViewAll" onclick="toggleCourseView()">Ver aula inteira</button></div></details></nav><div class="course-main"><div class="course-stage-label" id="courseStageLabel"></div><div class="lesson-stack">${blocks}</div><div class="course-controls"><button type="button" id="coursePrev" onclick="moveCourseStep(-1)">← Etapa anterior</button><button type="button" class="course-next" id="courseNext" onclick="moveCourseStep(1)">Próxima etapa →</button></div></div></div>
    ${moduleSummaryHtml(m,index)}
    ${moduleActionHtml(m)}
    <div class="course-quiz-callout"><div><b>Concluiu a leitura?</b><span>Confira o que aprendeu em 10 perguntas deste módulo.</span></div><button class="quiz-primary" onclick="startModuleQuiz('${m.id}')">Fazer teste do módulo ${m.id} →</button></div>
@@ -751,6 +736,8 @@ function showCourseStep(index,scroll=true){
  });
  $('courseProgressLabel').textContent=`${progress.read.length} de ${m.blocks.length} etapas lidas`;
  $('courseProgressFill').style.width=`${100*progress.read.length/m.blocks.length}%`;
+ if($('courseOutlineCurrent'))$('courseOutlineCurrent').textContent=String(step+1).padStart(2,'0')+' / '+String(m.blocks.length).padStart(2,'0');
+ if(scroll&&window.matchMedia('(max-width:760px)').matches){const outline=document.querySelector('.course-outline');if(outline)outline.open=false;}
  $('courseStageLabel').textContent=courseAllVisible?'AULA COMPLETA':`ETAPA ${String(step+1).padStart(2,'0')} DE ${String(m.blocks.length).padStart(2,'0')}`;
  $('coursePrev').disabled=step===0;
  $('courseNext').textContent=step===m.blocks.length-1?(progress.read.includes(step)?'Etapa concluída ✓':'Concluir módulo ✓'):'Marcar como lida e avançar →';

@@ -16,6 +16,49 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
+test('slides ficam legíveis no celular e etapas recolhem após a escolha',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('http://127.0.0.1:4173/?e2e=lesson-slides',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ for(const id of ['01','04','11','15']){
+  await page.evaluate(id=>{openModule(id);showCourseStep(0,false)},id);
+  await expect(page.locator('.course-outline')).not.toHaveAttribute('open','');
+  const figure=page.locator('.course-block:not([hidden]) .lesson-story');
+  await expect(figure).toBeVisible();
+  expect(await figure.locator('.lesson-story-heading h3').evaluate(e=>parseFloat(getComputedStyle(e).fontSize))).toBeGreaterThanOrEqual(23);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+ }
+ await page.locator('.course-outline>summary').click();
+ await page.locator('[data-course-step="1"]').click();
+ await expect(page.locator('.course-outline')).not.toHaveAttribute('open','');
+ await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 02 DE 07');
+ await page.setViewportSize({width:1280,height:900});
+ await expect(page.locator('.course-outline')).toHaveAttribute('open','');
+ await expect(page.locator('[data-course-step="0"]')).toBeVisible();
+});
+
+test('explicações dos exemplos podem ser abertas pelo teclado sem cortar o texto',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=calculation-details',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ await page.evaluate(()=>{openModule('06');showCourseStep(4,false)});
+ const detail=page.locator('.course-block:not([hidden]) .lesson-calculation').first();
+ await expect(detail).toBeVisible();
+ await detail.locator('summary').focus();
+ await page.keyboard.press('Enter');
+ await expect(detail).toHaveAttribute('open','');
+ expect((await detail.locator('p').textContent()).length).toBeGreaterThan(170);
+ expect(await detail.locator('p').textContent()).not.toMatch(/…$/);
+});
+
+test('slides continuam visíveis sem animação ou observador',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.addInitScript(()=>{delete window.IntersectionObserver;});
+ await page.goto('http://127.0.0.1:4173/?e2e=slides-accessible',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ await page.evaluate(()=>{openModule('02');showCourseStep(0,false)});
+ await expect(page.locator('.course-block:not([hidden]) .lesson-story')).toHaveCSS('opacity','1');
+});
+
 test('retornar ao celular busca progresso de outro aparelho sem sobrescrever o servidor',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await page.unroute('**/functions/v1/jaguarrt');
