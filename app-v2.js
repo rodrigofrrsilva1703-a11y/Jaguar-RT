@@ -409,7 +409,7 @@ function renderHome(){
  $('sourceGrid').innerHTML=SOURCES.map(s=>`<article class="source-card">
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
- $('timeline').innerHTML=Object.entries(TIMELINE).map(([y,o])=>`<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" aria-pressed="false"><b>${y}</b><small>${courseEscape(timelineInfo(y).short)}</small></button>`).join('');
+ $('timeline').innerHTML=Object.keys(TIMELINE).map(y=>{const info=timelineInfo(y);return `<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" aria-pressed="false"><b>${y}</b><small>${courseEscape(info.phase)}</small></button>`;}).join('');
  pickYear('2027');
 }
 
@@ -788,23 +788,120 @@ function moveCourseStep(direction){
 function toggleCourseView(){courseAllVisible=!courseAllVisible;showCourseStep(moduleProgress(activeCourse).step,false);}
 
 let activeTimelineYear='2027';
+
+const HOME_TRANSITION_INFO={
+ '2026':{
+  phase:'Teste',
+  stage:'PREPARAÇÃO',
+  short:'CBS e IBS entram em ambiente de teste',
+  newModel:'CBS 0,9% · IBS 0,1%',
+  oldModel:'PIS/Cofins + ICMS/ISS permanecem',
+  focus:'Documentos fiscais, sistemas, cadastros e adaptação operacional'
+ },
+ '2027':{
+  phase:'Implantação inicial',
+  stage:'NOVA CAMADA FEDERAL',
+  short:'CBS entra e o IBS começa com 0,1%',
+  newModel:'CBS aplicável · IBS 0,1% · Imposto Seletivo',
+  oldModel:'PIS/Cofins extintos · ICMS/ISS permanecem',
+  focus:'Apuração, créditos, documentos fiscais e formação de preço'
+ },
+ '2028':{
+  phase:'Implantação inicial',
+  stage:'ESTABILIZAÇÃO',
+  short:'CBS e IBS inicial seguem em operação',
+  newModel:'CBS aplicável · IBS 0,1%',
+  oldModel:'ICMS/ISS permanecem',
+  focus:'Consolidar rotinas, corrigir cadastros e revisar processos'
+ },
+ '2029':{
+  phase:'Convivência dos sistemas',
+  stage:'TRANSIÇÃO ESTADUAL/MUNICIPAL',
+  short:'Primeira redução efetiva de ICMS e ISS',
+  newModel:'IBS assume 10% da proporção de transição',
+  oldModel:'ICMS/ISS ficam em 90%',
+  focus:'Conciliar os dois modelos e medir impacto por operação'
+ },
+ '2030':{
+  phase:'Convivência dos sistemas',
+  stage:'TRANSIÇÃO ESTADUAL/MUNICIPAL',
+  short:'O IBS ganha mais espaço na tributação',
+  newModel:'IBS assume 20% da proporção de transição',
+  oldModel:'ICMS/ISS ficam em 80%',
+  focus:'Revisar créditos, custos, contratos e precificação'
+ },
+ '2031':{
+  phase:'Convivência dos sistemas',
+  stage:'TRANSIÇÃO ESTADUAL/MUNICIPAL',
+  short:'A participação do sistema antigo continua caindo',
+  newModel:'IBS assume 30% da proporção de transição',
+  oldModel:'ICMS/ISS ficam em 70%',
+  focus:'Monitorar margens, créditos e diferenças entre cenários'
+ },
+ '2032':{
+  phase:'Último ano de transição',
+  stage:'PREPARAÇÃO PARA A VIRADA',
+  short:'Última etapa antes do modelo integral',
+  newModel:'IBS assume 40% da proporção de transição',
+  oldModel:'ICMS/ISS ficam em 60%',
+  focus:'Preparar sistemas, contratos e rotinas para 2033'
+ },
+ '2033':{
+  phase:'Novo modelo',
+  stage:'MODELO INTEGRAL',
+  short:'CBS e IBS passam a operar no modelo integral',
+  newModel:'CBS + IBS · Imposto Seletivo quando aplicável',
+  oldModel:'ICMS e ISS extintos',
+  focus:'Operação integral, conciliação e consultoria no novo sistema'
+ }
+};
+
 function timelineInfo(y){
- const change={2029:10,2030:20,2031:30,2032:40,2033:100}[y];
- if(change!==undefined)return {phase:y==='2033'?'Novo modelo':'Substituição gradual',short:y==='2033'?'Modelo integral':`ICMS/ISS ${100-change}% · IBS ${change}%`};
- if(y==='2026')return {phase:'Ano de teste',short:'Teste'};
- return {phase:'Implantação inicial',short:y==='2027'?'CBS + IBS':'IBS inicial'};
+ return HOME_TRANSITION_INFO[String(y)]||{phase:'Transição',stage:'ETAPA',short:TIMELINE[y]?.label||'',newModel:'',oldModel:'',focus:''};
 }
+
 function pickYear(y){
  if(!TIMELINE[y]) return;
  activeTimelineYear=String(y);
- document.querySelectorAll('.year').forEach(b=>{const active=b.dataset.year===String(y);b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
- const o=TIMELINE[y], info=timelineInfo(y);
  const years=Object.keys(TIMELINE);
  const idx=years.indexOf(String(y));
- $('timelinePanel').innerHTML=`<div class="transition-selected"><strong>${y}</strong><span>${courseEscape(info.phase)}</span></div><div class="transition-summary"><h3>${courseEscape(info.short)}</h3><p>${courseEscape(o.text)}</p>${Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">Os percentuais indicam a proporção da transição, não a alíquota final.</small>':''}<div class="transition-panel-actions"><button type="button" onclick="moveYear(-1)" ${idx===0?'disabled':''}>← Anterior</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Cronograma oficial ↗</a><button type="button" onclick="moveYear(1)" ${idx===years.length-1?'disabled':''}>Próximo →</button></div></div>`;
+ const o=TIMELINE[y],info=timelineInfo(y);
+
+ document.querySelectorAll('#home .year').forEach(b=>{
+  const active=b.dataset.year===String(y);
+  b.classList.toggle('active',active);
+  b.setAttribute('aria-pressed',String(active));
+ });
+ const progress=$('transitionProgressFill');
+ if(progress)progress.style.width=(idx/(years.length-1)*100)+'%';
+ const progressLabel=$('transitionProgressLabel');
+ if(progressLabel)progressLabel.textContent='Etapa '+(idx+1)+' de '+years.length;
+
+ $('timelinePanel').innerHTML=
+  '<div class="transition-selected">'+
+   '<small>ANO SELECIONADO</small>'+
+   '<strong>'+courseEscape(y)+'</strong>'+
+   '<span>'+courseEscape(info.phase)+'</span>'+
+   '<em>Etapa '+(idx+1)+' de '+years.length+'</em>'+
+  '</div>'+
+  '<div class="transition-summary">'+
+   '<div class="transition-summary-top"><span class="transition-stage">'+courseEscape(info.stage)+'</span><h3>'+courseEscape(info.short)+'</h3><p>'+courseEscape(o.text)+'</p></div>'+
+   '<div class="transition-facts">'+
+    '<div><small>NOVO MODELO</small><b>'+courseEscape(info.newModel)+'</b></div>'+
+    '<div><small>SISTEMA ANTERIOR</small><b>'+courseEscape(info.oldModel)+'</b></div>'+
+    '<div class="transition-focus"><small>FOCO PRÁTICO</small><b>'+courseEscape(info.focus)+'</b></div>'+
+   '</div>'+
+   (Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">10%, 20%, 30% e 40% indicam a proporção da transição para o IBS — não a alíquota final do tributo.</small>':'')+
+   '<div class="transition-panel-actions">'+
+    '<button type="button" onclick="moveYear(-1)" '+(idx===0?'disabled':'')+'>← Anterior</button>'+
+    '<div class="transition-action-links"><button type="button" class="transition-study" onclick="openModule(\'10\')">Estudar Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>'+
+    '<button type="button" onclick="moveYear(1)" '+(idx===years.length-1?'disabled':'')+'>Próximo →</button>'+
+   '</div>'+
+  '</div>';
+
  if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   const summary=$('timelinePanel').querySelector('.transition-summary');
-  summary?.animate([{opacity:.25,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:320,easing:'cubic-bezier(.22,1,.36,1)'});
+  summary?.animate([{opacity:.45,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:280,easing:'cubic-bezier(.22,1,.36,1)'});
  }
 }
 
