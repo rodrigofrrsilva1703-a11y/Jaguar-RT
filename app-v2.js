@@ -324,9 +324,13 @@ function moduleBlockVisualHtml(m,b,index){
   }
  }
 
- if(/EXEMPLO|NUMÉRICO/.test(kind+' '+title)){
+ if(/EXEMPLO|NUMÉRICO|CASO PRÁTICO/.test(kind+' '+title)){
   const points=examplePointsFromBlock(b);
   return '<figure class="lesson-inline-visual lesson-visual-example" aria-label="Exemplo resumido"><span class="lesson-visual-label">EXEMPLO EM ETAPAS</span><div class="lesson-example-list">'+points.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></figure>';
+ }
+
+ if(/PROCESSO|CRONOGRAMA|INTEGRAÇÃO|CONFORMIDADE/.test(kind)){
+  return '<figure class="lesson-inline-visual lesson-visual-flow" aria-label="Fluxo resumido"><span class="lesson-visual-label">FLUXO DA IDEIA</span><div class="lesson-flow-mini">'+guide.flow.map((x,i)=>'<div><small>'+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('<i>→</i>')+'</div></figure>';
  }
 
  return '';
