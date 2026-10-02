@@ -55,8 +55,8 @@ test('sessão vencida durante o estudo pede login e recupera alterações após 
  await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
  await expect.poll(()=>page.evaluate(()=>localStorage.getItem('jaguarrt-unsynced:teste@jaguarcontabil.com.br'))).toBeNull();
  expired=true;
- await page.evaluate(()=>openModule('01'));
- await page.locator('#courseNext').click();
+ // A leitura e o avanço ocorrem antes do envio agendado de progresso.
+ await page.evaluate(()=>{openModule('01');moveCourseStep(1);});
  await expect(page.locator('#loginGate')).toBeVisible();
  await expect(page.locator('#loginError')).toContainText('Sessão expirada');
  expect(await page.evaluate(()=>localStorage.getItem('jaguarrt-session'))).toBeNull();
@@ -630,7 +630,7 @@ test('relatórios filtram desempenho e módulo; Excel inclui só o resultado fil
  const file=await download;
  const base64=require('node:fs').readFileSync(await file.path()).toString('base64');
  const book=await page.evaluate(base64=>{const b=XLSX.read(base64,{type:'base64'});return {names:b.SheetNames,rows:XLSX.utils.sheet_to_json(b.Sheets.Colaboradores),modules:XLSX.utils.sheet_to_json(b.Sheets['Módulos'])};},base64);
- expect(book.names).toEqual(['Colaboradores','Módulos','Testes']);
+ expect(book.names).toEqual(['Colaboradores','Módulos','Testes','Reforço por assunto']);
  const rows=book.rows;
  expect(rows).toHaveLength(1);expect(rows[0]['E-mail']).toBe('ana@jaguarcontabil.com.br');
  expect(book.modules).toHaveLength(16);
