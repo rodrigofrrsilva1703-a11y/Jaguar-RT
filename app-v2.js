@@ -253,13 +253,13 @@ function moduleCompareParts(m){
  const text=String(block?.x||'');
  const nowAt=text.indexOf('COMO É AGORA');
  if(nowAt<0)return {before:courseFirstSentence(text),after:courseFirstSentence(m.subtitle)};
- const beforeRaw=text.slice(0,nowAt).replace(/^COMO ERA ANTES[^\\n]*/,'').trim();
- const afterRaw=text.slice(nowAt).replace(/^COMO É AGORA[^\\n]*/,'').trim();
+ const beforeRaw=text.slice(0,nowAt).replace(/^COMO ERA ANTES[^\n]*/,'').trim();
+ const afterRaw=text.slice(nowAt).replace(/^COMO É AGORA[^\n]*/,'').trim();
  return {before:courseFirstSentence(beforeRaw),after:courseFirstSentence(afterRaw)};
 }
 function moduleExamplePoints(m){
  const block=m.blocks.find(b=>/EXEMPLO|NUMÉRICO/i.test(String(b.k||'')+' '+String(b.t||'')))||m.blocks[Math.max(0,m.blocks.length-2)]||m.blocks[0];
- const lines=String(block?.x||'').split('\\n').map(x=>x.replace(/^[-*•]\s*/,'').trim()).filter(Boolean);
+ const lines=String(block?.x||'').split('\n').map(x=>x.replace(/^[-*•]\s*/,'').trim()).filter(Boolean);
  const selected=lines.filter(x=>/R\\$|%|Etapa|Fase|Ano|→|=>/.test(x)).slice(0,4);
  return (selected.length>=2?selected:lines.slice(0,4)).map(x=>courseClip(x,115));
 }
