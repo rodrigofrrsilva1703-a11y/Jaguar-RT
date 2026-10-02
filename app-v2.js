@@ -190,11 +190,11 @@ function renderHomeDashboard(){
   }
  }catch(e){}
  const targetProgress=target?moduleProgress(target):{read:[]};
- const targetLabel=target?('Módulo '+target.id+' · '+target.title):'Trilha concluída';
+ const targetLabel=target?('Módulo '+target.id+' · '+target.title):'Curso concluído';
  const targetAction=target?("openModule('"+target.id+"')"):"go('quiz')";
  el.innerHTML=
   '<article class="home-dashboard-card primary"><small>PRÓXIMO PASSO</small><b>'+courseEscape(targetLabel)+'</b><span>'+(target?targetProgress.read.length+' de '+target.blocks.length+' etapas lidas':'Você concluiu os 16 módulos')+'</span><button type="button" onclick="'+targetAction+'">'+(target?'Continuar módulo':'Fazer revisão geral')+' →</button></article>'+
-  '<article class="home-dashboard-card"><small>PROGRESSO DA TRILHA</small><strong>'+pctDone+'%</strong><span>'+complete+' de '+STUDY_MODULES.length+' módulos concluídos</span></article>'+
+  '<article class="home-dashboard-card"><small>PROGRESSO DO CURSO</small><strong>'+pctDone+'%</strong><span>'+complete+' de '+STUDY_MODULES.length+' módulos concluídos</span></article>'+
   '<article class="home-dashboard-card"><small>ÚLTIMO TESTE</small><strong>'+(lastScore===null?'—':lastScore+'/10')+'</strong><span>'+(lastScore===null?'Faça seu primeiro teste':lastScope==='all'?'Teste geral':'Módulo '+lastScope)+'</span></article>';
  if($('homePrimaryAction')&&target){
   $('homePrimaryAction').onclick=function(){openModule(target.id);};
@@ -215,6 +215,87 @@ function courseText(value){
   return '<p>'+safe+'</p>';
  }).join('');
 }
+
+
+const MODULE_VISUAL_GUIDE={
+ '01':{focus:['IVA Dual','CBS + IBS','Neutralidade'],flow:['Sistema fragmentado','IVA Dual','Valor adicionado']},
+ '02':{focus:['Destino','Local da operação','IBS'],flow:['Fornecedor','Destino do consumo','Arrecadação']},
+ '03':{focus:['Fato gerador','Antecipação','Ajuste final'],flow:['Pagamento / fornecimento','Antecipação','Ajuste definitivo']},
+ '04':{focus:['Base por fora','Cálculo','Imposto Seletivo'],flow:['Valor da operação','Base de cálculo','IBS + CBS']},
+ '05':{focus:['Créditos','Não cumulatividade','Custo efetivo'],flow:['Compra tributada','Crédito elegível','Custo efetivo']},
+ '06':{focus:['Saldo credor','Ressarcimento','Cashback'],flow:['Crédito acumulado','Tratamento legal','Recuperação / devolução']},
+ '07':{focus:['Reduções','Alíquotas','Regimes diferenciados'],flow:['Identifique a operação','Aplique o tratamento','Valide a redução']},
+ '08':{focus:['Regimes específicos','DeRE','Setores'],flow:['Identifique o setor','Regra específica','Apuração correspondente']},
+ '09':{focus:['Importação','Exportação','Áreas incentivadas'],flow:['Origem da operação','Tratamento aplicável','Efeito tributário']},
+ '10':{focus:['2026–2033','Transição','Substituição gradual'],flow:['Modelo atual','Convivência dos sistemas','Novo modelo']},
+ '11':{focus:['Simples padrão','Regime regular','Créditos'],flow:['Perfil do cliente','Forma de recolhimento','Efeito na cadeia']},
+ '12':{focus:['Lucro Presumido','Lucro Real','Tributação do consumo'],flow:['Regime de renda','IBS / CBS','Impacto econômico']},
+ '13':{focus:['Preço','Margem','DRE'],flow:['Custo de compra','Tributos e créditos','Preço / margem']},
+ '14':{focus:['Documentos fiscais','Cadastros','Apuração assistida'],flow:['Cadastro correto','Documento fiscal','Apuração']},
+ '15':{focus:['Split payment','Fluxo financeiro','Conciliação'],flow:['Pagamento do cliente','Segregação tributária','Conciliação']},
+ '16':{focus:['Diagnóstico','Automação','Plano de ação'],flow:['Entender o cliente','Simular cenários','Orientar próximos passos']}
+};
+
+function courseClip(value,max=180){
+ const clean=String(value||'').replace(/\s+/g,' ').trim();
+ if(clean.length<=max)return clean;
+ const cut=clean.slice(0,max);
+ const stop=Math.max(cut.lastIndexOf('.'),cut.lastIndexOf(';'));
+ return (stop>max*.55?cut.slice(0,stop+1):cut.replace(/\s+\S*$/,'')+'…');
+}
+function courseFirstSentence(value,max=190){
+ const clean=String(value||'').replace(/\s+/g,' ').trim();
+ const m=clean.match(/^(.{30,220}?[.!?])(?:\s|$)/);
+ return courseClip(m?m[1]:clean,max);
+}
+function moduleCompareParts(m){
+ const block=m.blocks.find(b=>String(b.k||'').toUpperCase().includes('COMPARATIVO'))||m.blocks[1]||m.blocks[0];
+ const text=String(block?.x||'');
+ const nowAt=text.indexOf('COMO É AGORA');
+ if(nowAt<0)return {before:courseFirstSentence(text),after:courseFirstSentence(m.subtitle)};
+ const beforeRaw=text.slice(0,nowAt).replace(/^COMO ERA ANTES[^\\n]*/,'').trim();
+ const afterRaw=text.slice(nowAt).replace(/^COMO É AGORA[^\\n]*/,'').trim();
+ return {before:courseFirstSentence(beforeRaw),after:courseFirstSentence(afterRaw)};
+}
+function moduleExamplePoints(m){
+ const block=m.blocks.find(b=>/EXEMPLO|NUMÉRICO/i.test(String(b.k||'')+' '+String(b.t||'')))||m.blocks[Math.max(0,m.blocks.length-2)]||m.blocks[0];
+ const lines=String(block?.x||'').split('\\n').map(x=>x.replace(/^[-*•]\s*/,'').trim()).filter(Boolean);
+ const selected=lines.filter(x=>/R\\$|%|Etapa|Fase|Ano|→|=>/.test(x)).slice(0,4);
+ return (selected.length>=2?selected:lines.slice(0,4)).map(x=>courseClip(x,115));
+}
+function moduleVisualSlides(m){
+ const guide=MODULE_VISUAL_GUIDE[m.id]||{focus:[m.title],flow:['Entenda','Aplique','Revise']};
+ const compare=moduleCompareParts(m);
+ const example=moduleExamplePoints(m);
+ return [
+  {type:'intro',eyebrow:'VISÃO RÁPIDA',title:'O que você vai entender',focus:guide.focus,body:courseClip(m.subtitle,190)},
+  {type:'compare',eyebrow:'ANTES × AGORA',title:'A mudança central',leftTitle:'ANTES',left:compare.before,rightTitle:'AGORA',right:compare.after},
+  {type:'flow',eyebrow:'MAPA VISUAL',title:'A lógica em três passos',flow:guide.flow},
+  {type:'example',eyebrow:'EXEMPLO-CHAVE',title:'Veja a regra aplicada',points:example},
+  {type:'summary',eyebrow:'ANTES DE CONTINUAR',title:'O que guardar',focus:guide.focus,body:MODULE_COMMON_MISTAKES[m.id]||'Não transforme uma premissa didática em regra universal.'}
+ ];
+}
+function moduleVisualSlideCard(slide,index){
+ if(slide.type==='intro')return '<article class="module-visual-slide visual-intro" data-module-slide="'+index+'" '+(index?'hidden':'')+'><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2><p>'+courseEscape(slide.body)+'</p></div><div class="visual-focus">'+slide.focus.map((x,i)=>'<div><small>0'+(i+1)+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></article>';
+ if(slide.type==='compare')return '<article class="module-visual-slide visual-compare" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-compare-grid"><div><small>'+courseEscape(slide.leftTitle)+'</small><p>'+courseEscape(slide.left)+'</p></div><div class="after"><small>'+courseEscape(slide.rightTitle)+'</small><p>'+courseEscape(slide.right)+'</p></div></div></article>';
+ if(slide.type==='flow')return '<article class="module-visual-slide visual-flow" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-flowline">'+slide.flow.map((x,i)=>'<div><span>'+String(i+1).padStart(2,'0')+'</span><b>'+courseEscape(x)+'</b></div>'+(i<slide.flow.length-1?'<i>→</i>':'')).join('')+'</div></article>';
+ if(slide.type==='example')return '<article class="module-visual-slide visual-example" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-example-grid">'+slide.points.map((x,i)=>'<div><small>PASSO '+String(i+1).padStart(2,'0')+'</small><b>'+courseEscape(x)+'</b></div>').join('')+'</div></article>';
+ return '<article class="module-visual-slide visual-summary" data-module-slide="'+index+'" hidden><div class="visual-copy"><span class="visual-eyebrow">'+courseEscape(slide.eyebrow)+'</span><h2>'+courseEscape(slide.title)+'</h2></div><div class="visual-summary-grid"><div class="visual-takeaways">'+slide.focus.map(x=>'<span>✓ '+courseEscape(x)+'</span>').join('')+'</div><div class="visual-warning"><small>EVITE ESTE ERRO</small><b>'+courseEscape(slide.body)+'</b></div></div></article>';
+}
+function moduleVisualDeckHtml(m){
+ const slides=moduleVisualSlides(m);
+ return '<section class="module-visual-deck" aria-label="Resumo visual do módulo"><div class="module-visual-head"><div><span class="eyebrow">RESUMO VISUAL</span><b>Entenda antes de aprofundar</b></div><span id="moduleVisualCounter">1 / '+slides.length+'</span></div><div class="module-visual-stage">'+slides.map(moduleVisualSlideCard).join('')+'</div><div class="module-visual-controls"><button type="button" id="moduleVisualPrev" onclick="moveModuleVisualSlide(-1)" aria-label="Slide anterior">←</button><div class="module-visual-dots">'+slides.map((_,i)=>'<button type="button" data-module-visual-dot="'+i+'" onclick="setModuleVisualSlide('+i+')" aria-label="Ir para slide '+(i+1)+'"></button>').join('')+'</div><button type="button" id="moduleVisualNext" onclick="moveModuleVisualSlide(1)" aria-label="Próximo slide">→</button></div></section>';
+}
+let activeModuleVisualSlide=0;
+function setModuleVisualSlide(index,scroll=false){
+ const slides=[...document.querySelectorAll('#modulePage [data-module-slide]')];if(!slides.length)return;
+ const next=(Number(index)+slides.length)%slides.length;activeModuleVisualSlide=next;
+ slides.forEach((slide,i)=>slide.hidden=i!==next);
+ document.querySelectorAll('#modulePage [data-module-visual-dot]').forEach((dot,i)=>{dot.classList.toggle('active',i===next);dot.setAttribute('aria-current',i===next?'true':'false');});
+ if($('moduleVisualCounter'))$('moduleVisualCounter').textContent=(next+1)+' / '+slides.length;
+ if(scroll)document.querySelector('#modulePage .module-visual-deck')?.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function moveModuleVisualSlide(direction){setModuleVisualSlide(activeModuleVisualSlide+direction);}
 
 function renderHome(){
  renderHomeResume();
@@ -470,7 +551,7 @@ function moduleActionHtml(m){
 function moduleSummaryHtml(m,index){
  const next=STUDY_MODULES[index+1];
  return '<section class="module-summary">'+
-  '<div class="module-summary-head"><div><span class="eyebrow">FECHAMENTO DO MÓDULO</span><h3>O essencial deste módulo</h3></div><span class="module-no">'+(next?'PRÓXIMO · '+next.id:'TRILHA CONCLUÍDA')+'</span></div>'+
+  '<div class="module-summary-head"><div><span class="eyebrow">FECHAMENTO DO MÓDULO</span><h3>O essencial deste módulo</h3></div><span class="module-no">'+(next?'PRÓXIMO · '+next.id:'CURSO CONCLUÍDO')+'</span></div>'+
   '<div class="module-summary-grid">'+
    '<div class="module-summary-item"><small>VOCÊ APRENDEU</small><b>'+courseEscape(m.subtitle)+'</b></div>'+
    '<div class="module-summary-item"><small>EVITE</small><b>'+courseEscape(MODULE_COMMON_MISTAKES[m.id]||'Transformar uma premissa didática em regra universal.')+'</b></div>'+
@@ -493,6 +574,7 @@ function openModule(id){
   $('modulePage').innerHTML=`
    <button class="back" onclick="go('modules')">← Todos os estudos</button>
    <header class="course-hero"><span class="module-no">MÓDULO ${m.id} DE ${STUDY_MODULES.length}</span><h1 class="page-title">${courseEscape(m.title)}</h1><p class="page-lead">${courseEscape(m.subtitle)}</p><div class="course-hero-progress"><strong id="courseProgressLabel"></strong><span class="study-progress-track"><i id="courseProgressFill"></i></span></div></header>
+   ${moduleVisualDeckHtml(m)}
    <div class="course-note"><b>Premissas dos exemplos</b><p>Os valores de CBS 9,21% e IBS 18,70% são parâmetros didáticos deste curso. A alíquota efetiva e os créditos dependem do ano, do destino, do regime, da operação e dos requisitos legais. Confira as regras vigentes antes de aplicar um exemplo a uma empresa.</p></div>
    <div class="course-layout"><nav class="course-toc" aria-label="Etapas da aula"><div class="course-toc-head"><b>Nesta aula</b><span>${m.blocks.length} etapas</span></div>${m.blocks.map((b,i)=>`<button type="button" data-course-step="${i}" onclick="showCourseStep(${i})"><span class="course-step-number">${String(i+1).padStart(2,'0')}</span><span>${courseEscape(b.t)}</span><span class="course-step-check" aria-hidden="true">✓</span></button>`).join('')}<button type="button" class="course-view-all" id="courseViewAll" onclick="toggleCourseView()">Ver aula inteira</button></nav><div class="course-main"><div class="course-stage-label" id="courseStageLabel"></div><div class="lesson-stack">${blocks}</div><div class="course-controls"><button type="button" id="coursePrev" onclick="moveCourseStep(-1)">← Etapa anterior</button><button type="button" class="course-next" id="courseNext" onclick="moveCourseStep(1)">Próxima etapa →</button></div></div></div>
    ${moduleSummaryHtml(m,index)}
@@ -500,6 +582,7 @@ function openModule(id){
    <div class="course-quiz-callout"><div><b>Concluiu a leitura?</b><span>Confira o que aprendeu em 10 perguntas deste módulo.</span></div><button class="quiz-primary" onclick="startModuleQuiz('${m.id}')">Fazer teste do módulo ${m.id} →</button></div>
    <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
   go('modulePage',{instant:true});
+  setModuleVisualSlide(0,false);
   showCourseStep(progress.step,false);
   requestAnimationFrame(()=>{
    const target=document.querySelector('#modulePage .course-block:not([hidden])');
