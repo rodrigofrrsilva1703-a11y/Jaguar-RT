@@ -160,14 +160,24 @@ test('linha do tempo resume cada ano sem poluir a página inicial',async({page})
  await expect(page.locator('.transition-phases')).toHaveCount(0);
  await page.locator('#timeline [data-year="2029"]').click();
  await expect(page.locator('#timelinePanel h3')).toHaveText('Primeira redução efetiva de ICMS e ISS');
+ await expect(page.locator('#timelinePanel .rt-year-details')).not.toHaveAttribute('open','');
+ await expect(page.locator('#timelinePanel .rt-year-content')).toBeHidden();
+ await page.locator('#timelinePanel summary').focus();
+ await page.keyboard.press('Enter');
+ await expect(page.locator('#timelinePanel .rt-year-content')).toBeVisible();
  await expect(page.locator('#timelinePanel')).toContainText('ICMS/ISS ficam em 90%');
  await expect(page.locator('#timelinePanel')).toContainText('não a alíquota final');
  await expect(page.locator('#timeline [data-year="2029"]')).toHaveAttribute('aria-pressed','true');
- await page.getByRole('button',{name:'Próximo ano',exact:true}).click();
+ await page.locator('#timeline [data-year="2030"]').click();
+ await expect(page.locator('#timelinePanel .rt-year-content')).toBeHidden();
  await expect(page.locator('#timelinePanel')).toContainText('2030');
  await expect(page.locator('#timelinePanel')).toContainText('ICMS/ISS ficam em 80%');
  await page.locator('#timeline [data-year="2026"]').click();
  await expect(page.locator('#timelinePanel')).toContainText('CBS 0,9% e IBS 0,1%');
+ await page.locator('#timelinePanel summary').click();
+ await expect(page.locator('#timelinePanel').getByRole('link',{name:'Fonte oficial ↗'})).toHaveAttribute('href',/^https:\/\/www.gov.br/);
+ await page.locator('#timelinePanel').getByRole('button',{name:'Estudar no Módulo 10 →'}).click();
+ await expect(page.locator('#modulePage')).toBeVisible();
  await expect(page.locator('#timelinePanel .transition-bars')).toHaveCount(0);
 });
 
@@ -187,11 +197,12 @@ test('linha do tempo mostra todos os anos no celular e preserva seleção e tecl
  const first=page.locator('#timeline [data-year="2026"]');
  await first.click();
  await expect(first).toHaveCSS('color','rgb(255, 255, 255)');
- await expect(page.locator('#timelinePrevious')).toBeDisabled();
+ const section=await page.locator('#home .interactive-transition').boundingBox();
+ expect(section.height).toBeLessThan(380);
  await first.focus();
  await page.keyboard.press('End');
  await expect(page.locator('#timeline [data-year="2033"]')).toBeFocused();
- await expect(page.locator('#timelineNext')).toBeDisabled();
+ await expect(page.locator('#timeline [data-year="2033"]')).toHaveAttribute('aria-pressed','true');
  await page.keyboard.press('ArrowLeft');
  await expect(page.locator('#timeline [data-year="2032"]')).toHaveAttribute('aria-pressed','true');
  await page.reload();
@@ -199,9 +210,8 @@ test('linha do tempo mostra todos os anos no celular e preserva seleção e tecl
  await page.setViewportSize({width:1280,height:900});
  const firstBox=await first.boundingBox(),lastBox=await years.last().boundingBox();
  expect(firstBox.y).toBe(lastBox.y);
- await page.locator('#timelineNext').focus();
- await page.keyboard.press('Enter');
- await expect(page.locator('#timelineNext')).toBeDisabled();
+ await page.locator('#timeline [data-year="2032"]').focus();
+ await page.keyboard.press('ArrowRight');
  await expect(page.locator('#timelinePanel')).toContainText('2033');
 });
 

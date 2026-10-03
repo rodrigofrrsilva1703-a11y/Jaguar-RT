@@ -874,25 +874,20 @@ function pickYear(y){
   b.classList.toggle('is-past',i<idx);
   b.setAttribute('aria-pressed',String(active));
  });
- $('timelinePrevious').disabled=idx===0;
- $('timelineNext').disabled=idx===years.length-1;
- $('timelinePosition').textContent=String(idx+1).padStart(2,'0')+' / '+String(years.length).padStart(2,'0');
 
  $('timelinePanel').innerHTML=
-  '<div class="rt-detail-main">'+
-   '<div class="rt-detail-kicker"><strong>'+courseEscape(y)+'</strong><span>'+courseEscape(info.phase)+'</span></div>'+
-   '<h3>'+courseEscape(info.short)+'</h3>'+
-   '<p>'+courseEscape(o.text)+'</p>'+
-   '<div class="rt-detail-meta">'+
-    '<div><small>NOVO MODELO</small><b>'+courseEscape(info.newModel)+'</b></div>'+
-    '<div><small>SISTEMA ANTERIOR</small><b>'+courseEscape(info.oldModel)+'</b></div>'+
+  '<div class="rt-detail-kicker">'+courseEscape(y)+' · '+courseEscape(info.phase)+'</div>'+
+  '<h3>'+courseEscape(info.short)+'</h3>'+
+  '<details class="rt-year-details">'+
+   '<summary>Ver detalhes</summary>'+
+   '<div class="rt-year-content">'+
+    '<p>'+courseEscape(o.text)+'</p>'+
+    '<dl><div><dt>Novo modelo</dt><dd>'+courseEscape(info.newModel)+'</dd></div><div><dt>Sistema anterior</dt><dd>'+courseEscape(info.oldModel)+'</dd></div></dl>'+
+    (Number(y)>=2029&&Number(y)<=2032?'<p class="transition-caveat">A proporção indicada representa a transição para o IBS, não a alíquota final.</p>':'')+
+    '<p><b>Foco prático:</b> '+courseEscape(info.focus)+'</p>'+
+    '<div class="rt-detail-actions"><button type="button" onclick="openModule(\'10\')">Estudar no Módulo 10 →</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>'+
    '</div>'+
-   (Number(y)>=2029&&Number(y)<=2032?'<small class="transition-caveat">A proporção indicada representa a transição para o IBS, não a alíquota final.</small>':'')+
-  '</div>'+
-  '<aside class="rt-detail-side">'+
-   '<div><small>FOCO PRÁTICO</small><b>'+courseEscape(info.focus)+'</b></div>'+
-   '<div class="rt-detail-actions"><button type="button" onclick="openModule(\'10\')">Ver Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>'+
-  '</aside>';
+  '</details>';
 
  if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   const panel=$('timelinePanel');
