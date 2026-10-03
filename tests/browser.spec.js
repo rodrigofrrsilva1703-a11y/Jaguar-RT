@@ -37,17 +37,58 @@ test('slides ficam legíveis no celular e etapas recolhem após a escolha',async
  await expect(page.locator('[data-course-step="0"]')).toBeVisible();
 });
 
-test('explicações dos exemplos podem ser abertas pelo teclado sem cortar o texto',async({page})=>{
- await page.goto('http://127.0.0.1:4173/?e2e=calculation-details',{waitUntil:'domcontentloaded'});
+for(const width of [320,1280])test('todas as 102 etapas preservam o texto completo em '+width+'px',async({page})=>{
+ await page.setViewportSize({width,height:900});
+ await page.goto('http://127.0.0.1:4173/?e2e=all-lessons',{waitUntil:'domcontentloaded'});
  await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
- await page.evaluate(()=>{openModule('06');showCourseStep(4,false)});
- const detail=page.locator('.course-block:not([hidden]) .lesson-calculation').first();
- await expect(detail).toBeVisible();
- await detail.locator('summary').focus();
- await page.keyboard.press('Enter');
- await expect(detail).toHaveAttribute('open','');
- expect((await detail.locator('p').textContent()).length).toBeGreaterThan(170);
- expect(await detail.locator('p').textContent()).not.toMatch(/…$/);
+ const report=await page.evaluate(()=>{
+  const canon=s=>String(s).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'');
+  const result=[];
+  for(const m of STUDY_MODULES){
+   openModule(m.id);
+   for(let i=0;i<m.blocks.length;i++){
+    showCourseStep(i,false);
+    const node=document.querySelector('.course-block:not([hidden])'),b=m.blocks[i],rendered=canon(node.textContent);
+    const missing=b.x.split('\n').filter(x=>x.trim()).filter(x=>!rendered.includes(canon(x)));
+    result.push({module:m.id,step:i+1,missing,overflow:document.documentElement.scrollWidth>innerWidth});
+   }
+  }
+  return result;
+ });
+ expect(report).toHaveLength(102);
+ expect(report.filter(x=>x.missing.length||x.overflow)).toEqual([]);
+ await page.evaluate(()=>{openModule('15');showCourseStep(1,false)});
+ await expect(page.locator('.course-block:not([hidden]) .lesson-compare-grid')).toContainText('CENÁRIO DIDÁTICO COM SPLIT');
+});
+
+test('reorganização preserva a etapa e as leituras de 05, 14 e 15, inclusive após recarregar',async({page})=>{
+ await page.unroute('**/functions/v1/jaguarrt');
+ let state={study:{__orderVersion:2,'05':{read:[0,5],step:6},'14':{read:[0,5],step:6},'15':{read:[0,5],step:6}}};
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  if(route.request().postDataJSON().action==='save')state=route.request().postDataJSON().data;
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state,attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=reordered-lessons',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ const expected=['05','14','15'].map(id=>({id,read:[0,6],step:5}));
+ const progress=()=>page.evaluate(()=>['05','14','15'].map(id=>({id,...moduleProgress(STUDY_MODULES.find(m=>m.id===id))})));
+ expect(await progress()).toEqual(expected);
+ for(const id of ['05','14','15']){
+  await page.evaluate(id=>openModule(id),id);
+  await expect(page.locator('#courseStageLabel')).toHaveText('ETAPA 06 DE 07');
+  await expect(page.locator('.course-block:not([hidden]) .tag')).not.toContainText('PRÓXIMA ETAPA');
+ }
+ const migrated=await page.evaluate(()=>{
+  const input={__orderVersion:2,'05':{read:[6],step:5},'14':{read:[6],step:5},'15':{read:[6],step:5}};
+  const once=migrateStudyState(input);
+  return {once,twice:migrateStudyState(once)};
+ });
+ expect(migrated.once).toEqual(migrated.twice);
+ for(const id of ['05','14','15'])expect(migrated.once[id]).toEqual({read:[5],step:6});
+ await expect.poll(()=>state.study.__layoutVersion).toBe(1);
+ await page.reload({waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ expect(await progress()).toEqual(expected);
 });
 
 test('slides continuam visíveis sem animação ou observador',async({page})=>{
@@ -897,3 +938,4 @@ test('relatório identifica assuntos com erros e responde aos filtros',async({pa
  await page.locator('#reportsSearch').fill('inexistente');
  await expect(page.locator('#reportsInsights')).toContainText('Ainda não há respostas detalhadas');
 });
+

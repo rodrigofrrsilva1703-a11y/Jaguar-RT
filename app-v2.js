@@ -110,16 +110,26 @@ function remapCourseId(id){
  return COURSE_ID_MIGRATION[key]||key;
 }
 function migrateStudyState(raw){
- if(!raw||typeof raw!=='object')return {__orderVersion:COURSE_ORDER_VERSION};
- if(raw.__orderVersion===COURSE_ORDER_VERSION)return raw;
- const next={__orderVersion:COURSE_ORDER_VERSION};
- for(const [oldId,value] of Object.entries(raw)){
-  if(oldId.startsWith('__'))continue;
-  const newId=remapCourseId(oldId);
-  if(newId)next[newId]=value;
+ if(!raw||typeof raw!=='object')return {__orderVersion:COURSE_ORDER_VERSION,__layoutVersion:1};
+ let next=raw;
+ if(raw.__orderVersion!==COURSE_ORDER_VERSION){
+  next={__orderVersion:COURSE_ORDER_VERSION};
+  for(const [oldId,value] of Object.entries(raw)){
+   if(oldId.startsWith('__'))continue;
+   const newId=remapCourseId(oldId);if(newId)next[newId]=value;
+  }
+ }
+ if(next.__layoutVersion!==1){
+  next={...next,__layoutVersion:1};
+  for(const id of ['05','14','15']){
+   const saved=next[id];if(!saved||typeof saved!=='object')continue;
+   const map=i=>i===5?6:i===6?5:i;
+   next[id]={...saved,read:Array.isArray(saved.read)?saved.read.map(map):saved.read,step:Number.isInteger(saved.step)?map(saved.step):saved.step};
+  }
  }
  return next;
 }
+
 let studyFilter='all';
 let activeCourse=null;
 let courseAllVisible=false;
@@ -207,199 +217,8 @@ function renderHomeResume(){
 
 const courseEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-function courseText(value){
- return String(value||'').split('\n').map(line=>{
-  const safe=courseEscape(line);
-  if(/^(COMO ERA ANTES|COMO É AGORA)/.test(line))return '<h3 class="course-subhead">'+safe+'</h3>';
-  if(/^[-*•]\s/.test(line))return '<p class="course-bullet">'+safe.replace(/^[-*•]\s*/,'')+'</p>';
-  return '<p>'+safe+'</p>';
- }).join('');
-}
-
-
-function courseLineHtml(line){
- const safe=courseEscape(line);
- if(/^(COMO ERA ANTES|COMO É AGORA)/.test(line))return '<h3 class="course-subhead">'+safe+'</h3>';
- if(/^[-*•]\s/.test(line))return '<p class="course-bullet">'+safe.replace(/^[-*•]\s*/,'')+'</p>';
- return '<p>'+safe+'</p>';
-}
-function courseInlineVisualPosition(block,index){
- const lines=String(block?.x||'').split('\n');
- const kind=String(block?.k||'').toUpperCase();
- const title=String(block?.t||'');
-
- // Comparativos e regimes funcionam melhor como visão geral antes do texto detalhado.
- if(/COMPARATIVO/.test(kind)) return 0;
- if(/REGIMES/.test(kind)||/afeta cada regime/i.test(title)) return 0;
-
- // Exemplos: apresente primeiro o cenário e só então mostre o quadro guiado.
- if(/EXEMPLO|NUMÉRICO|CASO PRÁTICO/.test(kind+' '+title)) return Math.min(1,lines.length);
-
- // Fluxos: explique a ideia em uma frase/parágrafo e depois mostre a sequência visual.
- if(/PROCESSO|CRONOGRAMA|INTEGRAÇÃO|CONFORMIDADE/.test(kind)) return Math.min(1,lines.length);
-
- // Primeiro bloco: preserve a introdução curta antes do mapa do módulo.
- if(index===0){
-  const firstContent=lines.findIndex(x=>x.trim());
-  if(firstContent<0)return 0;
-  let pos=firstContent+1;
-  while(pos<lines.length&&!lines[pos].trim())pos++;
-  return pos;
- }
-
- return Math.min(1,lines.length);
-}
-function courseTextWithVisual(m,b,index){
- const visual=moduleBlockVisualHtml(m,b,index);
- if(!visual)return courseText(b.x);
- const lines=String(b.x||'').split('\n');
- const pos=courseInlineVisualPosition(b,index);
- const before=lines.slice(0,pos).map(courseLineHtml).join('');
- const after=lines.slice(pos).map(courseLineHtml).join('');
- return before+visual+after;
-}
-
-
-
-const MODULE_VISUAL_GUIDE={
- '01':{focus:['IVA Dual','CBS + IBS','Neutralidade'],flow:['Sistema fragmentado','IVA Dual','Valor adicionado']},
- '02':{focus:['Destino','Local da operação','IBS'],flow:['Fornecedor','Destino do consumo','Arrecadação']},
- '03':{focus:['Fato gerador','Antecipação','Ajuste final'],flow:['Pagamento / fornecimento','Antecipação','Ajuste definitivo']},
- '04':{focus:['Base por fora','Cálculo','Imposto Seletivo'],flow:['Valor da operação','Base de cálculo','IBS + CBS']},
- '05':{focus:['Créditos','Não cumulatividade','Custo efetivo'],flow:['Compra tributada','Crédito elegível','Custo efetivo']},
- '06':{focus:['Saldo credor','Ressarcimento','Cashback'],flow:['Crédito acumulado','Tratamento legal','Recuperação / devolução']},
- '07':{focus:['Reduções','Alíquotas','Regimes diferenciados'],flow:['Identifique a operação','Aplique o tratamento','Valide a redução']},
- '08':{focus:['Regimes específicos','DeRE','Setores'],flow:['Identifique o setor','Regra específica','Apuração correspondente']},
- '09':{focus:['Importação','Exportação','Áreas incentivadas'],flow:['Origem da operação','Tratamento aplicável','Efeito tributário']},
- '10':{focus:['2026–2033','Transição','Substituição gradual'],flow:['Modelo atual','Convivência dos sistemas','Novo modelo']},
- '11':{focus:['Simples padrão','Regime regular','Créditos'],flow:['Perfil do cliente','Forma de recolhimento','Efeito na cadeia']},
- '12':{focus:['Lucro Presumido','Lucro Real','Tributação do consumo'],flow:['Regime de renda','IBS / CBS','Impacto econômico']},
- '13':{focus:['Preço','Margem','DRE'],flow:['Custo de compra','Tributos e créditos','Preço / margem']},
- '14':{focus:['Documentos fiscais','Cadastros','Apuração assistida'],flow:['Cadastro correto','Documento fiscal','Apuração']},
- '15':{focus:['Split payment','Fluxo financeiro','Conciliação'],flow:['Pagamento do cliente','Segregação tributária','Conciliação']},
- '16':{focus:['Diagnóstico','Automação','Plano de ação'],flow:['Entender o cliente','Simular cenários','Orientar próximos passos']}
-};
-
-const MODULE_VISUAL_HELP={
- '01':{help:'Pense no IVA como uma cadeia: cada empresa observa o imposto da venda e os créditos permitidos da etapa anterior. O ponto central não é decorar siglas, mas entender a lógica do valor adicionado.',question:'Pergunta-guia: o que pertence à CBS, o que pertence ao IBS e em que momento o crédito reduz o valor a recolher?'},
- '02':{help:'Antes de pensar em alíquota, descubra onde a operação é considerada consumida. O destino é a informação que organiza o raciocínio deste módulo.',question:'Pergunta-guia: quem é o destinatário e qual local deve ser considerado para a operação?'},
- '03':{help:'Separe três momentos: contratação, pagamento e fornecimento. Eles podem acontecer em datas diferentes, e isso muda a análise do momento do débito e das antecipações.',question:'Pergunta-guia: houve pagamento antes do fornecimento ou a operação só se completou na entrega?'},
- '04':{help:'Comece pelo valor da operação e só depois aplique os tributos. O cálculo “por fora” precisa ficar visualmente separado do preço para você enxergar a base e o imposto.',question:'Pergunta-guia: qual é a base líquida e quais tributos devem ser acrescentados fora dela?'},
- '05':{help:'Crédito e custo efetivo precisam ser analisados juntos. Um preço de compra menor nem sempre representa menor custo econômico se a operação gerar menos crédito.',question:'Pergunta-guia: quanto custa a compra depois dos créditos que realmente podem ser aproveitados?'},
- '06':{help:'Saldo credor, ressarcimento, restituição e cashback não são a mesma coisa. Primeiro identifique de onde veio o crédito e depois qual mecanismo legal pode ser usado.',question:'Pergunta-guia: existe crédito acumulado da empresa ou devolução destinada ao consumidor?'},
- '07':{help:'Não aplique uma redução apenas porque o cliente pertence a determinado setor. Identifique primeiro a operação e confirme qual tratamento diferenciado alcança aquela situação.',question:'Pergunta-guia: a redução vale para este bem, serviço e operação específicos?'},
- '08':{help:'Regime específico significa que a regra geral pode não explicar toda a apuração. O primeiro passo é reconhecer o setor e depois seguir a obrigação própria, inclusive a DeRE quando aplicável.',question:'Pergunta-guia: esta operação está na regra geral ou possui forma própria de apuração e declaração?'},
- '09':{help:'No comércio exterior, origem, destino e tipo de operação mudam completamente a leitura. Separe importação, exportação e áreas incentivadas antes de calcular qualquer efeito.',question:'Pergunta-guia: é entrada do exterior, saída para o exterior ou operação com tratamento territorial específico?'},
- '10':{help:'Não tente decorar todos os anos isoladamente. Enxergue a transição como uma linha do tempo em que tributos antigos perdem espaço enquanto CBS e IBS ganham participação.',question:'Pergunta-guia: em qual ano está a operação e quais parcelas do sistema antigo e novo convivem naquele período?'},
- '11':{help:'No Simples, a decisão não deve olhar apenas o DAS. Em operações B2B, também importa entender como a forma de recolhimento afeta os créditos ao longo da cadeia.',question:'Pergunta-guia: a empresa vende principalmente para consumidor final ou para clientes que valorizam crédito?'},
- '12':{help:'Lucro Presumido e Lucro Real continuam sendo regimes da renda. Para estudar a Reforma, separe IRPJ/CSLL da tributação do consumo e analise IBS/CBS em outra camada.',question:'Pergunta-guia: qual parte da análise é renda e qual parte é tributação sobre o consumo?'},
- '13':{help:'Preço não deve ser recalculado olhando apenas a nova alíquota. Refaça a ponte entre custo de compra, créditos, tributos da saída e margem desejada.',question:'Pergunta-guia: depois dos créditos e tributos, a margem econômica continua a mesma?'},
- '14':{help:'A qualidade da apuração depende da qualidade do cadastro e do documento fiscal. Erros de classificação entram no sistema antes mesmo do cálculo do imposto.',question:'Pergunta-guia: cadastro, natureza da operação e documento fiscal estão coerentes antes da apuração assistida?'},
- '15':{help:'Split payment muda o fluxo financeiro. Para entender o efeito, acompanhe o dinheiro desde o pagamento do cliente até a segregação do tributo e a conciliação contábil.',question:'Pergunta-guia: quanto entra livremente no caixa e quanto é segregado no fluxo de pagamento?'},
- '16':{help:'A consultoria começa pelo diagnóstico, não pela resposta pronta. Primeiro entenda o perfil do cliente, depois simule cenários e só então organize o plano de ação.',question:'Pergunta-guia: qual problema do cliente estamos tentando resolver e quais premissas sustentam a simulação?'}
-};
-
-
-function courseClip(value,max=175){
- const clean=String(value||'').replace(/\s+/g,' ').trim();
- if(clean.length<=max)return clean;
- const cut=clean.slice(0,max);
- const stop=Math.max(cut.lastIndexOf('.'),cut.lastIndexOf(';'));
- return (stop>max*.55?cut.slice(0,stop+1):cut.replace(/\s+\S*$/,'')+'…');
-}
-function courseFirstSentence(value,max=175){
- const clean=String(value||'').replace(/\s+/g,' ').trim();
- const m=clean.match(/^(.{25,210}?[.!?])(?:\s|$)/);
- return courseClip(m?m[1]:clean,max);
-}
-function compareFromBlock(block){
- const text=String(block?.x||'');
- const nowAt=text.indexOf('COMO É AGORA');
- if(nowAt<0)return {before:courseFirstSentence(text),after:''};
- return {
-  before:courseFirstSentence(text.slice(0,nowAt).replace(/^COMO ERA ANTES[^\n]*/,'').trim()),
-  after:courseFirstSentence(text.slice(nowAt).replace(/^COMO É AGORA[^\n]*/,'').trim())
- };
-}
-function examplePointsFromBlock(block){
- const lines=String(block?.x||'').split('\n').map(x=>x.replace(/^[-*•]\s*/,'').trim()).filter(Boolean);
- const selected=lines.filter(x=>/R\$|%|Etapa|Fase|Ano|→|=>|Total|Crédito|Débito|Base/i.test(x)).slice(0,4);
- return (selected.length>=2?selected:lines.slice(0,4)).map(x=>x);
-}
-function regimeSummaryFromBlock(block,label){
- const lines=String(block?.x||'').split('\n').map(x=>x.trim()).filter(Boolean);
- const line=lines.find(x=>new RegExp('^[-*•]?\\s*'+label,'i').test(x));
- if(!line)return '';
- return courseFirstSentence(line.replace(/^[-*•]\s*/,'').replace(new RegExp('^'+label+'\\s*:\\s*','i'),''),125);
-}
-function moduleHelpFooter(m){
- const h=MODULE_VISUAL_HELP[m.id]||{help:m.subtitle,question:'Volte ao texto para aprofundar a regra.'};
- const rawQuestion=String(h.question||'').replace(/^Pergunta-guia:\s*/i,'');
- const question=rawQuestion.charAt(0).toUpperCase()+rawQuestion.slice(1);
- return '<figcaption class="lesson-takeaway"><span>PARA FIXAR</span><p>'+courseEscape(question)+'</p></figcaption>'+
-  '<details class="lesson-context"><summary>Entenda melhor</summary><p>'+courseEscape(h.help)+'</p></details>';
-}
-function moduleBlockVisualHtml(m,b,index){
- const guide=MODULE_VISUAL_GUIDE[m.id]||{focus:[m.title],flow:['Entenda','Aplique','Revise']};
- const kind=String(b.k||'').toUpperCase();
- const title=String(b.t||'');
- if(/PRÓXIMA ETAPA/.test(kind)||/Próximo passo/i.test(title)) return '';
-
- if(index===0){
-  return '<figure class="lesson-story lesson-story-focus" aria-label="Mapa visual do módulo">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">MAPA DO MÓDULO '+courseEscape(m.id)+'</span><h3>'+courseEscape(guide.focus[0])+' na prática</h3></div><p>Entenda a ideia, conecte os conceitos e aplique na análise.</p></div>'+
-   '<div class="lesson-concept-route">'+guide.focus.map((x,i)=>'<div class="lesson-concept-step"><span class="lesson-concept-no">'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['ENTENDA','CONECTE','APLIQUE'][i]||'FIXE')+'</small><b>'+courseEscape(x)+'</b></div></div>').join('')+'</div>'+
-   moduleHelpFooter(m)+
-  '</figure>';
- }
-
- if(/COMPARATIVO/.test(kind)){
-  const compare=compareFromBlock(b);
-  return '<figure class="lesson-story lesson-story-compare" aria-label="Comparação entre antes e depois">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">ANTES × DEPOIS</span><h3>O que mudou na prática</h3></div><p>O objetivo aqui não é resumir todo o tema, mas deixar visível qual lógica mudou.</p></div>'+
-   '<div class="lesson-before-after">'+
-    '<section class="lesson-era lesson-era-before"><div class="lesson-era-title"><small>ANTES</small><b>Sistema anterior</b></div><p>'+courseEscape(compare.before)+'</p></section>'+
-    '<div class="lesson-shift"><span>→</span><small>MUDANÇA<br>CENTRAL</small></div>'+
-    '<section class="lesson-era lesson-era-after"><div class="lesson-era-title"><small>AGORA</small><b>Nova lógica</b></div><p>'+courseEscape(compare.after||m.subtitle)+'</p></section>'+
-   '</div>'+
-   moduleHelpFooter(m)+
-  '</figure>';
- }
-
- if(/REGIMES/.test(kind)||/afeta cada regime/i.test(title)){
-  const rows=[
-   ['Simples Nacional',regimeSummaryFromBlock(b,'Simples Nacional')],
-   ['Lucro Presumido',regimeSummaryFromBlock(b,'Lucro Presumido')],
-   ['Lucro Real',regimeSummaryFromBlock(b,'Lucro Real')]
-  ].filter(x=>x[1]);
-  if(rows.length){
-   return '<figure class="lesson-story lesson-story-regimes" aria-label="Regimes em foco">'+
-    '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">REGIMES EM FOCO</span><h3>Compare os regimes</h3></div><p>Leia cada coluna separadamente antes de comparar.</p></div>'+
-    '<div class="lesson-regime-track">'+rows.map((x,i)=>'<section><span>'+String(i+1).padStart(2,'0')+'</span><small>REGIME</small><b>'+courseEscape(x[0])+'</b><p>'+courseEscape(x[1])+'</p></section>').join('')+'</div>'+
-    moduleHelpFooter(m)+
-   '</figure>';
-  }
- }
-
- if(/EXEMPLO|NUMÉRICO|CASO PRÁTICO/.test(kind+' '+title)){
-  const points=examplePointsFromBlock(b);
-  return '<figure class="lesson-story lesson-story-example" aria-label="Exemplo explicado em etapas">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">EXEMPLO GUIADO</span><h3>O exemplo em etapas</h3></div><p>Use o exemplo como ponte entre a regra e a aplicação prática.</p></div>'+
-   '<div class="lesson-example-route">'+points.map((x,i)=>'<div class="lesson-example-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><small>ETAPA '+(i+1)+'</small><b>'+courseEscape(courseFirstSentence(x,170))+'</b>'+(courseFirstSentence(x,170)!==x?'<details class="lesson-calculation"><summary>Ver explicação completa</summary><p>'+courseEscape(x)+'</p></details>':'')+'</div></div>').join('')+'</div>'+
-   moduleHelpFooter(m)+
-  '</figure>';
- }
-
- if(/PROCESSO|CRONOGRAMA|INTEGRAÇÃO|CONFORMIDADE/.test(kind)){
-  return '<figure class="lesson-story lesson-story-flow" aria-label="Fluxo visual do processo">'+
-   '<div class="lesson-story-heading"><div><span class="lesson-story-kicker">FLUXO DA IDEIA</span><h3>O caminho da operação</h3></div><p>Siga as etapas numeradas para acompanhar o processo.</p></div>'+
-   '<div class="lesson-process-line">'+guide.flow.map((x,i)=>'<div class="lesson-process-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><small>'+courseEscape(['INÍCIO','TRATAMENTO','RESULTADO'][i]||'ETAPA')+'</small><b>'+courseEscape(x)+'</b></div></div>').join('<i aria-hidden="true">→</i>')+'</div>'+
-   moduleHelpFooter(m)+
-  '</figure>';
- }
-
- return '';
-}
+function courseText(value){return JaguarLessons.text(value);}
+function courseTextWithVisual(m,b,index){return JaguarLessons.render(m,b,index);}
 
 function renderHome(){
  renderHomeResume();
@@ -671,20 +490,6 @@ function initLessonStoryDynamics(){
  const allStories=[...document.querySelectorAll('#modulePage .lesson-story')];
  if(!allStories.length)return;
 
- allStories.forEach(story=>{
-  if(story.dataset.interactiveReady)return;
-  story.dataset.interactiveReady='1';
-  const items=[...story.querySelectorAll('.lesson-concept-step,.lesson-regime-track section,.lesson-example-step,.lesson-process-step')];
-  items.forEach(item=>{
-   item.tabIndex=0;
-   const activate=()=>{
-    items.forEach(x=>x.classList.remove('is-active'));
-    item.classList.add('is-active');
-   };
-   item.addEventListener('click',activate);
-   item.addEventListener('focus',activate);
-  });
- });
 
  const stories=allStories.filter(x=>!x.classList.contains('is-visible'));
  if(!stories.length)return;

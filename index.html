@@ -786,135 +786,6 @@ html.has-saved-session #loginGate{display:none!important}
 
 
 
-/* ===== EXPERIÊNCIAS VISUAIS INTEGRADAS À LEITURA · PADRÃO UNIFICADO ===== */
-.course-main .course-block{overflow:visible}
-.course-main .course-text{max-width:none}
-.lesson-story{--story-line:#d9d9d4;--story-soft:#f4f4f1;--story-ink:#111;--story-muted:#66665f;position:relative;margin:34px 0 40px;padding:27px 28px 25px;border:1px solid var(--story-line);border-radius:20px;background:#fff;box-shadow:0 12px 32px rgba(0,0,0,.035);overflow:hidden;transform:translateY(0);transition:box-shadow .28s ease,border-color .28s ease}
-.lesson-story:before{content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:#111}
-.lesson-story:after{content:"";position:absolute;width:170px;height:170px;border:1px solid #ecece7;border-radius:50%;right:-95px;top:-105px;pointer-events:none}
-.lesson-story-heading{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(210px,.75fr);gap:28px;align-items:end;margin-bottom:24px}
-.lesson-story-kicker{display:inline-flex;align-items:center;gap:7px;font-size:8px;font-weight:900;letter-spacing:.16em;color:#6e6e68;margin-bottom:8px}
-.lesson-story-kicker:before{content:"";width:20px;height:2px;background:#111;border-radius:9px}
-.lesson-story-heading h3{font-size:clamp(21px,2.45vw,29px);line-height:1.13;letter-spacing:-.025em;margin:0;color:#111}
-.lesson-story-heading>p{font-size:11.5px!important;line-height:1.65!important;color:#6a6a64!important;margin:0!important;max-width:350px;justify-self:end}
-
-/* Todas as experiências usam a mesma base clara; preto aparece apenas como hierarquia. */
-.lesson-concept-route,.lesson-regime-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--story-line);border-radius:15px;overflow:hidden;background:var(--story-soft)}
-.lesson-concept-step,.lesson-regime-track section{position:relative;background:#fff;transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
-.lesson-concept-step+.lesson-concept-step,.lesson-regime-track section+section{border-left:1px solid var(--story-line)}
-.lesson-concept-step{display:grid;grid-template-columns:45px 1fr;gap:13px;padding:22px 20px;min-height:168px}
-.lesson-concept-no{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#111;color:#fff;font-size:9px;font-weight:900}
-.lesson-concept-step small,.lesson-concept-step b,.lesson-concept-step p{display:block}
-.lesson-concept-step small{font-size:8px;font-weight:900;letter-spacing:.13em;color:#85857f;margin:4px 0 7px}
-.lesson-concept-step b{font-size:18px;line-height:1.18;letter-spacing:-.02em;color:#111}
-.lesson-concept-step p{font-size:10.8px!important;line-height:1.58!important;color:#66665f!important;margin:10px 0 0!important}
-
-/* Antes x depois no mesmo tom visual, sem metade preta. */
-.lesson-before-after{display:grid;grid-template-columns:minmax(0,1fr) 78px minmax(0,1fr);align-items:stretch;border:1px solid var(--story-line);border-radius:16px;overflow:hidden;background:#f4f4f1}
-.lesson-era{padding:24px 25px;min-height:205px;background:#fff}
-.lesson-era-after{background:#f5f5f2}
-.lesson-era-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--story-line)}
-.lesson-era-title small{display:inline-flex;padding:6px 8px;border-radius:999px;background:#ecece8;font-size:8px;font-weight:900;letter-spacing:.13em;color:#62625d}
-.lesson-era-after .lesson-era-title small{background:#111;color:#fff}
-.lesson-era-title b{font-size:16px;color:#111}
-.lesson-era p,.lesson-era-after p{font-size:13.5px!important;line-height:1.72!important;margin:20px 0 0!important;color:#4f4f4a!important}
-.lesson-shift{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#ecece7;color:#111}
-.lesson-shift span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#111;color:#fff;font-size:20px;transition:transform .22s ease}
-.lesson-shift small{font-size:7px;font-weight:900;letter-spacing:.11em;line-height:1.45;margin-top:9px;color:#686862}
-
-/* Regimes no mesmo padrão, com foco progressivo. */
-.lesson-regime-track section{padding:22px 21px 24px;min-height:215px}
-.lesson-regime-track section>span{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#111;color:#fff;font-size:9px;font-weight:900;margin-bottom:24px}
-.lesson-regime-track small,.lesson-regime-track b,.lesson-regime-track p{display:block}
-.lesson-regime-track small{font-size:8px;font-weight:900;letter-spacing:.13em;color:#85857f}
-.lesson-regime-track b{font-size:17px;line-height:1.2;margin-top:7px;color:#111}
-.lesson-regime-track p{font-size:11.3px!important;line-height:1.62!important;color:#61615b!important;margin:12px 0 0!important}
-
-/* Exemplo guiado agora também é claro para manter consistência entre módulos. */
-.lesson-story-example{background:#fff;color:#111}
-.lesson-story-example:before{background:#111}
-.lesson-story-example .lesson-story-kicker,.lesson-story-example .lesson-story-heading>p{color:#6a6a64!important}
-.lesson-story-example .lesson-story-heading h3{color:#111}
-.lesson-example-route{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--story-line);border-radius:15px;overflow:hidden;background:var(--story-soft)}
-.lesson-example-step{display:grid;grid-template-columns:48px 1fr;gap:13px;padding:20px;background:#fff;min-height:124px;transition:transform .2s ease,background .2s ease}
-.lesson-example-step:nth-child(even){border-left:1px solid var(--story-line)}
-.lesson-example-step:nth-child(n+3){border-top:1px solid var(--story-line)}
-.lesson-example-step>span{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#111;color:#fff;font-size:9px;font-weight:900}
-.lesson-example-step small,.lesson-example-step b{display:block}
-.lesson-example-step small{font-size:8px;letter-spacing:.12em;color:#85857f;font-weight:900;margin:3px 0 7px}
-.lesson-example-step b{font-size:12.5px;line-height:1.55;color:#222}
-
-/* Fluxo com trilha visual contínua. */
-.lesson-process-line{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr) 34px minmax(0,1fr);align-items:center;padding:21px;border:1px solid var(--story-line);border-radius:15px;background:var(--story-soft);overflow:hidden}
-.lesson-process-step{display:grid;grid-template-columns:43px 1fr;gap:12px;align-items:center;min-width:0;background:#fff;border:1px solid var(--story-line);border-radius:12px;padding:15px;transition:transform .2s ease,box-shadow .2s ease}
-.lesson-process-step>span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#111;color:#fff;font-size:9px;font-weight:900}
-.lesson-process-step small,.lesson-process-step b{display:block}
-.lesson-process-step small{font-size:8px;letter-spacing:.12em;color:#898983;font-weight:900;margin-bottom:5px}
-.lesson-process-step b{font-size:13px;line-height:1.3;color:#111}
-.lesson-process-line>i{font-style:normal;font-size:21px;color:#85857f;text-align:center;transition:transform .22s ease}
-
-/* Ajuda contextual integrada ao mesmo quadro. */
-.lesson-insight-row{display:grid;grid-template-columns:1.25fr 1fr .8fr;gap:0;margin-top:20px;border-top:1px solid var(--story-line)}
-.lesson-insight-row>div{padding:17px 19px 0 0}
-.lesson-insight-row>div+div{border-left:1px solid var(--story-line);padding-left:19px}
-.lesson-insight-row small{display:block;font-size:8px;font-weight:900;letter-spacing:.13em;color:#85857f;margin-bottom:8px}
-.lesson-insight-row p{font-size:10.8px!important;line-height:1.62!important;color:#5f5f5a!important;margin:0!important}
-.lesson-insight-row b{display:block;font-size:11.5px;line-height:1.55;color:#111}
-
-/* Dinâmica: entrada ao rolar + resposta ao mouse/toque, sem poluir a leitura. */
-.lesson-story.lesson-story-motion{opacity:0;transform:translateY(18px)}
-.lesson-story.lesson-story-motion.is-visible{opacity:1;transform:translateY(0);transition:opacity .48s ease,transform .48s cubic-bezier(.2,.75,.2,1),box-shadow .28s ease,border-color .28s ease}
-.lesson-story.is-visible .lesson-concept-step,.lesson-story.is-visible .lesson-regime-track section,.lesson-story.is-visible .lesson-example-step,.lesson-story.is-visible .lesson-process-step{animation:lessonItemIn .42s both}
-.lesson-story.is-visible :is(.lesson-concept-step,.lesson-regime-track section,.lesson-example-step,.lesson-process-step):nth-child(2){animation-delay:.07s}
-.lesson-story.is-visible :is(.lesson-concept-step,.lesson-regime-track section,.lesson-example-step,.lesson-process-step):nth-child(3){animation-delay:.14s}
-.lesson-story.is-visible :is(.lesson-concept-step,.lesson-regime-track section,.lesson-example-step,.lesson-process-step):nth-child(4){animation-delay:.21s}
-@keyframes lessonItemIn{from{opacity:.25;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@media(hover:hover){
- .lesson-story:hover{border-color:#c5c5bf;box-shadow:0 16px 38px rgba(0,0,0,.055)}
- .lesson-concept-step:hover,.lesson-regime-track section:hover,.lesson-example-step:hover{background:#f7f7f4;transform:translateY(-3px);z-index:2}
- .lesson-process-step:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.06)}
- .lesson-before-after:hover .lesson-shift span{transform:translateX(4px)}
- .lesson-process-line:hover>i{transform:translateX(3px)}
-}
-.lesson-concept-step.is-active,.lesson-regime-track section.is-active,.lesson-example-step.is-active,.lesson-process-step.is-active{background:#f1f1ed;box-shadow:inset 0 0 0 1px #111}
-
-@media(max-width:900px){
- .lesson-story-heading{grid-template-columns:1fr;gap:9px}
- .lesson-story-heading>p{justify-self:start;max-width:620px}
- .lesson-before-after{grid-template-columns:1fr 62px 1fr}
- .lesson-era{padding:21px;min-height:0}
- .lesson-insight-row{grid-template-columns:1fr 1fr}
- .lesson-insight-warning{grid-column:1/-1;border-left:0!important;border-top:1px solid var(--story-line);padding-left:0!important;margin-top:6px}
-}
-@media(max-width:760px){
- .lesson-story{margin:27px 0 32px;padding:21px 18px 20px;border-radius:17px}
- .lesson-story-heading{margin-bottom:17px}
- .lesson-story-heading h3{font-size:21px}
- .lesson-concept-route,.lesson-regime-track{grid-template-columns:1fr}
- .lesson-concept-step{grid-template-columns:40px 1fr;min-height:0;padding:18px}
- .lesson-concept-step+.lesson-concept-step,.lesson-regime-track section+section{border-left:0;border-top:1px solid var(--story-line)}
- .lesson-before-after{grid-template-columns:1fr}
- .lesson-shift{min-height:57px;flex-direction:row;gap:10px}
- .lesson-shift span{transform:rotate(90deg)}
- .lesson-before-after:hover .lesson-shift span{transform:rotate(90deg)}
- .lesson-shift small br{display:none}
- .lesson-regime-track section{min-height:0;padding:19px}
- .lesson-regime-track section>span{margin-bottom:16px}
- .lesson-example-route{grid-template-columns:1fr}
- .lesson-example-step,.lesson-example-step:nth-child(even){border-left:0;padding:18px}
- .lesson-example-step:nth-child(n+2){border-top:1px solid var(--story-line)}
- .lesson-process-line{grid-template-columns:1fr;gap:9px;padding:15px}
- .lesson-process-line>i{transform:rotate(90deg)}
- .lesson-process-line:hover>i{transform:rotate(90deg)}
- .lesson-insight-row{grid-template-columns:1fr}
- .lesson-insight-row>div,.lesson-insight-row>div+div{border-left:0;padding:14px 0}
- .lesson-insight-row>div+div{border-top:1px solid var(--story-line)}
- .lesson-insight-warning{grid-column:auto;margin-top:0}
-}
-@media(prefers-reduced-motion:reduce){
- .lesson-story,.lesson-story *{animation:none!important;transition:none!important}
- .lesson-story.lesson-story-motion{opacity:1;transform:none}
-}
 </style>
 <script>
 try{
@@ -924,7 +795,7 @@ try{
  if(savedSession)document.documentElement.classList.add('has-saved-session');
 }catch(e){}
 </script>
-<link rel="stylesheet" href="lesson-slides.css?v=20261002-04">
+<link rel="stylesheet" href="lesson-slides.css?v=20261003-106">
 <link rel="stylesheet" href="timeline.css?v=20261002-105">
 </head>
 <body>
@@ -1490,13 +1361,14 @@ try{
 
 <div id="accountBackdrop" class="account-backdrop" hidden></div>
 <aside id="accountDrawer" class="account-drawer" role="dialog" aria-modal="true" aria-labelledby="accountTitle" hidden><div class="account-head"><div><span class="drawer-eyebrow">ESPAÇO PESSOAL</span><h2 id="accountTitle">Meu percurso</h2></div><button id="accountClose" aria-label="Fechar painel">✕</button></div><div class="drawer-profile"><span id="drawerAvatar" class="drawer-avatar"></span><div><b id="drawerName"></b><p id="accountEmail" class="account-email"></p></div></div><p id="accountStatus" class="account-status" role="status"></p><div id="accountContent"></div><section id="adminSection" class="account-admin" hidden><button id="reportsOpen" class="reports-open">Relatórios dos colaboradores →</button></section><p><button id="accountLogout">Sair da conta</button></p></aside>
-<script src="content-v2.js?v=20261001-01"></script>
+<script src="content-v2.js?v=20261003-106"></script>
 <script src="quiz-bank.js?v=20261001-02"></script>
 <script src="quiz-engine.js?v=20261001-02"></script>
 <script src="tax-rules.js?v=20260930-80"></script>
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<script src="app-v2.js?v=20261002-105" defer></script>
+<script src="lesson-layout.js?v=20261003-106"></script>
+<script src="app-v2.js?v=20261003-106" defer></script>
 <script src="account.js?v=20261002-99" defer></script>
 <script>window.JAGUAR_RT_BUILD="20261002-102";</script>
 </body>
