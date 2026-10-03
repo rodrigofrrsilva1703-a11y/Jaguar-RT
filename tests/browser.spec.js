@@ -159,15 +159,50 @@ test('linha do tempo resume cada ano sem poluir a página inicial',async({page})
  await expect(page.locator('#timeline .year')).toHaveCount(8);
  await expect(page.locator('.transition-phases')).toHaveCount(0);
  await page.locator('#timeline [data-year="2029"]').click();
- await expect(page.locator('#timelinePanel h3')).toHaveText('ICMS/ISS 90% · IBS 10%');
+ await expect(page.locator('#timelinePanel h3')).toHaveText('Primeira redução efetiva de ICMS e ISS');
+ await expect(page.locator('#timelinePanel')).toContainText('ICMS/ISS ficam em 90%');
  await expect(page.locator('#timelinePanel')).toContainText('não a alíquota final');
  await expect(page.locator('#timeline [data-year="2029"]')).toHaveAttribute('aria-pressed','true');
- await page.locator('#timelinePanel').getByRole('button',{name:'Próximo'}).click();
+ await page.getByRole('button',{name:'Próximo ano',exact:true}).click();
  await expect(page.locator('#timelinePanel')).toContainText('2030');
- await expect(page.locator('#timelinePanel h3')).toHaveText('ICMS/ISS 80% · IBS 20%');
+ await expect(page.locator('#timelinePanel')).toContainText('ICMS/ISS ficam em 80%');
  await page.locator('#timeline [data-year="2026"]').click();
  await expect(page.locator('#timelinePanel')).toContainText('CBS 0,9% e IBS 0,1%');
  await expect(page.locator('#timelinePanel .transition-bars')).toHaveCount(0);
+});
+
+test('linha do tempo mostra todos os anos no celular e preserva seleção e teclado',async({page})=>{
+ await page.setViewportSize({width:320,height:740});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('http://127.0.0.1:4173/?e2e=timeline-mobile',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ const years=page.locator('#timeline .year');
+ for(let i=0;i<8;i++){
+  const box=await years.nth(i).boundingBox();
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x+box.width).toBeLessThanOrEqual(320);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+ }
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(320);
+ const first=page.locator('#timeline [data-year="2026"]');
+ await first.click();
+ await expect(first).toHaveCSS('color','rgb(255, 255, 255)');
+ await expect(page.locator('#timelinePrevious')).toBeDisabled();
+ await first.focus();
+ await page.keyboard.press('End');
+ await expect(page.locator('#timeline [data-year="2033"]')).toBeFocused();
+ await expect(page.locator('#timelineNext')).toBeDisabled();
+ await page.keyboard.press('ArrowLeft');
+ await expect(page.locator('#timeline [data-year="2032"]')).toHaveAttribute('aria-pressed','true');
+ await page.reload();
+ await expect(page.locator('#timeline [data-year="2032"]')).toHaveAttribute('aria-pressed','true');
+ await page.setViewportSize({width:1280,height:900});
+ const firstBox=await first.boundingBox(),lastBox=await years.last().boundingBox();
+ expect(firstBox.y).toBe(lastBox.y);
+ await page.locator('#timelineNext').focus();
+ await page.keyboard.press('Enter');
+ await expect(page.locator('#timelineNext')).toBeDisabled();
+ await expect(page.locator('#timelinePanel')).toContainText('2033');
 });
 
 test('módulos preservam leitura, retomam etapa e filtram o andamento',async({page})=>{

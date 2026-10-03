@@ -410,7 +410,7 @@ function renderHome(){
    <h3>${s[0]}</h3><p>${s[2]}</p>${s[1]==='#'?'<span class="source-note">Material interno do estudo</span>':`<a href="${s[1]}" target="_blank" rel="noopener">Abrir fonte oficial →</a>`}
  </article>`).join('');
  $('timeline').innerHTML=Object.keys(TIMELINE).map(y=>{const info=timelineInfo(y);return `<button type="button" class="year" onclick="pickYear('${y}')" data-year="${y}" aria-label="${y}: ${courseEscape(info.short)}" aria-pressed="false"><b>${y}</b><small>${courseEscape(info.phase)}</small></button>`;}).join('');
- pickYear(TIMELINE[String(new Date().getFullYear())]?String(new Date().getFullYear()):'2026');
+ pickYear(TIMELINE[readNavigation().timelineYear]?readNavigation().timelineYear:TIMELINE[String(new Date().getFullYear())]?String(new Date().getFullYear()):'2026');
 }
 
 const QUIZ_HISTORY_KEY='jaguar-rtav-quiz-history-v2';
@@ -863,6 +863,7 @@ function timelineInfo(y){
 function pickYear(y){
  if(!TIMELINE[y]) return;
  activeTimelineYear=String(y);
+ saveNavigation({timelineYear:String(y)});
  const years=Object.keys(TIMELINE);
  const idx=years.indexOf(String(y));
  const o=TIMELINE[y],info=timelineInfo(y);
@@ -873,8 +874,9 @@ function pickYear(y){
   b.classList.toggle('is-past',i<idx);
   b.setAttribute('aria-pressed',String(active));
  });
- const lineFill=$('transitionLineFill');
- if(lineFill)lineFill.style.width=(idx/(years.length-1)*100)+'%';
+ $('timelinePrevious').disabled=idx===0;
+ $('timelineNext').disabled=idx===years.length-1;
+ $('timelinePosition').textContent=String(idx+1).padStart(2,'0')+' / '+String(years.length).padStart(2,'0');
 
  $('timelinePanel').innerHTML=
   '<div class="rt-detail-main">'+
@@ -892,17 +894,19 @@ function pickYear(y){
    '<div class="rt-detail-actions"><button type="button" onclick="openModule(\'10\')">Ver Módulo 10</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>'+
   '</aside>';
 
- const activeNode=document.querySelector('#home .year.active');
- const timelineScroller=document.querySelector('#home .rt-timeline-scroll');
- if(activeNode&&timelineScroller&&window.matchMedia('(max-width:920px)').matches){
-  const targetLeft=activeNode.offsetLeft-(timelineScroller.clientWidth-activeNode.offsetWidth)/2;
-  timelineScroller.scrollTo({left:Math.max(0,targetLeft),behavior:'smooth'});
- }
  if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   const panel=$('timelinePanel');
   panel?.animate([{opacity:.55,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'cubic-bezier(.22,1,.36,1)'});
  }
 }
+
+$('timeline').addEventListener('keydown',e=>{
+ const current=e.target.closest('[data-year]');if(!current)return;
+ const years=Object.keys(TIMELINE),index=years.indexOf(current.dataset.year);
+ const next=e.key==='ArrowRight'?Math.min(index+1,years.length-1):e.key==='ArrowLeft'?Math.max(index-1,0):e.key==='Home'?0:e.key==='End'?years.length-1:null;
+ if(next===null)return;e.preventDefault();pickYear(years[next]);
+ $('timeline').querySelector('[data-year="'+years[next]+'"]').focus();
+});
 
 function moveYear(direction){
  const years=Object.keys(TIMELINE);
