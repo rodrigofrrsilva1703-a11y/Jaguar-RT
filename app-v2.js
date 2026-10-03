@@ -878,12 +878,12 @@ function pickYear(y){
  $('timelinePanel').innerHTML=
   '<div class="rt-detail-intro"><strong class="rt-detail-year">'+courseEscape(y)+'</strong><div><div class="rt-detail-kicker">'+courseEscape(info.phase)+'</div><h3>'+courseEscape(info.short)+'</h3></div></div>'+
   '<details class="rt-year-details">'+
-   '<summary>Ver detalhes</summary>'+
+   '<summary><span class="rt-details-expand">Ver detalhes</span><span class="rt-details-collapse">Ocultar detalhes</span></summary>'+
    '<div class="rt-year-content">'+
-    '<p>'+courseEscape(o.text)+'</p>'+
-    '<dl><div><dt>Novo modelo</dt><dd>'+courseEscape(info.newModel)+'</dd></div><div><dt>Sistema anterior</dt><dd>'+courseEscape(info.oldModel)+'</dd></div></dl>'+
+    '<div class="rt-details-explanation"><h4>O que muda neste ano</h4><p>'+courseEscape(o.text)+'</p></div>'+
+    '<dl class="rt-details-compare"><div><dt>Sistema anterior</dt><dd>'+courseEscape(info.oldModel)+'</dd></div><div><dt>Novo modelo</dt><dd>'+courseEscape(info.newModel)+'</dd></div></dl>'+
     (Number(y)>=2029&&Number(y)<=2032?'<p class="transition-caveat">A proporção indicada representa a transição para o IBS, não a alíquota final.</p>':'')+
-    '<p><b>Foco prático:</b> '+courseEscape(info.focus)+'</p>'+
+    '<section class="rt-details-practice" aria-label="Foco prático"><h4>Na prática</h4><p>'+courseEscape(info.focus)+'</p></section>'+
     '<div class="rt-detail-actions"><button type="button" onclick="openModule(\'10\')">Estudar no Módulo 10 →</button><a href="https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/reforma-tributaria-do-consumo/entenda" target="_blank" rel="noopener">Fonte oficial ↗</a></div>'+
    '</div>'+
   '</details>';
