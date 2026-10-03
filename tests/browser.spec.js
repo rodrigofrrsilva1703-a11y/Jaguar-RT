@@ -160,24 +160,13 @@ test('linha do tempo resume cada ano sem poluir a página inicial',async({page})
  await expect(page.locator('.transition-phases')).toHaveCount(0);
  await page.locator('#timeline [data-year="2029"]').click();
  await expect(page.locator('#timelinePanel h3')).toHaveText('Primeira redução efetiva de ICMS e ISS');
- await expect(page.locator('#timelinePanel .rt-year-details')).not.toHaveAttribute('open','');
- await expect(page.locator('#timelinePanel .rt-year-content')).toBeHidden();
- await page.locator('#timelinePanel summary').focus();
- await page.keyboard.press('Enter');
- await expect(page.locator('#timelinePanel .rt-year-content')).toBeVisible();
- await expect(page.locator('#timelinePanel')).toContainText('ICMS/ISS ficam em 90%');
- await expect(page.locator('#timelinePanel')).toContainText('não a alíquota final');
+ await expect(page.locator('#timelinePanel details, #timelinePanel summary, #timelinePanel button, #timelinePanel a')).toHaveCount(0);
  await expect(page.locator('#timeline [data-year="2029"]')).toHaveAttribute('aria-pressed','true');
  await page.locator('#timeline [data-year="2030"]').click();
- await expect(page.locator('#timelinePanel .rt-year-content')).toBeHidden();
  await expect(page.locator('#timelinePanel')).toContainText('2030');
- await expect(page.locator('#timelinePanel')).toContainText('ICMS/ISS ficam em 80%');
+ await expect(page.locator('#timelinePanel h3')).toHaveText('O IBS ganha mais espaço na tributação');
  await page.locator('#timeline [data-year="2026"]').click();
- await expect(page.locator('#timelinePanel')).toContainText('CBS 0,9% e IBS 0,1%');
- await page.locator('#timelinePanel summary').click();
- await expect(page.locator('#timelinePanel').getByRole('link',{name:'Fonte oficial ↗'})).toHaveAttribute('href',/^https:\/\/www.gov.br/);
- await page.locator('#timelinePanel').getByRole('button',{name:'Estudar no Módulo 10 →'}).click();
- await expect(page.locator('#modulePage')).toBeVisible();
+ await expect(page.locator('#timelinePanel h3')).toHaveText('CBS e IBS entram em ambiente de teste');
  await expect(page.locator('#timelinePanel .transition-bars')).toHaveCount(0);
 });
 
@@ -198,7 +187,7 @@ test('linha do tempo mostra todos os anos no celular e preserva seleção e tecl
  await first.click();
  await expect(first).toHaveCSS('color','rgb(255, 255, 255)');
  const section=await page.locator('#home .interactive-transition').boundingBox();
- expect(section.height).toBeLessThan(380);
+ expect(section.height).toBeLessThan(320);
  await first.focus();
  await page.keyboard.press('End');
  await expect(page.locator('#timeline [data-year="2033"]')).toBeFocused();
