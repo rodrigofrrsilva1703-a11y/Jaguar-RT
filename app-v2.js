@@ -876,8 +876,7 @@ function pickYear(y){
  });
 
  $('timelinePanel').innerHTML=
-  '<div class="rt-detail-kicker">'+courseEscape(y)+' · '+courseEscape(info.phase)+'</div>'+
-  '<h3>'+courseEscape(info.short)+'</h3>'+
+  '<div class="rt-detail-intro"><strong class="rt-detail-year">'+courseEscape(y)+'</strong><div><div class="rt-detail-kicker">'+courseEscape(info.phase)+'</div><h3>'+courseEscape(info.short)+'</h3></div></div>'+
   '<details class="rt-year-details">'+
    '<summary>Ver detalhes</summary>'+
    '<div class="rt-year-content">'+
