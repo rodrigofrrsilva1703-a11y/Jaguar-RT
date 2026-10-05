@@ -16,6 +16,96 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
+test('todos os campos das ferramentas têm nome acessível e rótulos clicáveis',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=labels',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ const unlabeled=await page.evaluate(()=>Array.from(document.querySelectorAll('#tools .field input,#tools .field select')).filter(e=>!e.labels.length&&!e.getAttribute('aria-label')&&!e.getAttribute('aria-labelledby')).map(e=>e.id));
+ expect(unlabeled).toEqual([]);
+ await page.evaluate(()=>go('tools'));
+ await page.locator('label[for="priceNow"]').click();
+ await expect(page.locator('#priceNow')).toBeFocused();
+});
+
+for(const width of [320,390])test('celular '+width+'px mantém navegação tocável e comparação próxima do formulário',async({page})=>{
+ await page.setViewportSize({width,height:844});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('http://127.0.0.1:4173/?e2e=compact',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>go('home'));
+ expect((await page.locator('#home .hero').boundingBox()).height).toBeLessThan(650);
+ for(const button of await page.locator('.bottom button').all())expect((await button.boundingBox()).height).toBeGreaterThanOrEqual(44);
+ await page.locator('.bottom [data-go="tools"]').click();
+ await expect(page.locator('#priceSimpleOptions')).not.toHaveAttribute('open','');
+ await expect(page.locator('#priceRateOptions')).not.toHaveAttribute('open','');
+ await expect(page.locator('#priceEvolution')).not.toHaveAttribute('open','');
+ const resultY=await page.locator('#priceToolPanel .result-head').evaluate(e=>e.getBoundingClientRect().top+scrollY);
+ expect(resultY).toBeLessThan(2400);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+ await page.locator('#priceRateOptions>summary').click();
+ await expect(page.locator('#rateMode')).toBeVisible();
+});
+
+test('progresso do início acompanha etapas e curso concluído oferece revisão',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=course-finished',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>{openModule('01');moveCourseStep(1);moveCourseStep(1);go('home')});
+ await expect(page.locator('#homeDashboard')).toContainText('ETAPAS ESTUDADAS');
+ await expect(page.locator('#homeDashboard .home-dashboard-card').nth(1).locator('strong')).toHaveText('2%');
+ await page.evaluate(()=>{
+  const state={__orderVersion:2,__layoutVersion:1};
+  for(const m of STUDY_MODULES)state[m.id]={read:m.blocks.map((_,i)=>i),step:m.blocks.length-1};
+  saveStudyProgress(state);go('home');
+ });
+ await expect(page.locator('#homeDashboard')).toContainText('100%');
+ await expect(page.locator('#homeDashboard')).toContainText('16 de 16 módulos concluídos');
+ await page.locator('#homePrimaryAction').click();
+ await expect(page.locator('#quiz')).toBeVisible();
+});
+
+test('exportação carrega Excel sob demanda, recupera falha e reutiliza o arquivo local',async({page})=>{
+ let loads=0;
+ await page.route('**/vendor/xlsx-0.18.5.min.js',route=>{loads++;return loads===1?route.abort():route.continue();});
+ await page.goto('http://127.0.0.1:4173/?e2e=lazy-excel',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ expect(loads).toBe(0);
+ expect(await page.evaluate(()=>typeof XLSX)).toBe('undefined');
+ await page.evaluate(()=>go('tools'));
+ await page.locator('#priceEvolution>summary').click();
+ await page.locator('#exportPriceExcelBtn').click();
+ await expect(page.locator('#exportPriceExcelBtnStatus')).toContainText('Não foi possível');
+ await expect(page.locator('#exportPriceExcelBtn')).toBeEnabled();
+ const purchase=page.waitForEvent('download');
+ await page.locator('#exportPriceExcelBtn').click();
+ expect((await purchase).suggestedFilename()).toMatch(/compra.*\.xlsx$/);
+ expect(loads).toBe(2);
+ await page.locator('#revenueToolTab').click();
+ const revenue=page.waitForEvent('download');
+ await page.locator('#exportRevenueExcelBtn').click();
+ expect((await revenue).suggestedFilename()).toMatch(/faturamento.*\.xlsx$/);
+ expect(loads).toBe(2);
+});
+
+test('premissas opcionais continuam salvas e recalculam os quatro fornecedores',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=optional-premises',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>go('tools'));
+ await page.locator('#priceSimpleOptions>summary').click();
+ await page.locator('#snRbt12').fill('1500000');
+ await page.locator('#priceRateOptions>summary').click();
+ await page.locator('#rateMode').selectOption('manual');
+ await page.locator('#cbsRate').fill('8');
+ await page.locator('#ibsRate').fill('3');
+ const before=await page.locator('#buyerExample').textContent();
+ await page.reload({waitUntil:'domcontentloaded'});
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await expect(page.locator('#priceSimpleOptions')).not.toHaveAttribute('open','');
+ await expect(page.locator('#snRbt12')).toHaveValue('1500000');
+ await expect(page.locator('#rateMode')).toHaveValue('manual');
+ await expect(page.locator('#cbsRate')).toHaveValue('8');
+ await expect(page.locator('#ibsRate')).toHaveValue('3');
+ await expect(page.locator('#buyerExample')).toHaveText(before);
+});
+
 test('slides ficam legíveis no celular e etapas recolhem após a escolha',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await page.goto('http://127.0.0.1:4173/?e2e=lesson-slides',{waitUntil:'domcontentloaded'});
@@ -98,6 +188,18 @@ test('slides continuam visíveis sem animação ou observador',async({page})=>{
  await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
  await page.evaluate(()=>{openModule('02');showCourseStep(0,false)});
  await expect(page.locator('.course-block:not([hidden]) .lesson-story')).toHaveCSS('opacity','1');
+});
+
+test('início e navegação funcionam mesmo sem observador de animação',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{delete window.IntersectionObserver;});
+ await page.goto('http://127.0.0.1:4173/?e2e=no-observer',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ await page.evaluate(()=>go('home'));
+ await expect(page.locator('#homeGreeting')).toBeVisible();
+ await page.locator('nav [data-go="quiz"]').click();
+ await expect(page.locator('#quiz')).toBeVisible();
+ expect(errors).toEqual([]);
 });
 
 test('retornar ao celular busca progresso de outro aparelho sem sobrescrever o servidor',async({page})=>{
@@ -338,6 +440,8 @@ test('home orienta o próximo passo sem sobrecarregar a tela',async({page})=>{
 
  await page.locator('nav [data-go="modules"]').click();
  await page.locator('#moduleGrid .module-card').nth(4).click();
+ await expect(page.locator('#courseClosing')).toBeHidden();
+ await page.evaluate(()=>showCourseStep(activeCourse.blocks.length-1,false));
  await expect(page.locator('#modulePage .module-summary')).toBeVisible();
  await expect(page.locator('#modulePage .module-summary-item')).toHaveCount(2);
  await expect(page.locator('#modulePage .module-summary')).not.toContainText('NA JAGUAR');
@@ -442,6 +546,7 @@ test('um comprador compara quatro regimes de fornecedor sem conferência duplica
  await expect(page.locator('#yearlyProjectionHead')).toContainText('2033');
  await expect(page.locator('#yearlyProjectionTable')).toContainText('Lucro Presumido');
  await expect(page.locator('#yearlyProjectionTable')).toContainText('Lucro Real');
+ await page.locator('#priceEvolution>summary').click();
  await expect(page.locator('#yearlyProjectionTable .cell-best').first()).toBeVisible();
 
  // Navegar por um ano troca o painel e destaca a coluna correspondente.
@@ -514,6 +619,7 @@ test('fornecedores do Simples compartilham parâmetros do segmento e faturamento
  await expect(page.locator('#accountToggle')).toBeVisible();
  await page.evaluate(()=>go('tools'));
 
+ await page.locator('#priceSimpleOptions>summary').click();
  await expect(page.locator('#simplesCurrentFields')).toBeVisible();
  await page.locator('#priceSegment').selectOption('comercio');
  await page.locator('#snRbt12').fill('1000000');
@@ -742,7 +848,6 @@ test('relatórios filtram desempenho e módulo; Excel inclui só o resultado fil
  await expect(page.locator('.report-person')).toContainText('Ana');
  await page.locator('#reportsModule').selectOption('01');
  await expect(page.locator('.report-person')).toHaveCount(1);
- await page.waitForFunction(()=>!!window.XLSX);
  const download=page.waitForEvent('download');
  await page.locator('#reportsExport').click();
  const file=await download;

@@ -45,8 +45,8 @@ let viewEntrance=null;
 function animateViewEntrance(id){
  viewEntrance?.cancel();
  if(id==='home'||$('siteShell')?.inert||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- const view=$(id);if(!view)return;
- viewEntrance=view.animate([{opacity:.3,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:380,easing:'cubic-bezier(.22,1,.36,1)'});
+ const view=$(id);if(!view||typeof view.animate!=='function')return;
+ viewEntrance=view.animate([{opacity:.8,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:220,easing:'cubic-bezier(.22,1,.36,1)'});
 }
 function stopHomeEntrance(){
  homeEntranceObserver?.disconnect();
@@ -57,16 +57,16 @@ function stopHomeEntrance(){
 function animateHomeEntrance(){
  stopHomeEntrance();
  const home=$('home');
- if(!home||!home.classList.contains('active')||$('siteShell')?.hidden||$('siteShell')?.inert)return;
+ if(!home||!home.classList.contains('active')||$('siteShell')?.hidden||$('siteShell')?.inert||typeof home.animate!=='function')return;
  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  const mobile=window.matchMedia('(max-width:760px)').matches;
  const play=(el,delay=0,card=false)=>{
   if(!el||homeRevealedElements.has(el))return;
   homeRevealedElements.add(el);
   const animation=el.animate(
-   [{opacity:0,transform:`translateY(${card?8:12}px)`},
+   [{opacity:.8,transform:'translateY(4px)'},
     {opacity:1,transform:'translateY(0)'}],
-   {duration:mobile?420:620,delay:Math.min(delay,mobile?180:260),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}
+   {duration:220,delay:Math.min(delay,80),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}
   );
   homeEntranceAnimations.push(animation);
   animation.finished.then(()=>{homeEntranceAnimations=homeEntranceAnimations.filter(a=>a!==animation);},()=>{});
@@ -80,6 +80,9 @@ function animateHomeEntrance(){
    play(el.querySelector('.timeline-panel'),120,true);
   }else play(el,0,true);
  };
+ if(typeof IntersectionObserver!=='function'){
+  home.querySelectorAll('.home-search, .transition-home').forEach(reveal);return;
+ }
  homeEntranceObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
   if(entry.isIntersecting){reveal(entry.target);homeEntranceObserver.unobserve(entry.target);}
  }),{threshold:.12});
@@ -184,13 +187,15 @@ function filterStudyModules(filter){studyFilter=filter;renderModuleGrid();}
 
 function currentStudyTarget(){
  const active=STUDY_MODULES.find(function(m){return moduleStatus(m)==='Em andamento';});
- return active||STUDY_MODULES.find(function(m){return moduleStatus(m)!=='Concluído';})||STUDY_MODULES[STUDY_MODULES.length-1];
+ return active||STUDY_MODULES.find(function(m){return moduleStatus(m)!=='Concluído';})||null;
 }
 function renderHomeDashboard(){
  const el=$('homeDashboard');if(!el)return;
  const complete=STUDY_MODULES.filter(function(m){return moduleStatus(m)==='Concluído';}).length;
  const target=currentStudyTarget();
- const pctDone=Math.round(complete/STUDY_MODULES.length*100);
+ const total=STUDY_MODULES.reduce((n,m)=>n+m.blocks.length,0);
+ const studied=STUDY_MODULES.reduce((n,m)=>n+moduleProgress(m).read.length,0);
+ const pctDone=total?Math.round(studied/total*100):0;
  let lastScore=null,lastScope=null;
  try{
   const saved=JSON.parse(localStorage.getItem('jaguar-rtav-quiz-session-v3')||'null');
@@ -204,11 +209,11 @@ function renderHomeDashboard(){
  const targetAction=target?("openModule('"+target.id+"')"):"go('quiz')";
  el.innerHTML=
   '<article class="home-dashboard-card primary"><small>PRÓXIMO PASSO</small><b>'+courseEscape(targetLabel)+'</b><span>'+(target?targetProgress.read.length+' de '+target.blocks.length+' etapas lidas':'Você concluiu os 16 módulos')+'</span><button type="button" onclick="'+targetAction+'">'+(target?'Continuar módulo':'Fazer revisão geral')+' →</button></article>'+
-  '<article class="home-dashboard-card"><small>PROGRESSO DO CURSO</small><strong>'+pctDone+'%</strong><span>'+complete+' de '+STUDY_MODULES.length+' módulos concluídos</span></article>'+
+  '<article class="home-dashboard-card"><small>ETAPAS ESTUDADAS</small><strong>'+pctDone+'%</strong><span>'+complete+' de '+STUDY_MODULES.length+' módulos concluídos</span></article>'+
   '<article class="home-dashboard-card"><small>ÚLTIMO TESTE</small><strong>'+(lastScore===null?'—':lastScore+'/10')+'</strong><span>'+(lastScore===null?'Faça seu primeiro teste':lastScope==='all'?'Teste geral':'Módulo '+lastScope)+'</span></article>';
- if($('homePrimaryAction')&&target){
-  $('homePrimaryAction').onclick=function(){openModule(target.id);};
-  $('homePrimaryAction').innerHTML=(moduleStatus(target)==='Em andamento'?'Continuar módulo ':'Começar módulo ')+target.id+' <b>→</b>';
+ if($('homePrimaryAction')){
+  $('homePrimaryAction').onclick=function(){if(target)openModule(target.id);else go('quiz');};
+  $('homePrimaryAction').innerHTML=target?(moduleStatus(target)==='Em andamento'?'Continuar módulo ':'Começar módulo ')+target.id+' <b>→</b>':'Revisar o curso <b>→</b>';
  }
 }
 function renderHomeResume(){
@@ -474,7 +479,7 @@ function moduleActionHtml(m){
 function moduleSummaryHtml(m,index){
  const next=STUDY_MODULES[index+1];
  return '<section class="module-summary">'+
-  '<div class="module-summary-head"><div><span class="eyebrow">FECHAMENTO DO MÓDULO</span><h3>O essencial deste módulo</h3></div><span class="module-no">'+(next?'PRÓXIMO · '+next.id:'CURSO CONCLUÍDO')+'</span></div>'+
+  '<div class="module-summary-head"><div><span class="eyebrow">FECHAMENTO DO MÓDULO</span><h3>O essencial deste módulo</h3></div><span class="module-no">'+(next?'PRÓXIMO · '+next.id:'FECHAMENTO DA TRILHA')+'</span></div>'+
   '<div class="module-summary-grid">'+
    '<div class="module-summary-item"><small>VOCÊ APRENDEU</small><b>'+courseEscape(m.subtitle)+'</b></div>'+
    '<div class="module-summary-item"><small>EVITE</small><b>'+courseEscape(MODULE_COMMON_MISTAKES[m.id]||'Transformar uma premissa didática em regra universal.')+'</b></div>'+
@@ -522,10 +527,10 @@ function openModule(id){
    <header class="course-hero"><span class="module-no">MÓDULO ${m.id} DE ${STUDY_MODULES.length}</span><h1 class="page-title">${courseEscape(m.title)}</h1><p class="page-lead">${courseEscape(m.subtitle)}</p><div class="course-hero-progress"><strong id="courseProgressLabel"></strong><span class="study-progress-track"><i id="courseProgressFill"></i></span></div></header>
    <div class="course-note"><b>Premissas dos exemplos</b><p>Os valores de CBS 9,21% e IBS 18,70% são parâmetros didáticos deste curso. A alíquota efetiva e os créditos dependem do ano, do destino, do regime, da operação e dos requisitos legais. Confira as regras vigentes antes de aplicar um exemplo a uma empresa.</p></div>
    <div class="course-layout"><nav class="course-toc" aria-label="Etapas da aula"><details class="course-outline" ${window.matchMedia('(max-width:760px)').matches?'':'open'}><summary>Etapas da aula <span id="courseOutlineCurrent"></span></summary><div class="course-outline-list"><div class="course-toc-head"><b>Nesta aula</b><span>${m.blocks.length} etapas</span></div>${m.blocks.map((b,i)=>`<button type="button" data-course-step="${i}" onclick="showCourseStep(${i})"><span class="course-step-number">${String(i+1).padStart(2,'0')}</span><span>${courseEscape(b.t)}</span><span class="course-step-check" aria-hidden="true">✓</span></button>`).join('')}<button type="button" class="course-view-all" id="courseViewAll" onclick="toggleCourseView()">Ver aula inteira</button></div></details></nav><div class="course-main"><div class="course-stage-label" id="courseStageLabel"></div><div class="lesson-stack">${blocks}</div><div class="course-controls"><button type="button" id="coursePrev" onclick="moveCourseStep(-1)">← Etapa anterior</button><button type="button" class="course-next" id="courseNext" onclick="moveCourseStep(1)">Próxima etapa →</button></div></div></div>
-   ${moduleSummaryHtml(m,index)}
+   <div id="courseClosing" hidden>${moduleSummaryHtml(m,index)}
    ${moduleActionHtml(m)}
    <div class="course-quiz-callout"><div><b>Concluiu a leitura?</b><span>Confira o que aprendeu em 10 perguntas deste módulo.</span></div><button class="quiz-primary" onclick="startModuleQuiz('${m.id}')">Fazer teste do módulo ${m.id} →</button></div>
-   <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div>`;
+   <div class="course-navigation">${index>0?`<button onclick="openModule('${STUDY_MODULES[index-1].id}')">← Módulo anterior</button>`:'<span></span>'}${index<STUDY_MODULES.length-1?`<button onclick="openModule('${STUDY_MODULES[index+1].id}')">Próximo módulo →</button>`:`<button onclick="go('modules')">Ver todos os módulos →</button>`}</div></div>`;
   go('modulePage',{instant:true});
   showCourseStep(progress.step,false);
   requestAnimationFrame(initLessonStoryDynamics);
@@ -573,8 +578,9 @@ function showCourseStep(index,scroll=true){
  if(scroll&&window.matchMedia('(max-width:760px)').matches){const outline=document.querySelector('.course-outline');if(outline)outline.open=false;}
  $('courseStageLabel').textContent=courseAllVisible?'AULA COMPLETA':`ETAPA ${String(step+1).padStart(2,'0')} DE ${String(m.blocks.length).padStart(2,'0')}`;
  $('coursePrev').disabled=step===0;
- $('courseNext').textContent=step===m.blocks.length-1?(progress.read.includes(step)?'Etapa concluída ✓':'Concluir módulo ✓'):'Marcar como lida e avançar →';
+ $('courseNext').textContent=step===m.blocks.length-1?(progress.read.includes(step)?'Etapa concluída ✓':progress.read.length===m.blocks.length-1?'Concluir módulo ✓':'Marcar etapa como lida ✓'):'Marcar como lida e avançar →';
  $('courseNext').disabled=step===m.blocks.length-1&&progress.read.includes(step);
+ if($('courseClosing'))$('courseClosing').hidden=!courseAllVisible&&step<m.blocks.length-1;
  $('courseViewAll').textContent=courseAllVisible?'Voltar à leitura por etapas':'Ver aula inteira';
  if(scroll){
   const target=document.querySelector('#modulePage .course-block:not([hidden])');
@@ -2277,7 +2283,7 @@ $('priceCreditUsePct')?.addEventListener('input',calcIntegrated);
 $('snAnnex')?.addEventListener('change',function(){updateSnSummary();calcIntegrated();});
 $('snRbt12')?.addEventListener('input',function(){updateSnSummary();calcIntegrated();});
 $('priceYear')?.addEventListener('change',applyYearPreset);
-$('exportPriceExcelBtn')?.addEventListener('click',exportPriceExcel);
+$('exportPriceExcelBtn')?.addEventListener('click',()=>JaguarExports.run('exportPriceExcelBtn',exportPriceExcel));
 $('pricePresentationBtn')?.addEventListener('click',function(){togglePresentation('price');});
 $('pricePrintBtn')?.addEventListener('click',function(){printTaxReport('price');});
 $('resetPriceSimulation')?.addEventListener('click',function(){resetSimulation('price');});
@@ -2307,7 +2313,7 @@ $('revSnAnnex')?.addEventListener('change',function(){revUpdateSnSummary();revCa
 $('revSnRbt12')?.addEventListener('input',function(){revUpdateSnSummary();revCalcIntegrated();});
 $('revYear')?.addEventListener('change',revApplyYearPreset);
 $('revRevenuePeriod')?.addEventListener('change',revCalcIntegrated);
-$('exportRevenueExcelBtn')?.addEventListener('click',exportRevenueExcel);
+$('exportRevenueExcelBtn')?.addEventListener('click',()=>JaguarExports.run('exportRevenueExcelBtn',exportRevenueExcel));
 $('revenueQuickPreset')?.addEventListener('change',function(){applyQuickPreset('revenue');});
 $('revenuePresentationBtn')?.addEventListener('click',function(){togglePresentation('revenue');});
 $('revenuePrintBtn')?.addEventListener('click',function(){printTaxReport('revenue');});

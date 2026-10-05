@@ -223,7 +223,7 @@ by('reportsModule').innerHTML='<option value="all">Todos os módulos</option>'+S
 by('reportsModule').addEventListener('change',renderReports);
 by('reportsPerformance').addEventListener('change',renderReports);
 by('reportsSort').addEventListener('change',renderReports);
-by('reportsExport').onclick=exportReports;
+by('reportsExport').onclick=()=>JaguarExports.run('reportsExport',exportReports,'reportsStatus');
 setInterval(async()=>{if(!loaded||document.hidden)return;try{if(attemptQueue.length||read(pendingKey(),null)){await flush();return;}await refreshState();}catch(e){status(e.message);}},60000);
 window.addEventListener('online',()=>{if(loaded)flush();else if(token)restoreSession();});
 window.addEventListener('pagehide',()=>{if((loaded||offlinePreview)&&(read(pendingKey(),null)||attemptQueue.length))preservePending();});

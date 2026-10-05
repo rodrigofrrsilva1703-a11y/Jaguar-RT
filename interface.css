@@ -1,0 +1,82 @@
+/* Compact, readable interfaces in the JAGUAR RT palette. */
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid #444;outline-offset:3px}
+button,input,select,summary{touch-action:manipulation}
+#home .interactive-hero{min-height:0;padding:32px;gap:32px;border-radius:22px}
+#home .hero-status{margin-bottom:12px;padding:6px 10px}
+#home .interactive-hero h1{font-size:clamp(32px,4vw,48px);line-height:1.12;margin:10px 0 14px}
+#home .interactive-hero h1 span{color:#fff}
+#home .interactive-hero .hero-copy>p{font-size:15px;line-height:1.6}
+#home .interactive-hero .hero-actions{margin-top:20px}
+#home .home-command{padding:18px}
+#home .compact-dashboard{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+#home .compact-dashboard .home-dashboard-card.primary{grid-column:1/-1;padding:0 0 14px}
+#home .compact-dashboard .home-dashboard-card{padding:12px 0 4px;justify-content:flex-start}
+#home .compact-dashboard .home-dashboard-card small{font-size:10px;letter-spacing:.03em;line-height:1.5}
+#home .compact-dashboard .home-dashboard-card span{font-size:12px;line-height:1.5}
+#home .compact-dashboard .home-dashboard-card b{font-size:14px;line-height:1.5;margin:4px 0}
+#home .home-command-links{margin-top:14px}
+#home .home-command-links button{min-height:44px;font-size:12px}
+#tools .tool-options{margin-top:14px;border:1px solid #deded8;border-radius:12px;background:#fff;min-width:0}
+#tools .tool-options>summary,#tools .tool-evolution>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:13px 15px;cursor:pointer;font-size:13px;font-weight:650;list-style:none}
+#tools .tool-options>summary::-webkit-details-marker,#tools .tool-evolution>summary::-webkit-details-marker{display:none}
+#tools .tool-options>summary:after,#tools .tool-evolution>summary:after{content:'+';font-size:20px;font-weight:400;color:#777}
+#tools .tool-options[open]>summary:after,#tools .tool-evolution[open]>summary:after{content:'−'}
+#tools .tool-options summary span,#tools .tool-evolution summary span{font-size:11px;color:#666;font-weight:400;margin-left:auto}
+#tools .tool-options .regime-panel{padding:14px;margin:0;border:0;border-radius:0}
+#tools .tool-evolution{margin-top:22px;border-top:1px solid #ddd}
+#tools .tool-evolution>.yearly-analysis{margin-top:0}
+#tools #priceToolPanel .consultive-result{margin:16px 0;grid-template-columns:repeat(4,minmax(0,1fr))}
+#tools .consultive-card{min-height:0;padding:14px;border-radius:12px}
+#tools .consultive-card small{font-size:11px;line-height:1.5}
+#tools .consultive-card b{font-size:20px;line-height:1.35;margin:7px 0}
+#tools .consultive-card p{font-size:12px;line-height:1.6}
+#tools .field label{font-size:12px;line-height:1.6}
+#tools .field input,#tools .field select{min-height:44px;font-size:14px}
+#tools #priceToolPanel .year-price-strip{margin:12px 0}
+#tools #priceToolPanel .integrated-head{padding:24px}
+#tools #priceToolPanel .purchase-choice{gap:16px;padding:16px}
+.export-status{font-size:12px;color:#555;line-height:1.6}
+.bottom button{min-height:44px!important;font-size:11px!important;line-height:1.2}
+@media(max-width:760px){
+ #home .interactive-hero{padding:22px;gap:20px}
+ #home .hero-status{display:none}
+ #home .interactive-hero h1{font-size:32px}
+ #home .interactive-hero .hero-copy>.eyebrow{font-size:10px;line-height:1.5}
+ #home .interactive-hero .hero-copy>p{font-size:15px}
+ #home .interactive-hero .hero-actions .primary-action{min-height:46px;margin:0}
+ #home .home-command{padding:16px}
+ #home .command-top{margin-bottom:10px}
+ #tools .tool-switcher{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px}
+ #tools .tool-switcher button{padding:12px 6px;min-height:54px;display:block;text-align:center}
+ #tools .tool-switcher button>span,#tools .tool-switcher button small{display:none}
+ #tools .tool-switcher button b{font-size:12px;line-height:1.4}
+ #tools #priceToolPanel .integrated-head{padding:20px;border-radius:18px 18px 0 0}
+ #tools #priceToolPanel .integrated-head h3{font-size:25px;line-height:1.2}
+ #tools #priceToolPanel .integrated-head p{font-size:14px;line-height:1.6}
+ #tools #priceToolPanel .integration-badge{display:none}
+ #tools #priceToolPanel .scenario-strip{display:none}
+ #tools #priceToolPanel .purchase-choice{display:grid;grid-template-columns:1fr;gap:14px;padding:16px}
+ #tools #priceToolPanel .purchase-choice-copy{display:none}
+ #tools #priceToolPanel .purchase-choice .field{margin:0;width:100%}
+ #tools #priceToolPanel .sim-title{margin-bottom:14px}
+ #tools #priceToolPanel .sim-title small{display:none}
+ #tools #priceToolPanel .sim-block{padding:16px}
+ #tools .field input,#tools .field select{font-size:16px;min-height:46px}
+ #tools #priceToolPanel .consultive-result{grid-template-columns:1fr 1fr;gap:8px}
+ #tools .tool-options summary span{display:none}
+ #tools #priceToolPanel .consultive-card{padding:12px}
+ #tools #priceToolPanel .consultive-card b{font-size:18px;overflow-wrap:anywhere}
+ #tools #priceToolPanel .consultive-card p,#tools #priceToolPanel .consultive-card span{font-size:12px;line-height:1.6}
+ #tools #priceToolPanel .consultive-card:last-child b{font-size:16px;overflow-wrap:normal}
+ #tools #priceToolPanel .tool-year-selector{padding:12px 0}
+ #tools #priceToolPanel .tool-year-heading{display:none}
+ #tools #priceToolPanel .year-nav-phase{display:none}
+ #tools #priceToolPanel .year-price-card{padding:10px 5px;min-height:44px}
+ #tools .tool-evolution>summary{padding:16px 0}
+ #tools .tool-evolution>summary span{display:none}
+ .quiz-format small{font-size:11px!important}
+ main{padding-bottom:100px}
+}
+@media(max-width:360px){.bottom button{font-size:10.5px!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
