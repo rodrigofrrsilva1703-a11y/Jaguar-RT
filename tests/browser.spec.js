@@ -40,7 +40,8 @@ for(const width of [320,390])test('celular '+width+'px mantém navegação tocá
  await expect(page.locator('#priceEvolution')).not.toHaveAttribute('open','');
  const resultY=await page.locator('#priceToolPanel .result-head').evaluate(e=>e.getBoundingClientRect().top+scrollY);
  expect(resultY).toBeLessThan(2400);
- expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+ const layout=await page.evaluate(()=>({width:document.documentElement.scrollWidth,outside:Array.from(document.querySelectorAll('body *')).filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.right>innerWidth+1&&!e.closest('details:not([open])')&&!e.closest('.comparison-wrap')}).map(e=>({id:e.id,class:e.className,right:e.getBoundingClientRect().right}))}));
+ expect(layout.width,JSON.stringify(layout.outside)).toBeLessThanOrEqual(width);
  await page.locator('#priceRateOptions>summary').click();
  await expect(page.locator('#rateMode')).toBeVisible();
 });
