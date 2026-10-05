@@ -16,6 +16,85 @@ const brl=text=>{
  return Number(raw)||0;
 };
 
+async function checkPrintableReport(page,kind){
+ await page.emulateMedia({media:'print'});
+ await expect(page.locator('#printReport')).toBeVisible();
+ await expect(page.locator('#siteShell')).toBeHidden();
+ expect(await page.locator('#printReport').evaluate(e=>e.parentElement===document.body)).toBe(true);
+ const pdf=await page.pdf({format:'A4',preferCSSPageSize:true,printBackground:true});
+ // A blank Chromium PDF is about 1 KB; also assert visible content above.
+ expect(pdf.length).toBeGreaterThan(10000);
+ await expect(page.locator('#printReport')).toHaveAttribute('data-report-kind',kind);
+}
+
+for(const width of [390,1280])test('PDF da compra em '+width+'px contém os valores dos quatro fornecedores e a matriz',async({page})=>{
+ await page.setViewportSize({width,height:900});
+ await page.goto('http://127.0.0.1:4173/?e2e=print-price');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>{go('tools',{instant:true});window.print=()=>{};});
+ await page.locator('#priceSegment').selectOption('servicos');
+ await page.locator('#priceNow').fill('2500,00');
+ await page.locator('#priceYear').selectOption('2030');
+ await page.evaluate(()=>document.getElementById('priceClientName').value='Cliente <A> & Companhia');
+ const cards=await page.locator('#buyerExample .buyer-example-card').evaluateAll(cards=>cards.map(e=>({name:e.querySelector('h4').textContent.replace('FORNECEDOR',''),totals:Array.from(e.querySelectorAll('.buyer-total b')).map(b=>b.textContent),price:Array.from(e.children).find(d=>d.textContent.startsWith('Preço novo')).querySelector('b').textContent,credit:Array.from(e.children).filter(d=>d.textContent.startsWith('Crédito do comprador')).at(-1).querySelector('b').textContent})));
+ const matrix=await page.locator('#yearlyProjectionTable').textContent();
+ await page.locator('#pricePrintBtn').click();
+ await expect(page.locator('#printReport')).toContainText('Cliente <A> & Companhia');
+ await expect(page.locator('#printReport')).toContainText('ano selecionado 2030');
+ const rows=page.locator('.price-pdf-selected tbody tr');
+ await expect(rows).toHaveCount(4);
+ for(let i=0;i<cards.length;i++){
+  await expect(rows.nth(i)).toContainText(cards[i].name);
+  await expect(rows.nth(i).locator('td').nth(1)).toHaveText(cards[i].totals[0]);
+  await expect(rows.nth(i).locator('td').nth(4)).toHaveText(cards[i].totals[1]);
+  await expect(rows.nth(i).locator('td').nth(2)).toHaveText(cards[i].price);
+  await expect(rows.nth(i).locator('td').nth(3)).toHaveText(cards[i].credit);
+ }
+ for(const amount of matrix.match(/R\$\s*[\d.,]+/g)||[])await expect(page.locator('.price-pdf-evolution')).toContainText(amount);
+ await checkPrintableReport(page,'price');
+});
+
+for(const regime of ['presumido','real','simples','simples_hybrid'])test('PDF de faturamento reproduz a simulação '+regime+' com créditos e tributos',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=print-revenue');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>{go('tools',{instant:true});showTaxTool('revenue');window.print=()=>{};});
+ await page.locator('#revTaxRegime').selectOption(regime);
+ await page.locator('#revCurrentRevenue').fill('150000,00');
+ await page.evaluate(()=>{
+  for(const [id,value] of Object.entries({revYear:'2031',revRevenuePeriod:'anual',revSnRbt12:'1800000',revCreditMode:'manual',revManualCbsCredit:'50000',revManualIbsCredit:'15000',revSelectiveTaxRate:'2'}))document.getElementById(id).value=value;
+  document.getElementById('revenueClientName').value='Empresa PDF';revApplyYearPreset();
+ });
+ const current=await page.locator('#revCurrentSummary .tax-summary-row').evaluateAll(rows=>rows.map(e=>[e.querySelector('span').textContent,e.querySelector('b').textContent]));
+ const future=await page.locator('#revFutureSummary .tax-summary-row').evaluateAll(rows=>rows.map(e=>[e.querySelector('span').textContent,e.querySelector('b').textContent]));
+ await page.locator('#revenuePrintBtn').click();
+ await expect(page.locator('#printReport')).toContainText('Empresa PDF');
+ await expect(page.locator('#printReport')).toContainText('anual · análise de 2031');
+ const pdfRows=await page.locator('#printReport .pdf-card').evaluateAll(cards=>cards.map(e=>Array.from(e.querySelectorAll('.pdf-row')).map(r=>[r.querySelector('span').textContent,r.querySelector('b').textContent])));
+ expect(pdfRows).toEqual([current,future]);
+ await expect(page.locator('#printReport .pdf-table tbody tr')).toHaveCount(8);
+ await checkPrintableReport(page,'revenue');
+});
+
+test('impressão nativa atualiza dados e troca de ferramenta; fora dela não imprime relatório antigo',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/?e2e=native-print');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>{go('tools',{instant:true});window.print=()=>{};});
+ await page.locator('#pricePrintBtn').click();
+ await page.locator('#priceNow').fill('9876,54');
+ await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));
+ await expect(page.locator('#printReport')).toContainText('9.876,54');
+ await page.locator('#revenueToolTab').click();
+ await page.locator('#revCurrentRevenue').fill('123456,78');
+ await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));
+ await expect(page.locator('#printReport')).toHaveAttribute('data-report-kind','revenue');
+ await expect(page.locator('#printReport')).toContainText('123.456,78');
+ await page.evaluate(()=>{go('home',{instant:true});window.dispatchEvent(new Event('beforeprint'))});
+ await expect(page.locator('#printReport')).not.toHaveAttribute('data-report-kind',/./);
+ await page.emulateMedia({media:'print'});
+ await expect(page.locator('#printReport')).toBeHidden();
+ await expect(page.locator('#siteShell')).toBeVisible();
+});
+
 test('todos os campos das ferramentas têm nome acessível e rótulos clicáveis',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=labels',{waitUntil:'domcontentloaded'});
  await expect(page.locator('#accountToggle')).toBeVisible();

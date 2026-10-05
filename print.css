@@ -1,0 +1,44 @@
+/* Only the generated report is printed; the study interface stays on screen. */
+@page{size:A4;margin:10mm}
+@media print{
+ html,body{background:#fff!important}
+ body:has(>#printReport[data-report-kind])>*{display:none!important}
+ body>#printReport[data-report-kind]{display:block!important;visibility:visible!important;position:static!important;width:auto!important;max-width:none!important;margin:0!important;padding:0!important;color:#111!important;font:12px Arial,Helvetica,sans-serif!important;line-height:1.4!important}
+ #printReport *{visibility:visible!important;box-sizing:border-box;animation:none!important;transform:none!important;overflow-wrap:break-word}
+ .pdf-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:16px;break-inside:avoid}
+ .pdf-head>div:first-child{min-width:0;flex:1}
+ .pdf-brand{font-size:11px;font-weight:900;letter-spacing:.12em}
+ .pdf-head h1{font-size:24px;line-height:1.15;margin:5px 0 8px}
+ .pdf-head p{font-size:11px;line-height:1.5;margin:2px 0;color:#555}
+ .pdf-stamp{text-align:right;font-size:10px;color:#666;flex:0 0 130px}
+ .pdf-section{margin:0 0 14px;break-inside:avoid}
+ .pdf-section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;border-bottom:1px solid #d8d8d2;padding-bottom:6px;margin-bottom:10px;break-after:avoid}
+ .pdf-section-title h2{font-size:14px;margin:0}
+ .pdf-section-title span{font-size:10px;color:#666}
+ .pdf-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+ .pdf-kpi{border:1px solid #d9d9d3;border-radius:8px;padding:10px;min-width:0;min-height:70px}
+ .pdf-kpi small{display:block;font-size:10px;color:#666}
+ .pdf-kpi b{display:block;font-size:16px;margin-top:6px}
+ .pdf-kpi span{display:block;font-size:10px;color:#666;margin-top:4px}
+ .pdf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .pdf-card{border:1px solid #d9d9d3;border-radius:8px;padding:12px;min-width:0}
+ .pdf-card h3{font-size:12px;margin:0 0 10px}
+ .pdf-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #edede8;padding:4px 0;font-size:11px;break-inside:avoid}
+ .pdf-row:last-child{border-bottom:0}
+ .pdf-row span{color:#555}.pdf-row b{text-align:right;flex-shrink:0}
+ .pdf-table{width:100%;border-collapse:collapse;font-size:11px;line-height:1.5}
+ .pdf-table thead{display:table-header-group}
+ .pdf-table tr{break-inside:avoid}
+ .pdf-table th{background:#f2f2ef;text-align:left;padding:5px;border-bottom:1px solid #bbb}
+ .pdf-table td{padding:5px;border-bottom:1px solid #e6e6e0}
+ .pdf-table th:not(:first-child),.pdf-table td:not(:first-child){text-align:right}
+ .price-pdf-selected .pdf-table{font-size:10px;table-layout:fixed}
+ .price-pdf-selected .pdf-table th:first-child,.price-pdf-selected .pdf-table td:first-child{width:25%;text-align:left}
+ .price-pdf-selected .pdf-table th,.price-pdf-selected .pdf-table td{padding:7px 4px}
+ .price-pdf-evolution{break-inside:auto}
+ .price-pdf-evolution .pdf-table{font-size:9px;table-layout:fixed}
+ .price-pdf-evolution .pdf-table th:first-child,.price-pdf-evolution .pdf-table td:first-child{width:28%;text-align:left;font-weight:700}
+ .price-pdf-evolution .pdf-table th:not(:first-child),.price-pdf-evolution .pdf-table td:not(:first-child){width:9%;padding:7px 3px}
+ .pdf-note{background:#f5f5f2;border-radius:8px;padding:12px;font-size:11px;line-height:1.6;color:#555;break-inside:avoid}
+ .pdf-footer{margin-top:6px;padding-top:6px;border-top:1px solid #ddd;font-size:9px;color:#666;line-height:1.5;break-inside:avoid}
+}

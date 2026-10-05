@@ -433,14 +433,7 @@
  .advanced-grid{grid-template-columns:1fr}
  .tool-head-actions{justify-content:flex-start}
 }
-@media print{
- body *{visibility:hidden!important}
- .tax-tool-panel.active,.tax-tool-panel.active *{visibility:visible!important}
- .tax-tool-panel.active{position:absolute;left:0;top:0;width:100%;display:block!important}
- .tax-tool-panel.active .tax-input-grid,.tax-tool-panel.active .advanced-analysis,.tax-tool-panel.active .autosave-row,.tax-tool-panel.active .mini-action,.tax-tool-panel.active .export-btn{display:none!important}
- .tax-tool-panel.active .integrated-tool{border:0!important;box-shadow:none!important}
- nav,.sidebar,.topbar{display:none!important}
-}
+
 
 .preset-row{display:grid;grid-template-columns:auto minmax(180px,260px) 1fr;gap:8px;align-items:center;background:#f7f7f4;border:1px solid #e5e4de;border-radius:11px;padding:8px 10px;margin-bottom:9px}
 .preset-row label{font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
@@ -484,16 +477,7 @@
 }
 
 .print-report-header{display:none}
-@media print{
- .print-report-header{display:block!important;visibility:visible!important;border-bottom:2px solid #111;padding:0 0 14px;margin:0 0 14px}
- .print-report-header *{visibility:visible!important}
- .print-report-header .print-brand{font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
- .print-report-header h1{font-size:24px;margin:5px 0 6px}
- .print-report-header p{font-size:9px;color:#555;margin:2px 0}
- .calc-memory{display:block!important;visibility:visible!important}
- .calc-memory>summary{display:none!important}
- .calc-memory .memory-grid{display:grid!important}
-}
+
 
 /* ===== ACESSIBILIDADE DE FOCO ===== */
 .skip-link{position:fixed;left:12px;top:-60px;z-index:9999;background:#111;color:#fff;padding:10px 13px;border-radius:9px;text-decoration:none;font-size:11px;font-weight:850;transition:top .15s}
@@ -503,47 +487,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
 /* ===== RELATÓRIO EXECUTIVO PARA PDF ===== */
 .print-report{display:none}
-@media print{
- @page{size:A4;margin:12mm}
- html,body{background:#fff!important}
- body> *{display:none!important}
- #printReport{display:block!important;visibility:visible!important;position:static!important;width:auto!important;max-width:none!important;color:#111!important;font-family:Arial,Helvetica,sans-serif!important}
- #printReport *{visibility:visible!important;box-sizing:border-box}
- .pdf-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:14px}
- .pdf-brand{font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
- .pdf-head h1{font-size:22px;line-height:1.05;margin:4px 0 6px}
- .pdf-head p{font-size:8.5px;line-height:1.5;margin:1px 0;color:#555}
- .pdf-stamp{text-align:right;font-size:8px;color:#666;min-width:130px}
- .pdf-section{margin:0 0 14px;break-inside:avoid}
- .pdf-section-title{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid #d8d8d2;padding-bottom:5px;margin-bottom:8px}
- .pdf-section-title h2{font-size:11px;margin:0}
- .pdf-section-title span{font-size:7.5px;color:#777;text-transform:uppercase;letter-spacing:.06em}
- .pdf-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
- .pdf-kpi{border:1px solid #d9d9d3;border-radius:8px;padding:9px;min-height:58px}
- .pdf-kpi small{display:block;font-size:7px;color:#777;text-transform:uppercase;letter-spacing:.05em}
- .pdf-kpi b{display:block;font-size:15px;margin-top:5px}
- .pdf-kpi span{display:block;font-size:7px;color:#666;margin-top:3px}
- .supplier-pdf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
- .pdf-card{border:1px solid #d9d9d3;border-radius:8px;padding:9px}
- .pdf-card h3{font-size:9px;margin:0 0 7px}
- .pdf-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #ededE8;padding:5px 0;font-size:8px}
- .pdf-row:last-child{border-bottom:0}
- .pdf-row span{color:#666}.pdf-row b{text-align:right}
- .pdf-table{width:100%;border-collapse:collapse;font-size:7.8px}
- .pdf-table th{background:#f2f2ef;text-align:left;padding:6px;border-bottom:1px solid #ccc}
- .pdf-table td{padding:6px;border-bottom:1px solid #e6e6e0}
- .pdf-table th:not(:first-child),.pdf-table td:not(:first-child){text-align:right}
- .price-pdf-selected .pdf-table{font-size:7px;table-layout:fixed}
- .price-pdf-selected .pdf-table th:first-child,.price-pdf-selected .pdf-table td:first-child{width:25%;text-align:left}
- .price-pdf-selected .pdf-table th,.price-pdf-selected .pdf-table td{padding:5px 4px}
- .price-pdf-evolution{break-inside:auto}
- .price-pdf-evolution .pdf-table{font-size:6.8px;table-layout:fixed}
- .price-pdf-evolution .pdf-table th:first-child,.price-pdf-evolution .pdf-table td:first-child{width:28%;text-align:left;font-weight:700}
- .price-pdf-evolution .pdf-table th:not(:first-child),.price-pdf-evolution .pdf-table td:not(:first-child){width:9%;padding:5px 3px}
- .pdf-note{background:#f5f5f2;border-radius:8px;padding:9px;font-size:7.8px;line-height:1.5;color:#555}
- .pdf-footer{margin-top:12px;padding-top:8px;border-top:1px solid #ddd;font-size:6.8px;color:#777;line-height:1.45}
-}
+
 .course-note{max-width:940px;background:#eef0ed;border-left:4px solid #242e29;border-radius:12px;padding:16px 19px;margin:24px 0;color:#344038}.course-note b{font-size:12px}.course-note p{font-size:13px;line-height:1.65;margin:6px 0 0}.course-toc{max-width:940px;display:flex;flex-wrap:wrap;gap:7px;margin:20px 0 26px}.course-toc a{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 11px;color:#444;text-decoration:none;font-size:11px;line-height:1.35}.course-toc a:hover{background:#111;color:#fff}.course-block{scroll-margin-top:90px}.course-block h2{line-height:1.22}.course-text p{margin:0 0 12px;color:#454545;line-height:1.8;font-size:14px}.course-text p:last-child{margin-bottom:0}.course-text .course-bullet{border-left:2px solid #d9d9d4;padding-left:15px;margin-left:6px}.course-subhead{font-size:13px;letter-spacing:.03em;margin:20px 0 8px}.course-navigation{max-width:940px;display:flex;justify-content:space-between;gap:12px;margin-top:28px}.course-navigation button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 16px;font-weight:750}.course-navigation button:hover{background:#111;color:#fff}
 .quiz-lead{font-size:15px;margin:8px 0 24px}.quiz-picker{max-width:920px;display:flex;align-items:end;gap:10px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.quiz-picker label{font-size:12px;font-weight:800;flex:0 0 140px;align-self:center}.quiz-picker select{min-width:0;flex:1;border:1px solid var(--line);border-radius:10px;padding:12px;background:#fafafa}.quiz-primary{border:1px solid #111;background:#111;color:#fff;border-radius:11px;padding:13px 18px;font-weight:800}.quiz-primary:hover{background:#333}.quiz-resume{max-width:920px;margin-top:12px}.quiz-resume:empty{display:none}.quiz-resume button{width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:15px;font-weight:750}.quiz-pool-note{max-width:920px;margin-top:18px;color:#666;font-size:12px;line-height:1.6}.quiz-progress{max-width:820px;position:sticky;top:62px;z-index:5;background:var(--bg);padding:14px 0;font-size:12px;font-weight:800}.quiz-progress>div{height:7px;background:#deded9;border-radius:9px;margin-top:7px;overflow:hidden}.quiz-progress i{display:block;height:100%;background:#111;transition:width .2s}.quiz-question{max-width:820px;margin:13px 0;padding:22px;border:1px solid var(--line);border-radius:17px;background:#fff}.quiz-question legend{float:left;width:100%;padding:0;margin-bottom:17px}.quiz-question legend small,.quiz-question legend strong{display:block}.quiz-question legend small{font-size:10px;color:#777;letter-spacing:.08em;font-weight:850}.quiz-question legend strong{font-size:19px;line-height:1.4;margin-top:8px}.quiz-option{display:flex;gap:11px;align-items:flex-start;border:1px solid #e5e5e1;border-radius:11px;padding:12px 13px;margin:7px 0;cursor:pointer;line-height:1.5;color:#444}.quiz-option:has(input:checked){border-color:#111;background:#f1f2ee;color:#111}.quiz-option input{accent-color:#111;margin-top:4px}.quiz-option span{font-size:14px}.quiz-error{color:#a22a22;font-weight:750}.quiz-submit{margin:14px 0 30px}.quiz-result{max-width:820px;background:#111;color:#fff;border-radius:22px;padding:28px;margin:20px 0}.quiz-result small{font-size:10px;letter-spacing:.1em;color:#bbb;font-weight:850}.quiz-result h1{font-size:58px;line-height:1;margin:12px 0}.quiz-result p{color:#ddd;margin:0}.quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 26px}.quiz-actions button{border-radius:11px;padding:12px 16px;border:1px solid #111;font-weight:800;background:#fff}.quiz-actions .quiz-primary{background:#111;color:#fff}.quiz-review{max-width:820px}.quiz-review-item{background:#fff;border:1px solid var(--line);border-left:4px solid #678975;border-radius:14px;padding:19px;margin:10px 0}.quiz-review-item.is-wrong{border-left-color:#b36a50}.quiz-review-item small{font-size:10px;letter-spacing:.06em;font-weight:850;color:#666}.quiz-review-item h2{font-size:17px;line-height:1.4}.quiz-review-item p{margin:7px 0;color:#555;font-size:13px}.quiz-explanation{background:#f2f2ef;border-radius:9px;padding:12px;line-height:1.6;font-size:13px;margin:13px 0}.quiz-review-item button{border:0;background:none;padding:4px 0;color:#111;font-weight:800;text-decoration:underline}@media(max-width:650px){.quiz-picker{display:block}.quiz-picker label,.quiz-picker select,.quiz-picker button{display:block;width:100%;margin-top:9px}.quiz-progress{top:50px}}
 .course-quiz-callout{max-width:940px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#e9eae5;border-radius:15px;padding:18px;margin:24px 0}.course-quiz-callout b,.course-quiz-callout span{display:block}.course-quiz-callout span{color:#555;font-size:12px;margin-top:4px}@media(max-width:650px){.course-quiz-callout{display:block}.course-quiz-callout button{width:100%;margin-top:14px}}

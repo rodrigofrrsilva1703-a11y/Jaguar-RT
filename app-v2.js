@@ -1964,22 +1964,7 @@ function buildRevenuePdf(client,year){
  // Mantém no PDF a mesma leitura visual da tela:
  // valores de entrada/líquidos sem sinal e tributos/saídas com sinal negativo.
  const currentRows=revCurrentRows(base);
- const futureRows=[
-  ['Faturamento projetado',money(future.revenue)]
- ];
- if(input.regime!=='simples'){
-  if((future.cbs||0)>0) futureRows.push(['CBS',signedMoney(future.cbs,'−')]);
-  if((future.ibs||0)>0) futureRows.push(['IBS',signedMoney(future.ibs,'−')]);
-  if((future.remnant||0)>0) futureRows.push([revenueRemnantLabel(future),signedMoney(future.remnant,'−')]);
- }
- futureRows.push([input.regime==='simples'?'DAS total':'Tributos brutos',signedMoney(future.taxes,'−')]);
- if((future.purchaseCredit||0)>0){
-  futureRows.push(['Créditos estimados',money(future.purchaseCredit)]);
-  futureRows.push(['Carga líquida',signedMoney(future.netTax,'−')]);
-  futureRows.push(['Líquido após créditos',money(future.economicNet)]);
- }else{
-  futureRows.push(['Faturamento líquido',money(future.net)]);
- }
+ const futureRows=revFutureRows(future);
 
  const annual=[{year:2026,...base}];
  for(let y=2027;y<=2033;y++) annual.push(RTAV_ENGINE.futureRevenueScenario(input,y));
@@ -1993,7 +1978,7 @@ function buildRevenuePdf(client,year){
 
  return {
   title:'Relatório de faturamento',
-  subtitle:regimeLabel+' · '+period+' · análise de '+year,
+  subtitle:regimeLabel+' · '+(OPERATION_LABELS[input.operationType]||input.operationType)+' · '+period+' · análise de '+year,
   kpis:[
    ['Faturamento atual',money(base.revenue),'2026 · '+period],
    ['Faturamento projetado',money(future.revenue),String(year)],
@@ -2010,11 +1995,11 @@ function buildRevenuePdf(client,year){
  };
 }
 
-function printTaxReport(kind){
- showTaxTool(kind);
+function prepareTaxReport(kind){
+ if(!['price','revenue'].includes(kind)) return false;
  const price=kind==='price';
  const report=$('printReport');
- if(!report) return;
+ if(!report) return false;
 
  const client=($(price?'priceClientName':'revenueClientName')?.value||'').trim()||'Cliente não identificado';
  const year=Number(price?($('priceYear')?.value||2027):($('revYear')?.value||2027));
@@ -2054,12 +2039,31 @@ function printTaxReport(kind){
    '<div class="pdf-footer">Relatório de simulação para planejamento. Não substitui enquadramento fiscal, apuração tributária ou validação da legislação aplicável à operação.</div>';
  }
 
+ report.dataset.reportKind=kind;
  report.setAttribute('aria-hidden','false');
- setTimeout(function(){
-  window.print();
-  report.setAttribute('aria-hidden','true');
- },80);
+ return true;
 }
+
+function printTaxReport(kind){
+ showTaxTool(kind);
+ if(prepareTaxReport(kind)) window.print();
+}
+
+// Native printing must use the current simulation as well as the PDF buttons.
+window.addEventListener('beforeprint',function(){
+ const shell=$('siteShell');
+ const kind=$('priceToolPanel')?.classList.contains('active')?'price':
+  ($('revenueToolPanel')?.classList.contains('active')?'revenue':null);
+ if(shell&&!shell.hidden&&!shell.inert&&$('tools')?.classList.contains('active')&&kind){
+  prepareTaxReport(kind);
+ }else{
+  $('printReport')?.removeAttribute('data-report-kind');
+  $('printReport')?.setAttribute('aria-hidden','true');
+ }
+});
+window.addEventListener('afterprint',function(){
+ $('printReport')?.setAttribute('aria-hidden','true');
+});
 
 const PRICE_STATE_IDS=[
  'priceSegment','priceOperationType','priceBuyerRegime','priceCreditMode','priceCreditUsePct','priceNow','icmsRate','issRate','ipiRate',
