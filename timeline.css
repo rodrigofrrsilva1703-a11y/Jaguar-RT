@@ -35,3 +35,10 @@
 
 }
 @media(prefers-reduced-motion:reduce){#home .interactive-transition .year b,#home .interactive-transition .year:after{transition:none}}
+
+/* Selected year: a short explanation and a practical next step. */
+#home .rt-detail-copy{margin:10px 0 0 78px;max-width:720px}
+#home .rt-detail-summary,#home .rt-detail-focus{margin:0;font-size:14px;line-height:1.6;color:#555}
+#home .rt-detail-focus{margin-top:8px;color:#777}
+#home .rt-detail-focus strong{color:#333;font-weight:600;margin-right:4px}
+@media(max-width:650px){#home .rt-detail-copy{margin-left:0}#home .rt-detail-summary,#home .rt-detail-focus{font-size:14px;line-height:1.55}}

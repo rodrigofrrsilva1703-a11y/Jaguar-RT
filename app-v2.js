@@ -602,68 +602,76 @@ let activeTimelineYear='2027';
 
 const HOME_TRANSITION_INFO={
  '2026':{
+  summary:'CBS de 0,9% e IBS de 0,1% em fase de teste; os tributos atuais continuam. A dispensa de recolhimento depende do cumprimento das obrigações aplicáveis.',
   phase:'Teste',
   stage:'PREPARAÇÃO',
   short:'CBS e IBS entram em ambiente de teste',
   newModel:'CBS 0,9% · IBS 0,1%',
   oldModel:'PIS/Cofins + ICMS/ISS permanecem',
-  focus:'Documentos fiscais, sistemas, cadastros e adaptação operacional'
+  focus:'Validar emissão de notas, cadastros e sistemas conforme o cronograma da operação.'
  },
  '2027':{
+  summary:'PIS/Cofins são substituídos pela CBS. IBS total de 0,1%, com redução de 0,1 ponto percentual da CBS. Começa o Imposto Seletivo; IPI zerado, com exceções ligadas à Zona Franca de Manaus.',
   phase:'Implantação inicial',
   stage:'NOVA CAMADA FEDERAL',
-  short:'CBS entra e o IBS começa com 0,1%',
+  short:'CBS substitui PIS/Cofins; IBS segue em fase inicial',
   newModel:'CBS aplicável · IBS 0,1% · Imposto Seletivo',
   oldModel:'PIS/Cofins extintos · ICMS/ISS permanecem',
-  focus:'Apuração, créditos, documentos fiscais e formação de preço'
+  focus:'Revisar apuração, créditos e preços; avaliar as regras do Simples Nacional.'
  },
  '2028':{
+  summary:'Mantém-se o IBS total de 0,1% e a redução de 0,1 ponto percentual da CBS. ICMS e ISS ainda seguem sem a redução da transição.',
   phase:'Implantação inicial',
   stage:'ESTABILIZAÇÃO',
   short:'CBS e IBS inicial seguem em operação',
   newModel:'CBS aplicável · IBS 0,1%',
   oldModel:'ICMS/ISS permanecem',
-  focus:'Consolidar rotinas, corrigir cadastros e revisar processos'
+  focus:'Consolidar a conciliação dos créditos e preparar a convivência com o IBS crescente.'
  },
  '2029':{
+  summary:'ICMS e ISS passam a 90% das alíquotas anteriores. O IBS avança para 10% da alíquota de referência. A CBS continua.',
   phase:'Convivência dos sistemas',
   stage:'TRANSIÇÃO ESTADUAL/MUNICIPAL',
   short:'Primeira redução efetiva de ICMS e ISS',
   newModel:'IBS assume 10% da proporção de transição',
   oldModel:'ICMS/ISS ficam em 90%',
-  focus:'Conciliar os dois modelos e medir impacto por operação'
+  focus:'Comparar custos e créditos por operação, conciliando os dois sistemas.'
  },
  '2030':{
+  summary:'ICMS e ISS ficam em 80% das alíquotas anteriores; IBS em 20% da alíquota de referência. A CBS continua.',
   phase:'Convivência dos sistemas',
   stage:'TRANSIÇÃO ESTADUAL/MUNICIPAL',
   short:'O IBS ganha mais espaço na tributação',
   newModel:'IBS assume 20% da proporção de transição',
   oldModel:'ICMS/ISS ficam em 80%',
-  focus:'Revisar créditos, custos, contratos e precificação'
+  focus:'Recalcular preços e margens e revisar contratos com base nos créditos efetivos.'
  },
  '2031':{
+  summary:'ICMS e ISS ficam em 70% das alíquotas anteriores; IBS em 30% da alíquota de referência. A CBS continua.',
   phase:'Convivência dos sistemas',
   stage:'TRANSIÇÃO ESTADUAL/MUNICIPAL',
   short:'A participação do sistema antigo continua caindo',
   newModel:'IBS assume 30% da proporção de transição',
   oldModel:'ICMS/ISS ficam em 70%',
-  focus:'Monitorar margens, créditos e diferenças entre cenários'
+  focus:'Acompanhar saldos de créditos e o efeito da transição no caixa.'
  },
  '2032':{
+  summary:'ICMS e ISS ficam em 60% das alíquotas anteriores; IBS em 40% da alíquota de referência. É o último ano de convivência.',
   phase:'Último ano de transição',
   stage:'PREPARAÇÃO PARA A VIRADA',
   short:'Última etapa antes do modelo integral',
   newModel:'IBS assume 40% da proporção de transição',
   oldModel:'ICMS/ISS ficam em 60%',
-  focus:'Preparar sistemas, contratos e rotinas para 2033'
+  focus:'Validar sistemas e contratos para encerrar as rotinas de ICMS e ISS.'
  },
  '2033':{
+  summary:'ICMS e ISS são extintos. O IBS chega à aplicação integral, ao lado da CBS; o Imposto Seletivo incide quando aplicável.',
   phase:'Novo modelo',
   stage:'MODELO INTEGRAL',
   short:'CBS e IBS passam a operar no modelo integral',
   newModel:'CBS + IBS · Imposto Seletivo quando aplicável',
   oldModel:'ICMS e ISS extintos',
-  focus:'Operação integral, conciliação e consultoria no novo sistema'
+  focus:'Conferir apuração e créditos no novo modelo e tratar pendências da transição.'
  }
 };
 
@@ -687,7 +695,8 @@ function pickYear(y){
  });
 
  $('timelinePanel').innerHTML=
-  '<div class="rt-detail-intro"><strong class="rt-detail-year">'+courseEscape(y)+'</strong><div><div class="rt-detail-kicker">'+courseEscape(info.phase)+'</div><h3>'+courseEscape(info.short)+'</h3></div></div>';
+  '<div class="rt-detail-intro"><strong class="rt-detail-year">'+courseEscape(y)+'</strong><div><div class="rt-detail-kicker">'+courseEscape(info.phase)+'</div><h3>'+courseEscape(info.short)+'</h3></div></div>'+
+  '<div class="rt-detail-copy"><p class="rt-detail-summary">'+courseEscape(info.summary||info.newModel)+'</p><p class="rt-detail-focus"><strong>Na prática</strong> '+courseEscape(info.focus)+'</p></div>';
 
  if(!$('siteShell')?.inert&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
   const panel=$('timelinePanel');

@@ -391,6 +391,16 @@ test('linha do tempo resume cada ano sem poluir a página inicial',async({page})
  await page.locator('#timeline [data-year="2026"]').click();
  await expect(page.locator('#timelinePanel h3')).toHaveText('CBS e IBS entram em ambiente de teste');
  await expect(page.locator('#timelinePanel .transition-bars')).toHaveCount(0);
+ for(const year of ['2026','2027','2028','2029','2030','2031','2032','2033']){
+  await page.locator('#timeline [data-year="'+year+'"]').click();
+  await expect(page.locator('#timelinePanel .rt-detail-summary')).not.toBeEmpty();
+  await expect(page.locator('#timelinePanel .rt-detail-focus')).toContainText('Na prática');
+ }
+ await page.locator('#timeline [data-year="2027"]').click();
+ await expect(page.locator('#timelinePanel')).toContainText('0,1 ponto percentual');
+ await page.locator('#timeline [data-year="2029"]').click();
+ await expect(page.locator('#timelinePanel .rt-detail-summary')).toContainText('90% das alíquotas anteriores');
+ await expect(page.locator('#timelinePanel .rt-detail-summary')).toContainText('10% da alíquota de referência');
 });
 
 test('linha do tempo mostra todos os anos no celular e preserva seleção e teclado',async({page})=>{
@@ -410,7 +420,7 @@ test('linha do tempo mostra todos os anos no celular e preserva seleção e tecl
  await first.click();
  await expect(first).toHaveCSS('color','rgb(255, 255, 255)');
  const section=await page.locator('#home .interactive-transition').boundingBox();
- expect(section.height).toBeLessThan(320);
+ expect(section.height).toBeLessThan(520);
  await first.focus();
  await page.keyboard.press('End');
  await expect(page.locator('#timeline [data-year="2033"]')).toBeFocused();
