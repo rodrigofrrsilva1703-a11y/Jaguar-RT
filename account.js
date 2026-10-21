@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const ENDPOINT='https://dliycybiocnhvqilbrlj.supabase.co/functions/v1/jaguarrt';
+const ENDPOINT='https://maxfsruuaosyzkaqovuw.supabase.co/functions/v1/jaguarrt';
 const TOKEN_KEY='jaguarrt-session';
 const PROFILE_KEY='jaguarrt-profile';
 const KEYS=['jaguar-rtav-study-progress-v1','jaguar-rtav-quiz-history-v2','jaguar-rtav-quiz-session-v3'];
@@ -230,6 +230,9 @@ window.addEventListener('pagehide',()=>{if((loaded||offlinePreview)&&(read(pendi
 document.addEventListener('visibilitychange',()=>{if(document.hidden)return;if(loaded)flush();else if(token)restoreSession();});
 window.addEventListener('pageshow',e=>{if(e.persisted&&!loaded&&token)restoreSession();});
 function endExpiredSession(message){
+ // Preserve this browser's cached study under its known owner before reauthentication.
+ const cached=read(PROFILE_KEY,null);
+ if(me?.email&&cached?.email===me.email&&cached.sessionPrefix===token.slice(0,12))offlinePreview=true;
  if(loaded||offlinePreview)preservePending();
  clearTimeout(timer);clearTimeout(recoveryTimer);
  token='';loaded=false;offlinePreview=false;me=null;team=[];attemptQueue=[];

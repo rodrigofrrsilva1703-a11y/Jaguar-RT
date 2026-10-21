@@ -1134,3 +1134,25 @@ test('relatório identifica assuntos com erros e responde aos filtros',async({pa
  await expect(page.locator('#reportsInsights')).toContainText('Ainda não há respostas detalhadas');
 });
 
+for(const sameOwner of [true,false])test('reconexão ao banco novo preserva o estudo somente para o dono do cache: '+sameOwner,async({page})=>{
+ await page.addInitScript(()=>{
+  localStorage.setItem('jaguarrt-profile',JSON.stringify({email:'teste@jaguarcontabil.com.br',admin:false,sessionPrefix:'a'.repeat(12)}));
+  localStorage.setItem('jaguar-rtav-study-progress-v1',JSON.stringify({__orderVersion:2,'01':{read:[0,1]}}));
+ });
+ await page.unroute('**/functions/v1/jaguarrt');
+ const email=sameOwner?'teste@jaguarcontabil.com.br':'outra@jaguarcontabil.com.br';
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const body=route.request().postDataJSON();
+  if(body.action==='state'&&body.token==='a'.repeat(64))return route.fulfill({status:401,json:{error:'Sessão expirada. Entre novamente.'}});
+  await route.fulfill({json:{email,admin:false,token:'b'.repeat(64),state:body.action==='save'?body.data:{},attempts:[]}});
+ });
+ await page.goto('http://127.0.0.1:4173/?e2e=rebuild-recovery');
+ await expect(page.locator('#loginGate')).toBeVisible();
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('jaguarrt-unsynced:teste@jaguarcontabil.com.br')).state.study['01'].read)).toEqual([0,1]);
+ await page.locator('#loginEmail').fill(email);
+ await page.locator('#loginPassword').fill('mock-password');
+ await page.locator('#loginSubmit').click();
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ const recovered=await page.evaluate(()=>JSON.parse(localStorage.getItem('jaguar-rtav-study-progress-v1'))['01']?.read||[]);
+ expect(recovered).toEqual(sameOwner?[0,1]:[]);
+});
