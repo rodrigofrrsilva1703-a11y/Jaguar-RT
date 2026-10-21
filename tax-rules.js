@@ -3,7 +3,7 @@
  if(typeof module!=='undefined'&&module.exports) module.exports=rules;
  root.RTAV_RULES=rules;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
- const reviewedAt='2026-09-30';
+ const reviewedAt='2026-10-21';
  const transition={
   2026:{old:1,cbs:0,ibs:0,status:'base_2026',sourceType:'base',note:'2026 é usado como cenário-base da ferramenta.'},
   2027:{old:1,cbs:9.21,ibs:.1,status:'premissa_rtav',sourceType:'premissa',note:'Premissa padrão da ferramenta: CBS 9,21% + IBS 0,1% em 2027. Use o modo manual quando houver alíquota aplicável específica.'},
@@ -45,14 +45,14 @@
  };
 
  return Object.freeze({
-  version:'2026.09.30-1',
+  version:'2026.10.21-1',
   reviewedAt,
   transition:Object.freeze(transition),
   simpleTables:Object.freeze(simpleTables),
   metadata:Object.freeze({
    transition:{classification:'premissas_didaticas_e_transicao',source:'RTAV + materiais oficiais indicados na plataforma',reviewedAt},
    simpleTables:{classification:'tabelas_do_modelo_de_simulacao',source:'base vigente adotada pelo projeto; validar enquadramento real do contribuinte',reviewedAt},
-   warning:'As alíquotas CBS 9,21% e IBS 18,70% são premissas didáticas temporárias do JAGUAR RT, mantidas até a parametrização das alíquotas oficiais aplicáveis. Não devem ser tratadas como alíquota universal definitiva; use as regras do ano, destino, regime e operação concreta.'
+   warning:'As alíquotas CBS 9,21% e IBS 18,70% são premissas didáticas temporárias do JAGUAR RT, não alíquotas oficiais universais. Em 2026 vigoram percentuais de teste para operações abrangidas; em 2027–2028 o IBS transitório é 0,1%. A alíquota de CBS varia conforme legislação aplicável, com redução transitória nos anos pertinentes. Para documentos fiscais e apuração real, use regras do ano, destino, regime e operação concreta.'
   })
  });
 });
