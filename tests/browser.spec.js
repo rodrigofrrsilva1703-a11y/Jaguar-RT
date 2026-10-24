@@ -524,7 +524,7 @@ test('home orienta o próximo passo sem sobrecarregar a tela',async({page})=>{
  await expect(page.locator('#homeDashboard .home-dashboard-card')).toHaveCount(3);
  await expect(page.locator('#homeLearningPath')).toHaveCount(0);
  await expect(page.locator('#home .home-tool-grid')).toHaveCount(0);
- await expect(page.locator('.legislative-status')).toContainText('Base técnica revisada');
+ await expect(page.locator('.legislative-status')).toContainText('Fontes e módulos selecionados revisados');
  await expect(page.locator('#homeGreeting')).toContainText('Olá, Teste');
  await expect(page.locator('#home .home-command-links button')).toHaveCount(2);
 
@@ -1083,7 +1083,7 @@ test('resposta inválida de rede mantém a sessão e reconecta ao voltar para o 
 test('revisão pratica somente erros e não altera a nota dos testes',async({page})=>{
  await page.goto('http://127.0.0.1:4173/?e2e=error-review');
  await expect(page.locator('#accountToggle')).toBeVisible();
- await page.evaluate(()=>{startQuiz(false,'01');quizSession.answers=quizSession.questions.map((q,i)=>i<2?(q.correct+1)%q.options.length:q.correct);finishQuiz();go('quiz');});
+ await page.evaluate(async()=>{await startQuiz(false,'01');quizSession.answers=quizSession.questions.map((q,i)=>i<2?(q.correct+1)%q.options.length:q.correct);finishQuiz();go('quiz');});
  await expect(page.locator('#quizErrorReview')).toContainText('2 questões para revisar');
  await page.locator('#quizErrorReview button').click();
  await expect(page.locator('.quiz-question')).toHaveCount(2);
@@ -1155,4 +1155,36 @@ for(const sameOwner of [true,false])test('reconexão ao banco novo preserva o es
  await expect(page.locator('#accountToggle')).toBeVisible();
  const recovered=await page.evaluate(()=>JSON.parse(localStorage.getItem('jaguar-rtav-study-progress-v1'))['01']?.read||[]);
  expect(recovered).toEqual(sameOwner?[0,1]:[]);
+});
+
+test('início não carrega questões nem resultados dos simuladores antes do uso',async({page})=>{
+ const banks=[];page.on('request',r=>{if(r.url().includes('/quiz-bank.js'))banks.push(r.url());});
+ await page.goto('http://127.0.0.1:4173/?e2e=lazy-start');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ expect(banks).toHaveLength(0);
+ await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(0);
+ await expect(page.locator('#revKpis .integrated-kpi')).toHaveCount(0);
+ await page.evaluate(()=>go('tools'));
+ await expect(page.locator('#buyerExample .buyer-example-card')).toHaveCount(4);
+ await expect(page.locator('#revKpis .integrated-kpi')).toHaveCount(0);
+ await page.evaluate(()=>showTaxTool('revenue'));
+ await expect(page.locator('#revKpis .integrated-kpi')).toHaveCount(4);
+ await page.evaluate(()=>go('quiz'));
+ await expect.poll(()=>banks.length).toBe(1);
+ await page.locator('.quiz-start-button').click();
+ await expect(page.locator('#quizPage .quiz-question')).toHaveCount(10);
+ expect(banks).toHaveLength(1);
+});
+
+test('carregamento das questões permite tentar novamente após falha de rede',async({page})=>{
+ let attempts=0;
+ await page.route('**/quiz-bank.js?*',async route=>{attempts++;if(attempts===1)return route.abort();await route.continue();});
+ await page.goto('http://127.0.0.1:4173/?e2e=lazy-retry');
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ await page.evaluate(()=>go('quiz'));
+ await expect(page.locator('#quizLoadStatus')).toContainText('Não foi possível');
+ await page.locator('.quiz-start-button').click();
+ await expect(page.locator('#quizPage .quiz-question')).toHaveCount(10);
+ expect(attempts).toBe(2);
+ await expect(page.locator('#quizLoadStatus')).toBeHidden();
 });

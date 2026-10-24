@@ -91,3 +91,6 @@ button,input,select,summary{touch-action:manipulation}
  #home .home-command{padding:14px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* Reserve the title rows while the cached profile is restored. */
+#home .compact-dashboard .home-dashboard-card.primary b{min-height:3em}

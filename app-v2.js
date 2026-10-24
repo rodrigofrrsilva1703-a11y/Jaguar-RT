@@ -1,6 +1,8 @@
 const $=id=>document.getElementById(id);
-const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-const pct=v=>Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:4})+'%';
+const moneyFormatter=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+const money=v=>moneyFormatter.format(Number(v||0));
+const percentFormatter=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:4});
+const pct=v=>percentFormatter.format(Number(v||0))+'%';
 
 function parseMoneyInput(value){
  const raw=String(value??'').trim().replace(/\s+/g,'').replace(/^R\$/i,'');
@@ -90,10 +92,12 @@ function animateHomeEntrance(){
 }
 function go(id,options={}){
  stopHomeEntrance();
+ if(id==='tools'&&!toolsInitialized){let tool='price';try{tool=localStorage.getItem('jaguar-rtav-active-tool')||'price';}catch(e){}showTaxTool(tool);}
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  $(id)?.classList.add('active');
  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='modules') renderModuleGrid();
+ if(id==='quiz')ensureQuizBank().catch(()=>{});
  if(id==='home'){renderHomeResume();renderHomeDashboard();animateHomeEntrance();}
  animateViewEntrance(id);
  if(options.persist!==false)saveNavigation({view:id});
@@ -136,11 +140,15 @@ function migrateStudyState(raw){
 let studyFilter='all';
 let activeCourse=null;
 let courseAllVisible=false;
+let studyCacheRaw,studyCacheValue;
 function studyProgress(){
  try{
-  const raw=JSON.parse(localStorage.getItem(STUDY_PROGRESS_KEY))||{};
+  const serialized=localStorage.getItem(STUDY_PROGRESS_KEY);
+  if(serialized===studyCacheRaw&&studyCacheValue)return studyCacheValue;
+  const raw=JSON.parse(serialized)||{};
   const migrated=migrateStudyState(raw);
   if(migrated!==raw){localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(migrated));window.JaguarAccount?.changed();}
+  studyCacheRaw=localStorage.getItem(STUDY_PROGRESS_KEY);studyCacheValue=migrated;
   return migrated;
  }catch(e){return {__orderVersion:COURSE_ORDER_VERSION};}
 }
@@ -150,8 +158,8 @@ function saveStudyProgress(value){
   localStorage.setItem(STUDY_PROGRESS_KEY,JSON.stringify(next));window.JaguarAccount?.changed();
  }catch(e){}
 }
-function moduleProgress(m){
- const saved=studyProgress()[m.id]||{};
+function moduleProgress(m,progress=studyProgress()){
+ const saved=progress[m.id]||{};
  const read=Array.isArray(saved.read)?[...new Set(saved.read.filter(i=>Number.isInteger(i)&&i>=0&&i<m.blocks.length))].sort((a,b)=>a-b):[];
  let step=Number.isInteger(Number(saved.step))?Number(saved.step):0;
  if(read.length===0){
@@ -307,14 +315,26 @@ function updateQuizResume(){
  '</button>';
 }
 
+let quizBankPromise=null;
+function ensureQuizBank(){
+ if(typeof QUIZ_BANK!=='undefined')return Promise.resolve();
+ if(quizBankPromise)return quizBankPromise;
+ const status=$('quizLoadStatus');if(status){status.hidden=false;status.textContent='Preparando perguntas…';}
+ quizBankPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');script.src='quiz-bank.js?v=20261001-02';
+  script.onload=()=>{if(status)status.hidden=true;updateErrorReview();resolve();};
+  script.onerror=()=>{script.remove();quizBankPromise=null;if(status){status.hidden=false;status.textContent='Não foi possível carregar as perguntas. Tente começar o teste novamente.';}reject(new Error('Falha ao carregar perguntas'));};
+  document.head.appendChild(script);
+ });
+ return quizBankPromise;
+}
+
 function initQuiz(){
  const select=$('quizModule');
  if(!select)return;
  select.innerHTML='<option value="all">Todos os módulos · 10 perguntas mistas</option>'+STUDY_MODULES.map(m=>`<option value="${m.id}">Módulo ${m.id} · ${courseEscape(m.title)}</option>`).join('');
  const saved=quizRead(QUIZ_SESSION_KEY,null);
- if(saved?.questions?.length>0&&saved.questions.length<=10&&(saved.review||saved.questions.length===10)&&saved.questions.every(q=>QUIZ_BANK[q.module])){
-  const contexts=new Map(RTAV_QUIZ.pool(QUIZ_BANK).map(q=>[q.id,q.context]));
-  saved.questions.forEach(q=>{q.context=contexts.get(q.id)||q.context;});
+ if(saved?.questions?.length>0&&saved.questions.length<=10&&(saved.review||saved.questions.length===10)&&saved.questions.every(q=>STUDY_MODULES.some(m=>m.id===q.module))){
   quizSession=saved;
   select.value=saved.scope;
   updateQuizResume();
@@ -326,6 +346,7 @@ function initQuiz(){
 function pendingQuizErrors(scope='all'){
  const history=quizRead(QUIZ_HISTORY_KEY,{});
  const wrong=history.wrong||Object.fromEntries((quizSession?.finished?RTAV_QUIZ.grade(quizSession.questions,quizSession.answers).details:[]).filter(q=>!q.ok).map(q=>[q.id,true]));
+ if(typeof QUIZ_BANK==='undefined')return Object.keys(wrong).filter(id=>scope==='all'||id.startsWith(scope+'-'));
  const pool=new Map(RTAV_QUIZ.pool(QUIZ_BANK).map(q=>[q.id,q]));
  return Object.keys(wrong).filter(id=>pool.has(id)&&(scope==='all'||pool.get(id).module===scope));
 }
@@ -335,6 +356,7 @@ function updateErrorReview(){
  el.innerHTML=count?`<div><b>${count} ${count===1?'questão para revisar':'questões para revisar'}</b><span>Pratique até 10 erros por rodada. Os acertos saem desta lista.</span></div><button type="button" onclick="startErrorReview()">Revisar meus erros →</button>`:'<div><b>Nenhum erro pendente</b><span>Os erros dos próximos testes aparecerão aqui para revisão.</span></div>';
 }
 function startErrorReview(){
+ if(typeof QUIZ_BANK==='undefined')return ensureQuizBank().then(()=>startErrorReview()).catch(()=>{});
  const scope=$('quizModule')?.value||'all',ids=pendingQuizErrors(scope).slice(0,10);
  const pool=new Map(RTAV_QUIZ.pool(QUIZ_BANK).map(q=>[q.id,q]));
  if(!ids.length)return;
@@ -343,6 +365,7 @@ function startErrorReview(){
  quizSave(QUIZ_SESSION_KEY,quizSession);updateQuizResume();renderQuiz();go('quizPage');
 }
 function startQuiz(same=false,scope){
+ if(!same&&typeof QUIZ_BANK==='undefined')return ensureQuizBank().then(()=>startQuiz(same,scope)).catch(()=>{});
  if(same&&(!quizSession||!quizSession.questions.length))return;
  if(same){quizSession={...quizSession,answers:Array(quizSession.questions.length).fill(null),finished:false};}
  else{
@@ -360,7 +383,7 @@ function startQuiz(same=false,scope){
  go('quizPage');
 }
 
-function startModuleQuiz(id){startQuiz(false,id);}
+function startModuleQuiz(id){$('quizModule').value=id;go('quiz');return startQuiz(false,id);}
 
 function resumeQuiz(){if(quizSession){renderQuiz();go('quizPage');}}
 
@@ -1103,7 +1126,9 @@ function renderMemory(id,rows){
  }).join('');
 }
 
+let toolsInitialized=false,toolsInitializing=false;
 function calcIntegrated(){
+ if(toolsInitializing)return;
  if(!$('buyerExample')) return;
  syncSegmentFields();
  updateScenarioStrip();
@@ -1278,6 +1303,7 @@ function renderYearlyProjection(){
 }
 
 function showTaxTool(which){
+ ensureToolsInitialized();
  const active=['price','revenue','diagnostic'].includes(which)?which:'price';
  const price=active==='price',revenue=active==='revenue',diagnostic=active==='diagnostic';
  $('priceToolPanel')?.classList.toggle('active',price);
@@ -1457,6 +1483,7 @@ function revFutureRows(x){
 let revenueYearlyRows=[],revYearDetailSelected=null;
 
 function revCalcIntegrated(){
+ if(toolsInitializing)return;
  if(!$('revKpis')) return;
  const input=revenueEngineInput();
  renderValidation('revenueValidation',RTAV_ENGINE.validateRevenueInput(input));
@@ -2422,6 +2449,10 @@ renderHome();
 initQuiz();
 searchModules('');
 
+function ensureToolsInitialized(){
+ if(toolsInitialized||toolsInitializing)return;
+ toolsInitializing=true;
+ try{
 updateSnSummary();
 syncPriceCreditMode();
 applyRegimeUI({preset:true});
@@ -2444,7 +2475,7 @@ bindAutosave('revenue');
 renderScenarioOptions('price');
 renderScenarioOptions('revenue');
 
-let initialTool='price';
-try{initialTool=localStorage.getItem('jaguar-rtav-active-tool')||'price';}catch(e){}
-showTaxTool(['price','revenue','diagnostic'].includes(initialTool)?initialTool:'price');
 calcLP();
+ toolsInitialized=true;
+ }finally{toolsInitializing=false;}
+}
