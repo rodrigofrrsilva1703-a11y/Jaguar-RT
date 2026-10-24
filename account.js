@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const ENDPOINT='https://maxfsruuaosyzkaqovuw.supabase.co/functions/v1/jaguarrt';
+const ENDPOINT=window.JAGUAR_API_ENDPOINT||'https://maxfsruuaosyzkaqovuw.supabase.co/functions/v1/jaguarrt';
 const TOKEN_KEY='jaguarrt-session';
 const PROFILE_KEY='jaguarrt-profile';
 const KEYS=['jaguar-rtav-study-progress-v1','jaguar-rtav-quiz-history-v2','jaguar-rtav-quiz-session-v3'];
@@ -18,7 +18,14 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}};
 async function api(action,data,extra={}){
  const requestToken=extra.token||token;
- const r=await fetch(ENDPOINT,{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json'},body:JSON.stringify({action,token,data,...extra})});
+ const startup=window.JAGUAR_SESSION_REQUEST;
+ let r;
+ if(action==='state'&&startup?.token===requestToken){
+  delete window.JAGUAR_SESSION_REQUEST;
+  r=await startup.promise;
+ }else{
+  r=await fetch(ENDPOINT,{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json'},body:JSON.stringify({action,token,data,...extra})});
+ }
  let x;
  try{x=await r.json();}catch(e){
   if(r.status===401&&requestToken===token&&action!=='login'&&action!=='logout')endExpiredSession('Sessão expirada. Entre novamente.');

@@ -19,6 +19,7 @@ Deno.serve(async(req)=>{
  if(!/^[a-f0-9]{64}$/.test(token))return reply({error:'Entre para continuar.'},401);
  if(!['state','save','attempt','logout','admin'].includes(b.action))return reply({error:'Ação inválida'},400);
  const me=await rpc({p_action:'state',p_token:token});if(me.error)return reply(me,401);
+ if(b.action==='state')return reply(me);
  let data=b.data||{};
  if(b.action==='save'){
   if(!data||typeof data!=='object'||Array.isArray(data))return reply({error:'Progresso inválido'},400);

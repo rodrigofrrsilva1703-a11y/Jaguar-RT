@@ -1188,3 +1188,26 @@ test('carregamento das questões permite tentar novamente após falha de rede',a
  expect(attempts).toBe(2);
  await expect(page.locator('#quizLoadStatus')).toBeHidden();
 });
+
+test('validação da sessão começa antes do aplicativo e é reutilizada uma única vez',async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem('jaguarrt-profile',JSON.stringify({email:'teste@jaguarcontabil.com.br',admin:false,sessionPrefix:'a'.repeat(12)})));
+ let releaseApp,releaseState,stateCalls=0;
+ await page.route('**/app-v2.js?*',async route=>{await new Promise(resolve=>releaseApp=resolve);await route.continue();});
+ await page.unroute('**/functions/v1/jaguarrt');
+ await page.route('**/functions/v1/jaguarrt',async route=>{
+  const body=route.request().postDataJSON();
+  if(body.action==='state'){stateCalls++;await new Promise(resolve=>releaseState=resolve);}
+  await route.fulfill({json:{email:'teste@jaguarcontabil.com.br',admin:false,state:{study:{__orderVersion:2,__layoutVersion:1},history:{__orderVersion:2},quiz:null},attempts:[]}});
+ });
+ const navigating=page.goto('http://127.0.0.1:4173/?e2e=early-session',{waitUntil:'domcontentloaded'});
+ await expect.poll(()=>stateCalls).toBe(1);
+ await expect.poll(()=>typeof releaseApp).toBe('function');
+ // The shell is inert in HTML, even while the application is still downloading.
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(true);
+ releaseApp();await navigating;
+ await expect(page.locator('#accountToggle')).toBeVisible();
+ expect(await page.locator('#siteShell').evaluate(e=>e.inert)).toBe(true);
+ releaseState();
+ await expect.poll(()=>page.locator('#siteShell').evaluate(e=>e.inert)).toBe(false);
+ expect(stateCalls).toBe(1);
+});

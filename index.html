@@ -9,6 +9,21 @@
 <meta name="theme-color" content="#0a0a0a">
 <meta name="description" content="JAGUAR RT — estudo estruturado da Reforma Tributária do Consumo">
 <title>JAGUAR RT — Reforma Tributária</title>
+<link rel="preconnect" href="https://maxfsruuaosyzkaqovuw.supabase.co" crossorigin>
+<script>
+window.JAGUAR_API_ENDPOINT='https://maxfsruuaosyzkaqovuw.supabase.co/functions/v1/jaguarrt';
+try{
+ let savedSession='';
+ try{savedSession=localStorage.getItem('jaguarrt-session')||'';}catch(e){}
+ if(!savedSession){try{savedSession=sessionStorage.getItem('jaguarrt-session')||'';}catch(e){}}
+ if(savedSession){
+  document.documentElement.classList.add('has-saved-session');
+  const promise=fetch(window.JAGUAR_API_ENDPOINT,{method:'POST',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'state',token:savedSession})});
+  promise.catch(()=>{});
+  window.JAGUAR_SESSION_REQUEST={token:savedSession,promise};
+ }
+}catch(e){}
+</script>
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="site.css?v=20261005-111">
 <link rel="stylesheet" href="interface.css?v=20261023-115">
@@ -16,6 +31,7 @@
 <script>
 (async()=>{
   try{
+    if(localStorage.getItem('jaguarrt-cache-cleanup-v1'))return;
     if('serviceWorker' in navigator){
       const regs=await navigator.serviceWorker.getRegistrations();
       const scope=new URL('.',location.href).href;
@@ -25,6 +41,7 @@
       const keys=await caches.keys();
       await Promise.all(keys.filter(k=>/^jaguar[-_]rt/i.test(k)).map(k=>caches.delete(k)));
     }
+    localStorage.setItem('jaguarrt-cache-cleanup-v1','done');
   }catch(e){}
 })();
 </script>
@@ -38,14 +55,7 @@ html.has-saved-session #loginGate{display:none!important}
 
 
 </style>
-<script>
-try{
- let savedSession='';
- try{savedSession=localStorage.getItem('jaguarrt-session')||'';}catch(e){}
- if(!savedSession){try{savedSession=sessionStorage.getItem('jaguarrt-session')||'';}catch(e){}}
- if(savedSession)document.documentElement.classList.add('has-saved-session');
-}catch(e){}
-</script>
+
 <link rel="stylesheet" href="lesson-slides.css?v=20261005-111">
 <link rel="stylesheet" href="timeline.css?v=20261006-112">
 </head>
@@ -615,15 +625,15 @@ try{
 
 <div id="accountBackdrop" class="account-backdrop" hidden></div>
 <aside id="accountDrawer" class="account-drawer" role="dialog" aria-modal="true" aria-labelledby="accountTitle" hidden><div class="account-head"><div><span class="drawer-eyebrow">ESPAÇO PESSOAL</span><h2 id="accountTitle">Meu percurso</h2></div><button id="accountClose" aria-label="Fechar painel">✕</button></div><div class="drawer-profile"><span id="drawerAvatar" class="drawer-avatar"></span><div><b id="drawerName"></b><p id="accountEmail" class="account-email"></p></div></div><p id="accountStatus" class="account-status" role="status"></p><div id="accountContent"></div><section id="adminSection" class="account-admin" hidden><button id="reportsOpen" class="reports-open">Relatórios dos colaboradores →</button></section><p><button id="accountLogout">Sair da conta</button></p></aside>
-<script src="content-v2.js?v=20261021-02"></script>
+<script src="content-v2.js?v=20261021-02" defer></script>
 
-<script src="quiz-engine.js?v=20261001-02"></script>
-<script src="tax-rules.js?v=20261021-01"></script>
-<script src="tax-engine.js?v=20260930-72"></script>
+<script src="quiz-engine.js?v=20261001-02" defer></script>
+<script src="tax-rules.js?v=20261021-01" defer></script>
+<script src="tax-engine.js?v=20260930-72" defer></script>
 <script src="exports.js?v=20261005-111" defer></script>
-<script src="lesson-layout.js?v=20261003-106"></script>
+<script src="lesson-layout.js?v=20261003-106" defer></script>
 <script src="app-v2.js?v=20261023-115" defer></script>
-<script src="account.js?v=20261021-113" defer></script>
-<script>window.JAGUAR_RT_BUILD="20261023-115";</script>
+<script src="account.js?v=20261023-116" defer></script>
+<script>window.JAGUAR_RT_BUILD="20261023-116";</script>
 </body>
 </html>
