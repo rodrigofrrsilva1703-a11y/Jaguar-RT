@@ -94,3 +94,7 @@ button,input,select,summary{touch-action:manipulation}
 
 /* Reserve the title rows while the cached profile is restored. */
 #home .compact-dashboard .home-dashboard-card.primary b{min-height:3em}
+
+/* Reserve the saved profile in the header before session validation. */
+html.has-saved-session #accountToggle[hidden]{display:flex!important;visibility:hidden}
+@media(min-width:651px){.topin #accountToggle{width:208px;flex:0 0 208px}.topin .account-identity{min-width:0}.topin #accountName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}

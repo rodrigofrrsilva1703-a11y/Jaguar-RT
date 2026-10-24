@@ -91,6 +91,7 @@ function animateHomeEntrance(){
  home.querySelectorAll('.home-search, .transition-home').forEach(el=>homeEntranceObserver.observe(el));
 }
 function go(id,options={}){
+ const shouldScroll=options.scroll!==false&&(window.scrollX!==0||window.scrollY!==0);
  stopHomeEntrance();
  if(id==='tools'&&!toolsInitialized){let tool='price';try{tool=localStorage.getItem('jaguar-rtav-active-tool')||'price';}catch(e){}showTaxTool(tool);}
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -101,7 +102,7 @@ function go(id,options={}){
  if(id==='home'){renderHomeResume();renderHomeDashboard();animateHomeEntrance();}
  animateViewEntrance(id);
  if(options.persist!==false)saveNavigation({view:id});
- if(options.scroll!==false)window.scrollTo({top:0,behavior:options.instant?'auto':'smooth'});
+ if(shouldScroll)requestAnimationFrame(()=>window.scrollTo({top:0,behavior:options.instant?'auto':'smooth'}));
 }
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 

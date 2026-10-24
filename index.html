@@ -11,7 +11,7 @@
 <title>JAGUAR RT — Reforma Tributária</title>
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="site.css?v=20261005-111">
-<link rel="stylesheet" href="interface.css?v=20261023-114">
+<link rel="stylesheet" href="interface.css?v=20261023-115">
 <link rel="stylesheet" href="print.css?v=20261005-111" media="print">
 <script>
 (async()=>{
@@ -74,7 +74,7 @@ try{
 <header class="top">
  <div class="topin">
   <div class="brand"><div class="mark">J</div><div><b>JAGUAR RT</b><small>Reforma Tributária · estudo interno</small></div></div>
-  <button id="accountToggle" class="account-toggle" hidden aria-controls="accountDrawer" aria-expanded="false"><span id="accountAvatar" class="account-avatar"></span><span class="account-identity"><b id="accountName"></b><small><span id="accountProgress">0%</span> estudado · Meu percurso</small><span class="account-mini-track"><i id="accountMiniFill"></i></span></span><span class="account-chevron">›</span></button>
+  <button id="accountToggle" class="account-toggle" hidden aria-controls="accountDrawer" aria-expanded="false"><span id="accountAvatar" class="account-avatar"></span><span class="account-identity"><b id="accountName">&nbsp;</b><small><span id="accountProgress">0%</span> estudado · Meu percurso</small><span class="account-mini-track"><i id="accountMiniFill"></i></span></span><span class="account-chevron">›</span></button>
   <nav>
    <button data-go="home" class="active">Início</button>
    <button data-go="modules">Estudos</button>
@@ -125,8 +125,8 @@ try{
  <div class="section transition-home interactive-transition">
   <div class="transition-home-head"><h2>Transição 2026 → 2033</h2></div>
   <div class="rt-timeline-card">
-   <div id="timeline" class="timeline" role="group" aria-label="Anos da transição tributária"></div>
-   <div id="timelinePanel" class="timeline-panel" aria-live="polite"></div>
+   <div id="timeline" class="timeline" role="group" aria-label="Anos da transição tributária"><button type="button" class="year" onclick="pickYear('2026')" data-year="2026" aria-pressed="false"><b>2026</b></button><button type="button" class="year" onclick="pickYear('2027')" data-year="2027" aria-pressed="false"><b>2027</b></button><button type="button" class="year" onclick="pickYear('2028')" data-year="2028" aria-pressed="false"><b>2028</b></button><button type="button" class="year" onclick="pickYear('2029')" data-year="2029" aria-pressed="false"><b>2029</b></button><button type="button" class="year" onclick="pickYear('2030')" data-year="2030" aria-pressed="false"><b>2030</b></button><button type="button" class="year" onclick="pickYear('2031')" data-year="2031" aria-pressed="false"><b>2031</b></button><button type="button" class="year" onclick="pickYear('2032')" data-year="2032" aria-pressed="false"><b>2032</b></button><button type="button" class="year" onclick="pickYear('2033')" data-year="2033" aria-pressed="false"><b>2033</b></button></div>
+   <div id="timelinePanel" class="timeline-panel" aria-live="polite"><div class="rt-detail-intro"><strong class="rt-detail-year">2026</strong><div><div class="rt-detail-kicker">Teste</div><h3>CBS e IBS entram em ambiente de teste</h3></div></div><div class="rt-detail-copy"><p class="rt-detail-summary">CBS de 0,9% e IBS de 0,1% em fase de teste; os tributos atuais continuam. A dispensa de recolhimento depende do cumprimento das obrigações aplicáveis.</p><p class="rt-detail-focus"><strong>Na prática</strong> Validar emissão de notas, cadastros e sistemas conforme o cronograma da operação.</p></div></div>
   </div>
  </div>
 </section>
@@ -622,8 +622,8 @@ try{
 <script src="tax-engine.js?v=20260930-72"></script>
 <script src="exports.js?v=20261005-111" defer></script>
 <script src="lesson-layout.js?v=20261003-106"></script>
-<script src="app-v2.js?v=20261023-114" defer></script>
+<script src="app-v2.js?v=20261023-115" defer></script>
 <script src="account.js?v=20261021-113" defer></script>
-<script>window.JAGUAR_RT_BUILD="20261023-114";</script>
+<script>window.JAGUAR_RT_BUILD="20261023-115";</script>
 </body>
 </html>
