@@ -58,6 +58,7 @@ html.has-saved-session #loginGate{display:none!important}
 
 <link rel="stylesheet" href="lesson-slides.css?v=20261005-111">
 <link rel="stylesheet" href="timeline.css?v=20261006-112">
+<link rel="stylesheet" href="department-impact.css?v=20261026-01">
 </head>
 <body>
 
@@ -139,11 +140,20 @@ html.has-saved-session #loginGate{display:none!important}
    <div id="timelinePanel" class="timeline-panel" aria-live="polite"><div class="rt-detail-intro"><strong class="rt-detail-year">2026</strong><div><div class="rt-detail-kicker">Teste</div><h3>CBS e IBS entram em ambiente de teste</h3></div></div><div class="rt-detail-copy"><p class="rt-detail-summary">CBS de 0,9% e IBS de 0,1% em fase de teste; os tributos atuais continuam. A dispensa de recolhimento depende do cumprimento das obrigações aplicáveis.</p><p class="rt-detail-focus"><strong>Na prática</strong> Validar emissão de notas, cadastros e sistemas conforme o cronograma da operação.</p></div></div>
   </div>
  </div>
+ <button type="button" class="impact-home-shortcut" onclick="openDepartmentImpacts()">Veja o impacto da Reforma em cada departamento →</button>
 </section>
 
 <section id="modules" class="view">
  <div class="section-head"><div><span class="eyebrow">FORMAÇÃO COMPLETA</span><h2>16 módulos estruturados</h2></div><p>Leia por etapas ou abra a aula inteira. O progresso fica salvo na sua conta e neste navegador.</p></div>
- <p class="page-lead">Da fundamentação constitucional à consultoria contábil: cada módulo reúne conceito, comparação, regra, aplicação e um fechamento prático. Use a trilha abaixo para entender por que cada etapa vem antes da próxima.</p>
+ <p class="page-lead">Da fundamentação constitucional à consultoria contábil: cada módulo reúne conceito, comparação, regra, aplicação e um fechamento prático. Use a trilha abaixo para entender por que cada etapa vem antes da próxima.</p>
+ <section id="departmentImpact" class="department-impact" aria-labelledby="departmentImpactTitle">
+  <div class="impact-heading">
+   <div><span class="eyebrow">IMPACTO NO ESCRITÓRIO</span><h3 id="departmentImpactTitle">O que muda em cada departamento?</h3></div>
+   <p>Entenda as responsabilidades de cada setor, os cuidados legais e como as equipes devem trabalhar juntas.</p>
+  </div>
+  <div id="impactAreaTabs" class="impact-tabs" role="tablist" aria-label="Escolher departamento"></div>
+  <div id="impactAreaPanel" class="impact-detail" role="tabpanel" aria-live="polite"></div>
+ </section>
  <div class="study-dashboard"><div><span class="eyebrow">SEU PERCURSO</span><strong id="studyProgressText">0 de 16 módulos concluídos</strong><div class="study-progress-track"><i id="studyProgressFill"></i></div></div><div class="study-filters" aria-label="Filtrar módulos"><button type="button" class="active" data-study-filter="all" onclick="filterStudyModules('all')">Todos</button><button type="button" data-study-filter="started" onclick="filterStudyModules('started')">Em andamento</button><button type="button" data-study-filter="completed" onclick="filterStudyModules('completed')">Concluídos</button></div></div>
  <div id="moduleGrid" class="module-grid"></div>
 </section>
@@ -625,7 +635,7 @@ html.has-saved-session #loginGate{display:none!important}
 
 <div id="accountBackdrop" class="account-backdrop" hidden></div>
 <aside id="accountDrawer" class="account-drawer" role="dialog" aria-modal="true" aria-labelledby="accountTitle" hidden><div class="account-head"><div><span class="drawer-eyebrow">ESPAÇO PESSOAL</span><h2 id="accountTitle">Meu percurso</h2></div><button id="accountClose" aria-label="Fechar painel">✕</button></div><div class="drawer-profile"><span id="drawerAvatar" class="drawer-avatar"></span><div><b id="drawerName"></b><p id="accountEmail" class="account-email"></p></div></div><p id="accountStatus" class="account-status" role="status"></p><div id="accountContent"></div><section id="adminSection" class="account-admin" hidden><button id="reportsOpen" class="reports-open">Relatórios dos colaboradores →</button></section><p><button id="accountLogout">Sair da conta</button></p></aside>
-<script src="content-v2.js?v=20261021-02" defer></script>
+<script src="content-v2.js?v=20261026-01" defer></script>
 
 <script src="quiz-engine.js?v=20261001-02" defer></script>
 <script src="tax-rules.js?v=20261021-01" defer></script>
@@ -633,7 +643,8 @@ html.has-saved-session #loginGate{display:none!important}
 <script src="exports.js?v=20261005-111" defer></script>
 <script src="lesson-layout.js?v=20261003-106" defer></script>
 <script src="app-v2.js?v=20261023-115" defer></script>
+<script src="department-impact.js?v=20261026-01" defer></script>
 <script src="account.js?v=20261023-116" defer></script>
-<script>window.JAGUAR_RT_BUILD="20261023-116";</script>
+<script>window.JAGUAR_RT_BUILD="20261026-01";</script>
 </body>
 </html>
