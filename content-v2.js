@@ -725,9 +725,9 @@ const STUDY_MODULES = [
         "id": "16-05"
       },
       {
-        "t": "Síntese da trilha de aprendizagem",
-        "x": "Conclusão Consolidada: A trilha integral dos 16 módulos do JAGUAR RT percorre a Reforma Tributária em uma sequência única: fundamentos e incidência, créditos e ressarcimento, tratamentos diferenciados e específicos, comércio exterior, transição, regimes empresariais, formação de preços, conformidade digital, split payment e, por fim, aplicação consultiva. A equipe deve sempre separar regra legal vigente, premissa didática e dado concreto do cliente antes de transformar uma simulação em recomendação.",
-        "k": "SÍNTESE",
+        "t": "Da formação tributária à atuação por departamento",
+        "x": "Os módulos anteriores construíram a base técnica: IBS/CBS, créditos, tratamentos específicos, transição, documentos, preços e split payment. Agora o passo seguinte é distribuir o conhecimento entre os departamentos, com atribuições concretas e controles verificáveis.\nA Reforma muda diretamente a rotina do Fiscal e parte dos processos Contábeis, Financeiros e tecnológicos; já a Legalização, o RH/DP, o Jurídico e a Gestão precisam avaliar impactos cadastrais, contratuais, decisórios e operacionais conforme as características de cada cliente. O RH/DP, por exemplo, não deve confundir IBS/CBS com mudanças automáticas na folha, no FGTS ou no eSocial.\nAs próximas etapas trazem um mapa por área, um fluxo integrado, um caso de cliente e um checklist de preparação para o escritório.",
+        "k": "ESTUDO",
         "id": "16-06"
       },
       {
