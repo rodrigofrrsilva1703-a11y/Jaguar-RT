@@ -1,0 +1,236 @@
+/* Jaguar RT — guia operacional da Reforma por departamento */
+#modules .department-impact{
+  margin:24px 0 28px;
+  padding:21px 23px 20px;
+  border:1px solid #e1e1dc;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 6px 22px rgba(0,0,0,.025);
+  scroll-margin-top:90px;
+}
+#modules .impact-heading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  padding-bottom:14px;
+  border-bottom:1px solid #e9e9e5;
+}
+#modules .impact-heading .eyebrow{
+  display:block;
+  margin-bottom:6px;
+  color:#777771;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+#modules .impact-heading h3{
+  margin:0;
+  color:#181818;
+  font-size:clamp(20px,2.2vw,27px);
+  line-height:1.13;
+  letter-spacing:-.03em;
+}
+#modules .impact-heading p{
+  max-width:410px;
+  margin:0;
+  color:#666660;
+  font-size:12px;
+  line-height:1.55;
+}
+#modules .impact-tabs{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:15px 0 16px;
+}
+#modules .impact-tabs button{
+  min-height:35px;
+  padding:8px 11px;
+  border:1px solid #e2e2dd;
+  border-radius:9px;
+  background:#f8f8f6;
+  color:#5d5d57;
+  font-size:11px;
+  line-height:1.15;
+  font-weight:740;
+  white-space:nowrap;
+  transition:background .16s,border-color .16s,color .16s;
+}
+#modules .impact-tabs button:hover{border-color:#aaa9a2;color:#222;background:#fff}
+#modules .impact-tabs button.is-active,
+#modules .impact-tabs button[aria-selected="true"]{
+  border-color:#151515;
+  background:#151515;
+  color:#fff;
+}
+#modules .impact-tabs button:focus-visible,
+#modules .impact-actions button:focus-visible,
+#modules .impact-actions a:focus-visible{
+  outline:2px solid #888;
+  outline-offset:3px;
+}
+#modules .impact-detail{
+  min-width:0;
+  padding:18px 20px 16px;
+  border:1px solid #e5e5e1;
+  border-radius:13px;
+  background:#fbfbfa;
+}
+#modules .impact-nature{
+  display:inline-flex;
+  color:#6a6a65;
+  font-size:10px;
+  font-weight:760;
+  letter-spacing:.015em;
+}
+#modules .impact-detail-head h4{
+  margin:4px 0 7px;
+  color:#161616;
+  font-size:22px;
+  line-height:1.13;
+  letter-spacing:-.025em;
+}
+#modules .impact-detail-head p{
+  max-width:960px;
+  margin:0;
+  color:#51514d;
+  font-size:13px;
+  line-height:1.65;
+}
+#modules .impact-detail-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);
+  gap:26px;
+  margin-top:18px;
+  padding-top:15px;
+  border-top:1px solid #e6e6e2;
+}
+#modules .impact-detail-grid h5{
+  margin:0 0 10px;
+  color:#222;
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.015em;
+}
+#modules .impact-detail-grid ol{
+  display:grid;
+  gap:11px;
+  margin:0;
+  padding-left:20px;
+}
+#modules .impact-detail-grid li{
+  color:#43433e;
+  font-size:12px;
+  line-height:1.6;
+  padding-left:2px;
+}
+#modules .impact-detail-grid li::marker{font-weight:800;color:#111}
+#modules .impact-side{
+  min-width:0;
+  padding-left:19px;
+  border-left:1px solid #deded9;
+}
+#modules .impact-side>div+div{
+  margin-top:14px;
+  padding-top:13px;
+  border-top:1px solid #e5e5e1;
+}
+#modules .impact-side h5{margin-bottom:6px}
+#modules .impact-side p{
+  margin:0;
+  color:#565650;
+  font-size:12px;
+  line-height:1.55;
+}
+#modules .impact-side .impact-partners{
+  margin-top:15px;
+  color:#81817b;
+  font-size:10px;
+}
+#modules .impact-actions{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-top:17px;
+}
+#modules .impact-actions button{
+  display:inline-flex;
+  align-items:center;
+  gap:13px;
+  min-height:38px;
+  border:1px solid #161616;
+  border-radius:9px;
+  padding:9px 13px;
+  background:#161616;
+  color:#fff;
+  font-size:11px;
+  font-weight:780;
+}
+#modules .impact-actions button:hover{background:#333}
+#modules .impact-actions a{
+  color:#585852;
+  font-size:11px;
+  font-weight:760;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+#home .impact-home-shortcut{
+  display:inline-flex;
+  align-items:center;
+  margin:9px 0 0;
+  padding:8px 1px;
+  border:0;
+  background:transparent;
+  color:#3e3e3a;
+  font-size:12px;
+  font-weight:760;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+#home .impact-home-shortcut:hover{color:#000}
+@media(max-width:900px){
+  #modules .impact-heading{display:block}
+  #modules .impact-heading p{margin-top:9px;max-width:650px}
+  #modules .impact-detail-grid{grid-template-columns:minmax(0,1fr)}
+  #modules .impact-side{padding:13px 0 0;border-left:0;border-top:1px solid #deded9}
+}
+@media(max-width:650px){
+  #modules .department-impact{
+    margin:19px 0 23px;
+    padding:16px 13px 15px;
+    border-radius:15px;
+    scroll-margin-top:75px;
+  }
+  #modules .impact-heading h3{font-size:22px}
+  #modules .impact-heading p{font-size:12px}
+  #modules .impact-tabs{
+    flex-wrap:nowrap;
+    gap:6px;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    padding:2px 0 8px;
+    margin:11px -1px 9px;
+    scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;
+  }
+  #modules .impact-tabs button{
+    flex:0 0 auto;
+    min-height:40px;
+    font-size:12px;
+    padding:10px 12px;
+  }
+  #modules .impact-detail{padding:15px 13px;border-radius:12px}
+  #modules .impact-detail-head h4{font-size:20px}
+  #modules .impact-detail-head p{font-size:12px}
+  #modules .impact-detail-grid{gap:14px;margin-top:13px;padding-top:12px}
+  #modules .impact-detail-grid li{font-size:12px;line-height:1.57}
+  #modules .impact-side p{font-size:12px}
+  #modules .impact-actions{gap:10px}
+  #modules .impact-actions button{min-height:42px}
+}
+@media(prefers-reduced-motion:reduce){
+ #modules .impact-tabs button{transition:none}
+}
